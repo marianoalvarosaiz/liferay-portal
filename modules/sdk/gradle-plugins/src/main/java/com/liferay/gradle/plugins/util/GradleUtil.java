@@ -84,9 +84,17 @@ public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
 			project, portalToolName + ".version", portalToolVersion);
 	}
 
-	public static File getRootDir(Project project, String markerFileName) {
-		File dir = project.getProjectDir();
+	public static Project getProject(Project rootProject, String name) {
+		for (Project project : rootProject.getAllprojects()) {
+			if (name.equals(project.getName())) {
+				return project;
+			}
+		}
 
+		return null;
+	}
+
+	public static File getRootDir(File dir, String markerFileName) {
 		while (true) {
 			File markerFile = new File(dir, markerFileName);
 
@@ -100,6 +108,10 @@ public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
 				return null;
 			}
 		}
+	}
+
+	public static File getRootDir(Project project, String markerFileName) {
+		return getRootDir(project.getProjectDir(), markerFileName);
 	}
 
 	public static File getSrcDir(SourceDirectorySet sourceDirectorySet) {

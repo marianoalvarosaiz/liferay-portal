@@ -37,7 +37,10 @@ boolean search = mvcRenderCommandName.equals("/document_library/search");
 	searchContainerId="<%= searchContainerId %>"
 >
 	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-sidenav-toggler-button />
+		<liferay-frontend:management-bar-sidenav-toggler-button
+			icon="info-circle"
+			label="info"
+		/>
 
 		<c:if test="<%= !search %>">
 			<liferay-util:include page="/document_library/display_style_buttons.jsp" servletContext="<%= application %>" />
@@ -98,7 +101,10 @@ boolean search = mvcRenderCommandName.equals("/document_library/search");
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-sidenav-toggler-button />
+		<liferay-frontend:management-bar-sidenav-toggler-button
+			icon="info-circle"
+			label="info"
+		/>
 
 		<%
 		Group scopeGroup = themeDisplay.getScopeGroup();
@@ -107,7 +113,13 @@ boolean search = mvcRenderCommandName.equals("/document_library/search");
 		<c:if test="<%= !scopeGroup.isStaged() || scopeGroup.isStagingGroup() || !scopeGroup.isStagedPortlet(DLPortletKeys.DOCUMENT_LIBRARY) %>">
 
 			<%
-			String taglibURL = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CHECKIN + "'}); void(0);";
+			String taglibURL = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: 'download'}); void(0);";
+			%>
+
+			<liferay-frontend:management-bar-button href="<%= taglibURL %>" icon="download" label="download" />
+
+			<%
+			taglibURL = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CHECKIN + "'}); void(0);";
 			%>
 
 			<liferay-frontend:management-bar-button href="<%= taglibURL %>" icon="unlock" label="unlock" />

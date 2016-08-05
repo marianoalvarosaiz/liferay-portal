@@ -30,8 +30,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchTeamException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Team;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -44,6 +42,8 @@ import com.liferay.portal.kernel.service.persistence.UserPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -3051,12 +3051,14 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 */
 	@Override
 	public Team fetchByPrimaryKey(Serializable primaryKey) {
-		Team team = (Team)entityCache.getResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
 				TeamImpl.class, primaryKey);
 
-		if (team == _nullTeam) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Team team = (Team)serializable;
 
 		if (team == null) {
 			Session session = null;
@@ -3071,7 +3073,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 				}
 				else {
 					entityCache.putResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-						TeamImpl.class, primaryKey, _nullTeam);
+						TeamImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3125,18 +3127,20 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Team team = (Team)entityCache.getResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
 					TeamImpl.class, primaryKey);
 
-			if (team == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, team);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Team)serializable);
+				}
 			}
 		}
 
@@ -3178,7 +3182,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(TeamModelImpl.ENTITY_CACHE_ENABLED,
-					TeamImpl.class, primaryKey, _nullTeam);
+					TeamImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3544,9 +3548,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			companyId = team.getCompanyId();
 		}
 
-		for (long userPK : userPKs) {
-			teamToUserTableMapper.addTableMapping(companyId, pk, userPK);
-		}
+		teamToUserTableMapper.addTableMappings(companyId, pk, userPKs);
 	}
 
 	/**
@@ -3558,21 +3560,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	@Override
 	public void addUsers(long pk,
 		List<com.liferay.portal.kernel.model.User> users) {
-		long companyId = 0;
-
-		Team team = fetchByPrimaryKey(pk);
-
-		if (team == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = team.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.User user : users) {
-			teamToUserTableMapper.addTableMapping(companyId, pk,
-				user.getPrimaryKey());
-		}
+		addUsers(pk,
+			ListUtil.toLongArray(users,
+				com.liferay.portal.kernel.model.User.USER_ID_ACCESSOR));
 	}
 
 	/**
@@ -3615,9 +3605,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 */
 	@Override
 	public void removeUsers(long pk, long[] userPKs) {
-		for (long userPK : userPKs) {
-			teamToUserTableMapper.deleteTableMapping(pk, userPK);
-		}
+		teamToUserTableMapper.deleteTableMappings(pk, userPKs);
 	}
 
 	/**
@@ -3629,9 +3617,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	@Override
 	public void removeUsers(long pk,
 		List<com.liferay.portal.kernel.model.User> users) {
-		for (com.liferay.portal.kernel.model.User user : users) {
-			teamToUserTableMapper.deleteTableMapping(pk, user.getPrimaryKey());
-		}
+		removeUsers(pk,
+			ListUtil.toLongArray(users,
+				com.liferay.portal.kernel.model.User.USER_ID_ACCESSOR));
 	}
 
 	/**
@@ -3650,9 +3638,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 		removeUserPKsSet.removeAll(newUserPKsSet);
 
-		for (long removeUserPK : removeUserPKsSet) {
-			teamToUserTableMapper.deleteTableMapping(pk, removeUserPK);
-		}
+		teamToUserTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeUserPKsSet));
 
 		newUserPKsSet.removeAll(oldUserPKsSet);
 
@@ -3667,9 +3654,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			companyId = team.getCompanyId();
 		}
 
-		for (long newUserPK : newUserPKsSet) {
-			teamToUserTableMapper.addTableMapping(companyId, pk, newUserPK);
-		}
+		teamToUserTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newUserPKsSet));
 	}
 
 	/**
@@ -3862,10 +3848,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			companyId = team.getCompanyId();
 		}
 
-		for (long userGroupPK : userGroupPKs) {
-			teamToUserGroupTableMapper.addTableMapping(companyId, pk,
-				userGroupPK);
-		}
+		teamToUserGroupTableMapper.addTableMappings(companyId, pk, userGroupPKs);
 	}
 
 	/**
@@ -3877,21 +3860,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	@Override
 	public void addUserGroups(long pk,
 		List<com.liferay.portal.kernel.model.UserGroup> userGroups) {
-		long companyId = 0;
-
-		Team team = fetchByPrimaryKey(pk);
-
-		if (team == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = team.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.UserGroup userGroup : userGroups) {
-			teamToUserGroupTableMapper.addTableMapping(companyId, pk,
-				userGroup.getPrimaryKey());
-		}
+		addUserGroups(pk,
+			ListUtil.toLongArray(userGroups,
+				com.liferay.portal.kernel.model.UserGroup.USER_GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -3936,9 +3907,7 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	 */
 	@Override
 	public void removeUserGroups(long pk, long[] userGroupPKs) {
-		for (long userGroupPK : userGroupPKs) {
-			teamToUserGroupTableMapper.deleteTableMapping(pk, userGroupPK);
-		}
+		teamToUserGroupTableMapper.deleteTableMappings(pk, userGroupPKs);
 	}
 
 	/**
@@ -3950,10 +3919,9 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	@Override
 	public void removeUserGroups(long pk,
 		List<com.liferay.portal.kernel.model.UserGroup> userGroups) {
-		for (com.liferay.portal.kernel.model.UserGroup userGroup : userGroups) {
-			teamToUserGroupTableMapper.deleteTableMapping(pk,
-				userGroup.getPrimaryKey());
-		}
+		removeUserGroups(pk,
+			ListUtil.toLongArray(userGroups,
+				com.liferay.portal.kernel.model.UserGroup.USER_GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -3972,9 +3940,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 		removeUserGroupPKsSet.removeAll(newUserGroupPKsSet);
 
-		for (long removeUserGroupPK : removeUserGroupPKsSet) {
-			teamToUserGroupTableMapper.deleteTableMapping(pk, removeUserGroupPK);
-		}
+		teamToUserGroupTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeUserGroupPKsSet));
 
 		newUserGroupPKsSet.removeAll(oldUserGroupPKsSet);
 
@@ -3989,10 +3956,8 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 			companyId = team.getCompanyId();
 		}
 
-		for (long newUserGroupPK : newUserGroupPKsSet) {
-			teamToUserGroupTableMapper.addTableMapping(companyId, pk,
-				newUserGroupPK);
-		}
+		teamToUserGroupTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newUserGroupPKsSet));
 	}
 
 	/**
@@ -4083,33 +4048,4 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final Team _nullTeam = new TeamImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Team> toCacheModel() {
-				return _nullTeamCacheModel;
-			}
-		};
-
-	private static final CacheModel<Team> _nullTeamCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Team>, MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Team toEntityModel() {
-			return _nullTeam;
-		}
-	}
 }

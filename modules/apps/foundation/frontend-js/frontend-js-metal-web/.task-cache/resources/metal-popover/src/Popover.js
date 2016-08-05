@@ -1,4 +1,4 @@
-define("frontend-js-metal-web@1.0.6/metal-popover/src/Popover", ['exports', 'metal/src/metal', 'metal-soy/src/Soy', 'metal-tooltip/src/Tooltip', './Popover.soy', 'metal-jquery-adapter/src/JQueryAdapter'], function (exports, _metal, _Soy, _Tooltip, _Popover, _JQueryAdapter) {
+define("frontend-js-metal-web@1.0.8/metal-popover/src/Popover", ['exports', 'metal/src/metal', 'metal-soy/src/Soy', 'metal-tooltip/src/Tooltip', './Popover.soy', 'metal-jquery-adapter/src/JQueryAdapter'], function (exports, _metal, _Soy, _Tooltip, _Popover, _JQueryAdapter) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -91,7 +91,9 @@ define("frontend-js-metal-web@1.0.6/metal-popover/src/Popover", ['exports', 'met
    */
 		content: {
 			isHtml: true,
-			validator: _metal2.default.isString
+			validator: function validator(val) {
+				return _metal2.default.isString(val) || _metal2.default.isFunction(val);
+			}
 		},
 
 		/**
@@ -102,6 +104,15 @@ define("frontend-js-metal-web@1.0.6/metal-popover/src/Popover", ['exports', 'met
 		triggerEvents: {
 			validator: Array.isArray,
 			value: ['click', 'click']
+		},
+
+		/**
+   * Flag indicating if an arrow should be rendered for the popover.
+   * @type {boolean}
+   * @default true
+   */
+		withArrow: {
+			value: true
 		}
 	};
 

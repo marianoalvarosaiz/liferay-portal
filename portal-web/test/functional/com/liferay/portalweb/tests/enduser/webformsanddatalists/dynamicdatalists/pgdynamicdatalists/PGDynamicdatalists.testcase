@@ -106,6 +106,10 @@
 
 		<execute macro="DDLTemplate#saveFormTemplateViaDDLDisplayPG" />
 
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="${pageName}" />
+		</execute>
+
 		<execute macro="DDLList#selectViaDDLDisplayPG" />
 
 		<execute macro="DDLTemplate#selectFormTemplateViaDDLDisplayPG">
@@ -1120,15 +1124,6 @@
 
 		<execute macro="User#editPasswordCP">
 			<var name="userEmailAddress" value="user@liferay.com" />
-			<var name="userScreenName" value="usersn" />
-		</execute>
-
-		<execute macro="ProductMenu#gotoControlPanelUsers">
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#unassignRegularRoleCP">
-			<var name="roleName" value="Power User" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
