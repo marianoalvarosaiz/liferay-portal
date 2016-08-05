@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.Team;
+import com.liferay.portal.kernel.model.UserGroupRole;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -371,7 +372,6 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 		stopWatch.start();
 
-		boolean checkOwnerPermission = false;
 		Group group = null;
 
 		try {
@@ -399,8 +399,6 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 				// Site" group.
 
 				if (group.isUser() && (group.getClassPK() == getUserId())) {
-					checkOwnerPermission = true;
-
 					group = GroupLocalServiceUtil.getGroup(
 						getCompanyId(), GroupConstants.USER_PERSONAL_SITE);
 
@@ -422,15 +420,8 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		}
 
 		try {
-			if (checkOwnerPermission) {
-				value = hasOwnerPermission(
-					getCompanyId(), name, primKey, getUserId(), actionId);
-			}
-
-			if ((value == null) || !value) {
-				value = hasPermissionImpl(
-					groupId, name, primKey, roleIds, actionId);
-			}
+			value = hasPermissionImpl(
+				groupId, name, primKey, roleIds, actionId);
 
 			if (_log.isDebugEnabled()) {
 				_log.debug(
@@ -652,18 +643,20 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 			Set<Long> roleIdsSet = SetUtil.fromArray(userBag.getRoleIds());
 
-			List<Role> userGroupRoles = RoleLocalServiceUtil.getUserGroupRoles(
-				userId, groupId);
+			List<UserGroupRole> userGroupRoles =
+				UserGroupRoleLocalServiceUtil.getUserGroupRoles(
+					userId, groupId);
 
-			for (Role userGroupRole : userGroupRoles) {
+			for (UserGroupRole userGroupRole : userGroupRoles) {
 				roleIdsSet.add(userGroupRole.getRoleId());
 			}
 
 			if (parentGroupId > 0) {
-				userGroupRoles = RoleLocalServiceUtil.getUserGroupRoles(
-					userId, parentGroupId);
+				userGroupRoles =
+					UserGroupRoleLocalServiceUtil.getUserGroupRoles(
+						userId, parentGroupId);
 
-				for (Role userGroupRole : userGroupRoles) {
+				for (UserGroupRole userGroupRole : userGroupRoles) {
 					roleIdsSet.add(userGroupRole.getRoleId());
 				}
 			}

@@ -22,22 +22,20 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.journal.configuration.JournalServiceConfigurationValues;
+import com.liferay.journal.internal.verify.model.JournalArticleResourceVerifiableModel;
+import com.liferay.journal.internal.verify.model.JournalArticleVerifiableModel;
+import com.liferay.journal.internal.verify.model.JournalFeedVerifiableModel;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
-import com.liferay.journal.model.JournalArticleImage;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.model.JournalContentSearch;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.service.JournalArticleImageLocalService;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.journal.service.JournalContentSearchLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.journal.util.JournalConverter;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
-import com.liferay.journal.verify.model.JournalArticleResourceVerifiableModel;
-import com.liferay.journal.verify.model.JournalArticleVerifiableModel;
-import com.liferay.journal.verify.model.JournalFeedVerifiableModel;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
@@ -49,14 +47,19 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ResourceLocalService;
+import com.liferay.portal.kernel.service.SystemEventLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -80,7 +83,10 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
@@ -118,7 +124,22 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 		verifyURLTitle();
 		verifyUUIDModels();
 
-		verifyArticleImages();
+		VerifyProcess verifyProcess =
+			new JournalServiceSystemEventVerifyProcess(
+				_journalArticleLocalService,
+				_journalArticleResourceLocalService, _systemEventLocalService);
+
+		verifyProcess.verify();
+	}
+
+	protected String getContextFromDLUrl(String url) {
+		int x = url.indexOf("/documents/");
+
+		if (x < 1) {
+			return StringPool.BLANK;
+		}
+
+		return url.substring(0, x);
 	}
 
 	@Reference(unbind = "-")
@@ -138,13 +159,6 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 	@Reference(unbind = "-")
 	protected void setDLAppLocalService(DLAppLocalService dlAppLocalService) {
 		_dlAppLocalService = dlAppLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setJournalArticleImageLocalService(
-		JournalArticleImageLocalService journalArticleImageLocalService) {
-
-		_journalArticleImageLocalService = journalArticleImageLocalService;
 	}
 
 	@Reference(unbind = "-")
@@ -186,6 +200,18 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 		ResourceLocalService resourceLocalService) {
 
 		_resourceLocalService = resourceLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setSystemEventLocalService(
+		SystemEventLocalService systemEventLocalService) {
+
+		_systemEventLocalService = systemEventLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setUserLocalService(UserLocalService userLocalService) {
+		_userLocalService = userLocalService;
 	}
 
 	protected void updateContentSearch(long groupId, String portletId)
@@ -290,6 +316,12 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 
 		String path = dynamicContentElement.getStringValue();
 
+		String context = getContextFromDLUrl(path);
+
+		if (!context.isEmpty()) {
+			path = path.replaceFirst(context, StringPool.BLANK);
+		}
+
 		String[] pathArray = StringUtil.split(path, CharPool.SLASH);
 
 		if (pathArray.length != 5) {
@@ -306,7 +338,8 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 
 			Node node = dynamicContentElement.node(0);
 
-			node.setText(path + StringPool.SLASH + fileEntry.getUuid());
+			node.setText(
+				context + path + StringPool.SLASH + fileEntry.getUuid());
 		}
 		catch (PortalException pe) {
 		}
@@ -324,6 +357,8 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 			PortalUtil.getClassNameId(JournalArticle.class),
 			article.getDDMStructureKey(), true);
 
+		_localeHelper._setLocale(article.getGroupId(), article.getCompanyId());
+
 		Fields ddmFields = _journalConverter.getDDMFields(
 			ddmStructure, article.getContent());
 
@@ -334,6 +369,8 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 
 			_journalArticleLocalService.updateJournalArticle(article);
 		}
+
+		_localeHelper._unsetLocale();
 	}
 
 	protected void updateElement(long groupId, Element element) {
@@ -368,43 +405,6 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 			ps.setInt(4, status);
 
 			ps.executeUpdate();
-		}
-	}
-
-	protected void updateImageElement(Element element) {
-		List<Element> dynamicElementElements = element.elements(
-			"dynamic-element");
-
-		for (Element dynamicElementElement : dynamicElementElements) {
-			updateImageElement(dynamicElementElement);
-		}
-
-		String type = element.attributeValue("type");
-
-		if (!type.equals("image")) {
-			return;
-		}
-
-		String elName = element.attributeValue("name");
-
-		Element dynamicContentElement = element.element("dynamic-content");
-
-		long articleImageId = GetterUtil.getLong(
-			dynamicContentElement.attributeValue("id"));
-
-		JournalArticleImage articleImage =
-			_journalArticleImageLocalService.fetchJournalArticleImage(
-				articleImageId);
-
-		if (articleImage == null) {
-			return;
-		}
-
-		if (!elName.equals(articleImage.getElName())) {
-			articleImage.setElName(elName);
-
-			_journalArticleImageLocalService.updateJournalArticleImage(
-				articleImage);
 		}
 	}
 
@@ -461,7 +461,7 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 					Property resourcePrimKey = PropertyFactoryUtil.forName(
 						"resourcePrimKey");
 
-					dynamicQuery.add(resourcePrimKey.le(0l));
+					dynamicQuery.add(resourcePrimKey.le(0L));
 				}
 
 			});
@@ -663,39 +663,6 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 
 					updateExpirationDate(
 						groupId, articleId, expirationDate, status);
-				}
-			}
-		}
-	}
-
-	protected void verifyArticleImages() throws Exception {
-		try (LoggingTimer loggingTimer = new LoggingTimer();
-			PreparedStatement ps = connection.prepareStatement(
-				"select id_ from JournalArticle where (content like " +
-					"'%type=\"image\"%') and DDMStructureKey != ''");
-			ResultSet rs = ps.executeQuery()) {
-
-			while (rs.next()) {
-				long id = rs.getLong("id_");
-
-				JournalArticle article = _journalArticleLocalService.getArticle(
-					id);
-
-				try {
-					Document document = SAXReaderUtil.read(
-						article.getContent());
-
-					Element rootElement = document.getRootElement();
-
-					for (Element element : rootElement.elements()) {
-						updateImageElement(element);
-					}
-				}
-				catch (Exception e) {
-					_log.error(
-						"Unable to update images for article " +
-							article.getId(),
-						e);
 				}
 			}
 		}
@@ -960,15 +927,62 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 	private AssetEntryLocalService _assetEntryLocalService;
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private DLAppLocalService _dlAppLocalService;
-	private JournalArticleImageLocalService _journalArticleImageLocalService;
 	private JournalArticleLocalService _journalArticleLocalService;
 	private JournalArticleResourceLocalService
 		_journalArticleResourceLocalService;
 	private JournalContentSearchLocalService _journalContentSearchLocalService;
 	private JournalConverter _journalConverter;
 	private JournalFolderLocalService _journalFolderLocalService;
+	private final LocaleHelper _localeHelper = new LocaleHelper();
 	private ResourceLocalService _resourceLocalService;
+	private SystemEventLocalService _systemEventLocalService;
+	private UserLocalService _userLocalService;
 	private final VerifyResourcePermissions _verifyResourcePermissions =
 		new VerifyResourcePermissions();
+
+	private class LocaleHelper {
+
+		private void _setLocale(long groupId, long companyId)
+			throws PortalException {
+
+			Locale siteDefaultLocale = _sitesDefaultLocale.get(groupId);
+
+			if (siteDefaultLocale == null) {
+				Locale companyDefaultLocale = _companiesDefaultLocale.get(
+					companyId);
+
+				if (companyDefaultLocale == null) {
+					User defaultUser = _userLocalService.getDefaultUser(
+						companyId);
+
+					companyDefaultLocale = LocaleUtil.fromLanguageId(
+						defaultUser.getLanguageId());
+					_companiesDefaultLocale.put(
+						companyId, companyDefaultLocale);
+				}
+
+				LocaleThreadLocal.setDefaultLocale(companyDefaultLocale);
+
+				siteDefaultLocale = PortalUtil.getSiteDefaultLocale(groupId);
+			}
+
+			LocaleThreadLocal.setSiteDefaultLocale(siteDefaultLocale);
+			_sitesDefaultLocale.put(groupId, siteDefaultLocale);
+		}
+
+		private void _unsetLocale() {
+			LocaleThreadLocal.setDefaultLocale(_initialCompanyLocale);
+			LocaleThreadLocal.setSiteDefaultLocale(_initialSiteLocale);
+		}
+
+		private final Map<Long, Locale> _companiesDefaultLocale =
+			new HashMap<>();
+		private final Locale _initialCompanyLocale =
+			LocaleThreadLocal.getDefaultLocale();
+		private final Locale _initialSiteLocale =
+			LocaleThreadLocal.getSiteDefaultLocale();
+		private final Map<Long, Locale> _sitesDefaultLocale = new HashMap<>();
+
+	}
 
 }

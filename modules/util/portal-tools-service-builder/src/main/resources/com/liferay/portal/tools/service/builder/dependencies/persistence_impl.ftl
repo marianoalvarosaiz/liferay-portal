@@ -849,11 +849,13 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	 */
 	@Override
 	public ${entity.name} fetchByPrimaryKey(Serializable primaryKey) {
-		${entity.name} ${entity.varName} = (${entity.name})entityCache.getResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey);
+		Serializable serializable = entityCache.getResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey);
 
-		if (${entity.varName} == _null${entity.name}) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		${entity.name} ${entity.varName} = (${entity.name})serializable;
 
 		if (${entity.varName} == null) {
 			Session session = null;
@@ -867,7 +869,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					cacheResult(${entity.varName});
 				}
 				else {
-					entityCache.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey, _null${entity.name});
+					entityCache.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -930,17 +932,19 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			Set<Serializable> uncachedPrimaryKeys = null;
 
 			for (Serializable primaryKey : primaryKeys) {
-				${entity.name} ${entity.varName} = (${entity.name})entityCache.getResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey);
+				Serializable serializable = entityCache.getResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey);
 
-				if (${entity.varName} == null) {
-					if (uncachedPrimaryKeys == null) {
-						uncachedPrimaryKeys = new HashSet<Serializable>();
+				if (serializable != nullModel) {
+					if (serializable == null) {
+						if (uncachedPrimaryKeys == null) {
+							uncachedPrimaryKeys = new HashSet<Serializable>();
+						}
+
+						uncachedPrimaryKeys.add(primaryKey);
 					}
-
-					uncachedPrimaryKeys.add(primaryKey);
-				}
-				else {
-					map.put(primaryKey, ${entity.varName});
+					else {
+						map.put(primaryKey, (${entity.name})serializable);
+					}
 				}
 			}
 
@@ -990,7 +994,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				}
 
 				for (Serializable primaryKey : uncachedPrimaryKeys) {
-					entityCache.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey, _null${entity.name});
+					entityCache.putResult(${entity.name}ModelImpl.ENTITY_CACHE_ENABLED, ${entity.name}Impl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1345,9 +1349,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						companyId = ${entity.varName}.getCompanyId();
 					}
 
-					for (${tempEntity.PKClassName} ${tempEntity.varName}PK : ${tempEntity.varName}PKs) {
-						${entity.varName}To${tempEntity.name}TableMapper.addTableMapping(companyId, pk, ${tempEntity.varName}PK);
-					}
+					${entity.varName}To${tempEntity.name}TableMapper.addTableMappings(companyId, pk, ${tempEntity.varName}PKs);
 				}
 
 				/**
@@ -1358,20 +1360,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				 */
 				@Override
 				public void add${tempEntity.names}(${entity.PKClassName} pk, List<${tempEntity.apiPackagePath}.model.${tempEntity.name}> ${tempEntity.varNames}) {
-					long companyId = 0;
-
-					${entity.name} ${entity.varName} = fetchByPrimaryKey(pk);
-
-					if (${entity.varName} == null) {
-						companyId = companyProvider.getCompanyId();
-					}
-					else {
-						companyId = ${entity.varName}.getCompanyId();
-					}
-
-					for (${tempEntity.apiPackagePath}.model.${tempEntity.name} ${tempEntity.varName} : ${tempEntity.varNames}) {
-						${entity.varName}To${tempEntity.name}TableMapper.addTableMapping(companyId, pk, ${tempEntity.varName}.getPrimaryKey());
-					}
+					add${tempEntity.names}(pk, ListUtil.toLongArray(${tempEntity.varNames}, ${tempEntity.apiPackagePath}.model.${tempEntity.name}.${textFormatter.format(textFormatter.format(tempEntity.getPKVarName(), 7), 0)}_ACCESSOR));
 				}
 
 				/**
@@ -1414,9 +1403,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				 */
 				@Override
 				public void remove${tempEntity.names}(${entity.PKClassName} pk, ${tempEntity.PKClassName}[] ${tempEntity.varName}PKs) {
-					for (${tempEntity.PKClassName} ${tempEntity.varName}PK : ${tempEntity.varName}PKs) {
-						${entity.varName}To${tempEntity.name}TableMapper.deleteTableMapping(pk, ${tempEntity.varName}PK);
-					}
+					${entity.varName}To${tempEntity.name}TableMapper.deleteTableMappings(pk, ${tempEntity.varName}PKs);
 				}
 
 				/**
@@ -1427,9 +1414,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				 */
 				@Override
 				public void remove${tempEntity.names}(${entity.PKClassName} pk, List<${tempEntity.apiPackagePath}.model.${tempEntity.name}> ${tempEntity.varNames}) {
-					for (${tempEntity.apiPackagePath}.model.${tempEntity.name} ${tempEntity.varName} : ${tempEntity.varNames}) {
-						${entity.varName}To${tempEntity.name}TableMapper.deleteTableMapping(pk, ${tempEntity.varName}.getPrimaryKey());
-					}
+					remove${tempEntity.names}(pk, ListUtil.toLongArray(${tempEntity.varNames}, ${tempEntity.apiPackagePath}.model.${tempEntity.name}.${textFormatter.format(textFormatter.format(tempEntity.getPKVarName(), 7), 0)}_ACCESSOR));
 				}
 
 				/**
@@ -1447,9 +1432,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 					remove${tempEntity.name}PKsSet.removeAll(new${tempEntity.name}PKsSet);
 
-					for (long remove${tempEntity.name}PK : remove${tempEntity.name}PKsSet) {
-						${entity.varName}To${tempEntity.name}TableMapper.deleteTableMapping(pk, remove${tempEntity.name}PK);
-					}
+					${entity.varName}To${tempEntity.name}TableMapper.deleteTableMappings(pk, ArrayUtil.toLongArray(remove${tempEntity.name}PKsSet));
 
 					new${tempEntity.name}PKsSet.removeAll(old${tempEntity.name}PKsSet);
 
@@ -1464,9 +1447,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						companyId = ${entity.varName}.getCompanyId();
 					}
 
-					for (long new${tempEntity.name}PK :new${tempEntity.name}PKsSet) {
-						${entity.varName}To${tempEntity.name}TableMapper.addTableMapping(companyId, pk, new${tempEntity.name}PK);
-					}
+					${entity.varName}To${tempEntity.name}TableMapper.addTableMappings(companyId, pk, ArrayUtil.toLongArray(new${tempEntity.name}PKsSet));
 				}
 
 				/**
@@ -1867,53 +1848,6 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					</#if>
 				</#list>
 			});
-	</#if>
-
-	private static final ${entity.name} _null${entity.name} = new ${entity.name}Impl() {
-
-		@Override
-		public Object clone() {
-			return this;
-		}
-
-		@Override
-		public CacheModel<${entity.name}> toCacheModel() {
-			return _null${entity.name}CacheModel;
-		}
-
-	};
-
-	private static final CacheModel<${entity.name}> _null${entity.name}CacheModel =
-
-	<#if entity.isMvccEnabled()>
-		new NullCacheModel();
-
-		private static class NullCacheModel implements CacheModel<${entity.name}>, MVCCModel {
-
-			@Override
-			public long getMvccVersion() {
-				return -1;
-			}
-
-			@Override
-			public void setMvccVersion(long mvccVersion) {
-			}
-
-			@Override
-			public ${entity.name} toEntityModel() {
-				return _null${entity.name};
-			}
-
-		}
-	<#else>
-		new CacheModel<${entity.name}>() {
-
-			@Override
-			public ${entity.name} toEntityModel() {
-				return _null${entity.name};
-			}
-
-		};
 	</#if>
 
 }
