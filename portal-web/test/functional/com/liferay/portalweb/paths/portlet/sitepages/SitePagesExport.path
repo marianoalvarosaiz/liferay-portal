@@ -24,6 +24,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>EXPORT_PROCESS_NAME</td>
+	<td>//input[contains(@id,'ExportPortlet_name')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>EXPORT_BUTTON</td>
 	<td>//button[contains(.,'Export') and contains(@type,'submit')]</td>
 	<td></td>
@@ -98,6 +103,28 @@
 <tr>
 	<td>CONTENT_CHOOSE_CONTENT_CONTENT_CHECKBOX</td>
 	<td>//ul[@class='portlet-list']//label[contains(.,'${key_contentName}')]/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--CURRENT-->
+<tr>
+	<td>CURRENT_STATUS</td>
+	<td>//div[normalize-space(text()='Current')]//*[@data-qa-id='row']//h6</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--PREVIOUS-->
+<tr>
+	<td>PREVIOUS_STATUS</td>
+	<td>//div[normalize-space(text()='Previous')]//*[@data-qa-id='row']//h6</td>
 	<td></td>
 </tr>
 <tr>

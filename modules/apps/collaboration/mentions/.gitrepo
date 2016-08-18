@@ -3,9 +3,8 @@
 ; https://github.com/git-commands/git-subrepo#readme for more information.
 ;
 [subrepo]
-	branch = 7.0.x
 	cmdver = liferay
-	commit = a27ed25392672fcb45f4ddff6f6d4ddfb8a648cb
+	commit = 07b90016ad991d27e94a4415d50a3861fb6961b0
 	mode = push
-	parent = 6e39e7f50af7916607926452dd91797962a53cef
-	remote = git@github.com:liferay-continuous-integration/com-liferay-mentions.git
+	parent = 081b8acc3e2ff156e9f91050604e1b84b80d770f
+	remote = git@github.com:liferay/com-liferay-mentions.git

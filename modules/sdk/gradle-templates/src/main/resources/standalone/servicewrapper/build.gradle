@@ -7,7 +7,7 @@ buildscript {
 		mavenLocal()
 
 		maven {
-			url "http://cdn.repository.liferay.com/nexus/content/groups/public"
+			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
 		}
 	}
 }
@@ -15,14 +15,14 @@ buildscript {
 apply plugin: "com.liferay.plugin"
 
 dependencies {
-	compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.0.0"
-	compile group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.0.0"
+	compileOnly group: "org.osgi", name: "org.osgi.compendium", version: "5.0.0"
 }
 
 repositories {
 	mavenLocal()
 
 	maven {
-		url "http://cdn.repository.liferay.com/nexus/content/groups/public"
+		url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
 	}
 }

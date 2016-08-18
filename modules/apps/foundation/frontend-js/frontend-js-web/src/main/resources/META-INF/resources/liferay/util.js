@@ -293,9 +293,13 @@
 		},
 
 		focusFormField: function(el) {
+			var doc = $(document);
+
 			var interacting = false;
 
-			var doc = $(document);
+			el = Util.getDOM(el);
+
+			el = $(el);
 
 			doc.on(
 				'click.focusFormField',
@@ -306,12 +310,24 @@
 				}
 			);
 
-			el = Util.getDOM(el);
-
-			el = $(el);
-
 			if (!interacting && Util.inBrowserView(el)) {
-				el.focus();
+				var form = el.closest('form');
+
+				var focusable = !el.is(':disabled') && !el.is(':hidden');
+
+				if (!form.length || focusable) {
+					el.focus();
+				}
+				else {
+					var portletName = form.data('fm-namespace');
+
+					Liferay.once(
+						portletName + 'formReady',
+						function() {
+							el.focus();
+						}
+					);
+				}
 			}
 		},
 
@@ -923,7 +939,7 @@
 		showCapsLock: function(event, span) {
 			var keyCode = event.keyCode ? event.keyCode : event.which;
 
-			var shiftKeyCode = keyCode == 16 ? true : false;
+			var shiftKeyCode = keyCode === 16;
 
 			var shiftKey = event.shiftKey ? event.shiftKey : shiftKeyCode;
 
@@ -1323,12 +1339,22 @@
 
 			ddmURL.setParameter('scopeTitle', config.title);
 
+			if ('searchRestriction' in config) {
+				ddmURL.setParameter('searchRestriction', config.searchRestriction);
+				ddmURL.setParameter('searchRestrictionClassNameId', config.searchRestrictionClassNameId);
+				ddmURL.setParameter('searchRestrictionClassPK', config.searchRestrictionClassPK);
+			}
+
 			if ('showAncestorScopes' in config) {
 				ddmURL.setParameter('showAncestorScopes', config.showAncestorScopes);
 			}
 
 			if ('showBackURL' in config) {
 				ddmURL.setParameter('showBackURL', config.showBackURL);
+			}
+
+			if ('showCacheableInput' in config) {
+				ddmURL.setParameter('showCacheableInput', config.showCacheableInput);
 			}
 
 			if ('showHeader' in config) {
@@ -1583,7 +1609,6 @@
 					}
 				);
 			}
-
 		},
 		['aui-base', 'liferay-util-window']
 	);

@@ -1,4 +1,4 @@
-define("frontend-js-metal-web@1.0.6/metal-alert/src/Alert.soy", ['exports', 'metal-component/src/Component', 'metal-soy/src/Soy'], function (exports, _Component2, _Soy) {
+define("frontend-js-metal-web@1.0.8/metal-alert/src/Alert.soy", ['exports', 'metal-component/src/Component', 'metal-soy/src/Soy'], function (exports, _Component2, _Soy) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -93,6 +93,7 @@ define("frontend-js-metal-web@1.0.6/metal-alert/src/Alert.soy", ['exports', 'met
      * @suppress {checkTypes}
      */
     function $render(opt_data, opt_ignored, opt_ijData) {
+      opt_data = opt_data || {};
       soy.asserts.assertType(opt_data.body == null || opt_data.body instanceof Function || opt_data.body instanceof soydata.UnsanitizedText || goog.isString(opt_data.body), 'body', opt_data.body, '?soydata.SanitizedHtml|string|undefined');
       var body = /** @type {?soydata.SanitizedHtml|string|undefined} */opt_data.body;
       ie_open('div', null, null, 'class', 'alert' + (opt_data.dismissible ? ' alert-dismissible' : '') + (opt_data.elementClasses ? ' ' + opt_data.elementClasses : ''), 'role', 'alert');

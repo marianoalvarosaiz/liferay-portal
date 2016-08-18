@@ -98,9 +98,17 @@
 
 		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
 
-		<execute function="AssertClick" locator1="Blogs#PERMISSIONS" value1="Permissions" />
+		<if>
+			<isset var="entriesPermissions" />
+			<then>
+				<execute function="AssertClick" locator1="MenuItem#ENTRIES_PERMISSIONS" value1="Entries Permissions" />
+			</then>
+			<else>
+				<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
+			</else>
+		</if>
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoBlogsEntriesCP">
@@ -122,7 +130,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoBlogsEntryPG">
@@ -159,7 +167,7 @@
 		<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE_LINK" value1="${dmDocumentTitle}" />
 		<execute function="AssertClick#assertTextClick" locator1="Button#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoDMFolderPG">
@@ -172,7 +180,7 @@
 		<execute function="Click" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_VERTICAL_ELLIPSIS" />
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoDocumentsAndMediaHomeFolderPG">
@@ -194,7 +202,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoMessageBoardsCategoryPG">
@@ -204,7 +212,7 @@
 
 		<execute function="AssertClick" locator1="Button#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoMessageBoardsPG">
@@ -214,7 +222,7 @@
 
 		<execute function="AssertClick" locator1="Button#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoMessageBoardsThreadReplyPG">
@@ -233,7 +241,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoPagePG">
@@ -257,7 +265,7 @@
 
 		<execute function="Click" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoPollPermissionsCP">
@@ -267,7 +275,7 @@
 
 		<execute function="AssertClick" locator1="Polls#ACTIONS_DROPDOWN_PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoSitepageCP">
@@ -281,7 +289,7 @@
 
 		<execute function="Click" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoSiteTeamsCP">
@@ -298,7 +306,7 @@
 		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoSiteTemplateCP">

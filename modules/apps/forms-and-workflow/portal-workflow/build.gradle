@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins", version: "latest.release"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.defaults", version: "latest.release"
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.lang.merger", version: "latest.release"
 	}
 
@@ -8,7 +8,7 @@ buildscript {
 		mavenLocal()
 
 		maven {
-			url "http://cdn.repository.liferay.com/nexus/content/groups/public"
+			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
 		}
 	}
 }

@@ -240,8 +240,9 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 
 	@Override
 	public String getViewStructuresBackURL(
-		LiferayPortletRequest liferayPortletRequest,
-		LiferayPortletResponse liferayPortletResponse) throws Exception {
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse)
+		throws Exception {
 
 		return ParamUtil.getString(liferayPortletRequest, "backURL");
 	}
@@ -310,6 +311,25 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 	}
 
 	@Override
+	public boolean isEnableSelectStructureLink(
+		DDMStructure structure, long classPK) {
+
+		if (structure.getStructureId() == classPK) {
+			return false;
+		}
+
+		if (classPK == 0) {
+			return true;
+		}
+
+		if (!formsCycle(structure, classPK)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean isShowAddStructureButton() {
 		String portletId = getPortletId();
 
@@ -345,6 +365,20 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 
 	@Override
 	public boolean isVersioningEnabled() {
+		return false;
+	}
+
+	protected boolean formsCycle(DDMStructure structure, long classPK) {
+		while ((structure != null) && (structure.getParentStructureId() != 0)) {
+			if (structure.getParentStructureId() == classPK) {
+				return true;
+			}
+			else {
+				structure = DDMStructureLocalServiceUtil.fetchStructure(
+					structure.getParentStructureId());
+			}
+		}
+
 		return false;
 	}
 
