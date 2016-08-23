@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.exception.RSSFeedException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.image.ImageBag;
 import com.liferay.portal.kernel.image.ImageToolUtil;
+import com.liferay.portal.kernel.language.LanguageConstants;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -203,7 +204,6 @@ import com.liferay.portlet.PortletPreferencesImpl;
 import com.liferay.portlet.PortletPreferencesWrapper;
 import com.liferay.portlet.PortletRequestImpl;
 import com.liferay.portlet.PortletResponseImpl;
-import com.liferay.portlet.PortletURLImpl;
 import com.liferay.portlet.RenderRequestImpl;
 import com.liferay.portlet.RenderResponseImpl;
 import com.liferay.portlet.StateAwareResponseImpl;
@@ -664,11 +664,31 @@ public class PortalImpl implements Portal {
 
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-		String name = WebKeys.PORTLET_BREADCRUMBS;
+		boolean portletBreadcrumbEntry = false;
 
 		if (Validator.isNotNull(portletDisplay.getId()) &&
 			!portletDisplay.isFocused()) {
 
+			portletBreadcrumbEntry = true;
+		}
+
+		addPortletBreadcrumbEntry(
+			request, title, url, null, portletBreadcrumbEntry);
+	}
+
+	@Override
+	public void addPortletBreadcrumbEntry(
+		HttpServletRequest request, String title, String url,
+		Map<String, Object> data, boolean portletBreadcrumbEntry) {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		String name = WebKeys.PORTLET_BREADCRUMBS;
+
+		if (portletBreadcrumbEntry) {
 			name += StringPool.UNDERLINE + portletDisplay.getId();
 		}
 
@@ -845,8 +865,8 @@ public class PortalImpl implements Portal {
 			String param = enu.nextElement();
 			String[] values = actionRequest.getParameterValues(param);
 
-			if (renderParameters.get(
-					actionResponse.getNamespace() + param) == null) {
+			if (renderParameters.get(actionResponse.getNamespace() + param) ==
+					null) {
 
 				actionResponse.setRenderParameter(param, values);
 			}
@@ -1041,8 +1061,9 @@ public class PortalImpl implements Portal {
 
 			long companyId = PortalInstances.getCompanyId(request);
 
-			List<FriendlyURLResolver> friendlyURLResolvers =
-				FriendlyURLResolverRegistryUtil.getFriendlyURLResolvers();
+			Collection<FriendlyURLResolver> friendlyURLResolvers =
+				FriendlyURLResolverRegistryUtil.
+					getFriendlyURLResolversAsCollection();
 
 			for (FriendlyURLResolver friendlyURLResolver :
 					friendlyURLResolvers) {
@@ -1155,7 +1176,9 @@ public class PortalImpl implements Portal {
 				Locale siteDefaultLocale = getSiteDefaultLocale(
 					layout.getGroupId());
 
-				if (siteDefaultLocale.equals(locale)) {
+				if (siteDefaultLocale.equals(locale) &&
+					(PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE != 2)) {
+
 					return canonicalURL;
 				}
 
@@ -1733,8 +1756,7 @@ public class PortalImpl implements Portal {
 
 		if (Validator.isNull(PropsValues.COMPANY_SECURITY_STRANGERS_URL)) {
 			PortletURL createAccountURL = PortletURLFactoryUtil.create(
-				request, PortletKeys.LOGIN, themeDisplay.getPlid(),
-				PortletRequest.RENDER_PHASE);
+				request, PortletKeys.LOGIN, PortletRequest.RENDER_PHASE);
 
 			createAccountURL.setParameter(
 				"saveLastPath", Boolean.FALSE.toString());
@@ -2670,8 +2692,7 @@ public class PortalImpl implements Portal {
 		LayoutFriendlyURLComposite layoutFriendlyURLComposite =
 			friendlyURLResolver.getLayoutFriendlyURLComposite(
 				0, groupId, privateLayout, friendlyURL,
-				new HashMap<String, String[]>(),
-				new HashMap<String, Object>());
+				new HashMap<String, String[]>(), new HashMap<String, Object>());
 
 		return layoutFriendlyURLComposite.getLayout();
 	}
@@ -2813,8 +2834,9 @@ public class PortalImpl implements Portal {
 
 			long companyId = PortalInstances.getCompanyId(request);
 
-			List<FriendlyURLResolver> friendlyURLResolvers =
-				FriendlyURLResolverRegistryUtil.getFriendlyURLResolvers();
+			Collection<FriendlyURLResolver> friendlyURLResolvers =
+				FriendlyURLResolverRegistryUtil.
+					getFriendlyURLResolversAsCollection();
 
 			for (FriendlyURLResolver friendlyURLResolver :
 					friendlyURLResolvers) {
@@ -4060,10 +4082,14 @@ public class PortalImpl implements Portal {
 
 		StringBundler sb = new StringBundler(4);
 
-		boolean https =
-			(secure ||
-			 StringUtil.equalsIgnoreCase(
-				Http.HTTPS, PropsValues.WEB_SERVER_PROTOCOL));
+		boolean https = false;
+
+		if (secure ||
+			StringUtil.equalsIgnoreCase(
+				Http.HTTPS, PropsValues.WEB_SERVER_PROTOCOL)) {
+
+			https = true;
+		}
 
 		if (https) {
 			sb.append(Http.HTTPS_WITH_SLASH);
@@ -4081,7 +4107,7 @@ public class PortalImpl implements Portal {
 
 		if (!https) {
 			if (PropsValues.WEB_SERVER_HTTP_PORT == -1) {
-				if ((serverPort != Http.HTTP_PORT) &&
+				if ((serverPort != -1) && (serverPort != Http.HTTP_PORT) &&
 					(serverPort != Http.HTTPS_PORT)) {
 
 					sb.append(StringPool.COLON);
@@ -4097,7 +4123,7 @@ public class PortalImpl implements Portal {
 		}
 		else {
 			if (PropsValues.WEB_SERVER_HTTPS_PORT == -1) {
-				if ((serverPort != Http.HTTP_PORT) &&
+				if ((serverPort != -1) && (serverPort != Http.HTTP_PORT) &&
 					(serverPort != Http.HTTPS_PORT)) {
 
 					sb.append(StringPool.COLON);
@@ -5733,8 +5759,8 @@ public class PortalImpl implements Portal {
 			if (request != null) {
 				Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
 
-				PortletURL portletURL = new PortletURLImpl(
-					request, PortletKeys.DIRECTORY, layout.getPlid(),
+				PortletURL portletURL = PortletURLFactoryUtil.create(
+					request, PortletKeys.DIRECTORY, layout,
 					PortletRequest.RENDER_PHASE);
 
 				portletURL.setParameter(
@@ -6317,7 +6343,7 @@ public class PortalImpl implements Portal {
 
 		Locale locale = LocaleUtil.fromLanguageId(languageId);
 
-		String langDir = LanguageUtil.get(locale, "lang.dir");
+		String langDir = LanguageUtil.get(locale, LanguageConstants.KEY_DIR);
 
 		return langDir.equals("rtl");
 	}
@@ -7501,16 +7527,12 @@ public class PortalImpl implements Portal {
 
 		String portletCategory = portlet.getControlPanelEntryCategory();
 
-		if (portletCategory.equals(
-				PortletCategoryKeys.CONTROL_PANEL_APPS) ||
+		if (portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_APPS) ||
 			portletCategory.equals(
 				PortletCategoryKeys.CONTROL_PANEL_CONFIGURATION) ||
-			portletCategory.equals(
-				PortletCategoryKeys.CONTROL_PANEL_SITES) ||
-			portletCategory.equals(
-				PortletCategoryKeys.CONTROL_PANEL_SYSTEM) ||
-			portletCategory.equals(
-				PortletCategoryKeys.CONTROL_PANEL_USERS) ||
+			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_SITES) ||
+			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_SYSTEM) ||
+			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_USERS) ||
 			portletCategory.equals(
 				PortletCategoryKeys.USER_MY_ACCOUNT)) {
 
@@ -8152,7 +8174,6 @@ public class PortalImpl implements Portal {
 	private static final String _LOCALHOST = "localhost";
 
 	private static final Locale _NULL_LOCALE;
-
 	private static final MethodHandler _resetCDNHostsMethodHandler =
 		new MethodHandler(new MethodKey(PortalUtil.class, "resetCDNHosts"));
 

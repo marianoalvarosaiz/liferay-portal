@@ -23,10 +23,24 @@
 		<execute function="AssertClick" locator1="MenuItem#REPOSITORY" value1="Repository" />
 	</command>
 
+	<command name="gotoCheckedOutDocument">
+		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
+
+		<execute function="AssertClick" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TITLE" value1="${dmCheckedOutDocumentTitle}" />
+	</command>
+
 	<command name="gotoDocumentCP">
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 
-		<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE_LINK" value1="${dmDocumentTitle}" />
+		<if>
+			<condition function="IsElementPresent" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE_ACTIVE" />
+			<then>
+				<execute function="AssertClick" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
+			</then>
+			<else>
+				<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE_LINK" value1="${dmDocumentTitle}" />
+			</else>
+		</if>
 	</command>
 
 	<command name="gotoDocumentDetails">
@@ -69,7 +83,7 @@
 	</command>
 
 	<command name="gotoHomeCP">
-		<execute function="AssertClick#assertTextClickAtAndWait" locator1="DocumentsAndMedia#BREADCRUMB_HOME" value1="HOME" />
+		<execute function="AssertClick#assertTextClickAt" locator1="DocumentsAndMedia#BREADCRUMB_HOME" value1="HOME" />
 	</command>
 
 	<command name="gotoMetadataSets">

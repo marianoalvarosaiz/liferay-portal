@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -42,6 +41,8 @@ import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -4276,12 +4277,14 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	 */
 	@Override
 	public AssetEntry fetchByPrimaryKey(Serializable primaryKey) {
-		AssetEntry assetEntry = (AssetEntry)entityCache.getResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
 				AssetEntryImpl.class, primaryKey);
 
-		if (assetEntry == _nullAssetEntry) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		AssetEntry assetEntry = (AssetEntry)serializable;
 
 		if (assetEntry == null) {
 			Session session = null;
@@ -4297,7 +4300,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 				}
 				else {
 					entityCache.putResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
-						AssetEntryImpl.class, primaryKey, _nullAssetEntry);
+						AssetEntryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4351,18 +4354,20 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			AssetEntry assetEntry = (AssetEntry)entityCache.getResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
 					AssetEntryImpl.class, primaryKey);
 
-			if (assetEntry == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, assetEntry);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (AssetEntry)serializable);
+				}
 			}
 		}
 
@@ -4404,7 +4409,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
-					AssetEntryImpl.class, primaryKey, _nullAssetEntry);
+					AssetEntryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4774,10 +4779,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 			companyId = assetEntry.getCompanyId();
 		}
 
-		for (long assetCategoryPK : assetCategoryPKs) {
-			assetEntryToAssetCategoryTableMapper.addTableMapping(companyId, pk,
-				assetCategoryPK);
-		}
+		assetEntryToAssetCategoryTableMapper.addTableMappings(companyId, pk,
+			assetCategoryPKs);
 	}
 
 	/**
@@ -4789,21 +4792,9 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	@Override
 	public void addAssetCategories(long pk,
 		List<com.liferay.asset.kernel.model.AssetCategory> assetCategories) {
-		long companyId = 0;
-
-		AssetEntry assetEntry = fetchByPrimaryKey(pk);
-
-		if (assetEntry == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = assetEntry.getCompanyId();
-		}
-
-		for (com.liferay.asset.kernel.model.AssetCategory assetCategory : assetCategories) {
-			assetEntryToAssetCategoryTableMapper.addTableMapping(companyId, pk,
-				assetCategory.getPrimaryKey());
-		}
+		addAssetCategories(pk,
+			ListUtil.toLongArray(assetCategories,
+				com.liferay.asset.kernel.model.AssetCategory.CATEGORY_ID_ACCESSOR));
 	}
 
 	/**
@@ -4849,10 +4840,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	 */
 	@Override
 	public void removeAssetCategories(long pk, long[] assetCategoryPKs) {
-		for (long assetCategoryPK : assetCategoryPKs) {
-			assetEntryToAssetCategoryTableMapper.deleteTableMapping(pk,
-				assetCategoryPK);
-		}
+		assetEntryToAssetCategoryTableMapper.deleteTableMappings(pk,
+			assetCategoryPKs);
 	}
 
 	/**
@@ -4864,10 +4853,9 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	@Override
 	public void removeAssetCategories(long pk,
 		List<com.liferay.asset.kernel.model.AssetCategory> assetCategories) {
-		for (com.liferay.asset.kernel.model.AssetCategory assetCategory : assetCategories) {
-			assetEntryToAssetCategoryTableMapper.deleteTableMapping(pk,
-				assetCategory.getPrimaryKey());
-		}
+		removeAssetCategories(pk,
+			ListUtil.toLongArray(assetCategories,
+				com.liferay.asset.kernel.model.AssetCategory.CATEGORY_ID_ACCESSOR));
 	}
 
 	/**
@@ -4886,10 +4874,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 		removeAssetCategoryPKsSet.removeAll(newAssetCategoryPKsSet);
 
-		for (long removeAssetCategoryPK : removeAssetCategoryPKsSet) {
-			assetEntryToAssetCategoryTableMapper.deleteTableMapping(pk,
-				removeAssetCategoryPK);
-		}
+		assetEntryToAssetCategoryTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeAssetCategoryPKsSet));
 
 		newAssetCategoryPKsSet.removeAll(oldAssetCategoryPKsSet);
 
@@ -4904,10 +4890,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 			companyId = assetEntry.getCompanyId();
 		}
 
-		for (long newAssetCategoryPK : newAssetCategoryPKsSet) {
-			assetEntryToAssetCategoryTableMapper.addTableMapping(companyId, pk,
-				newAssetCategoryPK);
-		}
+		assetEntryToAssetCategoryTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newAssetCategoryPKsSet));
 	}
 
 	/**
@@ -5100,10 +5084,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 			companyId = assetEntry.getCompanyId();
 		}
 
-		for (long assetTagPK : assetTagPKs) {
-			assetEntryToAssetTagTableMapper.addTableMapping(companyId, pk,
-				assetTagPK);
-		}
+		assetEntryToAssetTagTableMapper.addTableMappings(companyId, pk,
+			assetTagPKs);
 	}
 
 	/**
@@ -5115,21 +5097,9 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	@Override
 	public void addAssetTags(long pk,
 		List<com.liferay.asset.kernel.model.AssetTag> assetTags) {
-		long companyId = 0;
-
-		AssetEntry assetEntry = fetchByPrimaryKey(pk);
-
-		if (assetEntry == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = assetEntry.getCompanyId();
-		}
-
-		for (com.liferay.asset.kernel.model.AssetTag assetTag : assetTags) {
-			assetEntryToAssetTagTableMapper.addTableMapping(companyId, pk,
-				assetTag.getPrimaryKey());
-		}
+		addAssetTags(pk,
+			ListUtil.toLongArray(assetTags,
+				com.liferay.asset.kernel.model.AssetTag.TAG_ID_ACCESSOR));
 	}
 
 	/**
@@ -5174,9 +5144,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	 */
 	@Override
 	public void removeAssetTags(long pk, long[] assetTagPKs) {
-		for (long assetTagPK : assetTagPKs) {
-			assetEntryToAssetTagTableMapper.deleteTableMapping(pk, assetTagPK);
-		}
+		assetEntryToAssetTagTableMapper.deleteTableMappings(pk, assetTagPKs);
 	}
 
 	/**
@@ -5188,10 +5156,9 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	@Override
 	public void removeAssetTags(long pk,
 		List<com.liferay.asset.kernel.model.AssetTag> assetTags) {
-		for (com.liferay.asset.kernel.model.AssetTag assetTag : assetTags) {
-			assetEntryToAssetTagTableMapper.deleteTableMapping(pk,
-				assetTag.getPrimaryKey());
-		}
+		removeAssetTags(pk,
+			ListUtil.toLongArray(assetTags,
+				com.liferay.asset.kernel.model.AssetTag.TAG_ID_ACCESSOR));
 	}
 
 	/**
@@ -5210,10 +5177,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 		removeAssetTagPKsSet.removeAll(newAssetTagPKsSet);
 
-		for (long removeAssetTagPK : removeAssetTagPKsSet) {
-			assetEntryToAssetTagTableMapper.deleteTableMapping(pk,
-				removeAssetTagPK);
-		}
+		assetEntryToAssetTagTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeAssetTagPKsSet));
 
 		newAssetTagPKsSet.removeAll(oldAssetTagPKsSet);
 
@@ -5228,10 +5193,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 			companyId = assetEntry.getCompanyId();
 		}
 
-		for (long newAssetTagPK : newAssetTagPKsSet) {
-			assetEntryToAssetTagTableMapper.addTableMapping(companyId, pk,
-				newAssetTagPK);
-		}
+		assetEntryToAssetTagTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newAssetTagPKsSet));
 	}
 
 	/**
@@ -5305,22 +5268,4 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AssetEntry exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No AssetEntry exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(AssetEntryPersistenceImpl.class);
-	private static final AssetEntry _nullAssetEntry = new AssetEntryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<AssetEntry> toCacheModel() {
-				return _nullAssetEntryCacheModel;
-			}
-		};
-
-	private static final CacheModel<AssetEntry> _nullAssetEntryCacheModel = new CacheModel<AssetEntry>() {
-			@Override
-			public AssetEntry toEntityModel() {
-				return _nullAssetEntry;
-			}
-		};
 }

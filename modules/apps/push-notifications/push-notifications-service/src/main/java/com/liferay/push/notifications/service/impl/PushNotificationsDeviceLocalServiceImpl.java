@@ -23,7 +23,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.push.notifications.messaging.DestinationNames;
+import com.liferay.push.notifications.constants.PushNotificationsDestinationNames;
 import com.liferay.push.notifications.model.PushNotificationsDevice;
 import com.liferay.push.notifications.sender.BaseResponse;
 import com.liferay.push.notifications.sender.PushNotificationsSender;
@@ -67,13 +67,15 @@ public class PushNotificationsDeviceLocalServiceImpl
 
 	@Override
 	public void afterPropertiesSet() {
+		super.afterPropertiesSet();
+
 		Bundle bundle = FrameworkUtil.getBundle(
 			PushNotificationsDeviceLocalServiceImpl.class);
 
-		BundleContext _bundleContext = bundle.getBundleContext();
+		BundleContext bundleContext = bundle.getBundleContext();
 
 		_serviceTrackerMap = ServiceTrackerMapFactory.singleValueMap(
-			_bundleContext, PushNotificationsSender.class, "platform");
+			bundleContext, PushNotificationsSender.class, "platform");
 
 		_serviceTrackerMap.open();
 	}
@@ -92,6 +94,8 @@ public class PushNotificationsDeviceLocalServiceImpl
 
 	@Override
 	public void destroy() {
+		super.destroy();
+
 		_serviceTrackerMap.close();
 	}
 
@@ -160,7 +164,8 @@ public class PushNotificationsDeviceLocalServiceImpl
 		finally {
 			if (exception != null) {
 				MessageBusUtil.sendMessage(
-					DestinationNames.PUSH_NOTIFICATION_RESPONSE,
+					PushNotificationsDestinationNames.
+						PUSH_NOTIFICATION_RESPONSE,
 					new BaseResponse(platform, exception));
 			}
 		}

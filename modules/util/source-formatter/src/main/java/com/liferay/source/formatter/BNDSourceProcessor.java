@@ -14,17 +14,22 @@
 
 package com.liferay.source.formatter;
 
+import aQute.bnd.osgi.Constants;
+
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.NaturalOrderStringComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ImportPackage;
 import com.liferay.portal.tools.ImportsFormatter;
 
 import java.io.File;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,7 +63,7 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		if (dirName.endsWith("-taglib-web")) {
 			String newDirName = dirName.substring(0, dirName.length() - 4);
 
-			processErrorMessage(
+			processMessage(
 				fileName,
 				"Rename module '" + dirName + "' to '" + newDirName + "'");
 		}
@@ -77,9 +82,15 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 			String expectedBundleName =
 				"liferay" + StringUtil.removeChars(dirName, CharPool.DASH);
 
-			if (!strippedBundleName.equalsIgnoreCase(expectedBundleName)) {
-				processErrorMessage(fileName, "Bundle-Name: " + fileName);
+			if (!StringUtil.equalsIgnoreCase(
+					strippedBundleName, expectedBundleName)) {
+
+				processMessage(fileName, "Bundle-Name");
 			}
+		}
+
+		if (dirName.contains("-import-") || dirName.contains("-private-")) {
+			return;
 		}
 
 		matcher = _bundleSymbolicNamePattern.matcher(content);
@@ -89,16 +100,56 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 			String expectedBundleSymbolicName =
 				"com.liferay." +
-					StringUtil.replace(
-						dirName, StringPool.DASH, StringPool.PERIOD);
+					StringUtil.replace(dirName, CharPool.DASH, CharPool.PERIOD);
 
-			if (!expectedBundleSymbolicName.contains(".import.") &&
-				!expectedBundleSymbolicName.contains(".private.") &&
-				!bundleSymbolicName.equalsIgnoreCase(
-					expectedBundleSymbolicName)) {
+			if (!StringUtil.equalsIgnoreCase(
+					bundleSymbolicName, expectedBundleSymbolicName)) {
 
-				processErrorMessage(
-					fileName, "Bundle-SymbolicName: " + fileName);
+				processMessage(fileName, "Bundle-SymbolicName");
+			}
+		}
+
+		matcher = _webContextPathNamePattern.matcher(content);
+
+		if (matcher.find()) {
+			String webContextPath = matcher.group(1);
+
+			if (!webContextPath.equals("/" + dirName)) {
+				processMessage(fileName, "Web-ContextPath");
+			}
+		}
+	}
+
+	protected void checkWildcardImports(
+		String fileName, String absolutePath, String content, Pattern pattern) {
+
+		if (absolutePath.contains("/portal-kernel/") ||
+			absolutePath.contains("/util-bridges/") ||
+			absolutePath.contains("/util-java/") ||
+			absolutePath.contains("/util-taglib/") ||
+			fileName.endsWith("/system.packages.extra.bnd")) {
+
+			return;
+		}
+
+		Matcher matcher = pattern.matcher(content);
+
+		if (!matcher.find()) {
+			return;
+		}
+
+		String imports = matcher.group(2);
+
+		matcher = _wilcardImportPattern.matcher(imports);
+
+		while (matcher.find()) {
+			String wildcardImport = matcher.group(1);
+
+			if (wildcardImport.matches("^!?com\\.liferay\\..+")) {
+				processMessage(
+					fileName,
+					"Do not use wildcard in Export-Package '" + wildcardImport +
+						"'");
 			}
 		}
 	}
@@ -119,27 +170,29 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 		if (fileName.endsWith("-web/bnd.bnd") &&
 			content.contains("Liferay-Require-SchemaVersion: 1.0.0")) {
 
-			processErrorMessage(
+			processMessage(
 				fileName,
 				"Do not include the header Liferay-Require-SchemaVersion in " +
-					"web modules: " + fileName);
+					"web modules");
 		}
 
 		content = StringUtil.replace(content, " \\\n", "\\\n");
 
 		Matcher matcher = _incorrectTabPattern.matcher(content);
 
-		while (matcher.find()) {
+		if (matcher.find()) {
 			content = StringUtil.replaceFirst(
 				content, matcher.group(1), StringPool.TAB, matcher.start());
 		}
 
 		matcher = _singleValueOnMultipleLinesPattern.matcher(content);
 
-		while (matcher.find()) {
+		if (matcher.find()) {
 			content = StringUtil.replaceFirst(
 				content, matcher.group(1), StringPool.SPACE, matcher.start());
 		}
+
+		checkWildcardImports(fileName, absolutePath, content, _exportsPattern);
 
 		ImportsFormatter importsFormatter = new BNDImportsFormatter();
 
@@ -148,18 +201,76 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 		checkDirectoryAndBundleName(fileName, absolutePath, content);
 
+		content = formatBundleClassPath(content);
+
 		if (portalSource && isModulesFile(absolutePath) &&
 			!fileName.endsWith("test-bnd.bnd")) {
 
 			content = formatIncludeResource(content);
 		}
 
-		return sortDefinitions(content);
+		return sortDefinitions(fileName, content, new DefinitionComparator());
 	}
 
 	@Override
 	protected List<String> doGetFileNames() throws Exception {
 		return getFileNames(new String[0], getIncludes());
+	}
+
+	protected String formatBundleClassPath(String content) {
+		Matcher matcher = _bundleClassPathPattern.matcher(content);
+
+		if (matcher.find()) {
+			return sortDefinitionProperties(
+				content, matcher.group(), new NaturalOrderStringComparator());
+		}
+
+		return content;
+	}
+
+	@Override
+	protected String formatDefinitionKey(
+		String fileName, String content, String definitionKey) {
+
+		Map<String, String> generalDefinitionKeysMap = getDefinitionKeysMap();
+
+		String lowerCaseDefinitionKey = StringUtil.toLowerCase(definitionKey);
+
+		String correctKey = generalDefinitionKeysMap.get(
+			lowerCaseDefinitionKey);
+
+		if (correctKey == null) {
+			int pos = fileName.lastIndexOf(StringPool.SLASH);
+
+			String shortFileName = fileName.substring(pos + 1);
+
+			Map<String, Map<String, String>> fileSpecificDefinitionKeysMap =
+				getFileSpecificDefinitionKeysMap();
+
+			Map<String, String> definitionKeysMap =
+				fileSpecificDefinitionKeysMap.get(shortFileName);
+
+			if (definitionKeysMap != null) {
+				correctKey = definitionKeysMap.get(lowerCaseDefinitionKey);
+			}
+		}
+
+		if (correctKey == null) {
+			processMessage(fileName, "Unknown key \"" + definitionKey + "\"");
+
+			return content;
+		}
+
+		if (correctKey.equals(definitionKey)) {
+			return content;
+		}
+
+		if (content.startsWith(definitionKey)) {
+			return StringUtil.replaceFirst(content, definitionKey, correctKey);
+		}
+
+		return StringUtil.replace(
+			content, "\n" + definitionKey + ":", "\n" + correctKey + ":");
 	}
 
 	protected String formatIncludeResource(String content) {
@@ -212,88 +323,119 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 			return StringUtil.replace(content, includeResources, replacement);
 		}
 
-		return sortIncludeResources(content, includeResources);
+		return sortDefinitionProperties(
+			content, includeResources, new IncludeResourceComparator());
 	}
 
-	protected String sortDefinitions(String content) {
-		String previousDefinition = null;
-
-		DefinitionComparator definitionComparator = new DefinitionComparator();
-
-		Matcher matcher = _bndDefinitionPattern.matcher(content);
-
-		while (matcher.find()) {
-			String definition = matcher.group();
-
-			if (Validator.isNotNull(matcher.group(1))) {
-				definition = definition.substring(0, definition.length() - 1);
-			}
-
-			if (Validator.isNotNull(previousDefinition)) {
-				int value = definitionComparator.compare(
-					previousDefinition, definition);
-
-				if (value > 0) {
-					content = StringUtil.replaceFirst(
-						content, previousDefinition, definition);
-					content = StringUtil.replaceLast(
-						content, definition, previousDefinition);
-
-					return content;
-				}
-
-				if (value == 0) {
-					return StringUtil.replaceFirst(
-						content, previousDefinition + "\n", StringPool.BLANK);
-				}
-			}
-
-			previousDefinition = definition;
+	protected Map<String, String> getDefinitionKeysMap() {
+		if (_definitionKeysMap != null) {
+			return _definitionKeysMap;
 		}
 
-		return content;
+		Map<String, String> definitionKeysMap = new HashMap<>();
+
+		definitionKeysMap = populateDefinitionKeysMap(
+			ArrayUtil.append(
+				Constants.BUNDLE_SPECIFIC_HEADERS, Constants.headers,
+				Constants.options));
+
+		_definitionKeysMap = definitionKeysMap;
+
+		return _definitionKeysMap;
 	}
 
-	protected String sortIncludeResources(
-		String content, String includeResources) {
+	protected Map<String, Map<String, String>>
+		getFileSpecificDefinitionKeysMap() {
 
-		String[] lines = StringUtil.splitLines(includeResources);
+		if (_fileSpecificDefinitionKeysMap != null) {
+			return _fileSpecificDefinitionKeysMap;
+		}
+
+		Map<String, Map<String, String>> fileSpecificDefinitionKeysMap =
+			new HashMap<>();
+
+		fileSpecificDefinitionKeysMap.put(
+			"app.bnd",
+			populateDefinitionKeysMap(
+				"Liferay-Releng-App-Description", "Liferay-Releng-App-Title",
+				"Liferay-Releng-Bundle", "Liferay-Releng-Category",
+				"Liferay-Releng-Demo-Url", "Liferay-Releng-Deprecated",
+				"Liferay-Releng-Labs", "Liferay-Releng-Marketplace",
+				"Liferay-Releng-Portal-Required", "Liferay-Releng-Public",
+				"Liferay-Releng-Restart-Required", "Liferay-Releng-Support-Url",
+				"Liferay-Releng-Supported"));
+		fileSpecificDefinitionKeysMap.put(
+			"bnd.bnd",
+			populateDefinitionKeysMap(
+				"-metatype-inherit", "Can-Redefine-Classes",
+				"Can-Retransform-Classes", "Implementation-Version",
+				"JPM-Command", "Liferay-Export-JS-Submodules",
+				"Liferay-JS-Config", "Liferay-Releng-App-Description",
+				"Liferay-Releng-Module-Group-Description",
+				"Liferay-Releng-Module-Group-Title",
+				"Liferay-Require-SchemaVersion", "Liferay-Service",
+				"Liferay-Theme-Contributor-Type",
+				"Liferay-Theme-Contributor-Weight", "Main-Class",
+				"Premain-Class", "Web-ContextPath"));
+		fileSpecificDefinitionKeysMap.put(
+			"common.bnd",
+			populateDefinitionKeysMap(
+				"Git-Descriptor", "Git-SHA", "Javac-Compiler", "Javac-Debug",
+				"Javac-Deprecation", "Javac-Encoding",
+				"Liferay-Portal-Build-Date", "Liferay-Portal-Build-Number",
+				"Liferay-Portal-Build-Time", "Liferay-Portal-Code-Name",
+				"Liferay-Portal-Parent-Build-Number",
+				"Liferay-Portal-Release-Info", "Liferay-Portal-Server-Info",
+				"Liferay-Portal-Version"));
+
+		_fileSpecificDefinitionKeysMap = fileSpecificDefinitionKeysMap;
+
+		return _fileSpecificDefinitionKeysMap;
+	}
+
+	protected Map<String, String> populateDefinitionKeysMap(String... keys) {
+		Map<String, String> definitionKeysMap = new HashMap<>();
+
+		for (String key : keys) {
+			definitionKeysMap.put(StringUtil.toLowerCase(key), key);
+		}
+
+		return definitionKeysMap;
+	}
+
+	protected String sortDefinitionProperties(
+		String content, String properties, Comparator<String> comparator) {
+
+		String[] lines = StringUtil.splitLines(properties);
 
 		if (lines.length == 1) {
 			return content;
 		}
 
-		String previousIncludeResource = null;
-
-		IncludeResourceComparator includeResourceComparator =
-			new IncludeResourceComparator();
+		String previousProperty = null;
 
 		for (int i = 1; i < lines.length; i++) {
-			String includeResource = StringUtil.trim(lines[i]);
+			String property = StringUtil.trim(lines[i]);
 
-			if (includeResource.endsWith(",\\")) {
-				includeResource = includeResource.substring(
-					0, includeResource.length() - 2);
+			if (property.endsWith(",\\")) {
+				property = property.substring(0, property.length() - 2);
 			}
 
-			if (previousIncludeResource != null) {
-				int value = includeResourceComparator.compare(
-					previousIncludeResource, includeResource);
+			if (previousProperty != null) {
+				int value = comparator.compare(previousProperty, property);
 
 				if (value > 0) {
 					String replacement = StringUtil.replaceFirst(
-						includeResources, previousIncludeResource,
-						includeResource);
+						properties, previousProperty, property);
 
 					replacement = StringUtil.replaceLast(
-						replacement, includeResource, previousIncludeResource);
+						replacement, property, previousProperty);
 
-					return StringUtil.replace(
-						content, includeResources, replacement);
+					return StringUtil.replace(content, properties, replacement);
 				}
 			}
 
-			previousIncludeResource = includeResource;
+			previousProperty = property;
 		}
 
 		return content;
@@ -309,26 +451,31 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 	private static final String[] _INCLUDES = new String[] {"**/*.bnd"};
 
-	private final Pattern _bndDefinitionPattern = Pattern.compile(
-		"^[A-Za-z-][\\s\\S]*?([^\\\\]\n|\\Z)", Pattern.MULTILINE);
+	private final Pattern _bundleClassPathPattern = Pattern.compile(
+		"^Bundle-ClassPath:[\\s\\S]*?([^\\\\]\n|\\Z)", Pattern.MULTILINE);
 	private final Pattern _bundleNamePattern = Pattern.compile(
 		"^Bundle-Name: (.*)\n", Pattern.MULTILINE);
 	private final Pattern _bundleSymbolicNamePattern = Pattern.compile(
 		"^Bundle-SymbolicName: (.*)\n", Pattern.MULTILINE);
+	private Map<String, String> _definitionKeysMap;
 	private final Pattern _exportsPattern = Pattern.compile(
-		"\nExport-Package:\\\\\n(.*?\n)[^\t]",
+		"\nExport-Package:(\\\\\n| )(.*?\n|\\Z)[^\t]",
 		Pattern.DOTALL | Pattern.MULTILINE);
+	private Map<String, Map<String, String>> _fileSpecificDefinitionKeysMap;
 	private final Pattern _importsPattern = Pattern.compile(
-		"\nImport-Package:\\\\\n(.*?\n)[^\t]",
+		"\nImport-Package:(\\\\\n| )(.*?\n|\\Z)[^\t]",
 		Pattern.DOTALL | Pattern.MULTILINE);
 	private final Pattern _includeResourcePattern = Pattern.compile(
-		"^((-liferay)?-includeresource|Include-Resource):[\\s\\S]*?([^\\\\]" +
-			"\n|\\Z)",
+		"^(-includeresource|Include-Resource):[\\s\\S]*?([^\\\\]\n|\\Z)",
 		Pattern.MULTILINE);
 	private final Pattern _incorrectTabPattern = Pattern.compile(
 		"\n[^\t].*:\\\\\n(\t{2,})[^\t]");
 	private final Pattern _singleValueOnMultipleLinesPattern = Pattern.compile(
 		"\n.*:(\\\\\n\t).*(\n[^\t]|\\Z)");
+	private final Pattern _webContextPathNamePattern = Pattern.compile(
+		"^Web-ContextPath: (.*)\n", Pattern.MULTILINE);
+	private final Pattern _wilcardImportPattern = Pattern.compile(
+		"(\\S+\\*)(,\\\\\n|\n|\\Z)");
 
 	private static class DefinitionComparator implements Comparator<String> {
 

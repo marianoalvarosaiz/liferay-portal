@@ -76,8 +76,7 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 		traverseDDMFormFieldValues(
 			ddmFormValues.getDDMFormFieldValues(),
-			ddmForm.getDDMFormFieldsMap(false),
-			ddmFormEvaluationResult.getDDMFormFieldEvaluationResultsMap());
+			ddmForm.getDDMFormFieldsMap(false), ddmFormEvaluationResult);
 	}
 
 	protected JSONArray createJSONArray(String fieldName, String json)
@@ -189,8 +188,7 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 	protected void traverseDDMFormFieldValues(
 			List<DDMFormFieldValue> ddmFormFieldValues,
 			Map<String, DDMFormField> ddmFormFieldsMap,
-			Map<String, DDMFormFieldEvaluationResult>
-				ddmFormFieldEvaluationResultsMap)
+			DDMFormEvaluationResult ddmFormEvaluationResult)
 		throws DDMFormValuesValidationException {
 
 		for (DDMFormFieldValue ddmFormFieldValue : ddmFormFieldValues) {
@@ -200,12 +198,12 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 			if (Validator.isNotNull(ddmFormField)) {
 				validateDDMFormFieldValue(
 					ddmFormFieldsMap.get(ddmFormFieldValue.getName()),
-					ddmFormFieldValue, ddmFormFieldEvaluationResultsMap);
+					ddmFormFieldValue, ddmFormEvaluationResult);
 
 				traverseDDMFormFieldValues(
 					ddmFormFieldValue.getNestedDDMFormFieldValues(),
 					ddmFormField.getNestedDDMFormFieldsMap(),
-					ddmFormFieldEvaluationResultsMap);
+					ddmFormEvaluationResult);
 			}
 		}
 	}
@@ -234,6 +232,12 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 				ddmFormField.getName(), selectedValue);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
+				if (Validator.isNull(jsonArray.getString(i)) &&
+					!ddmFormField.isRequired()) {
+
+					continue;
+				}
+
 				if (!optionValues.contains(jsonArray.getString(i))) {
 					throw new MustSetValidValue(ddmFormField.getName());
 				}
@@ -243,8 +247,7 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 	protected void validateDDMFormFieldValue(
 			DDMFormField ddmFormField, DDMFormFieldValue ddmFormFieldValue,
-			Map<String, DDMFormFieldEvaluationResult>
-				ddmFormFieldEvaluationResultsMap)
+			DDMFormEvaluationResult ddmFormEvaluationResult)
 		throws DDMFormValuesValidationException {
 
 		if (ddmFormField == null) {
@@ -253,15 +256,18 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 		DDMFormValues ddmFormValues = ddmFormFieldValue.getDDMFormValues();
 
+		DDMFormFieldEvaluationResult ddmFormFieldEvaluationResult =
+			ddmFormEvaluationResult.geDDMFormFieldEvaluationResult(
+				ddmFormFieldValue.getName(), ddmFormFieldValue.getInstanceId());
+
 		validateDDMFormFieldValue(
 			ddmFormField, ddmFormValues.getAvailableLocales(),
 			ddmFormValues.getDefaultLocale(), ddmFormFieldValue.getValue(),
-			ddmFormFieldEvaluationResultsMap.get(ddmFormFieldValue.getName()));
+			ddmFormFieldEvaluationResult);
 
 		traverseDDMFormFieldValues(
 			ddmFormFieldValue.getNestedDDMFormFieldValues(),
-			ddmFormField.getNestedDDMFormFieldsMap(),
-			ddmFormFieldEvaluationResultsMap);
+			ddmFormField.getNestedDDMFormFieldsMap(), ddmFormEvaluationResult);
 	}
 
 	protected void validateDDMFormFieldValue(

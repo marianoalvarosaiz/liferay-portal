@@ -1,4 +1,4 @@
-define("frontend-js-metal-web@1.0.6/metal-state/src/State", ['exports', 'metal/src/metal', 'metal-events/src/events'], function (exports, _metal, _events) {
+define("frontend-js-metal-web@1.0.8/metal-state/src/State", ['exports', 'metal/src/metal', 'metal-events/src/events'], function (exports, _metal, _events) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -58,6 +58,14 @@ define("frontend-js-metal-web@1.0.6/metal-state/src/State", ['exports', 'metal/s
     */
 			_this.stateInfo_ = {};
 
+			/**
+    * Object with the most recent values that state properties were set to
+    * through either the constructor or setState calls.
+    * @type {!Object<string, *>}
+    */
+			_this.config = {};
+
+			_this.updateConfig_(opt_config || {});
 			_this.setShouldUseFacade(true);
 			_this.mergeInvalidKeys_();
 			_this.addToStateFromStaticHint_(opt_config);
@@ -157,7 +165,7 @@ define("frontend-js-metal-web@1.0.6/metal-state/src/State", ['exports', 'metal/s
 			var info = this.stateInfo_[name];
 			var config = info.config;
 			if (config.validator) {
-				return this.callFunction_(config.validator, [value]);
+				return this.callFunction_(config.validator, [value, name]);
 			}
 			return true;
 		};
@@ -305,11 +313,14 @@ define("frontend-js-metal-web@1.0.6/metal-state/src/State", ['exports', 'metal/s
 			}
 		};
 
-		State.prototype.setState = function setState(values) {
+		State.prototype.setState = function setState(values, opt_callback) {
+			this.updateConfig_(values);
 			var names = Object.keys(values);
-
 			for (var i = 0; i < names.length; i++) {
 				this[names[i]] = values[names[i]];
+			}
+			if (opt_callback && this.scheduledBatchData_) {
+				this.once('stateChanged', opt_callback);
 			}
 		};
 
@@ -334,6 +345,15 @@ define("frontend-js-metal-web@1.0.6/metal-state/src/State", ['exports', 'metal/s
 			return info.state === State.KeyStates.INITIALIZED && (_metal.core.isObject(prevVal) || prevVal !== this[name]);
 		};
 
+		State.prototype.updateConfig_ = function updateConfig_(values) {
+			var prevConfig = this.config;
+			this.config = _metal.object.mixin({}, this.config, values);
+			this.emit('configChanged', {
+				newVal: this.config,
+				prevVal: prevConfig
+			});
+		};
+
 		State.prototype.validateKeyValue_ = function validateKeyValue_(name, value) {
 			var info = this.stateInfo_[name];
 
@@ -349,7 +369,7 @@ define("frontend-js-metal-web@1.0.6/metal-state/src/State", ['exports', 'metal/s
   * constructors, which will be merged together and handled automatically.
   * @type {!Array<string>}
   */
-	State.INVALID_KEYS = ['state', 'stateKey'];
+	State.INVALID_KEYS = ['config', 'state', 'stateKey'];
 
 	/**
   * Constants that represent the states that an a state key can be in.

@@ -18,7 +18,7 @@ AUI.add(
 					},
 
 					width: {
-						value: '900px'
+						validator: Lang.isString
 					}
 				},
 
@@ -99,10 +99,10 @@ AUI.add(
 
 						var header = Lang.sub(
 							TPL_HEADER,
-								{
-									title: title
-								}
-							);
+							{
+								title: title
+							}
+						);
 
 						header = A.Node.create(header);
 

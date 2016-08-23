@@ -27,6 +27,18 @@
 		<execute function="Type" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_PAGE_VISITED_FRIENDLY_URL_FIELD" value1="${friendlyURL}" />
 	</command>
 
+	<command name="addBehaviorPreviouslyVisitedSiteRuleCP">
+		<execute macro="ContentTargetingUserSegment#addRuleCmdCP">
+			<var name="userSegmentRule" value="Previously Visited Site" />
+		</execute>
+
+		<execute function="Select" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_PREVIOUSLY_VISITED_SITE_CONDITION_SELECT" value1="${condition}" />
+
+		<execute function="Type" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_PREVIOUSLY_VISITED_SITE_VALUE_FIELD" value1="${conditionValue}" />
+
+		<execute function="Click" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_PREVIOUSLY_VISITED_SITE_ADD_BUTTON" />
+	</command>
+
 	<command name="addBehaviorScorePointsRuleCP">
 		<execute macro="ContentTargetingUserSegment#addRuleCmdCP">
 			<var name="userSegmentRule" value="Score Points" />
@@ -48,6 +60,8 @@
 
 	<command name="addRuleCmdCP">
 		<execute function="Type" locator1="ContentTargeting#FORM_SEARCH_FIELD" value1="${userSegmentRule}" />
+
+		<execute macro="ContentTargetingUserSegment#expandCategory" />
 
 		<var name="key_userSegmentRule" value="${userSegmentRule}" />
 
@@ -180,6 +194,24 @@
 
 		<execute function="Type" locator1="EditUserSegment#USER_SEGMENT_RULE_USER_ATTRIBUTES_AGE_OLDER_THAN_FIELD" value1="${olderThanAge}" />
 		<execute function="Type" locator1="EditUserSegment#USER_SEGMENT_RULE_USER_ATTRIBUTES_AGE_YOUNGER_THAN_FIELD" value1="${youngerThanAge}" />
+	</command>
+
+	<command name="addUserAttributesCustomFieldCP">
+		<execute macro="ContentTargetingUserSegment#addRuleCmdCP">
+			<var name="userSegmentRule" value="Custom Field" />
+		</execute>
+
+		<execute function="Click" locator1="EditUserSegment#USER_SEGMENT_RULE_USER_ATTRIBUTES_CUSTOM_FIELD_SELECT_BUTTON" />
+
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+
+		<execute function="Select" locator1="EditUserSegment#USER_SEGMENT_RULE_USER_ATTRIBUTES_CUSTOM_FIELD_SELECT" value1="${customFieldKey}" />
+
+		<execute function="Type" locator1="TextInput#CUSTOM_FIELD" value1="${customFieldValue}" />
+
+		<execute macro="Button#clickDone" />
+
+		<execute function="SelectFrameTop" />
 	</command>
 
 	<command name="addUserAttributesGenderRuleCP">
@@ -323,7 +355,6 @@
 			<isset var="userSegmentRuleAddList" />
 			<then>
 				<for list="${userSegmentRuleAddList}" param="userSegmentRule">
-
 					<execute macro="ContentTargetingUserSegment#addRuleCmdCP">
 						<var name="userSegmentRule" value="${userSegmentRule}" />
 					</execute>
@@ -332,9 +363,25 @@
 		</if>
 	</command>
 
+	<command name="expandCategory">
+		<execute function="Pause" locator1="1000" />
+
+		<if>
+			<and>
+				<condition function="IsElementPresent" locator1="EditUserSegment#USER_SEGMENT_RULES_CATEGORY_COLLAPSED" />
+				<condition function="IsVisible" locator1="EditUserSegment#USER_SEGMENT_RULES_CATEGORY_COLLAPSED" />
+			</and>
+			<then>
+				<execute function="Click" locator1="EditUserSegment#USER_SEGMENT_RULES_CATEGORY_COLLAPSED" />
+			</then>
+		</if>
+
+		<execute function="AssertElementPresent" locator1="EditUserSegment#USER_SEGMENT_RULES_CATEGORY_EXPANDED" />
+	</command>
+
 	<command name="gotoViewReport">
 		<execute macro="LexiconEntry#gotoEntry">
-			<var name="key_rowEntry" value="${userSegmentName}" />
+			<var name="rowEntry" value="${userSegmentName}" />
 		</execute>
 
 		<execute macro="Navigator#gotoNavItem">
@@ -368,6 +415,17 @@
 		</if>
 	</command>
 
+	<command name="viewContentVisitedRuleEmpty">
+		<var name="key_rowEntry" value="${userSegmentName}" />
+
+		<execute function="Click" locator1="ContentRow#ENTRY_CONTENT_ENTRY_NAME_LINK" value1="${userSegmentName}" />
+
+		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
+		<execute function="Click" locator1="MenuItem#EDIT" />
+
+		<execute function="AssertElementNotPresent" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_CONTENT_VISITED_WEB_CONTENT_TITLE" />
+	</command>
+
 	<command name="viewCP">
 		<execute macro="Navigator#gotoNavItem">
 			<var name="navItem" value="User Segments" />
@@ -378,15 +436,6 @@
 		<execute function="AssertTextEquals" locator1="ContentRow#ENTRY_CONTENT_ENTRY_NAME_LINK" value1="${userSegmentName}" />
 
 		<execute function="AssertTextEquals" locator1="ContentRow#ENTRY_CONTENT_ENTRY_DESCRIPTION_TD3" value1="${userSegmentDescription}" />
-	</command>
-
-	<command name="viewImportContentVisitedRuleEmpty">
-		<var name="key_rowEntry" value="${userSegmentName}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-		<execute function="Click" locator1="MenuItem#EDIT" />
-
-		<execute function="AssertElementNotPresent#assertNotVisible" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_CONTENT_VISITED_WEB_CONTENT_TITLE" />
 	</command>
 
 	<command name="viewNotPresentCP">
@@ -402,26 +451,39 @@
 	<command name="viewReportContentViews">
 		<var name="key_rowEntry" value="${reportTitle}" />
 
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_TITLE" value1="${reportTitle}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_TYPE" value1="${reportType}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_EVENT" value1="${reportEvent}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_COUNT" value1="${reportCount}" />
+		<for list="${reportsContentTableList}" param="contentReports">
+			<var name="key_contentReports" value="${contentReports}" />
+			<var name="key_reportTitle" value="${reportTitle}" />
+
+			<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_CONTENT" value1="${contentReports}" />
+		</for>
 	</command>
 
 	<command name="viewRulesCP">
-		<var name="key_rowEntry" value="${userSegmentName}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-		<execute function="Click" locator1="MenuItem#EDIT" />
-
 		<for list="${viewUserSegmentRuleList}" param="usersegmentRuleName">
 			<var name="key_userSegmentRuleName" value="${usersegmentRuleName}" />
 
+			<if>
+				<not>
+					<isset var="ruleInstance" />
+				</not>
+				<then>
+					<var name="ruleInstance" value="1" />
+				</then>
+			</if>
+
 			<execute function="AssertTextEquals#assertPartialText" locator1="EditUserSegment#USER_SEGMENT_RULE_APPLIED" value1="${usersegmentRuleName}" />
 
-			<execute macro="ContentTargetingUserSegment#openFormField">
-				<var name="usersegmentRuleName" value="${usersegmentRuleName}" />
-			</execute>
+			<if>
+				<not>
+					<equals arg1="${ruleInstance}" arg2="1" />
+				</not>
+				<then>
+					<execute macro="ContentTargetingUserSegment#openFormField">
+						<var name="usersegmentRuleName" value="${usersegmentRuleName}" />
+					</execute>
+				</then>
+			</if>
 
 			<if>
 				<equals arg1="${usersegmentRuleName}" arg2="Content Visited" />
@@ -438,6 +500,13 @@
 					<equals arg1="${usersegmentRuleName}" arg2="Page Visited" />
 					<then>
 						<execute function="AssertTextEquals" locator1="EditUserSegment#USER_SEGMENT_RULE_BEHAVIOR_PAGE_VISITED_FRIENDLY_URL_FIELD" value1="${friendlyURL}" />
+					</then>
+				</elseif>
+				<elseif>
+					<equals arg1="${usersegmentRuleName}" arg2="Previously Visited Site" />
+					<then>
+						<execute function="AssertTextPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" value1="${condition}" />
+						<execute function="AssertTextPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" value1="${conditionValue}" />
 					</then>
 				</elseif>
 				<elseif>
@@ -502,6 +571,12 @@
 						<var name="key_selectSiteMemberSite" value="${selectSiteMemberSite}" />
 
 						<execute function="AssertSelectedLabel" locator1="EditUserSegment#USER_SEGMENT_RULE_USER_ATTRIBUTES_SITE_MEMBER_SELECT" value1="${selectSiteMemberSite}" />
+					</then>
+				</elseif>
+				<elseif>
+					<equals arg1="${userSegmentRuleName}" arg2="Custom Field" />
+					<then>
+						<execute function="AssertTextEquals" locator1="EditUserSegment#USER_SEGMENT_RULE_USER_ATTRIBUTES_CUSTOM_FIELD_ATTRIBUTE_CONTAINER" value1="${customFieldKey}: ${customFieldValue}" />
 					</then>
 				</elseif>
 				<elseif>
@@ -603,7 +678,7 @@
 				<elseif>
 					<equals arg1="${usersegmentRuleName}" arg2="Device" />
 					<then>
-						<execute function="Select" locator1="EditUserSegment#USER_SEGMENT_RULE_SESSION_ATTRIBUTES_DEVICE_SELECT" value1="${deviceFamilyName}" />
+						<execute function="AssertSelectedLabel" locator1="EditUserSegment#USER_SEGMENT_RULE_SESSION_ATTRIBUTES_DEVICE_SELECT" value1="${deviceFamilyName}" />
 					</then>
 				</elseif>
 			</if>
