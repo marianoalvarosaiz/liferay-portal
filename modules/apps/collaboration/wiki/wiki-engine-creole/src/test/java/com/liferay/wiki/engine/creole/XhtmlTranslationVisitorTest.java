@@ -18,8 +18,8 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.HtmlImpl;
-import com.liferay.wiki.engine.creole.parser.visitor.impl.XhtmlTranslationVisitor;
-import com.liferay.wiki.engine.creole.util.WikiEngineCreoleComponentProvider;
+import com.liferay.wiki.engine.creole.internal.parser.visitor.impl.XhtmlTranslationVisitor;
+import com.liferay.wiki.engine.creole.internal.util.WikiEngineCreoleComponentProvider;
 import com.liferay.wiki.engine.creole.util.test.CreoleTestUtil;
 
 import org.junit.After;
@@ -524,8 +524,7 @@ public class XhtmlTranslationVisitorTest {
 			"<ol><li> T1<ol><li> T1.1</li></ol></li><li> T2</li><li> T3" +
 				"</li></ol><ul><li> Divider 1<ul><li> Divider 2a</li>" +
 					"<li> Divider 2b<ul><li> Divider 3</li></ul></li>" +
-						"</ul></li></ul><ol><li> T3.2</li>" +
-							"<li> T3.3</li></ol>",
+						"</ul></li></ul><ol><li> T3.2</li><li> T3.3</li></ol>",
 			translate("mixed-list-3.creole"));
 	}
 
@@ -667,8 +666,8 @@ public class XhtmlTranslationVisitorTest {
 	@Test
 	public void testParseTableImagesNested() {
 		Assert.assertEquals(
-			"<table><tr><th>H1</th></tr><tr><td><img " +
-				"src=\"image.png\" alt=\"Image\"/></td></tr></table>",
+			"<table><tr><th>H1</th></tr><tr><td><img src=\"image.png\" " +
+				"alt=\"Image\"/></td></tr></table>",
 			translate("table-4.creole"));
 	}
 

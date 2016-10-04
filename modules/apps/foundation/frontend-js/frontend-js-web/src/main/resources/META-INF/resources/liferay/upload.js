@@ -202,18 +202,23 @@ AUI.add(
 						value: true
 					},
 
-					render: {
-						value: true
-					},
-
 					removeOnComplete: {
 						validator: Lang.isBoolean,
 						value: false
 					},
 
+					render: {
+						value: true
+					},
+
 					restoreState: {
 						validator: Lang.isBoolean,
 						value: true
+					},
+
+					simultaneousUploads: {
+						validator: Lang.isNumber,
+						value: 2
 					},
 
 					strings: {
@@ -401,8 +406,6 @@ AUI.add(
 						var uploader = instance._uploader;
 
 						var queue = uploader.queue;
-
-						var fileList = queue.get('fileList');
 
 						queue.pauseUpload();
 
@@ -1083,7 +1086,7 @@ AUI.add(
 									}
 								},
 								selectFilesButton: instance._selectFilesButton,
-								simLimit: 2,
+								simLimit: instance.get('simultaneousUploads'),
 								swfURL: Liferay.Util.addParams(timestampParam, URL_SWF_UPLOADER),
 								uploadURL: Liferay.Util.addParams(timestampParam, instance.get('uploadFile'))
 							}

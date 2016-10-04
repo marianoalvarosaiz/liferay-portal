@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -43,7 +42,9 @@ import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -4924,11 +4925,15 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"DLFolderPersistenceImpl.fetchByR_M(long, boolean, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"DLFolderPersistenceImpl.fetchByR_M(long, boolean, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					DLFolder dlFolder = list.get(0);
@@ -12938,12 +12943,14 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	 */
 	@Override
 	public DLFolder fetchByPrimaryKey(Serializable primaryKey) {
-		DLFolder dlFolder = (DLFolder)entityCache.getResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
 				DLFolderImpl.class, primaryKey);
 
-		if (dlFolder == _nullDLFolder) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		DLFolder dlFolder = (DLFolder)serializable;
 
 		if (dlFolder == null) {
 			Session session = null;
@@ -12958,7 +12965,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 				}
 				else {
 					entityCache.putResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
-						DLFolderImpl.class, primaryKey, _nullDLFolder);
+						DLFolderImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -13012,18 +13019,20 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			DLFolder dlFolder = (DLFolder)entityCache.getResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
 					DLFolderImpl.class, primaryKey);
 
-			if (dlFolder == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, dlFolder);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (DLFolder)serializable);
+				}
 			}
 		}
 
@@ -13065,7 +13074,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(DLFolderModelImpl.ENTITY_CACHE_ENABLED,
-					DLFolderImpl.class, primaryKey, _nullDLFolder);
+					DLFolderImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -13434,10 +13443,8 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			companyId = dlFolder.getCompanyId();
 		}
 
-		for (long dlFileEntryTypePK : dlFileEntryTypePKs) {
-			dlFolderToDLFileEntryTypeTableMapper.addTableMapping(companyId, pk,
-				dlFileEntryTypePK);
-		}
+		dlFolderToDLFileEntryTypeTableMapper.addTableMappings(companyId, pk,
+			dlFileEntryTypePKs);
 	}
 
 	/**
@@ -13449,21 +13456,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	@Override
 	public void addDLFileEntryTypes(long pk,
 		List<com.liferay.document.library.kernel.model.DLFileEntryType> dlFileEntryTypes) {
-		long companyId = 0;
-
-		DLFolder dlFolder = fetchByPrimaryKey(pk);
-
-		if (dlFolder == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = dlFolder.getCompanyId();
-		}
-
-		for (com.liferay.document.library.kernel.model.DLFileEntryType dlFileEntryType : dlFileEntryTypes) {
-			dlFolderToDLFileEntryTypeTableMapper.addTableMapping(companyId, pk,
-				dlFileEntryType.getPrimaryKey());
-		}
+		addDLFileEntryTypes(pk,
+			ListUtil.toLongArray(dlFileEntryTypes,
+				com.liferay.document.library.kernel.model.DLFileEntryType.FILE_ENTRY_TYPE_ID_ACCESSOR));
 	}
 
 	/**
@@ -13509,10 +13504,8 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	 */
 	@Override
 	public void removeDLFileEntryTypes(long pk, long[] dlFileEntryTypePKs) {
-		for (long dlFileEntryTypePK : dlFileEntryTypePKs) {
-			dlFolderToDLFileEntryTypeTableMapper.deleteTableMapping(pk,
-				dlFileEntryTypePK);
-		}
+		dlFolderToDLFileEntryTypeTableMapper.deleteTableMappings(pk,
+			dlFileEntryTypePKs);
 	}
 
 	/**
@@ -13524,10 +13517,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	@Override
 	public void removeDLFileEntryTypes(long pk,
 		List<com.liferay.document.library.kernel.model.DLFileEntryType> dlFileEntryTypes) {
-		for (com.liferay.document.library.kernel.model.DLFileEntryType dlFileEntryType : dlFileEntryTypes) {
-			dlFolderToDLFileEntryTypeTableMapper.deleteTableMapping(pk,
-				dlFileEntryType.getPrimaryKey());
-		}
+		removeDLFileEntryTypes(pk,
+			ListUtil.toLongArray(dlFileEntryTypes,
+				com.liferay.document.library.kernel.model.DLFileEntryType.FILE_ENTRY_TYPE_ID_ACCESSOR));
 	}
 
 	/**
@@ -13546,10 +13538,8 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 		removeDLFileEntryTypePKsSet.removeAll(newDLFileEntryTypePKsSet);
 
-		for (long removeDLFileEntryTypePK : removeDLFileEntryTypePKsSet) {
-			dlFolderToDLFileEntryTypeTableMapper.deleteTableMapping(pk,
-				removeDLFileEntryTypePK);
-		}
+		dlFolderToDLFileEntryTypeTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeDLFileEntryTypePKsSet));
 
 		newDLFileEntryTypePKsSet.removeAll(oldDLFileEntryTypePKsSet);
 
@@ -13564,10 +13554,8 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			companyId = dlFolder.getCompanyId();
 		}
 
-		for (long newDLFileEntryTypePK : newDLFileEntryTypePKsSet) {
-			dlFolderToDLFileEntryTypeTableMapper.addTableMapping(companyId, pk,
-				newDLFileEntryTypePK);
-		}
+		dlFolderToDLFileEntryTypeTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newDLFileEntryTypePKsSet));
 	}
 
 	/**
@@ -13653,22 +13641,4 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "hidden"
 			});
-	private static final DLFolder _nullDLFolder = new DLFolderImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<DLFolder> toCacheModel() {
-				return _nullDLFolderCacheModel;
-			}
-		};
-
-	private static final CacheModel<DLFolder> _nullDLFolderCacheModel = new CacheModel<DLFolder>() {
-			@Override
-			public DLFolder toEntityModel() {
-				return _nullDLFolder;
-			}
-		};
 }

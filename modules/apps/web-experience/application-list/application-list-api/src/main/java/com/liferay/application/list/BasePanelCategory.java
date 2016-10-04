@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
@@ -31,7 +32,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Provides a skeletal implementation of the {@link PanelCategory} to minimize
+ * the effort required to implement this interface.
+ *
+ * <p>
+ * To implement an application category, this class should be extended and
+ * {@link #include(HttpServletRequest, HttpServletResponse)} and
+ * #includeHeader(HttpServletRequest, HttpServletResponse)} should be
+ * overridden. The <code>include</code> override method should return
+ * <code>true</code> when the application view successfully renders and
+ * <code>false</code> otherwise. The <code>includeHeader</code> override method
+ * should return <code>true</code> when the category header successfully renders
+ * and <code>false</code> otherwise.
+ * </p>
+ *
  * @author Adolfo Pérez
+ * @see    PanelCategory
  */
 public abstract class BasePanelCategory implements PanelCategory {
 
@@ -92,9 +108,11 @@ public abstract class BasePanelCategory implements PanelCategory {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String ppid = ParamUtil.getString(
+			request, "selPpid", themeDisplay.getPpid());
+
 		return panelCategoryHelper.containsPortlet(
-			themeDisplay.getPpid(), getKey(),
-			themeDisplay.getPermissionChecker(), group);
+			ppid, getKey(), themeDisplay.getPermissionChecker(), group);
 	}
 
 	@Override

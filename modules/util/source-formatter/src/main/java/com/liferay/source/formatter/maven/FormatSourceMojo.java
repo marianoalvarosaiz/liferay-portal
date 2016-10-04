@@ -107,8 +107,36 @@ public class FormatSourceMojo extends AbstractMojo {
 	/**
 	 * @parameter
 	 */
+	public void setGitWorkingBranchName(String gitWorkingBranchName) {
+		_sourceFormatterArgs.setGitWorkingBranchName(gitWorkingBranchName);
+	}
+
+	/**
+	 * @parameter
+	 */
+	public void setIncludeSubrepositories(boolean includeSubrepositories) {
+		_sourceFormatterArgs.setIncludeSubrepositories(includeSubrepositories);
+	}
+
+	/**
+	 * @parameter
+	 */
+	public void setMaxLineLength(int maxLineLength) {
+		_sourceFormatterArgs.setMaxLineLength(maxLineLength);
+	}
+
+	/**
+	 * @parameter
+	 */
 	public void setPrintErrors(boolean printErrors) {
 		_sourceFormatterArgs.setPrintErrors(printErrors);
+	}
+
+	/**
+	 * @parameter
+	 */
+	public void setProcessorThreadCount(int processorThreadCount) {
+		_sourceFormatterArgs.setProcessorThreadCount(processorThreadCount);
 	}
 
 	/**

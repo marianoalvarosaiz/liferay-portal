@@ -581,7 +581,11 @@ public class VideoProcessorImpl
 			return false;
 		}
 
-		return hasPreviews(fileVersion) && hasThumbnails(fileVersion);
+		if (hasPreviews(fileVersion) && hasThumbnails(fileVersion)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private void _queueGeneration(
@@ -709,6 +713,7 @@ public class VideoProcessorImpl
 			ClassLoader classLoader = clazz.getClassLoader();
 
 			Properties systemProperties = System.getProperties();
+
 			SystemEnv.setProperties(systemProperties);
 
 			Log4JUtil.initLog4J(

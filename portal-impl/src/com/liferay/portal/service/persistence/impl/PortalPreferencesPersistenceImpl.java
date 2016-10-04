@@ -28,8 +28,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchPreferencesException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.PortalPreferences;
 import com.liferay.portal.kernel.service.persistence.PortalPreferencesPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -206,11 +204,15 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"PortalPreferencesPersistenceImpl.fetchByO_O(long, int, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"PortalPreferencesPersistenceImpl.fetchByO_O(long, int, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					PortalPreferences portalPreferences = list.get(0);
@@ -672,12 +674,14 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 	 */
 	@Override
 	public PortalPreferences fetchByPrimaryKey(Serializable primaryKey) {
-		PortalPreferences portalPreferences = (PortalPreferences)entityCache.getResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 				PortalPreferencesImpl.class, primaryKey);
 
-		if (portalPreferences == _nullPortalPreferences) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		PortalPreferences portalPreferences = (PortalPreferences)serializable;
 
 		if (portalPreferences == null) {
 			Session session = null;
@@ -693,8 +697,7 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 				}
 				else {
 					entityCache.putResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-						PortalPreferencesImpl.class, primaryKey,
-						_nullPortalPreferences);
+						PortalPreferencesImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -748,18 +751,20 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			PortalPreferences portalPreferences = (PortalPreferences)entityCache.getResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 					PortalPreferencesImpl.class, primaryKey);
 
-			if (portalPreferences == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, portalPreferences);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (PortalPreferences)serializable);
+				}
 			}
 		}
 
@@ -801,8 +806,7 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PortalPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-					PortalPreferencesImpl.class, primaryKey,
-					_nullPortalPreferences);
+					PortalPreferencesImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1035,35 +1039,4 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PortalPreferences exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No PortalPreferences exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(PortalPreferencesPersistenceImpl.class);
-	private static final PortalPreferences _nullPortalPreferences = new PortalPreferencesImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<PortalPreferences> toCacheModel() {
-				return _nullPortalPreferencesCacheModel;
-			}
-		};
-
-	private static final CacheModel<PortalPreferences> _nullPortalPreferencesCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<PortalPreferences>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public PortalPreferences toEntityModel() {
-			return _nullPortalPreferences;
-		}
-	}
 }

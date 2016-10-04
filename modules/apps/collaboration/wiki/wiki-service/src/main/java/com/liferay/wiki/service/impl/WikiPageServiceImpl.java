@@ -164,7 +164,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0 replaced by {@link #addTempFileEntry(long,
+	 * @deprecated As of 1.2.0, replaced by {@link #addTempFileEntry(long,
 	 *             String, String, InputStream, String)}
 	 */
 	@Deprecated
@@ -424,7 +424,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 		throws PortalException {
 
 		WikiPagePermissionChecker.check(
-			getPermissionChecker(), nodeId, title, ActionKeys.VIEW);
+			getPermissionChecker(), nodeId, title, version, ActionKeys.VIEW);
 
 		return wikiPageLocalService.getPage(nodeId, title, version);
 	}

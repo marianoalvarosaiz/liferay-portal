@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -2206,11 +2205,15 @@ public class CalendarNotificationTemplatePersistenceImpl
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"CalendarNotificationTemplatePersistenceImpl.fetchByC_NT_NTT(long, String, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"CalendarNotificationTemplatePersistenceImpl.fetchByC_NT_NTT(long, String, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					CalendarNotificationTemplate calendarNotificationTemplate = list.get(0);
@@ -2903,12 +2906,14 @@ public class CalendarNotificationTemplatePersistenceImpl
 	@Override
 	public CalendarNotificationTemplate fetchByPrimaryKey(
 		Serializable primaryKey) {
-		CalendarNotificationTemplate calendarNotificationTemplate = (CalendarNotificationTemplate)entityCache.getResult(CalendarNotificationTemplateModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(CalendarNotificationTemplateModelImpl.ENTITY_CACHE_ENABLED,
 				CalendarNotificationTemplateImpl.class, primaryKey);
 
-		if (calendarNotificationTemplate == _nullCalendarNotificationTemplate) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		CalendarNotificationTemplate calendarNotificationTemplate = (CalendarNotificationTemplate)serializable;
 
 		if (calendarNotificationTemplate == null) {
 			Session session = null;
@@ -2925,7 +2930,7 @@ public class CalendarNotificationTemplatePersistenceImpl
 				else {
 					entityCache.putResult(CalendarNotificationTemplateModelImpl.ENTITY_CACHE_ENABLED,
 						CalendarNotificationTemplateImpl.class, primaryKey,
-						_nullCalendarNotificationTemplate);
+						nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2980,18 +2985,21 @@ public class CalendarNotificationTemplatePersistenceImpl
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			CalendarNotificationTemplate calendarNotificationTemplate = (CalendarNotificationTemplate)entityCache.getResult(CalendarNotificationTemplateModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(CalendarNotificationTemplateModelImpl.ENTITY_CACHE_ENABLED,
 					CalendarNotificationTemplateImpl.class, primaryKey);
 
-			if (calendarNotificationTemplate == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, calendarNotificationTemplate);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey,
+						(CalendarNotificationTemplate)serializable);
+				}
 			}
 		}
 
@@ -3035,7 +3043,7 @@ public class CalendarNotificationTemplatePersistenceImpl
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(CalendarNotificationTemplateModelImpl.ENTITY_CACHE_ENABLED,
 					CalendarNotificationTemplateImpl.class, primaryKey,
-					_nullCalendarNotificationTemplate);
+					nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3281,24 +3289,4 @@ public class CalendarNotificationTemplatePersistenceImpl
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final CalendarNotificationTemplate _nullCalendarNotificationTemplate =
-		new CalendarNotificationTemplateImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<CalendarNotificationTemplate> toCacheModel() {
-				return _nullCalendarNotificationTemplateCacheModel;
-			}
-		};
-
-	private static final CacheModel<CalendarNotificationTemplate> _nullCalendarNotificationTemplateCacheModel =
-		new CacheModel<CalendarNotificationTemplate>() {
-			@Override
-			public CalendarNotificationTemplate toEntityModel() {
-				return _nullCalendarNotificationTemplate;
-			}
-		};
 }

@@ -66,8 +66,7 @@ public class DDMFormValidationException extends PortalException {
 
 		public MustSetAvailableLocales() {
 			super(
-				"The available locales property was not set for the " +
-					"DDM form");
+				"The available locales property was not set for the DDM form");
 		}
 
 	}
@@ -99,6 +98,15 @@ public class DDMFormValidationException extends PortalException {
 		}
 
 		private final Locale _defaultLocale;
+
+	}
+
+	public static class MustSetFieldsForForm
+		extends DDMFormValidationException {
+
+		public MustSetFieldsForForm() {
+			super("At least one field must be set");
+		}
 
 	}
 

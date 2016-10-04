@@ -20,7 +20,7 @@ feature or API will be dropped in an upcoming version.
 replaces an old API, in spite of the old API being kept in Liferay Portal for
 backwards compatibility.
 
-*This document has been reviewed through commit `3a116f1`.*
+*This document has been reviewed through commit `b6a7500`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -4128,5 +4128,62 @@ be added by deploying the module `asset-tags-validator`.
 
 This change has been made as part of the modularization efforts to decouple
 different parts of the portal.
+
+---------------------------------------
+
+### Removed the swfupload and video_player Utilities
+- **Date:** 2016-May-13
+- **JIRA Ticket:** LPS-54111
+
+#### What changed?
+
+The utilities `swfupload` and `video_player` have been removed.
+
+#### Who is affected?
+
+This affects anyone who is using the `swfupload` AlloyUI module or any of the
+associated `swfupload_f*.swf` and `mpw_player.swf` flash movies.
+
+#### How should I update my code?
+
+There are better, more standard ways to achieve upload currently. For instance,
+you can use [A.Uploader](http://alloyui.com/api/classes/Uploader.html) to manage
+your uploads consistently across browsers.
+
+For audio/video reproduction, you should update your code to use
+[A.Audio](http://alloyui.com/api/classes/A.Audio.html) and
+[A.Video](http://alloyui.com/api/classes/A.Video.html).
+
+#### Why was this change made?
+
+This change removes outdated code no longer being used in the platform. In
+addition, this change avoids future security issues from outdated flash movies.
+
+---------------------------------------
+
+### Moved Journal Portlet Properties to OSGi Configuration
+- **Date:** 2016-Jul-29
+- **JIRA Ticket:** LPS-58672
+
+#### What changed?
+
+All Journal portlet properties have been moved to an OSGI configuration.
+
+#### Who is affected?
+
+This affects anyone who is overriding the Journal portlet's `portlet.properties`
+file.
+
+#### How should I update my code?
+
+Instead of overriding the Journal portlet's `portlet.properties` file, you can
+manage the properties from Portal's configuration administrator. This can be
+accessed by navigating to Liferay's Control Panel &rarr; *System Settings*
+&rarr; *Web Experience* and selecting the appropriate Web Content category.
+
+#### Why was this change made?
+
+This change was made as part of modularization efforts to ease portlet
+configuration changes.
 
 ---------------------------------------

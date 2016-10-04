@@ -97,6 +97,8 @@ if (editorOptions != null) {
 
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + PortalWebResourcesUtil.getContextPath(PortalWebResourceConstants.RESOURCE_TYPE_EDITOR_ALLOYEDITOR) + "/alloyeditor/liferay-alloy-editor-no-ckeditor-min.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
+		<liferay-util:dynamic-include key='<%= "com.liferay.frontend.editor.alloyeditor.web#" + editorName + "#additionalResources" %>' />
+
 		<script type="text/javascript">
 			AlloyEditor.regexBasePath = /(^|.*[\\\/])(?:liferay-alloy-editor[^/]+|liferay-alloy-editor)\.js(?:\?.*|;.*)?$/i;
 
@@ -153,16 +155,17 @@ if (editorOptions != null) {
 					</div>
 				</div>
 			</div>
+
 			<div class="alloy-editor-switch hide">
-				<button class="btn btn-default btn-xs hide" id="<%= name %>Fullscreen" type="button">
+				<button class="btn btn-default btn-xs hide lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "fullscreen") %>" id="<%= name %>Fullscreen" type="button">
 					<aui:icon cssClass="icon-monospaced" image="expand" markupView="lexicon" />
 				</button>
 
-				<button class="btn btn-default btn-xs hide" id="<%= name %>SwitchTheme" type="button">
+				<button class="btn btn-default btn-xs hide lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "switch-theme") %>" id="<%= name %>SwitchTheme" type="button">
 					<aui:icon cssClass="icon-monospaced" image="moon" markupView="lexicon" />
 				</button>
 
-				<button class="btn btn-default btn-xs" id="<%= name %>Switch" type="button">
+				<button class="btn btn-default btn-xs editor-view lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "code-view") %>" id="<%= name %>Switch" type="button">
 					<aui:icon cssClass="icon-monospaced" image="code" markupView="lexicon" />
 				</button>
 			</div>
@@ -270,22 +273,15 @@ if (showSource) {
 				onFocusMethod: window['<%= HtmlUtil.escapeJS(onFocusMethod) %>'],
 				onInitMethod: window['<%= HtmlUtil.escapeJS(onInitMethod) %>'],
 				plugins: plugins,
-				textMode: <%= (editorOptions != null) ? editorOptions.isTextMode() : Boolean.FALSE.toString() %>
+				textMode: <%= (editorOptions != null) ? editorOptions.isTextMode() : Boolean.FALSE.toString() %>,
+
+				<%
+				boolean useCustomDataProcessor = (editorOptionsDynamicAttributes != null) && GetterUtil.getBoolean(editorOptionsDynamicAttributes.get("useCustomDataProcessor"));
+				%>
+
+				useCustomDataProcessor: <%= useCustomDataProcessor %>
 			}
 		).render();
-
-		<%
-		boolean useCustomDataProcessor = (editorOptionsDynamicAttributes != null) && GetterUtil.getBoolean(editorOptionsDynamicAttributes.get("useCustomDataProcessor"));
-		%>
-
-		<c:if test="<%= useCustomDataProcessor %>">
-			alloyEditor.getNativeEditor().on(
-				'customDataProcessorLoaded',
-				function() {
-					alloyEditor.setHTML(getInitialContent());
-				}
-			);
-		</c:if>
 
 		<liferay-util:dynamic-include key='<%= "com.liferay.frontend.editor.alloyeditor.web#" + editorName + "#onEditorCreate" %>' />
 	};
@@ -356,7 +352,7 @@ if (showSource) {
 			var data = '';
 
 			if (alloyEditor && alloyEditor.instanceReady) {
-				data = A.Lang.String.escapeHTML(alloyEditor.getText());
+				data = alloyEditor.getText();
 			}
 			else {
 				data = getInitialContent();
@@ -376,7 +372,6 @@ if (showSource) {
 				alloyEditor.setHTML(value);
 			}
 		}
-
 	};
 
 	Liferay.fire(

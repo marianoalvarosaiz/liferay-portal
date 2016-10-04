@@ -14,6 +14,7 @@
 
 package com.liferay.exportimport.kernel.staging;
 
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutRevision;
@@ -56,7 +57,15 @@ public class LayoutStagingUtil {
 		return _layoutStaging.isBranchingLayoutSet(group, privateLayout);
 	}
 
-	private static final LayoutStaging _layoutStaging =
-		ProxyFactory.newServiceTrackedInstance(LayoutStaging.class);
+	public static boolean prepareLayoutStagingHandler(
+		PortletDataContext portletDataContext, Layout layout) {
+
+		return _layoutStaging.prepareLayoutStagingHandler(
+			portletDataContext, layout);
+	}
+
+	private static volatile LayoutStaging _layoutStaging =
+		ProxyFactory.newServiceTrackedInstance(
+			LayoutStaging.class, LayoutStagingUtil.class, "_layoutStaging");
 
 }

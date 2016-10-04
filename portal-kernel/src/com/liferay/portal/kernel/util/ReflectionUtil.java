@@ -60,6 +60,20 @@ public class ReflectionUtil {
 		return unfinalField(field);
 	}
 
+	public static Field[] getDeclaredFields(Class<?> clazz) throws Exception {
+		Field[] fields = clazz.getDeclaredFields();
+
+		for (Field field : fields) {
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
+
+			unfinalField(field);
+		}
+
+		return fields;
+	}
+
 	public static Method getDeclaredMethod(
 			Class<?> clazz, String name, Class<?>... parameterTypes)
 		throws Exception {
@@ -205,7 +219,7 @@ public class ReflectionUtil {
 	}
 
 	public static <T> T throwException(Throwable throwable) {
-		return ReflectionUtil.<T, RuntimeException>_doThrowException(throwable);
+		return ReflectionUtil.<T, RuntimeException>_throwException(throwable);
 	}
 
 	public static Field unfinalField(Field field) throws Exception {
@@ -218,14 +232,6 @@ public class ReflectionUtil {
 		}
 
 		return field;
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T, E extends Throwable> T _doThrowException(
-			Throwable throwable)
-		throws E {
-
-		throw (E)throwable;
 	}
 
 	private static Type _getGenericInterface(
@@ -268,6 +274,14 @@ public class ReflectionUtil {
 			catch (ClassNotFoundException cnfe) {
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T, E extends Throwable> T _throwException(
+			Throwable throwable)
+		throws E {
+
+		throw (E)throwable;
 	}
 
 	private static final Method _CLONE_METHOD;

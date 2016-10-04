@@ -243,12 +243,12 @@ AUI.add(
 						var coverImageCaption = window[instance.ns('coverImageCaptionEditor')].getHTML();
 						var description = window[instance.ns('descriptionEditor')].getHTML();
 						var subtitle = window[instance.ns('subtitleEditor')].getHTML();
-						var title = window[instance.ns('titleEditor')].getHTML();
+						var title = window[instance.ns('titleEditor')].getText();
 
 						var form = instance._getPrincipalForm();
 
 						if (draft && ajax) {
-							var hasData = content !== STR_BLANK && title !== STR_BLANK;
+							var hasData = content !== STR_BLANK && (draft || (title !== STR_BLANK));
 
 							var hasChanged = instance._oldContent !== content || instance._oldSubtitle !== subtitle || instance._oldTitle !== title;
 
@@ -317,10 +317,6 @@ AUI.add(
 													instance.one('#coverImageFileEntryId').val(message.coverImageFileEntryId);
 
 													instance.one('#entryId').val(message.entryId);
-
-													if (message.updateRedirect) {
-														instance.one('#redirect').val(message.redirect);
-													}
 
 													if (message.blogsEntryAttachmentReferences) {
 														instance._updateImages(message.blogsEntryAttachmentReferences);

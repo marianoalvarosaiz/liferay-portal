@@ -39,16 +39,16 @@ public class ArrayUtilTest {
 				new boolean[] {true, false}, new boolean[] {false, false}));
 		Assert.assertArrayEquals(
 			new byte[] {1, 2, 3, 4},
-			ArrayUtil.append(new byte[] {1, 2, 3}, (byte) 4));
+			ArrayUtil.append(new byte[] {1, 2, 3}, (byte)4));
 		Assert.assertArrayEquals(
 			new byte[] {1, 2, 3, 4, 5, 6},
 			ArrayUtil.append(new byte[] {1, 2, 3}, new byte[] {4, 5, 6}));
 		Assert.assertArrayEquals(
-			new char[] {'a','b','c','d'},
-			ArrayUtil.append(new char[] {'a','b','c'},'d'));
+			new char[] {'a', 'b', 'c', 'd'},
+			ArrayUtil.append(new char[] {'a', 'b', 'c'}, 'd'));
 		Assert.assertArrayEquals(
-			new char[] {'a','b','c','d','e','f'}, ArrayUtil.append(
-				new char[] {'a','b','c'}, new char[] {'d','e','f'}));
+			new char[] {'a', 'b', 'c', 'd', 'e', 'f'}, ArrayUtil.append(
+				new char[] {'a', 'b', 'c'}, new char[] {'d', 'e', 'f'}));
 		Assert.assertArrayEquals(
 			new double[] {1.0, 2.0, 3.0, 4.0},
 			ArrayUtil.append(new double[] {1.0, 2.0, 3.0}, 4.0), 0.0001);
@@ -66,8 +66,7 @@ public class ArrayUtilTest {
 				new float[] {1.0f, 2.0f, 3.0f}, new float[] {4.0f, 5.0f, 6.0f}),
 			0.0001f);
 		Assert.assertArrayEquals(
-			new int[] {1, 2, 3, 4},
-			ArrayUtil.append(new int[] {1, 2, 3}, 4));
+			new int[] {1, 2, 3, 4}, ArrayUtil.append(new int[] {1, 2, 3}, 4));
 		Assert.assertArrayEquals(
 			new int[] {1, 2, 3, 4, 5, 6},
 			ArrayUtil.append(new int[] {1, 2, 3}, new int[] {4, 5, 6}));
@@ -869,8 +868,8 @@ public class ArrayUtilTest {
 			new byte[] {1, 2, 3},
 			ArrayUtil.subset(new byte[] {1, 2, 3, 4}, 0, 3));
 		Assert.assertArrayEquals(
-			new char[] {'a','b','c'},
-			ArrayUtil.subset(new char[] {'a','b','c','d'}, 0, 3));
+			new char[] {'a', 'b', 'c'},
+			ArrayUtil.subset(new char[] {'a', 'b', 'c', 'd'}, 0, 3));
 		Assert.assertArrayEquals(
 			new double[] {1.0, 2.0, 3.0},
 			ArrayUtil.subset(new double[] {1.0, 2.0, 3.0, 4.0}, 0, 3), 0.0001);

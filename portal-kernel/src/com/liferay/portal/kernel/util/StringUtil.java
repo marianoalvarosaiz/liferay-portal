@@ -443,7 +443,11 @@ public class StringUtil {
 	 *         character, ignoring case; <code>false</code> otherwise
 	 */
 	public static boolean endsWith(String s, char end) {
-		return endsWith(s, (Character.valueOf(end)).toString());
+		if ((s == null) || s.isEmpty()) {
+			return false;
+		}
+
+		return equalsIgnoreCase(s.charAt(s.length() - 1), end);
 	}
 
 	/**
@@ -502,6 +506,43 @@ public class StringUtil {
 		return s1.equals(s2);
 	}
 
+	public static boolean equalsIgnoreCase(char c1, char c2) {
+		if (c1 == c2) {
+			return true;
+		}
+
+		// Fast fallback for non-acsii code.
+
+		if ((c1 > 127) || (c2 > 127)) {
+
+			// Georgian alphabet needs to check both upper and lower case
+
+			if ((Character.toLowerCase(c1) == Character.toLowerCase(c2)) ||
+				(Character.toUpperCase(c1) == Character.toUpperCase(c2))) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		// Fast fallback for non-letter ascii code
+
+		if ((c1 < CharPool.UPPER_CASE_A) || (c1 > CharPool.LOWER_CASE_Z) ||
+			(c2 < CharPool.UPPER_CASE_A) || (c2 > CharPool.LOWER_CASE_Z)) {
+
+			return false;
+		}
+
+		int delta = c1 - c2;
+
+		if ((delta != 32) && (delta != -32)) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Returns <code>true</code> if the strings are equal, ignoring case.
 	 *
@@ -524,40 +565,7 @@ public class StringUtil {
 		}
 
 		for (int i = 0; i < s1.length(); i++) {
-			char c1 = s1.charAt(i);
-
-			char c2 = s2.charAt(i);
-
-			if (c1 == c2) {
-				continue;
-			}
-
-			// Fast fallback for non-acsii code.
-
-			if ((c1 > 127) || (c2 > 127)) {
-
-				// Georgian alphabet needs to check both upper and lower case
-
-				if ((Character.toLowerCase(c1) == Character.toLowerCase(c2)) ||
-					(Character.toUpperCase(c1) == Character.toUpperCase(c2))) {
-
-					continue;
-				}
-
-				return false;
-			}
-
-			// Fast fallback for non-letter ascii code
-
-			if ((c1 < CharPool.UPPER_CASE_A) || (c1 > CharPool.LOWER_CASE_Z) ||
-				(c2 < CharPool.UPPER_CASE_A) || (c2 > CharPool.LOWER_CASE_Z)) {
-
-				return false;
-			}
-
-			int delta = c1 - c2;
-
-			if ((delta != 32) && (delta != -32)) {
+			if (!equalsIgnoreCase(s1.charAt(i), s2.charAt(i))) {
 				return false;
 			}
 		}
@@ -1116,7 +1124,7 @@ public class StringUtil {
 					continue;
 				}
 
-				if ((i + texts[j].length() <= toIndex + 1) &&
+				if (((i + texts[j].length()) <= (toIndex + 1)) &&
 					s.startsWith(texts[j], i)) {
 
 					return i;
@@ -1331,8 +1339,8 @@ public class StringUtil {
 	 * <p>
 	 * <pre>
 	 * <code>
-	 * lastIndexOfAny(null</code>, *, *, *) returns -1
-	 * lastIndexOfAny(*, null</code>, *, *) returns -1
+	 * lastIndexOfAny(null, *, *, *) returns -1
+	 * lastIndexOfAny(*, null, *, *) returns -1
 	 * lastIndexOfAny(*, [], *, *) returns -1
 	 * lastIndexOfAny("zzabyycdxx", ['a','c'], 5, 7) returns 6
 	 * lastIndexOfAny("zzabyycdxx", ['m','n'], *, *) returns -1
@@ -1404,10 +1412,10 @@ public class StringUtil {
 	 * <p>
 	 * <pre>
 	 * <code>
-	 * lastIndexOfAny(null</code>, *) returns -1
-	 * lastIndexOfAny(*, null</code>) returns -1
+	 * lastIndexOfAny(null, *) returns -1
+	 * lastIndexOfAny(*, null) returns -1
 	 * lastIndexOfAny(*, []) returns -1
-	 * lastIndexOfAny(*, [null</code>]) returns -1
+	 * lastIndexOfAny(*, [null]) returns -1
 	 * lastIndexOfAny("zzabyycdxx", ["ab","cd"]) returns 6
 	 * lastIndexOfAny("zzabyycdxx", ["cd","ab"]) returns 6
 	 * lastIndexOfAny("zzabyycdxx", ["mn","op"]) returns -1
@@ -1548,7 +1556,7 @@ public class StringUtil {
 					continue;
 				}
 
-				if ((i + texts[j].length() <= toIndex + 1) &&
+				if (((i + texts[j].length()) <= (toIndex + 1)) &&
 					s.startsWith(texts[j], i)) {
 
 					return i;
@@ -2295,6 +2303,7 @@ public class StringUtil {
 				sb.append(s.substring(x, y));
 
 				x = y + 1;
+
 				y = s.indexOf(oldSub, x);
 			}
 
@@ -2463,6 +2472,7 @@ public class StringUtil {
 				sb.append(s.substring(x, y));
 
 				x = y + length;
+
 				y = s.indexOf(oldSub, x);
 			}
 
@@ -2705,6 +2715,7 @@ public class StringUtil {
 				sb.append(newSub);
 
 				x = y + length;
+
 				y = s.indexOf(oldSub, x);
 			}
 
@@ -3144,6 +3155,7 @@ public class StringUtil {
 
 		while (true) {
 			int x = s.indexOf(begin, pos);
+
 			int y = s.indexOf(end, x + begin.length());
 
 			if ((x == -1) || (y == -1)) {
@@ -3210,6 +3222,7 @@ public class StringUtil {
 
 		while (true) {
 			int x = s.indexOf(begin, pos);
+
 			int y = s.indexOf(end, x + begin.length());
 
 			if ((x == -1) || (y == -1)) {
@@ -3251,6 +3264,7 @@ public class StringUtil {
 		}
 
 		char[] chars = s.toCharArray();
+
 		char[] reverse = new char[chars.length];
 
 		for (int i = 0; i < chars.length; i++) {
@@ -3391,19 +3405,21 @@ public class StringUtil {
 			return null;
 		}
 
-		if (s.length() <= length) {
+		if (s.codePointCount(0, s.length()) <= length) {
 			return s;
 		}
 
 		if (length < suffix.length()) {
-			return s.substring(0, length);
+			return s.substring(0, s.offsetByCodePoints(0, length));
 		}
 
 		int curLength = length;
 
-		for (int j = (curLength - suffix.length()); j >= 0; j--) {
-			if (Character.isWhitespace(s.charAt(j))) {
-				curLength = j;
+		for (int j = (curLength - suffix.length() + 1), offset; j > 0; j--) {
+			offset = s.offsetByCodePoints(0, j);
+
+			if (Character.isWhitespace(s.codePointBefore(offset))) {
+				curLength = j - 1;
 
 				break;
 			}
@@ -3413,7 +3429,7 @@ public class StringUtil {
 			curLength = length - suffix.length();
 		}
 
-		String temp = s.substring(0, curLength);
+		String temp = s.substring(0, s.offsetByCodePoints(0, curLength));
 
 		return temp.concat(suffix);
 	}
@@ -3535,12 +3551,14 @@ public class StringUtil {
 		List<String> nodeValues = new ArrayList<>();
 
 		int offset = 0;
+
 		int pos = s.indexOf(delimiter, offset);
 
 		while (pos != -1) {
 			nodeValues.add(s.substring(offset, pos));
 
 			offset = pos + 1;
+
 			pos = s.indexOf(delimiter, offset);
 		}
 
@@ -3669,12 +3687,14 @@ public class StringUtil {
 		List<String> nodeValues = new ArrayList<>();
 
 		int offset = 0;
+
 		int pos = s.indexOf(delimiter, offset);
 
 		while (pos != -1) {
 			nodeValues.add(s.substring(offset, pos));
 
 			offset = pos + delimiter.length();
+
 			pos = s.indexOf(delimiter, offset);
 		}
 
@@ -3699,6 +3719,7 @@ public class StringUtil {
 	 */
 	public static boolean[] split(String s, String delimiter, boolean x) {
 		String[] array = split(s, delimiter);
+
 		boolean[] newArray = new boolean[array.length];
 
 		for (int i = 0; i < array.length; i++) {
@@ -3731,6 +3752,7 @@ public class StringUtil {
 	 */
 	public static double[] split(String s, String delimiter, double x) {
 		String[] array = split(s, delimiter);
+
 		double[] newArray = new double[array.length];
 
 		for (int i = 0; i < array.length; i++) {
@@ -3762,6 +3784,7 @@ public class StringUtil {
 	 */
 	public static float[] split(String s, String delimiter, float x) {
 		String[] array = split(s, delimiter);
+
 		float[] newArray = new float[array.length];
 
 		for (int i = 0; i < array.length; i++) {
@@ -3793,6 +3816,7 @@ public class StringUtil {
 	 */
 	public static int[] split(String s, String delimiter, int x) {
 		String[] array = split(s, delimiter);
+
 		int[] newArray = new int[array.length];
 
 		for (int i = 0; i < array.length; i++) {
@@ -3824,6 +3848,7 @@ public class StringUtil {
 	 */
 	public static long[] split(String s, String delimiter, long x) {
 		String[] array = split(s, delimiter);
+
 		long[] newArray = new long[array.length];
 
 		for (int i = 0; i < array.length; i++) {
@@ -3855,6 +3880,7 @@ public class StringUtil {
 	 */
 	public static short[] split(String s, String delimiter, short x) {
 		String[] array = split(s, delimiter);
+
 		short[] newArray = new short[array.length];
 
 		for (int i = 0; i < array.length; i++) {
@@ -3955,7 +3981,11 @@ public class StringUtil {
 	 *         specified character; <code>false</code> otherwise
 	 */
 	public static boolean startsWith(String s, char begin) {
-		return startsWith(s, (Character.valueOf(begin)).toString());
+		if ((s == null) || s.isEmpty()) {
+			return false;
+		}
+
+		return equalsIgnoreCase(s.charAt(0), begin);
 	}
 
 	/**
@@ -4137,6 +4167,7 @@ public class StringUtil {
 
 		while (true) {
 			int x = s.indexOf(begin, pos);
+
 			int y = s.indexOf(end, x + begin.length());
 
 			if ((x == -1) || (y == -1)) {
@@ -4330,7 +4361,7 @@ public class StringUtil {
 		int index = 16;
 
 		do {
-			buffer[--index] = HEX_DIGITS[(int) (l & 15)];
+			buffer[--index] = HEX_DIGITS[(int)(l & 15)];
 
 			l >>>= 4;
 		}
@@ -4581,6 +4612,7 @@ public class StringUtil {
 		}
 
 		int len = s.length();
+
 		int x = len;
 
 		for (int i = 0; i < len; i++) {
@@ -4634,6 +4666,7 @@ public class StringUtil {
 		}
 
 		int len = s.length();
+
 		int x = len;
 
 		for (int i = 0; i < len; i++) {
@@ -4695,6 +4728,7 @@ public class StringUtil {
 		}
 
 		int len = s.length();
+
 		int x = len;
 
 		for (int i = 0; i < len; i++) {

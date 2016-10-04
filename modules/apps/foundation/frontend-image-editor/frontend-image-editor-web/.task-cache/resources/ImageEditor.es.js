@@ -1,4 +1,4 @@
-define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-component/src/Component', 'metal-soy/src/Soy', 'metal/src/async/async', 'metal/src/core', 'metal-dom/src/dom', 'metal-promise/src/promise/Promise', 'metal-dropdown/src/Dropdown', './ImageEditorHistoryEntry.es', './ImageEditorLoading.es', './ImageEditor.soy'], function (exports, _Component2, _Soy, _async, _core, _dom, _Promise, _Dropdown, _ImageEditorHistoryEntry, _ImageEditorLoading, _ImageEditor) {
+define("frontend-image-editor-web@1.0.5/ImageEditor.es", ['exports', 'metal-component/src/Component', 'metal-soy/src/Soy', 'metal/src/async/async', 'metal/src/core', 'metal-dom/src/dom', 'metal-promise/src/promise/Promise', 'metal-dropdown/src/Dropdown', './ImageEditorHistoryEntry.es', './ImageEditorLoading.es', './ImageEditor.soy'], function (exports, _Component2, _Soy, _async, _core, _dom, _Promise, _Dropdown, _ImageEditorHistoryEntry, _ImageEditorLoading, _ImageEditor) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -161,12 +161,36 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 			var _this3 = this;
 
 			return new _Promise.CancellablePromise(function (resolve, reject) {
-				_this3.getImageEditorCanvas().toBlob(resolve);
+				_this3.getImageEditorImageData().then(function (imageData) {
+					var canvas = document.createElement('canvas');
+					canvas.width = imageData.width;
+					canvas.height = imageData.height;
+
+					canvas.getContext('2d').putImageData(imageData, 0, 0);
+
+					if (canvas.toBlob) {
+						canvas.toBlob(resolve, _this3.saveMimeType);
+					} else {
+						var data = atob(canvas.toDataURL(_this3.saveMimeType).split(',')[1]);
+						var length = data.length;
+						var bytes = new Uint8Array(length);
+
+						for (var i = 0; i < length; i++) {
+							bytes[i] = data.charCodeAt(i);
+						}
+
+						resolve(new Blob([bytes], { type: _this3.saveMimeType }));
+					}
+				});
 			});
 		};
 
 		ImageEditor.prototype.getImageEditorImageData = function getImageEditorImageData() {
 			return this.history_[this.historyIndex_].getImageData();
+		};
+
+		ImageEditor.prototype.normalizeCanvasMimeType_ = function normalizeCanvasMimeType_(mimeType) {
+			return mimeType.replace('jpg', 'jpeg');
 		};
 
 		ImageEditor.prototype.notifySaveResult_ = function notifySaveResult_(result) {
@@ -178,6 +202,8 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 				});
 
 				Liferay.Util.getWindow().hide();
+			} else if (result.error) {
+				this.showError_(result.error.message);
 			}
 		};
 
@@ -233,12 +259,44 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 					return _this6.submitBlob_(imageBlob);
 				}).then(function (result) {
 					return _this6.notifySaveResult_(result);
+				}).catch(function (error) {
+					return _this6.showError_(error);
 				});
 			}
 		};
 
-		ImageEditor.prototype.submitBlob_ = function submitBlob_(imageBlob) {
+		ImageEditor.prototype.setterSaveMimeTypeFn_ = function setterSaveMimeTypeFn_(saveMimeType) {
+			if (!saveMimeType) {
+				var imageExtensionRegex = /(?:.*:\/\/)?(?:[^\/])*[^.]*.([^?\/$]*)/;
+				var imageExtension = this.image.match(imageExtensionRegex)[1];
+
+				saveMimeType = this.normalizeCanvasMimeType_('image/' + imageExtension);
+			}
+
+			return saveMimeType;
+		};
+
+		ImageEditor.prototype.showError_ = function showError_(message) {
 			var _this7 = this;
+
+			this.components.loading.show = false;
+
+			AUI().use('liferay-alert', function () {
+				new Liferay.Alert({
+					delay: {
+						hide: 2000,
+						show: 0
+					},
+					duration: 3000,
+					icon: 'exclamation-circle',
+					message: message.message,
+					type: 'danger'
+				}).render(_this7.element);
+			});
+		};
+
+		ImageEditor.prototype.submitBlob_ = function submitBlob_(imageBlob) {
+			var _this8 = this;
 
 			var saveFileName = this.saveFileName;
 			var saveParamName = this.saveParamName;
@@ -248,18 +306,17 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 
 				formData.append(saveParamName, imageBlob, saveFileName);
 
-				$.ajax({
+				var requestConfig = {
 					contentType: false,
 					data: formData,
-					error: function error(_error) {
-						return reject(_error);
-					},
+					dataType: "json",
 					processData: false,
-					success: function success(result) {
-						return resolve(result);
-					},
 					type: 'POST',
-					url: _this7.saveURL
+					url: _this8.saveURL
+				};
+
+				AUI.$.ajax(requestConfig).done(resolve).fail(function (jqXHR, status, error) {
+					return reject(error);
 				});
 			});
 
@@ -269,16 +326,16 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 		};
 
 		ImageEditor.prototype.syncHistory_ = function syncHistory_() {
-			var _this8 = this;
+			var _this9 = this;
 
 			return new _Promise.CancellablePromise(function (resolve, reject) {
-				_this8.history_[_this8.historyIndex_].getImageData().then(function (imageData) {
-					_this8.syncImageData_(imageData);
+				_this9.history_[_this9.historyIndex_].getImageData().then(function (imageData) {
+					_this9.syncImageData_(imageData);
 
-					_this8.history = {
-						canRedo: _this8.historyIndex_ < _this8.history_.length - 1,
-						canReset: _this8.history_.length > 1,
-						canUndo: _this8.historyIndex_ > 0
+					_this9.history = {
+						canRedo: _this9.historyIndex_ < _this9.history_.length - 1,
+						canReset: _this9.history_.length > 1,
+						canUndo: _this9.historyIndex_ > 0
 					};
 
 					resolve();
@@ -304,7 +361,15 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 
 			var boundingBox = _dom2.default.closest(this.element, '.portlet-layout');
 			var availableWidth = boundingBox.offsetWidth;
-			var availableHeight = boundingBox.offsetHeight - 142 - 40;
+
+			var dialogFooterHeight = 0;
+			var dialogFooter = this.element.querySelector('.dialog-footer');
+
+			if (dialogFooter) {
+				dialogFooterHeight = dialogFooter.offsetHeight;
+			}
+
+			var availableHeight = boundingBox.offsetHeight - 142 - 40 - dialogFooterHeight;
 			var availableAspectRatio = availableWidth / availableHeight;
 
 			if (availableAspectRatio > 1) {
@@ -362,6 +427,16 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
    * @type {String}
    */
 		saveFileName: {
+			validator: _core2.default.isString
+		},
+
+		/**
+   * Mime type of the saved image. If not explicitly set,
+   * the image mime type will be infered from the image url.
+   * @type {String}
+   */
+		saveMimeType: {
+			setter: 'setterSaveMimeTypeFn_',
 			validator: _core2.default.isString
 		},
 
