@@ -1086,8 +1086,7 @@ public class DLImpl implements DL {
 			DLFileVersion dlFileVersion, ServiceContext serviceContext)
 		throws PortalException {
 
-		if (Objects.equals(
-				serviceContext.getCommand(), Constants.ADD_WEBDAV) ||
+		if (Objects.equals(serviceContext.getCommand(), Constants.ADD_WEBDAV) ||
 			Objects.equals(
 				serviceContext.getCommand(), Constants.UPDATE_WEBDAV)) {
 
@@ -1128,6 +1127,12 @@ public class DLImpl implements DL {
 				break;
 			}
 			catch (PortalException pe) {
+
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(pe, pe);
+				}
 			}
 		}
 

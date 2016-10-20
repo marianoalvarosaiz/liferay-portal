@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.model.ReleaseConstants;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.upgrade.OlderVersionException;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
@@ -69,6 +70,7 @@ public class ReleaseLocalServiceImpl extends ReleaseLocalServiceBaseImpl {
 
 		release.setCreateDate(now);
 		release.setModifiedDate(now);
+
 		release.setServletContextName(servletContextName);
 		release.setBuildNumber(buildNumber);
 
@@ -103,6 +105,7 @@ public class ReleaseLocalServiceImpl extends ReleaseLocalServiceBaseImpl {
 
 		release.setCreateDate(now);
 		release.setModifiedDate(now);
+
 		release.setServletContextName(servletContextName);
 		release.setSchemaVersion(schemaVersion);
 
@@ -165,6 +168,7 @@ public class ReleaseLocalServiceImpl extends ReleaseLocalServiceBaseImpl {
 	}
 
 	@Override
+	@Transactional
 	public int getBuildNumberOrCreate() throws PortalException {
 
 		// Gracefully add version column
@@ -321,10 +325,12 @@ public class ReleaseLocalServiceImpl extends ReleaseLocalServiceBaseImpl {
 		int buildNumber = GetterUtil.getInteger(
 			unfilteredPortalProperties.getProperty(
 				PropsKeys.RELEASE_INFO_BUILD_NUMBER));
+
 		int previousBuildNumber = GetterUtil.getInteger(
 			unfilteredPortalProperties.getProperty(
 				PropsKeys.RELEASE_INFO_PREVIOUS_BUILD_NUMBER),
 			buildNumber);
+
 		boolean indexOnUpgrade = GetterUtil.getBoolean(
 			unfilteredPortalProperties.getProperty(PropsKeys.INDEX_ON_UPGRADE),
 			PropsValues.INDEX_ON_UPGRADE);

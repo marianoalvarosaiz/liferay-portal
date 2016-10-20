@@ -333,7 +333,11 @@ public class Recurrence implements Serializable {
 	 * @return Calendar
 	 */
 	public Calendar getUntil() {
-		return ((until != null) ? (Calendar)until.clone() : null);
+		if (until != null) {
+			return (Calendar)until.clone();
+		}
+
+		return null;
 	}
 
 	/**
@@ -691,9 +695,8 @@ public class Recurrence implements Serializable {
 	 * @return long
 	 */
 	protected static long getMonthNumber(Calendar cal) {
-		return
-			((cal.get(Calendar.YEAR) - 1970) * 12L) +
-				((cal.get(Calendar.MONTH) - Calendar.JANUARY));
+		return ((cal.get(Calendar.YEAR) - 1970) * 12L) +
+			((cal.get(Calendar.MONTH) - Calendar.JANUARY));
 	}
 
 	/**
@@ -729,9 +732,8 @@ public class Recurrence implements Serializable {
 			(tempCal.getFirstDayOfWeek() - Calendar.THURSDAY) * 24L * 60 * 60 *
 				1000;
 
-		return
-			(tempCal.getTime().getTime() - weekEpoch) /
-				(7 * 24 * 60 * 60 * 1000);
+		return (tempCal.getTime().getTime() - weekEpoch) /
+			(7 * 24 * 60 * 60 * 1000);
 	}
 
 	/**
@@ -746,8 +748,7 @@ public class Recurrence implements Serializable {
 			throw new IllegalArgumentException("Not a constant length field");
 		}
 
-		int fieldLength =
-			(start.getMaximum(field) - start.getMinimum(field) + 1);
+		int fieldLength = start.getMaximum(field) - start.getMinimum(field) + 1;
 		int delta = start.get(field) - candidate.get(field);
 
 		if (delta > 0) {

@@ -20,7 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, with no direct replacement
  */
+@Deprecated
 public class JournalContentSearchTag extends IncludeTag {
 
 	public void setShowListed(boolean showListed) {
@@ -55,7 +57,7 @@ public class JournalContentSearchTag extends IncludeTag {
 	private static final String _PAGE =
 		"/html/taglib/ui/journal_content_search/page.jsp";
 
-	private boolean _showListed;
+	private boolean _showListed = true;
 	private String _targetPortletId;
 
 }

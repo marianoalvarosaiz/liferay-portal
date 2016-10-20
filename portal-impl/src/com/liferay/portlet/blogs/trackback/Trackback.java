@@ -24,7 +24,10 @@ import com.liferay.portlet.blogs.linkback.LinkbackConsumer;
 
 /**
  * @author André de Oliveira
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.blogs.web.internal.Trackback}
  */
+@Deprecated
 public interface Trackback {
 
 	public void addTrackback(
@@ -33,8 +36,16 @@ public interface Trackback {
 			Function<String, ServiceContext> serviceContextFunction)
 		throws PortalException;
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public void setCommentManager(CommentManager commentManager);
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public void setLinkbackConsumer(LinkbackConsumer linkbackConsumer);
 
 }

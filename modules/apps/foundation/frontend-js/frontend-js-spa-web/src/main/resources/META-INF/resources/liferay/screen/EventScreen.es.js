@@ -1,9 +1,8 @@
 'use strict';
 
-import dom from 'metal-dom/src/dom';
 import HtmlScreen from 'senna/src/screen/HtmlScreen';
-import globalEval from 'metal-dom/src/globalEval';
-import { CancellablePromise } from 'metal-promise/src/promise/Promise';
+import globals from 'senna/src/globals/globals';
+import {CancellablePromise} from 'metal-promise/src/promise/Promise';
 import Utils from '../util/Utils.es';
 
 class EventScreen extends HtmlScreen {
@@ -11,7 +10,6 @@ class EventScreen extends HtmlScreen {
 		super();
 
 		this.cacheable = false;
-		this.timeout = Liferay.PropsValues.JAVASCRIPT_SINGLE_PAGE_APPLICATION_TIMEOUT;
 	}
 
 	dispose() {
@@ -44,6 +42,14 @@ class EventScreen extends HtmlScreen {
 		this.cacheLastModified = (new Date()).getTime();
 	}
 
+	checkRedirectPath(redirectPath) {
+		var app = Liferay.SPA.app;
+
+		if (!globals.capturedFormElement && !app.findRoute(redirectPath)) {
+			window.location.href = redirectPath;
+		}
+	}
+
 	deactivate() {
 		super.deactivate();
 
@@ -66,21 +72,42 @@ class EventScreen extends HtmlScreen {
 		);
 	}
 
+	copyBodyAttributes() {
+		var virtualBody = this.virtualDocument.querySelector('body');
+
+		document.body.className = virtualBody.className;
+		document.body.onload = virtualBody.onload;
+	}
+
 	flip(surfaces) {
-		document.body.className = this.virtualDocument.querySelector('body').className;
+		this.copyBodyAttributes();
 
 		return CancellablePromise.resolve(Utils.resetAllPortlets())
 			.then(CancellablePromise.resolve(this.beforeScreenFlip()))
 			.then(super.flip(surfaces))
-			.then(() => {
-				Liferay.fire(
-					'screenFlip',
-					{
-						app: Liferay.SPA.app,
-						screen: this
-					}
-				);
-			});
+			.then(
+				() => {
+					this.runBodyOnLoad();
+
+					Liferay.fire(
+						'screenFlip',
+						{
+							app: Liferay.SPA.app,
+							screen: this
+						}
+					);
+				}
+			);
+	}
+
+	getCache() {
+		var app = Liferay.SPA.app;
+
+		if (app.isCacheEnabled() && !app.isScreenCacheExpired(this)) {
+			return super.getCache();
+		}
+
+		return null;
 	}
 
 	getCacheLastModified() {
@@ -95,18 +122,32 @@ class EventScreen extends HtmlScreen {
 
 	load(path) {
 		return super.load(path)
-			.then((content) => {
-				Liferay.fire(
-					'screenLoad',
-					{
-						app: Liferay.SPA.app,
-						content: content,
-						screen: this
-					}
-				);
+			.then(
+				(content) => {
+					var redirectPath = this.beforeUpdateHistoryPath(path);
 
-				return content;
-			});
+					this.checkRedirectPath(redirectPath);
+
+					Liferay.fire(
+						'screenLoad',
+						{
+							app: Liferay.SPA.app,
+							content: content,
+							screen: this
+						}
+					);
+
+					return content;
+				}
+			);
+	}
+
+	runBodyOnLoad() {
+		var onLoad = document.body.onload;
+
+		if (onLoad) {
+			onLoad();
+		}
 	}
 }
 

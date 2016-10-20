@@ -374,6 +374,7 @@ public class DLFileEntryLocalServiceImpl
 				dlFileEntry, majorVersion, serviceContext.getWorkflowAction());
 
 			latestDLFileVersion.setVersion(version);
+
 			latestDLFileVersion.setChangeLog(changeLog);
 
 			dlFileVersionPersistence.update(latestDLFileVersion);
@@ -1549,6 +1550,13 @@ public class DLFileEntryLocalServiceImpl
 			return;
 		}
 
+		dlFileEntry = dlFileEntryPersistence.fetchByPrimaryKey(
+			dlFileEntry.getFileEntryId());
+
+		if (dlFileEntry == null) {
+			return;
+		}
+
 		dlFileEntry.setModifiedDate(dlFileEntry.getModifiedDate());
 		dlFileEntry.setReadCount(dlFileEntry.getReadCount() + increment);
 
@@ -1594,8 +1602,8 @@ public class DLFileEntryLocalServiceImpl
 	}
 
 	/**
-	 * As of 7.0.0, replaced by {@link #isKeepFileVersionLabel(long, boolean,
-	 * ServiceContext)}
+	 * @deprecated As of 7.0.0, replaced by {@link #isKeepFileVersionLabel(long,
+	 * boolean, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -2402,6 +2410,13 @@ public class DLFileEntryLocalServiceImpl
 			return fileEntryTypeId;
 		}
 		catch (InvalidFileEntryTypeException ifete) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(ifete, ifete);
+			}
+
 			return dlFileEntryTypeLocalService.getDefaultFileEntryTypeId(
 				dlFileEntry.getFolderId());
 		}
@@ -2437,6 +2452,8 @@ public class DLFileEntryLocalServiceImpl
 		for (DLFileVersion dlFileVersion : dlFileVersions) {
 			dlFileVersion.setFolderId(newFolderId);
 			dlFileVersion.setTreePath(dlFileVersion.buildTreePath());
+			dlFileVersion.setStatusByUserId(userId);
+			dlFileVersion.setStatusByUserName(user.getFullName());
 
 			dlFileVersionPersistence.update(dlFileVersion);
 		}

@@ -136,11 +136,11 @@
 
 		<execute function="Type" locator1="NavBar#BASIC_SEARCH_FIELD" value1="userfn" />
 
-		<execute function="AssertClick" locator1="NavBar#BASIC_SEARCH_BUTTON" value1="Search" />
+		<execute function="Click" locator1="Button#SUBMIT" />
 
-		<var name="key_userScreenName" value="usersn" />
+		<var name="key_rowEntry" value="usersn" />
 
-		<execute function="Click" locator1="UsersAndOrganizations#USER_TABLE_ACTIONS" />
+		<execute function="Click" locator1="ContentRow#ENTRY_CONTENT_ENTRY_ELLIPSIS" />
 
 		<execute function="AssertClick" locator1="MenuItem#MANAGE_PAGES" value1="Manage Pages" />
 
@@ -187,7 +187,7 @@
 			<var name="permissionDefinitionValue" value="View Control Panel Menu" />
 			<var name="permissionNavigationKey" value="CONTROL_PANEL_GENERAL_PERMISSIONS" />
 			<var name="permissionNavigationValue" value="General Permissions" />
-			<var name="roleName" value="Authenticated" />
+			<var name="roleTitle" value="Authenticated" />
 			<var name="roleUser" value="User" />
 		</execute>
 
@@ -266,7 +266,7 @@
 			<var name="portlet" value="Site Memberships" />
 		</execute>
 
-		<execute macro="Site#addMemberUserGroupCP">
+		<execute macro="Site#assignUserGroupAsMemberCP">
 			<var name="siteName" value="Site Name" />
 			<var name="userGroupName" value="UG UserGroup Name" />
 		</execute>
@@ -279,9 +279,13 @@
 			<var name="portlet" value="Site Memberships" />
 		</execute>
 
-		<execute macro="Site#assignSiteRolesUserGroupsCP">
-			<var name="roleName" value="Site Owner" />
-			<var name="userGroupName" value="UG UserGroup Name" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="User Groups" />
+		</execute>
+
+		<execute macro="Site#assignSiteRoleCP">
+			<var name="resourceName" value="UG UserGroup Name" />
+			<var name="roleTitle" value="Site Owner" />
 		</execute>
 
 		<execute macro="User#logoutPG" />
@@ -291,16 +295,15 @@
 			<var name="userEmailAddress" value="userea3@liferay.com" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoControlPanelSites">
-			<var name="portlet" value="Sites" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
 		</execute>
 
-		<var name="key_siteName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSitesMembers">
+			<var name="portlet" value="Site Memberships" />
+		</execute>
 
-		<execute function="AssertClick#assertPartialTextClickAt" locator1="Sites#SITE_TABLE_NAME" value1="Site Name" />
-
-		<execute function="AssertClick#assertPartialTextClickAtCPNavigation" locator1="Home#SITE_ADMINISTRATION_MEMBERS" value1="Members" />
-		<execute function="AssertClick#assertPartialTextClickAtCPNavigation" locator1="Home#SITE_ADMINISTRATION_MEMBERS_SITE_MEMBERSHIPS" value1="Site Memberships" />
+		<execute function="Click" locator1="Icon#DISPLAY_STYLE_LIST" />
 
 		<var name="key_userScreenName" value="usersn3" />
 
@@ -355,7 +358,7 @@
 		</execute>
 
 		<execute macro="Role#addCP">
-			<var name="roleName" value="Test UserGroup Role" />
+			<var name="roleTitle" value="Test UserGroup Role" />
 			<var name="roleType" value="Regular" />
 		</execute>
 
@@ -368,7 +371,7 @@
 			<var name="permissionDefinitionValue" value="Access in Site Administration" />
 			<var name="permissionNavigationKey" value="SITE_ADMIN_CONTENT_BOOKMARKS" />
 			<var name="permissionNavigationValue" value="Bookmarks" />
-			<var name="roleName" value="Test UserGroup Role" />
+			<var name="roleTitle" value="Test UserGroup Role" />
 			<var name="roleUser" value="Test UserGroup Role" />
 		</execute>
 
@@ -377,7 +380,7 @@
 		</execute>
 
 		<execute macro="Role#assignMembersUserGroupsCP">
-			<var name="roleName" value="Test UserGroup Role" />
+			<var name="roleTitle" value="Test UserGroup Role" />
 			<var name="userGroupName" value="UG UserGroup Name" />
 		</execute>
 
@@ -414,6 +417,14 @@
 	</command>
 
 	<command name="UserGroupSiteTemplates" priority="4">
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Server Administration" />
+		</execute>
+
+		<execute macro="ServerAdministration#executeServerResourcesActions">
+			<var name="actionsDescription" value="Reindex all search indexes." />
+		</execute>
+
 		<execute macro="ProductMenu#gotoControlPanelUsers">
 			<var name="portlet" value="Users and Organizations" />
 		</execute>
@@ -555,7 +566,7 @@
 		</execute>
 
 		<execute macro="Role#addCP">
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 			<var name="roleType" value="Regular" />
 		</execute>
 
@@ -566,7 +577,7 @@
 		<execute macro="Role#definePermissionCmdCP">
 			<var name="permissionDefinitionKey" value="CONTROL_PANEL_GENERAL_PERMISSIONS_GO_TO_CONTROL_PANEL_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="View Control Panel Menu" />
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -576,7 +587,17 @@
 		<execute macro="Role#definePermissionCmdCP">
 			<var name="permissionDefinitionKey" value="CONTROL_PANEL_USERS_USER_GROUPS_GENERAL_PERMISSIONS_ACCESS_IN_CONTROL_PANEL_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Access in Control Panel" />
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Roles" />
+		</execute>
+
+		<execute macro="Role#definePermissionCmdCP">
+			<var name="permissionDefinitionKey" value="CONTROL_PANEL_USERS_USER_GROUPS_RESOURCE_PERMISSIONS_USER_GROUP_VIEW_CHECKBOX" />
+			<var name="permissionDefinitionValue" value="View" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -604,7 +625,7 @@
 		</execute>
 
 		<execute macro="User#assignRegularRoleCP">
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
@@ -721,7 +742,7 @@
 		</execute>
 
 		<execute macro="Role#addCP">
-			<var name="roleName" value="Roles Siterole Name" />
+			<var name="roleTitle" value="Roles Siterole Name" />
 			<var name="roleType" value="Site" />
 		</execute>
 
@@ -737,9 +758,9 @@
 			<var name="userGroupName" value="UG UserGroup Name" />
 		</execute>
 
-		<var name="key_roleName" value="Roles Siterole Name" />
+		<var name="key_roleTitle" value="Roles Siterole Name" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 		<execute function="AssertTextEquals" locator1="Permissions#CONTENT_PERMISSIONS_ROLE_NAME" value1="Roles Siterole Name" />
 	</command>
 </definition>

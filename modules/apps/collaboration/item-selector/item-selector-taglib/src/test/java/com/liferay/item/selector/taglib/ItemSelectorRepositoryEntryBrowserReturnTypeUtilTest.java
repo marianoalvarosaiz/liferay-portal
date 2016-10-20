@@ -16,8 +16,8 @@ package com.liferay.item.selector.taglib;
 
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.Base64ItemSelectorReturnType;
+import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
 import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
-import com.liferay.item.selector.criteria.UploadableFileReturnType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,7 @@ public class ItemSelectorRepositoryEntryBrowserReturnTypeUtilTest {
 			new URLItemSelectorReturnType();
 
 		itemSelectorReturnTypes.add(existingFileEntryReturnType);
+
 		itemSelectorReturnTypes.add(new Base64ItemSelectorReturnType());
 
 		ItemSelectorReturnType itemSelectorReturnType =
@@ -83,8 +84,8 @@ public class ItemSelectorRepositoryEntryBrowserReturnTypeUtilTest {
 			new ArrayList<>();
 
 		itemSelectorReturnTypes.add(new Base64ItemSelectorReturnType());
+		itemSelectorReturnTypes.add(new FileEntryItemSelectorReturnType());
 		itemSelectorReturnTypes.add(new URLItemSelectorReturnType());
-		itemSelectorReturnTypes.add(new UploadableFileReturnType());
 
 		ItemSelectorRepositoryEntryBrowserReturnTypeUtil.
 			getFirstAvailableExistingFileEntryReturnType(

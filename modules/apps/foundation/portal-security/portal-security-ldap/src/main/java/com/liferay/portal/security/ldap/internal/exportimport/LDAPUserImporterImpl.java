@@ -506,6 +506,13 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 				companyId, ldapGroup.getGroupName());
 		}
 		catch (NoSuchRoleException nsre) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsre, nsre);
+			}
+
 			User defaultUser = _userLocalService.getDefaultUser(companyId);
 
 			Map<Locale, String> descriptionMap = new HashMap<>();
@@ -623,7 +630,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 	}
 
 	protected String escapeValue(String value) {
-		return StringUtil.replace(value, "\\,", "\\\\,");
+		return StringUtil.replace(value, _UNESCAPED_CHARS, _ESCAPED_CHARS);
 	}
 
 	protected User getUser(long companyId, LDAPUser ldapUser) throws Exception {
@@ -637,7 +644,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			ServiceContext serviceContext = ldapUser.getServiceContext();
 
 			return _userLocalService.fetchUserByUuidAndCompanyId(
-				serviceContext.getUuid(), companyId);
+				serviceContext.getUuidWithoutReset(), companyId);
 		}
 
 		String authType = PrefsPropsUtil.getString(
@@ -1068,6 +1075,13 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			}
 		}
 		catch (NoSuchUserGroupException nsuge) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsuge, nsuge);
+			}
+
 			StopWatch stopWatch = new StopWatch();
 
 			if (_log.isDebugEnabled()) {
@@ -1513,7 +1527,7 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			passwordReset, ldapUser.getReminderQueryQuestion(),
 			ldapUser.getReminderQueryAnswer(), ldapUser.getScreenName(),
 			ldapUser.getEmailAddress(), ldapUser.getFacebookId(),
-			ldapUser.getOpenId(), (ldapUser.getPortraitId() > 0),
+			ldapUser.getOpenId(), ldapUser.getPortraitId() > 0,
 			ldapUser.getPortraitBytes(), ldapUser.getLanguageId(),
 			ldapUser.getTimeZoneId(), ldapUser.getGreeting(),
 			ldapUser.getComments(), ldapUser.getFirstName(),
@@ -1527,13 +1541,14 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 			ldapUser.getUserGroupRoles(), ldapUser.getUserGroupIds(),
 			ldapUser.getServiceContext());
 
+		ServiceContext serviceContext = new ServiceContext();
+
 		if (modifiedDate != null) {
-			user = _userLocalService.updateModifiedDate(
-				user.getUserId(), modifiedDate);
+			serviceContext.setModifiedDate(modifiedDate);
 		}
 
 		user = _userLocalService.updateStatus(
-			user.getUserId(), ldapUser.getStatus(), new ServiceContext());
+			user.getUserId(), ldapUser.getStatus(), serviceContext);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug(
@@ -1575,9 +1590,17 @@ public class LDAPUserImporterImpl implements LDAPUserImporter, UserImporter {
 		"prefixId", "skypeSn", "smsSn", "suffixId", "twitterSn"
 	};
 
+	private static final String[] _ESCAPED_CHARS = {
+		"\\\\,", "\\\\#", "\\\\+", "\\\\<", "\\\\>", "\\\\;", "\\\\=", "\\\\ "
+	};
+
 	private static final String _IMPORT_BY_GROUP = "group";
 
 	private static final String _IMPORT_BY_USER = "user";
+
+	private static final String[] _UNESCAPED_CHARS = {
+		"\\,", "\\#", "\\+", "\\<", "\\>", "\\;", "\\=", "\\ "
+	};
 
 	private static final String _USER_PASSWORD_SCREEN_NAME = "screenName";
 

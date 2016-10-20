@@ -1,6 +1,10 @@
 AUI.add(
 	'liferay-ddm-form-field-editor',
 	function(A) {
+		var Renderer = Liferay.DDM.Renderer;
+
+		var Util = Renderer.Util;
+
 		var EditorField = A.Component.create(
 			{
 				ATTRS: {
@@ -40,7 +44,7 @@ AUI.add(
 						return A.merge(
 							EditorField.superclass.getTemplateContext.apply(instance, arguments),
 							{
-								placeholder: instance.getLocalizedValue(instance.get('placeholder'))
+								placeholder: instance.get('placeholder')
 							}
 						);
 					},
@@ -67,7 +71,7 @@ AUI.add(
 						if (editorNode.inDoc() && !instance.get('readOnly')) {
 							var name = instance.getQualifiedName();
 
-							var value = instance.getContextValue();
+							var value = instance.get('value');
 
 							editorNode.html(value);
 
@@ -96,6 +100,8 @@ AUI.add(
 									textMode: false
 								}
 							).render();
+
+							instance._alloyEditor.getNativeEditor().on('actionPerformed', A.bind(instance._onActionPerformed, instance));
 						}
 
 						return instance;
@@ -106,25 +112,27 @@ AUI.add(
 
 						EditorField.superclass.setValue.apply(instance, arguments);
 
-						if (instance._alloyEditor) {
+						if (instance._alloyEditor && value !== instance.getValue()) {
 							instance._alloyEditor.setHTML(value);
 						}
 					},
 
-					_onChangeEditor: function() {
+					_onActionPerformed: function() {
 						var instance = this;
 
-						var value = instance._alloyEditor.getHTML();
+						instance._onChangeEditor(instance.getValue());
+					},
 
-						instance.getInputNode().val(value);
+					_onChangeEditor: function(value) {
+						var instance = this;
 
-						instance.fire(
-							'valueChanged',
-							{
-								field: instance,
-								value: value
-							}
-						);
+						var inputNode = instance.getInputNode();
+
+						if (inputNode && !Util.compare(value, inputNode.val())) {
+							inputNode.val(value);
+
+							instance.set('value', value);
+						}
 					}
 				}
 			}

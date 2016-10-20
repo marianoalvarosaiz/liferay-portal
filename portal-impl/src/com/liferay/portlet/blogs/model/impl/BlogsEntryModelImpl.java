@@ -71,8 +71,11 @@ import java.util.Map;
  * @see BlogsEntryImpl
  * @see BlogsEntry
  * @see BlogsEntryModel
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.blogs.model.impl.BlogsEntryImpl}
  * @generated
  */
+@Deprecated
 @JSON(strict = true)
 @ProviderType
 public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
@@ -777,6 +780,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 		return _allowPingbacks;
 	}
 
+	@JSON
 	@Override
 	public boolean isAllowPingbacks() {
 		return _allowPingbacks;
@@ -793,6 +797,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 		return _allowTrackbacks;
 	}
 
+	@JSON
 	@Override
 	public boolean isAllowTrackbacks() {
 		return _allowTrackbacks;
@@ -868,6 +873,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 		return _smallImage;
 	}
 
+	@JSON
 	@Override
 	public boolean isSmallImage() {
 		return _smallImage;

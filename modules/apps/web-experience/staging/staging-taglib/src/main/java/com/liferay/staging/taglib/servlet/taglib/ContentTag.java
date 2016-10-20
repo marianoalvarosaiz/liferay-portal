@@ -14,7 +14,9 @@
 
 package com.liferay.staging.taglib.servlet.taglib;
 
-import com.liferay.staging.taglib.servlet.ServletContextUtil;
+import aQute.bnd.annotation.ProviderType;
+
+import com.liferay.staging.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import javax.servlet.jsp.PageContext;
 /**
  * @author Levente Hudák
  */
+@ProviderType
 public class ContentTag extends IncludeTag {
 
 	public void setCmd(String cmd) {
@@ -85,7 +88,7 @@ public class ContentTag extends IncludeTag {
 
 	private String _cmd;
 	private boolean _disableInputs;
-	private long _exportImportConfigurationId = 0;
+	private long _exportImportConfigurationId;
 	private boolean _showAllPortlets;
 	private String _type;
 

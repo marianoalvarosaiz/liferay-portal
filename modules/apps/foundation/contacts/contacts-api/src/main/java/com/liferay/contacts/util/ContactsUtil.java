@@ -136,11 +136,15 @@ public class ContactsUtil {
 
 			jsonObject.put("connectionRequested", connectionRequested);
 
-			boolean connected =
-				!connectionRequested &&
+			boolean connected = false;
+
+			if (!connectionRequested &&
 				SocialRelationLocalServiceUtil.hasRelation(
 					userId, user.getUserId(),
-					SocialRelationConstants.TYPE_BI_CONNECTION);
+					SocialRelationConstants.TYPE_BI_CONNECTION)) {
+
+				connected = true;
+			}
 
 			jsonObject.put("connected", connected);
 
@@ -162,6 +166,7 @@ public class ContactsUtil {
 		Contact contact = user.getContact();
 
 		sb.append(_getName(user, contact));
+
 		sb.append(_getJobTitle(user));
 		sb.append(_getEmailAddresses(user));
 		sb.append(_getPhones(user));

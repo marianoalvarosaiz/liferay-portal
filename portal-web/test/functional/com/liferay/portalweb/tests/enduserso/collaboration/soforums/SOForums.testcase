@@ -633,7 +633,7 @@
 			<var name="categoryName" value="${categoryName}" />
 		</execute>
 
-		<execute macro="MessageboardsThread#quickReplyPG">
+		<execute macro="MessageboardsThread#replyPG">
 			<var name="threadBody" value="${threadBody}" />
 			<var name="threadReplyBody" value="${threadReplyBody}" />
 			<var name="threadSubject" value="${threadSubject}" />
@@ -2118,8 +2118,6 @@
 		<execute macro="LAR#configureExportSiteCP">
 			<var name="exportPermissions" value="true" />
 			<var name="larFileName" value="${larFileName}" />
-			<var name="siteName" value="${siteName}" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="SOSite#tearDownCP" />
@@ -3069,10 +3067,7 @@
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Joe Bloggs" />
 			<var name="gmailAssetType" value="Message Boards" />
-			<var name="gmailMailTableMessageTitle" value="${categoryName} New Message: ${threadSubject}" />
 			<var name="gmailMessageBody" value="${threadBody}" />
-			<var name="gmailMessageBodyClosing" value="Liferay Message Boards" />
-			<var name="gmailMessageBodyGreeting" value="${threadBody}" />
 			<var name="gmailMessageTitle" value="${categoryName} New Message: ${threadSubject}" />
 		</execute>
 
@@ -3206,10 +3201,7 @@
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Joe Bloggs" />
 			<var name="gmailAssetType" value="Inappropriate Content Flagged" />
-			<var name="gmailMailTableMessageTitle" value="Inappropriate Content Flagged in ${siteName2}" />
 			<var name="gmailMessageBody" value="You are receiving this email because you are administrator of ${siteName2}. Please review the content in this site." />
-			<var name="gmailMessageBodyClosing" value="Sincerely" />
-			<var name="gmailMessageBodyGreeting" value="Dear ${userName}," />
 			<var name="gmailMessageTitle" value="Inappropriate Content Flagged in ${siteName2}" />
 		</execute>
 

@@ -21,6 +21,8 @@ import com.liferay.dynamic.data.mapping.util.DDMTemplatePermissionSupport;
 import com.liferay.exportimport.kernel.staging.permission.StagingPermissionUtil;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerCustomizerFactory.ServiceWrapper;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.BaseResourcePermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -28,7 +30,6 @@ import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
@@ -149,7 +150,7 @@ public class DDMTemplatePermission extends BaseResourcePermissionChecker {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #contains(PermissionChecker,
+	 * @deprecated As of 2.1.0, replaced by {@link #contains(PermissionChecker,
 	 *             DDMTemplate, String)}
 	 */
 	@Deprecated
@@ -202,7 +203,7 @@ public class DDMTemplatePermission extends BaseResourcePermissionChecker {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #contains(PermissionChecker,
+	 * @deprecated As of 2.1.0, replaced by {@link #contains(PermissionChecker,
 	 *             long, String)}
 	 */
 	@Deprecated
@@ -261,13 +262,9 @@ public class DDMTemplatePermission extends BaseResourcePermissionChecker {
 			return DDMTemplate.class.getName();
 		}
 
-		StringBundler sb = new StringBundler(3);
-
-		sb.append(PortalUtil.getClassName(resourceClassNameId));
-		sb.append(ResourceActionsUtil.getCompositeModelNameSeparator());
-		sb.append(DDMTemplate.class.getName());
-
-		return sb.toString();
+		return ResourceActionsUtil.getCompositeModelName(
+			PortalUtil.getClassName(resourceClassNameId),
+			DDMTemplate.class.getName());
 	}
 
 	@Override
@@ -278,6 +275,13 @@ public class DDMTemplatePermission extends BaseResourcePermissionChecker {
 			return contains(permissionChecker, classPK, actionId);
 		}
 		catch (PortalException pe) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+
 			return false;
 		}
 	}
@@ -316,6 +320,9 @@ public class DDMTemplatePermission extends BaseResourcePermissionChecker {
 
 		_ddmTemplateLocalService = ddmTemplateLocalService;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DDMTemplatePermission.class);
 
 	private static DDMPermissionSupportTracker _ddmPermissionSupportTracker;
 	private static DDMTemplateLocalService _ddmTemplateLocalService;

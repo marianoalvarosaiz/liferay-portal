@@ -48,7 +48,7 @@ searchContainer.setDeltaConfigurable(false);
 int total = 0;
 List results = null;
 
-int notPublishedEntriesCount = BlogsEntryServiceUtil.getGroupUserEntriesCount(scopeGroupId, themeDisplay.getUserId(), new int[] {WorkflowConstants.STATUS_DRAFT, WorkflowConstants.STATUS_SCHEDULED});
+int notPublishedEntriesCount = BlogsEntryServiceUtil.getGroupUserEntriesCount(scopeGroupId, themeDisplay.getUserId(), new int[] {WorkflowConstants.STATUS_DRAFT, WorkflowConstants.STATUS_PENDING, WorkflowConstants.STATUS_SCHEDULED});
 
 if ((assetCategoryId != 0) || Validator.isNotNull(assetTagName)) {
 	SearchContainerResults<AssetEntry> searchContainerResults = BlogsUtil.getSearchContainerResults(searchContainer);
@@ -57,12 +57,12 @@ if ((assetCategoryId != 0) || Validator.isNotNull(assetTagName)) {
 
 	results = searchContainerResults.getResults();
 }
-else if (mvcRenderCommandName.equals("/blogs/view_not_published_entries")) {
+else if ((notPublishedEntriesCount > 0) && mvcRenderCommandName.equals("/blogs/view_not_published_entries")) {
 	total = notPublishedEntriesCount;
 
 	searchContainer.setTotal(total);
 
-	results = BlogsEntryServiceUtil.getGroupUserEntries(scopeGroupId, themeDisplay.getUserId(), new int[] {WorkflowConstants.STATUS_DRAFT, WorkflowConstants.STATUS_SCHEDULED}, searchContainer.getStart(), searchContainer.getEnd(), new EntryModifiedDateComparator());
+	results = BlogsEntryServiceUtil.getGroupUserEntries(scopeGroupId, themeDisplay.getUserId(), new int[] {WorkflowConstants.STATUS_DRAFT, WorkflowConstants.STATUS_PENDING, WorkflowConstants.STATUS_SCHEDULED}, searchContainer.getStart(), searchContainer.getEnd(), new EntryModifiedDateComparator());
 
 	searchContainer.setResults(results);
 }

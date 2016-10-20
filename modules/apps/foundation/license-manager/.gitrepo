@@ -1,11 +1,9 @@
 ;
-; Do not manually edit this file. See
-; https://github.com/git-commands/git-subrepo#readme for more information.
+; Do not manually edit this file.
 ;
 [subrepo]
-	branch = 7.0.x
 	cmdver = liferay
-	commit = a27ed25392672fcb45f4ddff6f6d4ddfb8a648cb
+	commit = 08741212ff3df4a7cbbea440e978a8b6f761a0e5
 	mode = push
-	parent = 6e39e7f50af7916607926452dd91797962a53cef
-	remote = git@github.com:liferay-continuous-integration/com-liferay-license-manager.git
+	parent = fd0d5aaba127fbb9fedc5b71c10bc92c88b8b2da
+	remote = git@github.com:liferay/com-liferay-license-manager.git

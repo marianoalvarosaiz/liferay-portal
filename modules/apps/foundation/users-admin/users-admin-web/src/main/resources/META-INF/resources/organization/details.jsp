@@ -80,7 +80,7 @@ User selUser = (User)request.getAttribute("user.selUser");
 		</c:choose>
 
 		<c:choose>
-			<c:when test="<%= organization == null && PropsValues.ORGANIZATIONS_TYPES.length > 1 %>">
+			<c:when test="<%= (organization == null) && (PropsValues.ORGANIZATIONS_TYPES.length > 1) %>">
 				<aui:select name="type">
 
 					<%
@@ -195,12 +195,14 @@ if (parentOrganization != null) {
 		</portlet:renderURL>
 
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			href="<%= rowURL %>"
 			name="name"
 			property="name"
 		/>
 
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			href="<%= rowURL %>"
 			name="type"
 			value="<%= LanguageUtil.get(request, curOrganization.getType()) %>"

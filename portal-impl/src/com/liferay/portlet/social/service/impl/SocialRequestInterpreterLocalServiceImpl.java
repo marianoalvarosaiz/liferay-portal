@@ -93,6 +93,8 @@ public class SocialRequestInterpreterLocalServiceImpl
 
 	@Override
 	public void afterPropertiesSet() {
+		super.afterPropertiesSet();
+
 		Registry registry = RegistryUtil.getRegistry();
 
 		Filter filter = registry.getFilter(
@@ -245,7 +247,8 @@ public class SocialRequestInterpreterLocalServiceImpl
 		}
 		catch (JSONException jsone) {
 			_log.error(
-				"Unable to create JSON object from " + request.getExtraData());
+				"Unable to create JSON object from " + request.getExtraData(),
+				jsone);
 
 			return StringPool.BLANK;
 		}

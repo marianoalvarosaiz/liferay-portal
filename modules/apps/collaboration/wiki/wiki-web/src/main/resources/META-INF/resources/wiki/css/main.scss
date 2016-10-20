@@ -24,6 +24,10 @@
 	}
 
 	.wiki-body, .wiki-page-editor {
+		img {
+			max-width: 100%;
+		}
+
 		table {
 			border-collapse: collapse;
 			width: 100%;
@@ -81,10 +85,6 @@
 
 	.taglib-discussion {
 		margin: 1em;
-	}
-
-	.page-tags {
-		color: #7D7D7D;
 	}
 
 	.portlet-body {
@@ -208,6 +208,10 @@
 			text-align: right;
 
 			img {
+				margin-left: 5px;
+			}
+
+			& > span {
 				margin-left: 5px;
 			}
 		}

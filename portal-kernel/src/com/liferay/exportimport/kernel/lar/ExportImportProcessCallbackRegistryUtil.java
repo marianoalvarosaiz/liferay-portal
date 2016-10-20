@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.kernel.lar;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.util.concurrent.Callable;
@@ -21,15 +23,18 @@ import java.util.concurrent.Callable;
 /**
  * @author Daniel Kocsis
  */
+@ProviderType
 public class ExportImportProcessCallbackRegistryUtil {
 
 	public static void registerCallback(Callable<?> callable) {
 		_exportImportProcessCommitCallbackRegistry.registerCallback(callable);
 	}
 
-	private static final ExportImportProcessCallbackRegistry
+	private static volatile ExportImportProcessCallbackRegistry
 		_exportImportProcessCommitCallbackRegistry =
 			ProxyFactory.newServiceTrackedInstance(
-				ExportImportProcessCallbackRegistry.class);
+				ExportImportProcessCallbackRegistry.class,
+				ExportImportProcessCallbackRegistryUtil.class,
+				"_exportImportProcessCommitCallbackRegistry");
 
 }

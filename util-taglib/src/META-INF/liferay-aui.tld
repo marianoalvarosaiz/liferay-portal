@@ -299,6 +299,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
+		<description><![CDATA[Deprecated as of 7.0.0, with no direct replacement.]]></description>
 		<name>component</name>
 		<tag-class>com.liferay.taglib.aui.ComponentTag</tag-class>
 		<body-content>JSP</body-content>
@@ -1320,6 +1321,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
+		<description><![CDATA[Deprecated as of 7.0.0, with no direct replacement.]]></description>
 		<name>panel</name>
 		<tag-class>com.liferay.taglib.aui.PanelTag</tag-class>
 		<body-content>JSP</body-content>
@@ -1440,6 +1442,11 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
+			<name>field</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[Whether the component should be the first element of the form. The default value is <code>false</code>.]]></description>
 			<name>first</name>
 			<required>false</required>
@@ -1507,6 +1514,13 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Sets the class for the bean object.]]></description>
+			<name>model</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Class</type>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Whether multiple options can be selected. If set to <code>true</code>, the select field expands to allow for multiple selections. The default value is <code>false</code>.]]></description>
@@ -1594,7 +1608,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Creates a spacer component that enables JSP 2.1 server-side trimming of white spaces.]]></description>
+		<description><![CDATA[Deprecated as of 7.0.0, with no direct replacement. Creates a spacer component that enables JSP 2.1 server-side trimming of white spaces.]]></description>
 		<name>spacer</name>
 		<tag-class>com.liferay.taglib.aui.SpacerTag</tag-class>
 		<body-content>JSP</body-content>

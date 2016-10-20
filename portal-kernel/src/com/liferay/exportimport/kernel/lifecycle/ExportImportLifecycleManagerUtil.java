@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.kernel.lifecycle;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.ProxyFactory;
 
 import java.io.Serializable;
@@ -21,6 +23,7 @@ import java.io.Serializable;
 /**
  * @author Michael C. Han
  */
+@ProviderType
 public class ExportImportLifecycleManagerUtil {
 
 	public static void fireExportImportLifecycleEvent(
@@ -30,8 +33,10 @@ public class ExportImportLifecycleManagerUtil {
 			code, processFlag, arguments);
 	}
 
-	private static final ExportImportLifecycleManager
+	private static volatile ExportImportLifecycleManager
 		_exportImportLifecycleManager = ProxyFactory.newServiceTrackedInstance(
-			ExportImportLifecycleManager.class);
+			ExportImportLifecycleManager.class,
+			ExportImportLifecycleManagerUtil.class,
+			"_exportImportLifecycleManager");
 
 }

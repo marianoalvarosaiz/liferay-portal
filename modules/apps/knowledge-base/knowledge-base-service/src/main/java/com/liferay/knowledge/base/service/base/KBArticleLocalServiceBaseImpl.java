@@ -32,6 +32,7 @@ import com.liferay.knowledge.base.service.KBArticleLocalService;
 import com.liferay.knowledge.base.service.persistence.KBArticleFinder;
 import com.liferay.knowledge.base.service.persistence.KBArticlePersistence;
 import com.liferay.knowledge.base.service.persistence.KBCommentPersistence;
+import com.liferay.knowledge.base.service.persistence.KBFolderFinder;
 import com.liferay.knowledge.base.service.persistence.KBFolderPersistence;
 import com.liferay.knowledge.base.service.persistence.KBTemplatePersistence;
 
@@ -41,6 +42,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Conjunction;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -344,6 +346,27 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 				public void addCriteria(DynamicQuery dynamicQuery) {
 					Criterion modifiedDateCriterion = portletDataContext.getDateRangeCriteria(
 							"modifiedDate");
+
+					if (modifiedDateCriterion != null) {
+						Conjunction conjunction = RestrictionsFactoryUtil.conjunction();
+
+						conjunction.add(modifiedDateCriterion);
+
+						Disjunction disjunction = RestrictionsFactoryUtil.disjunction();
+
+						disjunction.add(RestrictionsFactoryUtil.gtProperty(
+								"modifiedDate", "lastPublishDate"));
+
+						Property lastPublishDateProperty = PropertyFactoryUtil.forName(
+								"lastPublishDate");
+
+						disjunction.add(lastPublishDateProperty.isNull());
+
+						conjunction.add(disjunction);
+
+						modifiedDateCriterion = conjunction;
+					}
+
 					Criterion statusDateCriterion = portletDataContext.getDateRangeCriteria(
 							"statusDate");
 
@@ -618,6 +641,24 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 */
 	public void setKBFolderPersistence(KBFolderPersistence kbFolderPersistence) {
 		this.kbFolderPersistence = kbFolderPersistence;
+	}
+
+	/**
+	 * Returns the k b folder finder.
+	 *
+	 * @return the k b folder finder
+	 */
+	public KBFolderFinder getKBFolderFinder() {
+		return kbFolderFinder;
+	}
+
+	/**
+	 * Sets the k b folder finder.
+	 *
+	 * @param kbFolderFinder the k b folder finder
+	 */
+	public void setKBFolderFinder(KBFolderFinder kbFolderFinder) {
+		this.kbFolderFinder = kbFolderFinder;
 	}
 
 	/**
@@ -1251,6 +1292,8 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected com.liferay.knowledge.base.service.KBFolderLocalService kbFolderLocalService;
 	@BeanReference(type = KBFolderPersistence.class)
 	protected KBFolderPersistence kbFolderPersistence;
+	@BeanReference(type = KBFolderFinder.class)
+	protected KBFolderFinder kbFolderFinder;
 	@BeanReference(type = com.liferay.knowledge.base.service.KBTemplateLocalService.class)
 	protected com.liferay.knowledge.base.service.KBTemplateLocalService kbTemplateLocalService;
 	@BeanReference(type = KBTemplatePersistence.class)

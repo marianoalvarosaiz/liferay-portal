@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.lar;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -29,6 +31,7 @@ import com.liferay.portal.kernel.xml.Element;
 /**
  * @author Mate Thurzo
  */
+@ProviderType
 public class ThemeExporter {
 
 	public static ThemeExporter getInstance() {
@@ -51,8 +54,18 @@ public class ThemeExporter {
 			return;
 		}
 
+		Theme theme = layoutSet.getTheme();
+
+		if (theme == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to export theme " + layoutSet.getThemeId());
+			}
+
+			return;
+		}
+
 		StagedTheme stagedTheme = ModelAdapterUtil.adapt(
-			layoutSet.getTheme(), Theme.class, StagedTheme.class);
+			theme, Theme.class, StagedTheme.class);
 
 		if (!portletDataContext.isPerformDirectBinaryImport()) {
 			Element layoutSetElement = portletDataContext.getExportDataElement(

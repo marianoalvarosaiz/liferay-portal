@@ -23,6 +23,8 @@ import com.liferay.portal.kernel.exception.LayoutTypeException;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -107,7 +109,7 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 	}
 
 	public String getFriendlyURL(String friendlyURL) {
-		return FriendlyURLNormalizerUtil.normalize(friendlyURL);
+		return FriendlyURLNormalizerUtil.normalizeWithEncoding(friendlyURL);
 	}
 
 	public Map<Locale, String> getFriendlyURLMap(
@@ -174,6 +176,13 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 			return priority;
 		}
 		catch (NoSuchLayoutException nsle) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsle, nsle);
+			}
+
 			return 0;
 		}
 	}
@@ -354,7 +363,9 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 
 		LayoutImpl.validateFriendlyURLKeyword(friendlyURL);
 
-		if (friendlyURL.contains(Portal.FRIENDLY_URL_SEPARATOR)) {
+		if (friendlyURL.contains(Portal.FRIENDLY_URL_SEPARATOR) ||
+			friendlyURL.endsWith("/-")) {
+
 			LayoutFriendlyURLException lfurle = new LayoutFriendlyURLException(
 				LayoutFriendlyURLException.KEYWORD_CONFLICT);
 
@@ -578,5 +589,8 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 	protected ResourcePermissionLocalService resourcePermissionLocalService;
 
 	private static final int _PRIORITY_BUFFER = 1000000;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		LayoutLocalServiceHelper.class);
 
 }

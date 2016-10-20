@@ -58,23 +58,6 @@ create unique index IX_C0AAD74D on AssetVocabulary (groupId, name[$COLUMN_LENGTH
 create index IX_C4E6FD10 on AssetVocabulary (uuid_[$COLUMN_LENGTH:75$], companyId);
 create unique index IX_1B2B8792 on AssetVocabulary (uuid_[$COLUMN_LENGTH:75$], groupId);
 
-create index IX_BB0C2905 on BlogsEntry (companyId, displayDate, status);
-create index IX_EB2DCE27 on BlogsEntry (companyId, status);
-create index IX_A5F57B61 on BlogsEntry (companyId, userId, status);
-create index IX_2672F77F on BlogsEntry (displayDate, status);
-create index IX_F0E73383 on BlogsEntry (groupId, displayDate, status);
-create index IX_1EFD8EE9 on BlogsEntry (groupId, status);
-create unique index IX_DB780A20 on BlogsEntry (groupId, urlTitle[$COLUMN_LENGTH:150$]);
-create index IX_DA04F689 on BlogsEntry (groupId, userId, displayDate, status);
-create index IX_49E15A23 on BlogsEntry (groupId, userId, status);
-create index IX_5E8307BB on BlogsEntry (uuid_[$COLUMN_LENGTH:75$], companyId);
-create unique index IX_1B1040FD on BlogsEntry (uuid_[$COLUMN_LENGTH:75$], groupId);
-
-create index IX_90CDA39A on BlogsStatsUser (companyId, entryCount);
-create index IX_28C78D5C on BlogsStatsUser (groupId, entryCount);
-create unique index IX_82254C25 on BlogsStatsUser (groupId, userId);
-create index IX_507BA031 on BlogsStatsUser (userId, lastPostDate);
-
 create unique index IX_E7B95510 on BrowserTracker (userId);
 
 create unique index IX_B27A301F on ClassName_ (value[$COLUMN_LENGTH:200$]);
@@ -106,6 +89,7 @@ create unique index IX_ED5CA615 on DLFileEntry (groupId, folderId, title[$COLUMN
 create index IX_D20C434D on DLFileEntry (groupId, userId, folderId);
 create index IX_D9492CF6 on DLFileEntry (mimeType[$COLUMN_LENGTH:75$]);
 create index IX_1B352F4A on DLFileEntry (repositoryId, folderId);
+create index IX_25F5CAB9 on DLFileEntry (smallImageId, largeImageId, custom1ImageId, custom2ImageId);
 create index IX_31079DE8 on DLFileEntry (uuid_[$COLUMN_LENGTH:75$], companyId);
 create unique index IX_BC2E7E6A on DLFileEntry (uuid_[$COLUMN_LENGTH:75$], groupId);
 
@@ -210,7 +194,7 @@ create index IX_6A925A4D on Image (size_);
 create index IX_C7FBC998 on Layout (companyId);
 create unique index IX_BC2C4231 on Layout (groupId, privateLayout, friendlyURL[$COLUMN_LENGTH:255$]);
 create unique index IX_7162C27C on Layout (groupId, privateLayout, layoutId);
-create index IX_6DE88B06 on Layout (groupId, privateLayout, parentLayoutId);
+create index IX_7399B71E on Layout (groupId, privateLayout, parentLayoutId, priority);
 create index IX_8CE8C0D9 on Layout (groupId, privateLayout, sourcePrototypeLayoutUuid[$COLUMN_LENGTH:75$]);
 create index IX_1A1B61D2 on Layout (groupId, privateLayout, type_[$COLUMN_LENGTH:75$]);
 create index IX_23922F7D on Layout (iconImageId);
@@ -503,14 +487,14 @@ create unique index IX_D1C44A6E on UserIdMapper (userId, type_[$COLUMN_LENGTH:75
 
 create unique index IX_8B6E3ACE on UserNotificationDelivery (userId, portletId[$COLUMN_LENGTH:200$], classNameId, notificationType, deliveryType);
 
-create index IX_BF29100B on UserNotificationEvent (type_[$COLUMN_LENGTH:75$]);
+create index IX_BF29100B on UserNotificationEvent (type_[$COLUMN_LENGTH:200$]);
 create index IX_5CE95F03 on UserNotificationEvent (userId, actionRequired, archived);
 create index IX_3DBB361A on UserNotificationEvent (userId, archived);
 create index IX_E32CC19 on UserNotificationEvent (userId, delivered, actionRequired);
 create index IX_C4EFBD45 on UserNotificationEvent (userId, deliveryType, actionRequired, archived);
 create index IX_A87A585C on UserNotificationEvent (userId, deliveryType, archived);
 create index IX_A6F83617 on UserNotificationEvent (userId, deliveryType, delivered, actionRequired);
-create index IX_8FB65EC1 on UserNotificationEvent (userId, type_[$COLUMN_LENGTH:75$], deliveryType, delivered);
+create index IX_8FB65EC1 on UserNotificationEvent (userId, type_[$COLUMN_LENGTH:200$], deliveryType, delivered);
 create index IX_A6BAFDFE on UserNotificationEvent (uuid_[$COLUMN_LENGTH:75$], companyId);
 
 create index IX_29BA1CF5 on UserTracker (companyId);

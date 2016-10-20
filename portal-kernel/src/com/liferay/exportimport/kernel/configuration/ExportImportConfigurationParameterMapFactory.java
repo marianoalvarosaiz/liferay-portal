@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.kernel.configuration;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.exportimport.kernel.lar.ExportImportDateUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.exportimport.kernel.lar.UserIdStrategy;
@@ -27,6 +29,7 @@ import javax.portlet.PortletRequest;
 /**
  * @author Akos Thurzo
  */
+@ProviderType
 public class ExportImportConfigurationParameterMapFactory {
 
 	public static Map<String, String[]> buildParameterMap() {
@@ -72,6 +75,14 @@ public class ExportImportConfigurationParameterMapFactory {
 
 			parameterMap.put(
 				PortletDataHandlerKeys.LAYOUT_SET_PROTOTYPE_LINK_ENABLED,
+				new String[] {Boolean.FALSE.toString()});
+		}
+
+		if (!parameterMap.containsKey(
+				PortletDataHandlerKeys.LAYOUT_SET_PROTOTYPE_SETTINGS)) {
+
+			parameterMap.put(
+				PortletDataHandlerKeys.LAYOUT_SET_PROTOTYPE_SETTINGS,
 				new String[] {Boolean.FALSE.toString()});
 		}
 
@@ -210,6 +221,19 @@ public class ExportImportConfigurationParameterMapFactory {
 			new String[] {
 				String.valueOf(layoutSetPrototypeLinkEnabledParameter)
 			});
+
+		// Layout set prototype settings
+
+		boolean layoutSetPrototypeSettingsParameter = false;
+
+		if (layoutSetPrototypeLinkEnabled != null) {
+			layoutSetPrototypeSettingsParameter =
+				layoutSetPrototypeLinkEnabled.booleanValue();
+		}
+
+		parameterMap.put(
+			PortletDataHandlerKeys.LAYOUT_SET_PROTOTYPE_SETTINGS,
+			new String[] {String.valueOf(layoutSetPrototypeSettingsParameter)});
 
 		// Layout set settings
 

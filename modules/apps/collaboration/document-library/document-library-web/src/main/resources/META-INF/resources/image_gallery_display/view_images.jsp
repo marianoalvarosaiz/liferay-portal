@@ -82,10 +82,18 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 						}
 					}
 				}
+
+				String title = fileEntry.getTitle();
+
+				if (Validator.isNotNull(fileEntry.getDescription())) {
+					title += " - " + fileEntry.getDescription();
+				}
+
+				row.setCssClass("lfr-asset-item");
 				%>
 
 				<liferay-ui:search-container-column-text>
-					<div class="image-link preview" <%= (hasAudio || hasVideo) ? "data-options=\"height=" + playerHeight + "&thumbnailURL=" + HtmlUtil.escapeURL(DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1")) + "&width=640" + dataOptions + "\"" : StringPool.BLANK %> href="<%= imageURL %>" thumbnailId="<%= thumbnailId %>" title="<%= HtmlUtil.escapeAttribute(fileEntry.getTitle()) %>">
+					<div class="image-link preview" <%= (hasAudio || hasVideo) ? "data-options=\"height=" + playerHeight + "&thumbnailURL=" + HtmlUtil.escapeURL(DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1")) + "&width=640" + dataOptions + "\"" : StringPool.BLANK %> href="<%= imageURL %>" thumbnailId="<%= thumbnailId %>" title="<%= HtmlUtil.escapeAttribute(title) %>">
 						<c:choose>
 							<c:when test="<%= Validator.isNull(imageURL) %>">
 								<liferay-frontend:icon-vertical-card
@@ -117,6 +125,10 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
 				</portlet:renderURL>
+
+				<%
+				row.setCssClass("lfr-asset-folder");
+				%>
 
 				<liferay-ui:search-container-column-text>
 					<liferay-frontend:horizontal-card

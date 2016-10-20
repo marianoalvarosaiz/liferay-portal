@@ -3,8 +3,9 @@
 import App from 'senna/src/app/App';
 import core from 'metal/src/core';
 import dom from 'metal-dom/src/dom';
-import Utils from '../util/Utils.es';
 import LiferaySurface from '../surface/Surface.es';
+import Utils from '../util/Utils.es';
+import {CancellablePromise} from 'metal-promise/src/promise/Promise';
 
 class LiferayApp extends App {
 	constructor() {
@@ -12,6 +13,11 @@ class LiferayApp extends App {
 
 		this.portletsBlacklist = {};
 		this.validStatusCodes = [];
+
+		this.setShouldUseFacade(true);
+
+		this.timeout = Math.max(Liferay.SPA.requestTimeout, 0) || Utils.getMaxTimeout();
+		this.timeoutAlert = null;
 
 		var exceptionsSelector = ':not([target="_blank"]):not([data-senna-off]):not([data-resource-href])';
 
@@ -36,16 +42,6 @@ class LiferayApp extends App {
 		dom.append(body, '<div class="lfr-spa-loading-bar"></div>');
 	}
 
-	createScreenInstance(path, route) {
-		var screen = super.createScreenInstance(path, route);
-
-		if (this.isCacheEnabled() && this.isScreenCacheExpired(screen)) {
-			screen.clearCache();
-		}
-
-		return screen;
-	}
-
 	getCacheExpirationTime() {
 		return Liferay.SPA.cacheExpirationTime;
 	}
@@ -58,14 +54,30 @@ class LiferayApp extends App {
 		return this.getCacheExpirationTime() > -1;
 	}
 
+	isInPortletBlacklist(element) {
+		return Object.keys(this.portletsBlacklist).some(
+			(portletId) => {
+				var boundaryId = Utils.getPortletBoundaryId(portletId);
+
+				var portlets = document.querySelectorAll('[id^="' + boundaryId + '"]');
+
+				return Array.prototype.slice.call(portlets).some(portlet => dom.contains(portlet, element));
+			}
+		);
+	}
+
 	isScreenCacheExpired(screen) {
+		if (this.getCacheExpirationTime() === 0) {
+			return false;
+		}
+
 		var lastModifiedInterval = (new Date()).getTime() - screen.getCacheLastModified();
 
 		return lastModifiedInterval > this.getCacheExpirationTime();
 	}
 
-	onBeforeNavigate(event) {
-		if (Liferay.SPA.clearScreensCache || event.form) {
+	onBeforeNavigate(data, event) {
+		if (Liferay.SPA.clearScreensCache || data.form) {
 			this.clearScreensCache();
 		}
 
@@ -73,28 +85,26 @@ class LiferayApp extends App {
 			'beforeNavigate',
 			{
 				app: this,
-				path: event.path
+				originalEvent: event,
+				path: data.path
 			}
 		);
 	}
 
 	onDocClickDelegate_(event) {
-		var inPortletsBlacklist = false;
-
-		Object.keys(this.portletsBlacklist).forEach(
-			(portletId) => {
-				var boundaryId = Utils.getPortletBoundaryId(portletId);
-				var portlets = document.querySelectorAll('[id^="' + boundaryId + '"]');
-
-				inPortletsBlacklist = Array.prototype.slice.call(portlets).some(portlet => dom.contains(portlet, event.delegateTarget));
-			}
-		);
-
-		if (inPortletsBlacklist) {
+		if (this.isInPortletBlacklist(event.delegateTarget)) {
 			return;
 		}
 
 		super.onDocClickDelegate_(event);
+	}
+
+	onDocSubmitDelegate_(event) {
+		if (this.isInPortletBlacklist(event.delegateTarget)) {
+			return;
+		}
+
+		super.onDocSubmitDelegate_(event);
 	}
 
 	onEndNavigate(event) {
@@ -107,14 +117,20 @@ class LiferayApp extends App {
 			}
 		);
 
+		if (!this.pendingNavigate) {
+			this._clearRequestTimer();
+			this._hideTimeoutAlert();
+		}
+
 		if (event.error) {
 			if (event.error.invalidStatus || event.error.requestError || event.error.timeout) {
-				if (event.form) {
-					event.form.submit();
-				}
-				else {
-					window.location.href = event.path;
-				}
+				this._createNotification(
+					{
+						message: Liferay.Language.get('there-was-an-unexpected-error.-please-refresh-the-current-page'),
+						title: Liferay.Language.get('error'),
+						type: 'danger'
+					}
+				);
 			}
 		}
 		else if (Liferay.Layout && Liferay.Data.layoutConfig) {
@@ -138,6 +154,8 @@ class LiferayApp extends App {
 				path: event.path
 			}
 		);
+
+		this._startRequestTimer(event.path);
 	}
 
 	setPortletsBlacklist(portletsBlacklist) {
@@ -146,6 +164,81 @@ class LiferayApp extends App {
 
 	setValidStatusCodes(validStatusCodes) {
 		this.validStatusCodes = validStatusCodes;
+	}
+
+	_clearRequestTimer() {
+		if (this.requestTimer) {
+			clearTimeout(this.requestTimer);
+		}
+	}
+
+	_createNotification(config) {
+		return new CancellablePromise(
+			(resolve) => {
+				AUI().use(
+					'liferay-notification',
+					() => {
+						resolve(
+							new Liferay.Notification(
+								Object.assign(
+									{
+										closeable: true,
+										delay: {
+											hide: 0,
+											show: 0
+										},
+										duration: 500,
+										type: 'warning'
+									},
+									config
+								)
+							).render('body')
+						);
+					}
+				);
+			}
+		);
+	}
+
+	_hideTimeoutAlert() {
+		if (this.timeoutAlert) {
+			this.timeoutAlert.hide();
+		}
+	}
+
+	_startRequestTimer(path) {
+		this._clearRequestTimer();
+
+		if (Liferay.SPA.userNotification.timeout > 0) {
+			this.requestTimer = setTimeout(
+				() => {
+					Liferay.fire(
+						'spaRequestTimeout',
+						{
+							path: path
+						}
+					);
+
+					if (!this.timeoutAlert) {
+						this._createNotification(
+							{
+								message: Liferay.SPA.userNotification.message,
+								title: Liferay.SPA.userNotification.title,
+								type: 'warning'
+							}
+						).then(
+							(alert) => {
+								this.timeoutAlert = alert;
+							}
+						);
+					}
+					else {
+						this.timeoutAlert.show();
+					}
+				},
+				Liferay.SPA.userNotification.timeout
+			);
+		}
 	}
 }
 

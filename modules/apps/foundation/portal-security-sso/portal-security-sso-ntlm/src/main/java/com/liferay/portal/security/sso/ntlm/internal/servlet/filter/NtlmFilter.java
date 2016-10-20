@@ -26,10 +26,10 @@ import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.security.sso.ntlm.NetlogonConnectionManager;
 import com.liferay.portal.security.sso.ntlm.configuration.NtlmConfiguration;
 import com.liferay.portal.security.sso.ntlm.constants.NtlmConstants;
 import com.liferay.portal.security.sso.ntlm.constants.NtlmWebKeys;
+import com.liferay.portal.security.sso.ntlm.internal.NetlogonConnectionManager;
 import com.liferay.portal.security.sso.ntlm.internal.NtlmManager;
 import com.liferay.portal.security.sso.ntlm.internal.NtlmUserAccount;
 import com.liferay.portal.util.PortalInstances;
@@ -92,6 +92,7 @@ import org.osgi.service.component.annotations.Reference;
  * com.liferay.portal.security.sso.ntlm.internal.auto.login.NTLMAutoLogin} class
  * to log the user in (see above).
  * </li>
+ * </ol>
  *
  * @author Bruno Farache
  * @author Marcus Schmidke
@@ -115,20 +116,20 @@ public class NtlmFilter extends BaseFilter {
 	public boolean isFilterEnabled(
 		HttpServletRequest request, HttpServletResponse response) {
 
-		try {
-			long companyId = PortalInstances.getCompanyId(request);
+		if (!BrowserSnifferUtil.isIe(request)) {
+			return false;
+		}
 
+		long companyId = PortalInstances.getCompanyId(request);
+
+		try {
 			NtlmConfiguration ntlmConfiguration =
 				_configurationProvider.getConfiguration(
 					NtlmConfiguration.class,
 					new CompanyServiceSettingsLocator(
 						companyId, NtlmConstants.SERVICE_NAME));
 
-			if (BrowserSnifferUtil.isIe(request) &&
-				ntlmConfiguration.enabled()) {
-
-				return true;
-			}
+			return ntlmConfiguration.enabled();
 		}
 		catch (Exception e) {
 			_log.error(e, e);

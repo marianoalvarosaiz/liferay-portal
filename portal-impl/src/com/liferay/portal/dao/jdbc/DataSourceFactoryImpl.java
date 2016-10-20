@@ -231,6 +231,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 
 		while (enu.hasMoreElements()) {
 			String key = enu.nextElement();
+
 			String value = properties.getProperty(key);
 
 			// Map org.apache.commons.dbcp.BasicDataSource to C3PO
@@ -596,7 +597,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 
 	private static final PACL _pacl = new NoPACL();
 
-	private ServiceTracker <MBeanServer, MBeanServer> _serviceTracker;
+	private ServiceTracker<MBeanServer, MBeanServer> _serviceTracker;
 
 	private static class MBeanServerServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer<MBeanServer, MBeanServer> {

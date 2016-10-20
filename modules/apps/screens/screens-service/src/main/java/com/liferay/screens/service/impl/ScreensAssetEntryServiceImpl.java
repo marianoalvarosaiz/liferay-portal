@@ -17,7 +17,8 @@ package com.liferay.screens.service.impl;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
-import com.liferay.blogs.kernel.model.BlogsEntry;
+import com.liferay.blogs.model.BlogsEntry;
+import com.liferay.blogs.service.BlogsEntryService;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.journal.model.JournalArticle;
@@ -47,6 +48,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
 import com.liferay.screens.service.base.ScreensAssetEntryServiceBaseImpl;
 
@@ -153,6 +155,20 @@ public class ScreensAssetEntryServiceImpl
 		}
 	}
 
+	public JSONObject getAssetEntry(long entryId, Locale locale)
+		throws PortalException {
+
+		return toJSONObject(assetEntryLocalService.getEntry(entryId), locale);
+	}
+
+	public JSONObject getAssetEntry(
+			String className, long classPK, Locale locale)
+		throws PortalException {
+
+		return toJSONObject(
+			assetEntryLocalService.getEntry(className, classPK), locale);
+	}
+
 	protected List<AssetEntry> filterAssetEntries(List<AssetEntry> assetEntries)
 		throws PortalException {
 
@@ -199,7 +215,7 @@ public class ScreensAssetEntryServiceImpl
 	protected JSONObject getBlogsEntryJSONObject(AssetEntry assetEntry)
 		throws PortalException {
 
-		BlogsEntry blogsEntry = blogsEntryService.getEntry(
+		BlogsEntry blogsEntry = _blogsEntryService.getEntry(
 			assetEntry.getClassPK());
 
 		JSONObject blogsEntryJSONObject = JSONFactoryUtil.createJSONObject();
@@ -310,20 +326,30 @@ public class ScreensAssetEntryServiceImpl
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (AssetEntry assetEntry : assetEntries) {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-				JSONFactoryUtil.looseSerialize(assetEntry));
+			JSONObject jsonObject = toJSONObject(assetEntry, locale);
 
-			jsonObject.put("className", assetEntry.getClassName());
-			jsonObject.put("description", assetEntry.getDescription(locale));
-			jsonObject.put("locale", String.valueOf(locale));
-			jsonObject.put(
-				"object", getAssetObjectJSONObject(assetEntry, locale));
-			jsonObject.put("summary", assetEntry.getSummary(locale));
-			jsonObject.put("title", assetEntry.getTitle(locale));
 			jsonArray.put(jsonObject);
 		}
 
 		return jsonArray;
 	}
+
+	protected JSONObject toJSONObject(AssetEntry assetEntry, Locale locale)
+		throws PortalException {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+			JSONFactoryUtil.looseSerialize(assetEntry));
+
+		jsonObject.put("className", assetEntry.getClassName());
+		jsonObject.put("description", assetEntry.getDescription(locale));
+		jsonObject.put("locale", String.valueOf(locale));
+		jsonObject.put("object", getAssetObjectJSONObject(assetEntry, locale));
+		jsonObject.put("summary", assetEntry.getSummary(locale));
+		jsonObject.put("title", assetEntry.getTitle(locale));
+		return jsonObject;
+	}
+
+	@ServiceReference(type = BlogsEntryService.class)
+	private BlogsEntryService _blogsEntryService;
 
 }

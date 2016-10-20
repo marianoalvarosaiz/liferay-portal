@@ -41,7 +41,7 @@ request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 %>
 
 <c:choose>
-	<c:when test="<%= (ListUtil.isNotEmpty(groups) && (groups.size() == 1)) %>">
+	<c:when test="<%= ListUtil.isNotEmpty(groups) && (groups.size() == 1) %>">
 
 		<%
 		Group group = groups.get(0);
@@ -74,7 +74,7 @@ request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 				%>
 
 				<div class="sidebar-header">
-					<ul class="list-inline list-unstyled sidebar-header-actions">
+					<ul class="sidebar-header-actions">
 						<li>
 							<liferay-util:include page="/site_action.jsp" servletContext="<%= application %>" />
 						</li>
