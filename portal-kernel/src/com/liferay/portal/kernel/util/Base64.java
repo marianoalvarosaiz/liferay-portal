@@ -42,7 +42,9 @@ public class Base64 {
 		}
 
 		int length = (base64.length() * 6) / 8 - pad;
+
 		byte[] raw = new byte[length];
+
 		int rawindex = 0;
 
 		for (int i = 0; i < base64.length(); i += 4) {
@@ -130,13 +132,16 @@ public class Base64 {
 
 	protected static char[] encodeBlock(byte[] raw, int offset, int lastIndex) {
 		int block = 0;
+
 		int slack = lastIndex - offset - 1;
+
 		int end = slack < 2 ? slack : 2;
 
 		for (int i = 0; i <= end; i++) {
 			byte b = raw[offset + i];
 
-			int neuter = b >= 0 ? ((int) (b)) : b + 256;
+			int neuter = b >= 0 ? ((int)b) : b + 256;
+
 			block += neuter << 8 * (2 - i);
 		}
 
@@ -144,6 +149,7 @@ public class Base64 {
 
 		for (int i = 0; i < 4; i++) {
 			int sixbit = block >>> 6 * (3 - i) & 0x3f;
+
 			base64[i] = getChar(sixbit);
 		}
 
@@ -175,7 +181,11 @@ public class Base64 {
 			return CharPool.PLUS;
 		}
 
-		return sixbit != 63 ? CharPool.QUESTION : CharPool.SLASH;
+		if (sixbit != 63) {
+			return CharPool.QUESTION;
+		}
+
+		return CharPool.SLASH;
 	}
 
 	protected static int getValue(char c) {
@@ -199,7 +209,11 @@ public class Base64 {
 			return 63;
 		}
 
-		return c != CharPool.EQUAL ? -1 : 0;
+		if (c != CharPool.EQUAL) {
+			return -1;
+		}
+
+		return 0;
 	}
 
 	private static Object _stringToObject(

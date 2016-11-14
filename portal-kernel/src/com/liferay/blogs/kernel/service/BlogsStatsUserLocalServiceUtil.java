@@ -31,8 +31,11 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see BlogsStatsUserLocalService
  * @see com.liferay.portlet.blogs.service.base.BlogsStatsUserLocalServiceBaseImpl
  * @see com.liferay.portlet.blogs.service.impl.BlogsStatsUserLocalServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.blogs.service.impl.BlogsStatsUserLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class BlogsStatsUserLocalServiceUtil {
 	/*
@@ -105,6 +108,9 @@ public class BlogsStatsUserLocalServiceUtil {
 		return getService().getBlogsStatsUser(statsUserId);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	public static com.liferay.blogs.kernel.model.BlogsStatsUser getStatsUser(
 		long groupId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -313,6 +319,9 @@ public class BlogsStatsUserLocalServiceUtil {
 		getService().deleteStatsUser(statsUsers);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	public static void deleteStatsUser(long statsUserId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().deleteStatsUser(statsUserId);
@@ -326,11 +335,17 @@ public class BlogsStatsUserLocalServiceUtil {
 		getService().deleteStatsUserByUserId(userId);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	public static void updateStatsUser(long groupId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().updateStatsUser(groupId, userId);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	public static void updateStatsUser(long groupId, long userId,
 		java.util.Date displayDate)
 		throws com.liferay.portal.kernel.exception.PortalException {

@@ -17,10 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-RoleSearch searchContainer = (RoleSearch)request.getAttribute("liferay-ui:search:searchContainer");
-
-String redirect = searchContainer.getIteratorURL().toString();
-
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 Role role = (Role)row.getObject();
@@ -32,7 +28,8 @@ String name = role.getName();
 	<c:if test="<%= RolePermissionUtil.contains(permissionChecker, role.getRoleId(), ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcPath" value="/edit_role.jsp" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
+			<portlet:param name="tabs1" value="details" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="roleId" value="<%= String.valueOf(role.getRoleId()) %>" />
 		</portlet:renderURL>
 
@@ -69,21 +66,10 @@ String name = role.getName();
 		/>
 	</c:if>
 
-	<c:if test="<%= !name.equals(RoleConstants.ADMINISTRATOR) && !name.equals(RoleConstants.SITE_OWNER) && !name.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) && !name.equals(RoleConstants.ORGANIZATION_OWNER) && !name.equals(RoleConstants.OWNER) && !name.equals(RoleConstants.SITE_ADMINISTRATOR) && RolePermissionUtil.contains(permissionChecker, role.getRoleId(), ActionKeys.DEFINE_PERMISSIONS) %>">
-		<portlet:renderURL var="editRolePermissionsURL">
-			<portlet:param name="mvcPath" value="/edit_role_permissions.jsp" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.VIEW %>" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
-			<portlet:param name="roleId" value="<%= String.valueOf(role.getRoleId()) %>" />
-		</portlet:renderURL>
-
-		<liferay-ui:icon message="define-permissions" url="<%= editRolePermissionsURL %>" />
-	</c:if>
-
 	<c:if test="<%= !role.isSystem() && RolePermissionUtil.contains(permissionChecker, role.getRoleId(), ActionKeys.DELETE) %>">
 		<portlet:actionURL name="deleteRole" var="deleteRoleURL">
 			<portlet:param name="mvcPath" value="/edit_role.jsp" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="roleId" value="<%= String.valueOf(role.getRoleId()) %>" />
 		</portlet:actionURL>
 

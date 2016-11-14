@@ -31,8 +31,7 @@ public class UpgradeGroup extends UpgradeProcess {
 	@Override
 	protected void doUpgrade() throws Exception {
 		alter(
-			GroupTable.class,
-			new AlterColumnType("name", "VARCHAR(150) null"));
+			GroupTable.class, new AlterColumnType("name", "VARCHAR(150) null"));
 
 		updateName();
 		updateSite();
@@ -97,6 +96,7 @@ public class UpgradeGroup extends UpgradeProcess {
 			sb.append(name);
 
 			ps.setString(1, sb.toString());
+
 			ps.setLong(2, groupId);
 
 			ps.executeUpdate();

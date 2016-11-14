@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -67,8 +66,11 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  * @see BlogsStatsUserPersistence
  * @see com.liferay.blogs.kernel.service.persistence.BlogsStatsUserUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.blogs.model.impl.BlogsStatsUserImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStatsUser>
 	implements BlogsStatsUserPersistence {
@@ -3383,12 +3385,14 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 	 */
 	@Override
 	public BlogsStatsUser fetchByPrimaryKey(Serializable primaryKey) {
-		BlogsStatsUser blogsStatsUser = (BlogsStatsUser)entityCache.getResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
 				BlogsStatsUserImpl.class, primaryKey);
 
-		if (blogsStatsUser == _nullBlogsStatsUser) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		BlogsStatsUser blogsStatsUser = (BlogsStatsUser)serializable;
 
 		if (blogsStatsUser == null) {
 			Session session = null;
@@ -3404,8 +3408,7 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 				}
 				else {
 					entityCache.putResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-						BlogsStatsUserImpl.class, primaryKey,
-						_nullBlogsStatsUser);
+						BlogsStatsUserImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3459,18 +3462,20 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			BlogsStatsUser blogsStatsUser = (BlogsStatsUser)entityCache.getResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
 					BlogsStatsUserImpl.class, primaryKey);
 
-			if (blogsStatsUser == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, blogsStatsUser);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (BlogsStatsUser)serializable);
+				}
 			}
 		}
 
@@ -3512,7 +3517,7 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(BlogsStatsUserModelImpl.ENTITY_CACHE_ENABLED,
-					BlogsStatsUserImpl.class, primaryKey, _nullBlogsStatsUser);
+					BlogsStatsUserImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3747,23 +3752,4 @@ public class BlogsStatsUserPersistenceImpl extends BasePersistenceImpl<BlogsStat
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No BlogsStatsUser exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No BlogsStatsUser exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(BlogsStatsUserPersistenceImpl.class);
-	private static final BlogsStatsUser _nullBlogsStatsUser = new BlogsStatsUserImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<BlogsStatsUser> toCacheModel() {
-				return _nullBlogsStatsUserCacheModel;
-			}
-		};
-
-	private static final CacheModel<BlogsStatsUser> _nullBlogsStatsUserCacheModel =
-		new CacheModel<BlogsStatsUser>() {
-			@Override
-			public BlogsStatsUser toEntityModel() {
-				return _nullBlogsStatsUser;
-			}
-		};
 }

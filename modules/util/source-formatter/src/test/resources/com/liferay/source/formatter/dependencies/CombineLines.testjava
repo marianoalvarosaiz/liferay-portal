@@ -16,6 +16,9 @@ package com.liferay.source.formatter.dependencies;
 
 import aQute.bnd.annotation.metatype.Meta;
 
+import com.liferay.dynamic.data.mapping.annotations.DDMFormField;
+import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
+import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.provider.AddPortletProvider;
 import com.liferay.portal.kernel.provider.ViewPortletProvider;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -48,6 +51,14 @@ public class CombineLines
 	public static final String
 		STRING_1;
 
+	@DDMFormField(
+		label =
+			"%field-with-a-long-name-so-it-will-surpass-the-max-number-of-characters-for-a-single-line",
+		properties = {
+			"tooltip=%tooltip-with-a-long-name-so-it-will-surpass-the-max-" +
+				"number-of-characters-for-a-single-line"
+		}
+	)
 	public List<String>
 		getList() {
 
@@ -89,6 +100,12 @@ public class CombineLines
 
 		if ((i1 == 0) ||
 			(i2 == 0)) {
+		}
+
+		if (StringUtil.contains(
+				test1, "Hello World Hello World Hello") ||
+			StringUtil.contains(
+				test2, "Hello World Hello World Hello World Hello")) {
 		}
 	}
 
@@ -134,19 +151,6 @@ public class CombineLines
 	}
 
 	public String method4() {
-		String test1 = getString(
-			"hello world" + "hello world" + "hello world" +
-				"hello world");
-
-		String test2 =
-			"hello world" + "hello world" + "hello world" +
-				"hello world";
-
-		return test1 +
-			test2;
-	}
-
-	public String method5() {
 		String stringWithAFairlyMediumLongName =
 			StringPool.
 				GREATER_THAN_OR_EQUAL;
@@ -154,7 +158,7 @@ public class CombineLines
 		return stringWithAFairlyMediumLongName;
 	}
 
-	public Set<String> method6() {
+	public Set<String> method5() {
 		Set<String> numbers =
 			SetUtil.fromArray(
 				new String[] {
@@ -165,7 +169,7 @@ public class CombineLines
 		return numbers;
 	}
 
-	public String method7(String s) {
+	public String method6(String s) {
 		return StringUtil.replace(
 			s,
 			new String[] {
@@ -176,7 +180,7 @@ public class CombineLines
 			});
 	}
 
-	public void method8(
+	public void method7(
 		String string1, List<String>
 			listWithAVeryLongNameThatThereforeByNoMeansFitsOnTheSameLine) {
 
@@ -187,16 +191,21 @@ public class CombineLines
 				anotherStringWithAVeryLongName));
 
 		boolean b2 = StringUtil.contains(
-			test1, "Hello World" + "Hello World Hello" +
-				"Hello World Hello World Hello World Hello World");
+			test1, "Hello WorldHello World Hello" +
+				"HelloWorldHelloWorldHelloWorldHelloWorld");
 
 		boolean b3 = StringUtil.merge(
 			new String[] {"One", "Two"},
 			"Hello World");
+	}
 
-		String s =
-			"Hello World " +
-				"Hello World Hello" + "Hello World Hello World Hello";
+	public void method8(String s) {
+		try (UnsyncBufferedReader unsyncBufferedReader =
+				new UnsyncBufferedReader(
+					new UnsyncStringReader(s))) {
+
+			return;
+		}
 	}
 
 	protected final List<String>

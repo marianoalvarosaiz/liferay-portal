@@ -331,8 +331,8 @@ public class VerifyProperties extends VerifyProcess {
 			"com.liferay.portal.upload.UploadServletRequestImpl.temp.dir"
 		},
 		new String[] {
-			"com.liferay.util.servlet.fileupload.LiferayFileItem." +
-				"threshold.size",
+			"com.liferay.util.servlet.fileupload.LiferayFileItem.threshold." +
+				"size",
 			"com.liferay.portal.upload.LiferayFileItem.threshold.size"
 		},
 		new String[] {
@@ -1780,13 +1780,15 @@ public class VerifyProperties extends VerifyProcess {
 		"hibernate.cache.use_minimal_puts", "hibernate.cache.use_query_cache",
 		"hibernate.cache.use_second_level_cache",
 		"hibernate.cache.use_structured_entries", "icq.jar", "icq.login",
-		"icq.password", "index.filter.search.limit", "index.read.only",
+		"icq.password", "index.filter.search.limit",
+		"index.portal.field.analyzer.enabled", "index.read.only",
 		"invitation.email.max.recipients", "invitation.email.message.body",
 		"invitation.email.message.subject", "javax.persistence.validation.mode",
 		"jbi.workflow.url", "json.deserializer.strict.mode",
 		"journal.article.form.add", "journal.article.form.default.values",
 		"journal.article.form.update", "journal.article.form.translate",
 		"journal.article.types", "journal.articles.page.delta.values",
+		"journal.browse.by.structures.sorted.by.name",
 		"journal.template.language.parser[css]",
 		"journal.template.language.parser[ftl]",
 		"journal.template.language.parser[vm]",
@@ -1814,14 +1816,17 @@ public class VerifyProperties extends VerifyProcess {
 		"lucene.store.jdbc.dialect.mysql", "lucene.store.jdbc.dialect.oracle",
 		"lucene.store.jdbc.dialect.postgresql", "mail.hook.cyrus.add.user",
 		"mail.hook.cyrus.delete.user", "mail.hook.cyrus.home",
+		"mail.hook.fusemail.account.type", "mail.hook.fusemail.group.parent",
+		"mail.hook.fusemail.password", "mail.hook.fusemail.url",
+		"mail.hook.fusemail.username",
 		"memory.cluster.scheduler.lock.cache.enabled",
 		"message.boards.email.message.added.signature",
 		"message.boards.email.message.updated.signature",
 		"message.boards.thread.locking.enabled",
 		"message.boards.thread.previous.and.next.navigation.enabled",
 		"message.boards.thread.views", "message.boards.thread.views.default",
-		"mobile.device.styling.wap.enabled", "msn.login", "msn.password",
-		"multicast.group.address[\"hibernate\"]",
+		"mobile.device.styling.wap.enabled", "module.framework.initial.bundles",
+		"msn.login", "msn.password", "multicast.group.address[\"hibernate\"]",
 		"multicast.group.port[\"hibernate\"]",
 		"net.sf.ehcache.configurationResourceName",
 		"net.sf.ehcache.configurationResourceName.peerProviderProperties",

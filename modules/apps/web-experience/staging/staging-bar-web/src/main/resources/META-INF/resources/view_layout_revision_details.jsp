@@ -192,7 +192,7 @@ else {
 	<li class="control-menu-nav-item">
 		<div class="dropdown hidden-xs">
 			<a class="dropdown-toggle taglib-icon" data-toggle="dropdown" href="javascript:;">
-				<aui:icon image="ellipsis-v" markupView="lexicon" />
+				<aui:icon cssClass="icon-monospaced" image="ellipsis-v" markupView="lexicon" />
 
 				<span class="sr-only">
 					<liferay-ui:message key="options" />
@@ -205,7 +205,6 @@ else {
 						<liferay-ui:message key="site-pages-variation" />
 					</a>
 				</li>
-
 				<li>
 					<a href="javascript:;" id="manageLayoutRevisions" onclick="<%= renderResponse.getNamespace() + "openPageVariationsDialog();" %>">
 						<liferay-ui:message key="page-variations" />

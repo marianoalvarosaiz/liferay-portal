@@ -25,8 +25,6 @@ MBCategory category = (MBCategory)request.getAttribute(WebKeys.MESSAGE_BOARDS_CA
 
 long categoryId = MBUtil.getCategoryId(request, category);
 
-MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, categoryId);
-
 Set<Long> categorySubscriptionClassPKs = null;
 Set<Long> threadSubscriptionClassPKs = null;
 
@@ -52,16 +50,30 @@ if (Validator.isNotNull(keywords)) {
 	portletURL.setParameter("keywords", keywords);
 }
 
-request.setAttribute("view.jsp-categoryDisplay", categoryDisplay);
+String orderByCol = ParamUtil.getString(request, "orderByCol", "modified-date");
+
+boolean orderByAsc = false;
+
+String orderByType = ParamUtil.getString(request, "orderByType", "desc");
+
+if (orderByType.equals("asc")) {
+	orderByAsc = true;
+}
+
+OrderByComparator orderByComparator = null;
+
+if (orderByCol.equals("modified-date")) {
+	orderByComparator = new ThreadModifiedDateComparator(orderByAsc);
+}
+
+MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDisplayContext(request, response, categoryId);
 
 request.setAttribute("view.jsp-categorySubscriptionClassPKs", categorySubscriptionClassPKs);
 request.setAttribute("view.jsp-threadSubscriptionClassPKs", threadSubscriptionClassPKs);
 
 request.setAttribute("view.jsp-categoryId", categoryId);
-request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 request.setAttribute("view.jsp-portletURL", portletURL);
-
-MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDisplayContext(request, response, categoryId);
+request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 %>
 
 <portlet:actionURL name="/message_boards/edit_category" var="restoreTrashEntriesURL">
@@ -89,6 +101,9 @@ MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDi
 		SearchContainer entriesSearchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, SearchContainer.DEFAULT_DELTA, portletURL, null, "there-are-no-threads-nor-categories");
 
 		entriesSearchContainer.setId("mbEntries");
+		entriesSearchContainer.setOrderByCol(orderByCol);
+		entriesSearchContainer.setOrderByComparator(orderByComparator);
+		entriesSearchContainer.setOrderByType(orderByType);
 
 		mbListDisplayContext.populateResultsAndTotal(entriesSearchContainer);
 		%>
@@ -262,6 +277,12 @@ MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDi
 			</c:when>
 			<c:when test="<%= mbListDisplayContext.isShowMyPosts() || mbListDisplayContext.isShowRecentPosts() %>">
 				<div class="main-content-body">
+					<c:if test="<%= Validator.isNotNull(redirect) && mbListDisplayContext.isShowRecentPosts() %>">
+						<liferay-ui:header
+							backURL="<%= redirect %>"
+							title="recent-posts"
+						/>
+					</c:if>
 
 					<%
 					if (mbListDisplayContext.isShowMyPosts() && themeDisplay.isSignedIn()) {
@@ -273,21 +294,13 @@ MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDi
 					}
 					%>
 
-					<c:if test="<%= mbListDisplayContext.isShowMyPosts() && (groupThreadsUserId > 0) %>">
+					<c:if test="<%= groupThreadsUserId > 0 %>">
 						<div class="alert alert-info">
 							<liferay-ui:message key="filter-by-user" />: <%= HtmlUtil.escape(PortalUtil.getUserName(groupThreadsUserId, StringPool.BLANK)) %>
 						</div>
 					</c:if>
 
 					<%
-					String entriesEmptyResultsMessage = "you-do-not-have-any-posts";
-
-					if (mbListDisplayContext.isShowRecentPosts()) {
-						entriesEmptyResultsMessage = "there-are-no-recent-posts";
-					}
-
-					entriesSearchContainer.setEmptyResultsMessage(entriesEmptyResultsMessage);
-
 					request.setAttribute("view.jsp-displayStyle", "descriptive");
 					request.setAttribute("view.jsp-entriesSearchContainer", entriesSearchContainer);
 					%>
@@ -334,6 +347,8 @@ MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDi
 		if (groupThreadsUserId > 0) {
 			portletURL.setParameter("groupThreadsUserId", String.valueOf(groupThreadsUserId));
 		}
+
+		MBCategoryDisplay categoryDisplay = new MBCategoryDisplayImpl(scopeGroupId, categoryId);
 		%>
 
 		<div class="main-content-body">
@@ -355,8 +370,6 @@ MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDi
 					keyProperty="categoryId"
 					modelVar="curCategory"
 				>
-					<liferay-ui:search-container-row-parameter name="categorySubscriptionClassPKs" value="<%= categorySubscriptionClassPKs %>" />
-
 					<liferay-portlet:renderURL varImpl="rowURL">
 						<portlet:param name="mvcRenderCommandName" value="/message_boards/view_category" />
 						<portlet:param name="mbCategoryId" value="<%= String.valueOf(curCategory.getCategoryId()) %>" />

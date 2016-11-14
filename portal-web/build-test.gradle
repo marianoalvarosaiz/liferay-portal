@@ -2,7 +2,7 @@ import com.liferay.gradle.util.GradleUtil
 
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.poshi.runner", version: "1.0.10"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.poshi.runner", version: "1.0.11"
 	}
 
 	repositories {
@@ -11,12 +11,21 @@ buildscript {
 		}
 
 		maven {
-			url "http://cdn.repository.liferay.com/nexus/content/groups/public"
+			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
 		}
 	}
 }
 
 apply plugin: "com.liferay.poshi.runner"
+
+poshiRunner {
+	if (project.hasProperty("poshiRunnerExtProperties")) {
+		poshiPropertiesFile = new File(projectDir.parentFile, project.properties["poshiRunnerExtProperties"])
+	}
+
+	openCVVersion = "2.4.10-0.10"
+	version = "1.0.48"
+}
 
 task updateGradleCache
 
@@ -33,21 +42,13 @@ dependencies {
 	sikuliComplete classifier: "macosx-x86_64", group: "org.bytedeco.javacpp-presets", name: "opencv", version: poshiRunner.openCVVersion
 }
 
-poshiRunner {
-	if (project.hasProperty("poshiRunnerExtProperties")) {
-		poshiPropertiesFile = new File(projectDir.parentFile, project.properties["poshiRunnerExtProperties"])
-	}
-
-	version = "1.0.40"
-}
-
 repositories {
 	if (!Boolean.getBoolean("maven.local.ignore")) {
 		mavenLocal()
 	}
 
 	maven {
-		url "http://cdn.repository.liferay.com/nexus/content/groups/public"
+		url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
 	}
 }
 
@@ -57,7 +58,7 @@ updateGradleCache << {
 }
 
 if (GradleUtil.getProperty(project, "local", false)) {
-	File localPoshiDir = file("../tools/sdk/tmp/portal-tools/poshi-runner")
+	File localPoshiDir = file("../tools/sdk/dependencies/com.liferay.poshi.runner/lib")
 
 	dependencies {
 		poshiRunner fileTree(dir: localPoshiDir, include: "*.jar")

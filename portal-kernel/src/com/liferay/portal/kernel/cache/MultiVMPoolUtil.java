@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.cache;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.ProxyFactory;
 
@@ -24,6 +26,7 @@ import java.io.Serializable;
  * @author Michael Young
  */
 @OSGiBeanProperties(service = MultiVMPoolUtil.class)
+@ProviderType
 public class MultiVMPoolUtil {
 
 	public static void clear() {
@@ -77,6 +80,14 @@ public class MultiVMPoolUtil {
 	}
 
 	public static <K extends Serializable, V extends Serializable>
+		PortalCache<K, V> getPortalCache(
+			String portalCacheName, boolean blocking, boolean mvcc) {
+
+		return (PortalCache<K, V>)_multiVMPool.getPortalCache(
+			portalCacheName, blocking, mvcc);
+	}
+
+	public static <K extends Serializable, V extends Serializable>
 		PortalCacheManager<K, V> getPortalCacheManager() {
 
 		return (PortalCacheManager<K, V>)_multiVMPool.getPortalCacheManager();
@@ -94,7 +105,8 @@ public class MultiVMPoolUtil {
 		_multiVMPool.removePortalCache(portalCacheName);
 	}
 
-	private static final MultiVMPool _multiVMPool =
-		ProxyFactory.newServiceTrackedInstance(MultiVMPool.class);
+	private static volatile MultiVMPool _multiVMPool =
+		ProxyFactory.newServiceTrackedInstance(
+			MultiVMPool.class, MultiVMPoolUtil.class, "_multiVMPool");
 
 }

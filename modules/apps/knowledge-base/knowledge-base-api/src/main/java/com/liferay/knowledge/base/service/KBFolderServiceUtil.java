@@ -58,6 +58,25 @@ public class KBFolderServiceUtil {
 		return getService().deleteKBFolder(kbFolderId);
 	}
 
+	public static com.liferay.knowledge.base.model.KBFolder fetchFirstChildKBFolder(
+		long groupId, long kbFolderId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchFirstChildKBFolder(groupId, kbFolderId);
+	}
+
+	public static com.liferay.knowledge.base.model.KBFolder fetchFirstChildKBFolder(
+		long groupId, long kbFolderId,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledge.base.model.KBFolder> obc)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchFirstChildKBFolder(groupId, kbFolderId, obc);
+	}
+
+	public static com.liferay.knowledge.base.model.KBFolder fetchKBFolder(
+		long kbFolderId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchKBFolder(kbFolderId);
+	}
+
 	public static com.liferay.knowledge.base.model.KBFolder fetchKBFolderByUrlTitle(
 		long groupId, long parentKbFolderId, java.lang.String urlTitle)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -87,6 +106,13 @@ public class KBFolderServiceUtil {
 			parentResourcePrimKey, kbFolderId, name, description);
 	}
 
+	public static int getKBFoldersAndKBArticlesCount(long groupId,
+		long parentResourcePrimKey, int status) {
+		return getService()
+				   .getKBFoldersAndKBArticlesCount(groupId,
+			parentResourcePrimKey, status);
+	}
+
 	public static int getKBFoldersCount(long groupId, long parentKBFolderId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getKBFoldersCount(groupId, parentKBFolderId);
@@ -105,6 +131,15 @@ public class KBFolderServiceUtil {
 		long groupId, long parentKBFolderId, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getKBFolders(groupId, parentKBFolderId, start, end);
+	}
+
+	public static java.util.List<java.lang.Object> getKBFoldersAndKBArticles(
+		long groupId, long parentResourcePrimKey, int status, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<?> orderByComparator) {
+		return getService()
+				   .getKBFoldersAndKBArticles(groupId, parentResourcePrimKey,
+			status, start, end, orderByComparator);
 	}
 
 	public static void moveKBFolder(long kbFolderId, long parentKBFolderId)

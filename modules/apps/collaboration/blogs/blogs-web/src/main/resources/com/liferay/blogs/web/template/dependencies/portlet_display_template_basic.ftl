@@ -4,7 +4,12 @@
 
 		${viewURL.setParameter("mvcRenderCommandName", "/blogs/view_entry")}
 		${viewURL.setParameter("redirect", currentURL)}
-		${viewURL.setParameter("urlTitle", entry.getUrlTitle())}
+
+		<#if validator.isNotNull(entry.getUrlTitle())>
+			${viewURL.setParameter("urlTitle", entry.getUrlTitle())}
+		<#else>
+			${viewURL.setParameter("entryId", entry.getEntryId()?string)}
+		</#if>
 
 		<div class="entry-content">
 			<div class="entry-title">
@@ -33,7 +38,7 @@
 				${dateUtil.getDate(entry.getCreateDate(), "dd MMM yyyy - HH:mm:ss", locale)}
 			</span>
 
-			<#assign blogsEntryClassName = "com.liferay.blogs.kernel.model.BlogsEntry" />
+			<#assign blogsEntryClassName = "com.liferay.blogs.model.BlogsEntry" />
 
 			<#if blogsPortletInstanceConfiguration.enableFlags()>
 				<@liferay_flags["flags"]
@@ -51,7 +56,6 @@
 					portletURL=renderResponse.createRenderURL()
 				/>
 			</span>
-
 			<span class="entry-tags">
 				<@liferay_ui["asset-tags-summary"]
 					className=blogsEntryClassName

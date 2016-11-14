@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.ObjectInputStream;
@@ -607,6 +608,12 @@ public class BeanPropertiesImpl implements BeanProperties {
 
 			String value = request.getParameter(name);
 
+			if (Validator.isNull(value) &&
+				(getObjectSilent(bean, name) instanceof Number)) {
+
+				value = String.valueOf(0);
+			}
+
 			BeanUtil.setPropertyForcedSilent(bean, name, value);
 
 			if (name.endsWith("Month")) {
@@ -676,6 +683,13 @@ public class BeanPropertiesImpl implements BeanProperties {
 				month, day, year, hour, minute, user.getTimeZone(), null);
 		}
 		catch (PortalException pe) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+
 			return null;
 		}
 	}

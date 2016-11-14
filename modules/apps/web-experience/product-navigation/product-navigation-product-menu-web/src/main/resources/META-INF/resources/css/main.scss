@@ -1,46 +1,22 @@
 @import "bourbon";
 @import "mixins";
 
-body {
-	&.open #wrapper {
-		@include sm() {
-			padding-left: 320px;
-		}
-	}
-
-	&.open, &.sidenav-transition {
-		@include sm() {
-			overflow-x: hidden;
-		}
-	}
-
-	&.sidenav-transition #wrapper {
-		@include transition(padding 0.5s ease);
-	}
-}
-
-.lfr-product-menu-panel.sidenav-menu-slider {
-	z-index: 951;
-
-	&, .sidenav-menu {
-		width: 320px;
-	}
-}
-
 .product-menu {
 	.sidebar-header {
 		line-height: 32px;
 		padding-bottom: 10px;
+		padding-right: 9px;
 		padding-top: 12px;
 
 		@include sm() {
-			padding: 16px 24px;
+			padding-bottom: 16px;
+			padding-left: 24px;
+			padding-top: 16px;
 		}
 
 		.sidenav-close {
 			float: right;
-			margin-right: -8px;
-			margin-top: -4px;
+			margin-right: -2px;
 		}
 	}
 
@@ -205,7 +181,7 @@ body {
 		margin: 10px 22px 4px 16px;
 	}
 
-	/* Layouts Tree */
+	/* ---------- Layouts tree ---------- */
 
 	li.tree-node .tree-node-content.lfr-root-node {
 		display: none;
@@ -280,11 +256,6 @@ body {
 			width: 97px;
 		}
 
-		.lexicon-icon {
-			height: 16px;
-			width: 16px;
-		}
-
 		.selected-layout-set {
 			border-bottom: 1px solid;
 
@@ -295,7 +266,7 @@ body {
 	}
 }
 
-/* Icon Animation */
+/* ---------- Icon animation ---------- */
 
 .toast-animation {
 	height: 20px;

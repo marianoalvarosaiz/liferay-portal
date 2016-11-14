@@ -14,8 +14,10 @@
 
 package com.liferay.staging.taglib.servlet.taglib;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.staging.taglib.servlet.ServletContextUtil;
+import com.liferay.staging.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import javax.servlet.jsp.PageContext;
 /**
  * @author Mate Thurzo
  */
+@ProviderType
 public class SelectPagesTag extends IncludeTag {
 
 	public void setAction(String action) {

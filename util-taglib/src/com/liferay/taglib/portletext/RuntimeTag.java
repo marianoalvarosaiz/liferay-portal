@@ -37,12 +37,11 @@ import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.servlet.DynamicServletRequest;
-import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
-import com.liferay.portal.kernel.util.PrefixPredicateFilter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -51,6 +50,7 @@ import com.liferay.taglib.util.PortalIncludeUtil;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -181,7 +181,7 @@ public class RuntimeTag extends TagSupport {
 				request.getParameter("p_p_id"))) {
 
 			parameterMap = MapUtil.filterByKeys(
-				parameterMap, new PrefixPredicateFilter("p_p_"));
+				parameterMap, (key) -> !key.startsWith("p_p_"));
 		}
 
 		request = DynamicServletRequest.addQueryString(
@@ -193,12 +193,19 @@ public class RuntimeTag extends TagSupport {
 			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+			Portlet portlet = getPortlet(
+				themeDisplay.getCompanyId(),
+				portletInstance.getPortletInstanceKey());
 
-			if (Objects.equals(
-					portletDisplay.getId(),
-					portletInstance.getPortletInstanceKey())) {
+			Stack<String> embeddedPortletIds = _embeddedPortletIds.get();
 
+			if (embeddedPortletIds == null) {
+				embeddedPortletIds = new Stack<>();
+
+				_embeddedPortletIds.set(embeddedPortletIds);
+			}
+
+			if (embeddedPortletIds.search(portlet.getPortletId()) > -1) {
 				String errorMessage = LanguageUtil.get(
 					request, "the-application-cannot-include-itself");
 
@@ -225,10 +232,6 @@ public class RuntimeTag extends TagSupport {
 			}
 
 			Layout layout = themeDisplay.getLayout();
-
-			Portlet portlet = getPortlet(
-				themeDisplay.getCompanyId(),
-				portletInstance.getPortletInstanceKey());
 
 			request.setAttribute(WebKeys.SETTINGS_SCOPE, settingsScope);
 
@@ -286,7 +289,11 @@ public class RuntimeTag extends TagSupport {
 				PortletJSONUtil.writeHeaderPaths(response, jsonObject);
 			}
 
+			embeddedPortletIds.push(portletInstance.getPortletInstanceKey());
+
 			PortletContainerUtil.render(request, response, portlet);
+
+			embeddedPortletIds.pop();
 
 			if (jsonObject != null) {
 				PortletJSONUtil.writeFooterPaths(response, jsonObject);
@@ -399,6 +406,9 @@ public class RuntimeTag extends TagSupport {
 		PortletPreferencesFactoryConstants.SETTINGS_SCOPE_PORTLET_INSTANCE;
 
 	private static final Log _log = LogFactoryUtil.getLog(RuntimeTag.class);
+
+	private static final ThreadLocal<Stack<String>> _embeddedPortletIds =
+		new AutoResetThreadLocal<>(RuntimeTag.class + "._embeddedPortletIds");
 
 	private String _defaultPreferences;
 	private String _instanceId;

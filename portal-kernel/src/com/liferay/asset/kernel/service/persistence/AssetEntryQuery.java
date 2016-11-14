@@ -150,7 +150,11 @@ public class AssetEntryQuery {
 
 		if (Validator.isNotNull(tagName)) {
 			_allTagIds = AssetTagLocalServiceUtil.getTagIds(
-				themeDisplay.getSiteGroupId(), new String[] {tagName});
+				themeDisplay.getScopeGroupId(), new String[] {tagName});
+
+			if (_allTagIds.length == 0) {
+				_allTagIds = new long[] {0};
+			}
 
 			_allTagIdsArray = new long[][] {_allTagIds};
 		}
@@ -703,7 +707,7 @@ public class AssetEntryQuery {
 	private long[] _groupIds = new long[0];
 	private String _keywords;
 	private Layout _layout;
-	private long _linkedAssetEntryId = 0;
+	private long _linkedAssetEntryId;
 	private Boolean _listable = true;
 	private long[] _notAllCategoryIds = new long[0];
 	private long[] _notAllTagIds = new long[0];

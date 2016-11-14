@@ -258,7 +258,7 @@
 			<var name="imageSourceURL" value="https://cdn.lfrs.sl/www.liferay.com/osb-community-theme/images/custom/heading.png" />
 		</execute>
 
-		<execute macro="PortletEntry#publish" />
+		<execute macro="PortletEntry#publishAndWait" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -311,7 +311,7 @@
 	</command>
 
 	<command name="DeleteBlogsEntries" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<var name="blogsEntryCounterList" value="1,2,3" />
 
@@ -600,6 +600,8 @@
 			<var name="portlet" value="Blogs" />
 		</execute>
 
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="BlogsEntry#searchCP">
 			<var name="entryContent" value="Blogs Entry Content" />
 			<var name="entrySearchTerm" value="Blogs Entry Content" />
@@ -649,6 +651,8 @@
 			<var name="portlet" value="Blogs" />
 		</execute>
 
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="BlogsEntry#searchCP">
 			<var name="entryContent" value="Blogs Entry Content" />
 			<var name="entrySearchTerm" value="Blogs Entry Title" />
@@ -695,7 +699,7 @@
 			<var name="uploadFileName" value="Document_1.jpg" />
 		</execute>
 
-		<execute macro="PortletEntry#publish" />
+		<execute macro="PortletEntry#publishAndWait" />
 
 		<execute macro="BlogsNavigator#gotoEntryCP">
 			<var name="entryTitle" value="Blogs Entry Title" />
@@ -765,16 +769,16 @@
 			<var name="uploadFileName" value="Document_1.jpg" />
 		</execute>
 
-		<execute macro="BlogsEntry#saveAsDraft" />
+		<execute macro="BlogsEntry#saveAsDraftAndWait" />
 
 		<execute function="Click" locator1="Icon#BACK" />
 
-		<execute function="Click" locator1="Icon#DISPLAY_STYLE_ICON" />
+		<execute function="Click" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE" />
 
 		<var name="key_entryTitle" value="Blogs Entry Title" />
 
-		<execute function="AssertTextEquals" locator1="Blogs#ICON_VIEW_ENTRY_TITLE" value1="Blogs Entry Title" />
-		<execute function="AssertTextEquals" locator1="Blogs#ICON_VIEW_ENTRY_STATUS" value1="Draft" />
+		<execute function="AssertTextEquals" locator1="Blogs#DESCRIPTIVE_VIEW_ENTRY_TITLE" value1="Blogs Entry Title" />
+		<execute function="AssertTextEquals" locator1="Blogs#DESCRIPTIVE_VIEW_ENTRY_STATUS" value1="Draft" />
 
 		<execute macro="BlogsNavigator#gotoEntryCP">
 			<var name="entryTitle" value="Blogs Entry Title" />
@@ -803,7 +807,7 @@
 			<var name="uploadFileName" value="Document_1.jpg" />
 		</execute>
 
-		<execute macro="PortletEntry#publish" />
+		<execute macro="PortletEntry#publishAndWait" />
 
 		<execute macro="BlogsNavigator#gotoEntryCP">
 			<var name="entryTitle" value="Blogs Entry Title" />
@@ -844,7 +848,7 @@
 
 		<execute function="Click" locator1="Radio#CUSTOM_ABSTRACT" />
 
-		<execute function="AssertClick#assertTextClickAtAndWait" locator1="Button#PUBLISH" value1="Publish" />
+		<execute function="AssertClick#assertTextClickAt" locator1="Button#PUBLISH" value1="Publish" />
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
 

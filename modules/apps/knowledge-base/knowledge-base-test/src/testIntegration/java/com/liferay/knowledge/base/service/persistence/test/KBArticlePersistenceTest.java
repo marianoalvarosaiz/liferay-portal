@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.test.AssertUtils;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.TransactionalTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.util.IntegerWrapper;
@@ -41,6 +40,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PersistenceTestRule;
+import com.liferay.portal.test.rule.TransactionalTestRule;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -70,7 +70,8 @@ public class KBArticlePersistenceTest {
 	@Rule
 	public static final AggregateTestRule aggregateTestRule = new AggregateTestRule(new LiferayIntegrationTestRule(),
 			PersistenceTestRule.INSTANCE,
-			new TransactionalTestRule(Propagation.REQUIRED));
+			new TransactionalTestRule(Propagation.REQUIRED,
+				"com.liferay.knowledge.base.service"));
 
 	@Before
 	public void setUp() {
@@ -532,6 +533,14 @@ public class KBArticlePersistenceTest {
 		_persistence.countByG_KBFI_UT(0L, 0L, StringPool.NULL);
 
 		_persistence.countByG_KBFI_UT(0L, 0L, (String)null);
+	}
+
+	@Test
+	public void testCountByG_KBFI_L() throws Exception {
+		_persistence.countByG_KBFI_L(RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean());
+
+		_persistence.countByG_KBFI_L(0L, 0L, RandomTestUtil.randomBoolean());
 	}
 
 	@Test

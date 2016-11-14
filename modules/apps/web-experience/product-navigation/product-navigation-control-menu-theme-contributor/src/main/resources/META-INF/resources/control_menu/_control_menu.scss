@@ -1,11 +1,3 @@
-body.open {
-	.control-menu {
-		@include sm() {
-			left: 320px;
-		}
-	}
-}
-
 .has-control-menu {
 	#wrapper {
 		margin-top: $has-control-menu-margin-top-mobile;
@@ -29,7 +21,7 @@ body.open {
 	position: fixed;
 	right: 0;
 	top: 0;
-	z-index: 500;
+	z-index: $control-menu-zindex;
 }
 
 .control-menu-icon {
@@ -64,7 +56,7 @@ body.open {
 .control-menu-level-1-heading {
 	color: #FFF;
 	font-size: 19px;
-	font-weight: 700;
+	font-weight: bold;
 }
 
 .control-menu-level-1-nav {
@@ -80,6 +72,11 @@ body.open {
 .control-menu-level-2 {
 	background-color: $control-menu-level-2-bg;
 	color: $control-menu-level-2-color;
+
+	.container-fluid-1280 {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
 
 	.control-menu-label {
 		@include sm() {
@@ -237,6 +234,15 @@ body.open {
 	}
 }
 
+%control-menu-icon-monospaced {
+	height: 35px;
+	line-height: 35px;
+	margin-left: 3px;
+	margin-right: 3px;
+	text-align: center;
+	width: 35px;
+}
+
 .tools-control-group {
 	@include flex(1);
 	@include flex-wrap(wrap);
@@ -244,6 +250,10 @@ body.open {
 	> .control-menu-nav {
 		@include flex-wrap(wrap);
 		@include justify-content(center);
+
+		> li > .lfr-portal-tooltip > .control-menu-icon {
+			@extend %control-menu-icon-monospaced;
+		}
 	}
 
 	.taglib-icon-help {
@@ -254,6 +264,10 @@ body.open {
 }
 
 .user-control-group {
+	> .control-menu-nav > li > .control-menu-icon {
+		@extend %control-menu-icon-monospaced;
+	}
+
 	.portlet-options {
 		margin-right: -1px;
 	}

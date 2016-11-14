@@ -62,12 +62,10 @@
 
 		<execute macro="ProductMenuHelper#gotoPortlet">
 			<var name="portlet" value="${portlet}" />
-			<var name="portletLocalization" value="${portletLocalization}" />
 		</execute>
 	</command>
 
 	<command name="gotoLocalizedEditPage" summary="Navigate to Navigate to Product Menu > Sites > ${category} > ${page}">
-
 		<execute macro="ProductMenuHelper#expandPanelSites" />
 
 		<execute macro="ProductMenuHelper#expandCategory">
@@ -90,7 +88,6 @@
 
 		<execute macro="ProductMenuHelper#gotoPortlet">
 			<var name="portlet" value="${portlet}" />
-			<var name="portletLocalization" value="${portletLocalization}" />
 		</execute>
 	</command>
 
@@ -186,6 +183,8 @@
 		</execute>
 
 		<execute function="SelectFrameTop" />
+
+		<execute macro="ProductMenuHelper#expandPanelSites" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="ProductMenu#PRODUCT_MENU_PANEL_SITE_ADMINISTRATION_SITE_NAME" value1="${site}" />
 	</command>

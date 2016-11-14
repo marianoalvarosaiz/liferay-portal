@@ -243,15 +243,21 @@ public class BackgroundTaskLocalServiceImpl
 	@Override
 	public void cleanUpBackgroundTasks() {
 		List<BackgroundTask> backgroundTasks =
-			backgroundTaskPersistence.findByStatus(
-				BackgroundTaskConstants.STATUS_IN_PROGRESS);
+			backgroundTaskPersistence.findByCompleted(false);
 
 		for (BackgroundTask backgroundTask : backgroundTasks) {
-			backgroundTask.setStatus(BackgroundTaskConstants.STATUS_FAILED);
+			if (backgroundTask.getStatus() ==
+					BackgroundTaskConstants.STATUS_IN_PROGRESS) {
+
+				backgroundTask.setCompleted(true);
+				backgroundTask.setStatus(BackgroundTaskConstants.STATUS_FAILED);
+
+				backgroundTaskPersistence.update(backgroundTask);
+			}
 
 			cleanUpBackgroundTask(
 				backgroundTask.getBackgroundTaskId(),
-				BackgroundTaskConstants.STATUS_FAILED);
+				backgroundTask.getStatus());
 		}
 	}
 
@@ -638,7 +644,7 @@ public class BackgroundTaskLocalServiceImpl
 		User user = null;
 
 		if (userId != UserConstants.USER_ID_DEFAULT) {
-			user = userPersistence.findByPrimaryKey(userId);
+			user = userLocalService.getUser(userId);
 		}
 
 		final long backgroundTaskId = counterLocalService.increment();

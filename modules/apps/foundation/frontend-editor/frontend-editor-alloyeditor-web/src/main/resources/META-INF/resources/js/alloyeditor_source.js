@@ -8,7 +8,7 @@ AUI.add(
 				iconCssClass: 'code'
 			},
 			true: {
-				iconCssClass: 'format'
+				iconCssClass: 'text-editor'
 			}
 		};
 
@@ -97,7 +97,13 @@ AUI.add(
 								mode: 'html',
 								on: {
 									themeSwitched: function(event) {
-										instance._editorSwitchTheme.one('.lexicon-icon').replace(event.themes[event.nextThemeIndex].icon);
+										var editorSwitchTheme = instance._editorSwitchTheme;
+
+										var nextTheme = event.themes[event.nextThemeIndex];
+
+										editorSwitchTheme.one('.lexicon-icon').replace(nextTheme.icon);
+
+										editorSwitchTheme.setAttribute('data-title', nextTheme.tooltip);
 									}
 								},
 								value: host.getHTML()
@@ -197,18 +203,23 @@ AUI.add(
 								function(dialog) {
 									fullScreenDialog = dialog;
 
-									fullScreenEditor = new A.LiferayFullScreenSourceEditor(
-										{
-											boundingBox: dialog.getStdModNode(A.WidgetStdMod.BODY).appendChild('<div></div>'),
-											dataProcessor: host.getNativeEditor().dataProcessor,
-											previewCssClass: 'alloy-editor alloy-editor-placeholder',
-											value: host.getHTML()
+									Liferay.Util.getTop().AUI().use(
+										'liferay-fullscreen-source-editor',
+										function(A) {
+											fullScreenEditor = new A.LiferayFullScreenSourceEditor(
+												{
+													boundingBox: dialog.getStdModNode(A.WidgetStdMod.BODY).appendChild('<div></div>'),
+													dataProcessor: host.getNativeEditor().dataProcessor,
+													previewCssClass: 'alloy-editor alloy-editor-placeholder',
+													value: host.getHTML()
+												}
+											).render();
+
+											instance._fullScreenDialog = fullScreenDialog;
+
+											instance._fullScreenEditor = fullScreenEditor;
 										}
-									).render();
-
-									instance._fullScreenDialog = fullScreenDialog;
-
-									instance._fullScreenEditor = fullScreenEditor;
+									);
 								}
 							);
 						}
@@ -289,6 +300,7 @@ AUI.add(
 						instance._isVisible = editorWrapper.hasClass(CSS_SHOW_SOURCE);
 
 						editorSwitch.one('.lexicon-icon').replace(instance._getEditorStateLexiconIcon());
+						editorSwitch.setAttribute('data-title', instance._isVisible ? Liferay.Language.get('text-view') : Liferay.Language.get('code-view'));
 
 						instance._toggleSourceSwitchFn(
 							{

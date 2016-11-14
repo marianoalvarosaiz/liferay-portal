@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchTicketException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Ticket;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -208,11 +206,15 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"TicketPersistenceImpl.fetchByKey(String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"TicketPersistenceImpl.fetchByKey(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					Ticket ticket = list.get(0);
@@ -1269,12 +1271,14 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	 */
 	@Override
 	public Ticket fetchByPrimaryKey(Serializable primaryKey) {
-		Ticket ticket = (Ticket)entityCache.getResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
 				TicketImpl.class, primaryKey);
 
-		if (ticket == _nullTicket) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Ticket ticket = (Ticket)serializable;
 
 		if (ticket == null) {
 			Session session = null;
@@ -1289,7 +1293,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 				}
 				else {
 					entityCache.putResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
-						TicketImpl.class, primaryKey, _nullTicket);
+						TicketImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1343,18 +1347,20 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Ticket ticket = (Ticket)entityCache.getResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
 					TicketImpl.class, primaryKey);
 
-			if (ticket == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, ticket);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Ticket)serializable);
+				}
 			}
 		}
 
@@ -1396,7 +1402,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(TicketModelImpl.ENTITY_CACHE_ENABLED,
-					TicketImpl.class, primaryKey, _nullTicket);
+					TicketImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1638,34 +1644,4 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"key", "type"
 			});
-	private static final Ticket _nullTicket = new TicketImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Ticket> toCacheModel() {
-				return _nullTicketCacheModel;
-			}
-		};
-
-	private static final CacheModel<Ticket> _nullTicketCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Ticket>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Ticket toEntityModel() {
-			return _nullTicket;
-		}
-	}
 }
