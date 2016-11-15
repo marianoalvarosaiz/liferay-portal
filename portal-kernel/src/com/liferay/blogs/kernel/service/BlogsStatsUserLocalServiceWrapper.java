@@ -23,8 +23,11 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
  *
  * @author Brian Wing Shun Chan
  * @see BlogsStatsUserLocalService
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.blogs.service.impl.BlogsStatsUserLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class BlogsStatsUserLocalServiceWrapper
 	implements BlogsStatsUserLocalService,
@@ -104,6 +107,9 @@ public class BlogsStatsUserLocalServiceWrapper
 		return _blogsStatsUserLocalService.getBlogsStatsUser(statsUserId);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	@Override
 	public com.liferay.blogs.kernel.model.BlogsStatsUser getStatsUser(
 		long groupId, long userId)
@@ -345,6 +351,9 @@ public class BlogsStatsUserLocalServiceWrapper
 		_blogsStatsUserLocalService.deleteStatsUser(statsUsers);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	@Override
 	public void deleteStatsUser(long statsUserId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -361,12 +370,18 @@ public class BlogsStatsUserLocalServiceWrapper
 		_blogsStatsUserLocalService.deleteStatsUserByUserId(userId);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	@Override
 	public void updateStatsUser(long groupId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		_blogsStatsUserLocalService.updateStatsUser(groupId, userId);
 	}
 
+	/**
+	* @throws PortalException
+	*/
 	@Override
 	public void updateStatsUser(long groupId, long userId,
 		java.util.Date displayDate)

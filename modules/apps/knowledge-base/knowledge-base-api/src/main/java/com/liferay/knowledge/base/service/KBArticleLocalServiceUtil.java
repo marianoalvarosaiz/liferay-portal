@@ -115,6 +115,11 @@ public class KBArticleLocalServiceUtil {
 		return getService().fetchKBArticle(kbArticleId);
 	}
 
+	public static com.liferay.knowledge.base.model.KBArticle fetchKBArticle(
+		long resourcePrimKey, long groupId, int version) {
+		return getService().fetchKBArticle(resourcePrimKey, groupId, version);
+	}
+
 	public static com.liferay.knowledge.base.model.KBArticle fetchKBArticleByUrlTitle(
 		long groupId, java.lang.String kbFolderUrlTitle,
 		java.lang.String urlTitle)
@@ -144,6 +149,11 @@ public class KBArticleLocalServiceUtil {
 	public static com.liferay.knowledge.base.model.KBArticle fetchLatestKBArticle(
 		long resourcePrimKey, int status) {
 		return getService().fetchLatestKBArticle(resourcePrimKey, status);
+	}
+
+	public static com.liferay.knowledge.base.model.KBArticle fetchLatestKBArticle(
+		long resourcePrimKey, long groupId) {
+		return getService().fetchLatestKBArticle(resourcePrimKey, groupId);
 	}
 
 	public static com.liferay.knowledge.base.model.KBArticle fetchLatestKBArticleByUrlTitle(
@@ -293,6 +303,15 @@ public class KBArticleLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static com.liferay.portal.kernel.repository.model.FileEntry addAttachment(
+		long userId, long resourcePrimKey, java.lang.String fileName,
+		java.io.InputStream inputStream, java.lang.String mimeType)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addAttachment(userId, resourcePrimKey, fileName,
+			inputStream, mimeType);
+	}
+
 	public static int addKBArticlesMarkdown(long userId, long groupId,
 		long parentKbFolderId, java.lang.String fileName,
 		boolean prioritizeByNumericalPrefix, java.io.InputStream inputStream,
@@ -342,7 +361,7 @@ public class KBArticleLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #getKBArticlesCount(long,
+	* @deprecated As of 1.1.0, replaced by {@link #getKBArticlesCount(long,
 	long, int)}
 	*/
 	@Deprecated
@@ -452,7 +471,7 @@ public class KBArticleLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link
+	* @deprecated As of 1.1.0, replaced by {@link
 	#getKBArticleAndAllDescendantKBArticles(long, int,
 	OrderByComparator)}
 	*/
@@ -535,6 +554,11 @@ public class KBArticleLocalServiceUtil {
 			end, orderByComparator);
 	}
 
+	public static java.util.List<com.liferay.knowledge.base.model.KBArticle> getKBFolderKBArticles(
+		long groupId, long kbFolderId) {
+		return getService().getKBFolderKBArticles(groupId, kbFolderId);
+	}
+
 	public static java.util.List<com.liferay.knowledge.base.model.KBArticle> getSectionsKBArticles(
 		long groupId, java.lang.String[] sections, int status, int start,
 		int end,
@@ -545,7 +569,7 @@ public class KBArticleLocalServiceUtil {
 	}
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #getKBArticles(long, long,
+	* @deprecated As of 1.1.0, replaced by {@link #getKBArticles(long, long,
 	int, int, int,
 	OrderByComparator)}
 	*/

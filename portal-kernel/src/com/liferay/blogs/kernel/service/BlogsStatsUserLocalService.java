@@ -49,8 +49,11 @@ import java.util.List;
  * @see BlogsStatsUserLocalServiceUtil
  * @see com.liferay.portlet.blogs.service.base.BlogsStatsUserLocalServiceBaseImpl
  * @see com.liferay.portlet.blogs.service.impl.BlogsStatsUserLocalServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.blogs.service.impl.BlogsStatsUserLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
@@ -113,6 +116,9 @@ public interface BlogsStatsUserLocalService extends BaseLocalService,
 	public BlogsStatsUser getBlogsStatsUser(long statsUserId)
 		throws PortalException;
 
+	/**
+	* @throws PortalException
+	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BlogsStatsUser getStatsUser(long groupId, long userId)
 		throws PortalException;
@@ -271,15 +277,24 @@ public interface BlogsStatsUserLocalService extends BaseLocalService,
 
 	public void deleteStatsUser(BlogsStatsUser statsUsers);
 
+	/**
+	* @throws PortalException
+	*/
 	public void deleteStatsUser(long statsUserId) throws PortalException;
 
 	public void deleteStatsUserByGroupId(long groupId);
 
 	public void deleteStatsUserByUserId(long userId);
 
+	/**
+	* @throws PortalException
+	*/
 	public void updateStatsUser(long groupId, long userId)
 		throws PortalException;
 
+	/**
+	* @throws PortalException
+	*/
 	public void updateStatsUser(long groupId, long userId, Date displayDate)
 		throws PortalException;
 }

@@ -36,7 +36,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimerInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.calendar.DueDateCalculator;
-import com.liferay.portal.workflow.kaleo.runtime.messaging.DestinationNames;
+import com.liferay.portal.workflow.kaleo.runtime.constants.KaleoRuntimeDestinationNames;
 import com.liferay.portal.workflow.kaleo.runtime.util.SchedulerUtil;
 import com.liferay.portal.workflow.kaleo.runtime.util.WorkflowContextUtil;
 import com.liferay.portal.workflow.kaleo.service.base.KaleoTimerInstanceTokenLocalServiceBaseImpl;
@@ -64,8 +64,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		User user = userPersistence.findByPrimaryKey(
-			serviceContext.getGuestOrUserId());
+		User user = userLocalService.getUser(serviceContext.getGuestOrUserId());
 		KaleoInstanceToken kaleoInstanceToken =
 			kaleoInstanceTokenPersistence.findByPrimaryKey(
 				kaleoInstanceTokenId);
@@ -325,7 +324,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 
 		_schedulerEngineHelper.schedule(
 			trigger, StorageType.PERSISTED, null,
-			DestinationNames.WORKFLOW_TIMER, message, 0);
+			KaleoRuntimeDestinationNames.WORKFLOW_TIMER, message, 0);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

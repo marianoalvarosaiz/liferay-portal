@@ -218,8 +218,8 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 			classPK);
 
 		if ((article.getFolderId() > 0) &&
-			(_journalFolderLocalService.fetchFolder(
-				article.getFolderId()) == null)) {
+			(_journalFolderLocalService.fetchFolder(article.getFolderId()) ==
+				null)) {
 
 			return false;
 		}
@@ -315,6 +315,7 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 
 			ree.setDuplicateEntryId(duplicateArticle.getResourcePrimKey());
 			ree.setOldName(duplicateArticle.getArticleId());
+
 			ree.setTrashEntryId(trashEntryId);
 
 			throw ree;

@@ -78,6 +78,7 @@ import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
+import com.liferay.trash.kernel.util.TrashUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -406,7 +407,15 @@ public class DLFileEntryIndexer
 			document.addKeyword(Field.HIDDEN, dlFileEntry.isInHiddenFolder());
 			document.addText(
 				Field.PROPERTIES, dlFileEntry.getLuceneProperties());
-			document.addText(Field.TITLE, dlFileEntry.getTitle());
+
+			String title = dlFileEntry.getTitle();
+
+			if (dlFileEntry.isInTrash()) {
+				title = TrashUtil.getOriginalTitle(title);
+			}
+
+			document.addText(Field.TITLE, title);
+
 			document.addKeyword(
 				Field.TREE_PATH,
 				StringUtil.split(dlFileEntry.getTreePath(), CharPool.SLASH));
@@ -585,6 +594,7 @@ public class DLFileEntryIndexer
 			});
 		indexableActionableDynamicQuery.setCompanyId(companyId);
 		indexableActionableDynamicQuery.setGroupId(groupId);
+		indexableActionableDynamicQuery.setInterval(_INTERVAL);
 		indexableActionableDynamicQuery.setPerformActionMethod(
 			new ActionableDynamicQuery.PerformActionMethod<DLFileEntry>() {
 
@@ -650,6 +660,7 @@ public class DLFileEntryIndexer
 				@Override
 				public void performAction(Group group) throws PortalException {
 					long groupId = group.getGroupId();
+
 					long folderId = groupId;
 
 					String[] newIds = {
@@ -664,6 +675,8 @@ public class DLFileEntryIndexer
 
 		actionableDynamicQuery.performActions();
 	}
+
+	private static final int _INTERVAL = 500;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DLFileEntryIndexer.class);

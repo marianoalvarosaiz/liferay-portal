@@ -14,9 +14,10 @@
 
 package com.liferay.staging.taglib.servlet.taglib;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.staging.taglib.servlet.ServletContextUtil;
+import com.liferay.staging.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import javax.servlet.jsp.PageContext;
 /**
  * @author Levente Hudák
  */
+@ProviderType
 public class ConfigurationHeaderTag extends IncludeTag {
 
 	public void setExportImportConfiguration(
@@ -67,6 +69,6 @@ public class ConfigurationHeaderTag extends IncludeTag {
 	private static final String _PAGE = "/configuration_header/page.jsp";
 
 	private ExportImportConfiguration _exportImportConfiguration;
-	private String _label = StringPool.BLANK;
+	private String _label;
 
 }

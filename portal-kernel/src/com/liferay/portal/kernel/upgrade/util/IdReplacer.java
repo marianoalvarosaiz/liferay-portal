@@ -30,8 +30,8 @@ public class IdReplacer {
 			String s, String begin, ValueMapper valueMapper)
 		throws Exception {
 
-		if ((s == null) || (begin == null) ||
-			(valueMapper == null) || (valueMapper.size() == 0)) {
+		if ((s == null) || (begin == null) || (valueMapper == null) ||
+			(valueMapper.size() == 0)) {
 
 			return s;
 		}
@@ -44,6 +44,7 @@ public class IdReplacer {
 
 		while (true) {
 			int x = s.indexOf(begin, pos);
+
 			int y = _getEndPos(chars, x + begin.length());
 
 			if ((x == -1) || (y == -1)) {
@@ -100,6 +101,7 @@ public class IdReplacer {
 
 		while (true) {
 			int x = s.indexOf(begin, pos);
+
 			int y = s.indexOf(end, x + begin.length());
 
 			if ((x == -1) || (y == -1)) {

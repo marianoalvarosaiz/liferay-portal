@@ -20,7 +20,7 @@
 	</tear-down>
 
 	<command name="RemoveNoGuestInlineView" priority="5">
-		<property name="portal.acceptance" value="false" />
+		<property name="portal.acceptance" value="true" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Welcome" />
@@ -30,7 +30,7 @@
 			<var name="pageName" value="Welcome" />
 		</execute>
 
-		<var name="key_roleName" value="guest" />
+		<var name="key_roleTitle" value="guest" />
 
 		<execute function="Click" locator1="Permissions#INLINE_PERMISSIONS_VIEW_CHECKBOX" />
 		<execute function="AssertChecked" locator1="Permissions#INLINE_PERMISSIONS_VIEW_CHECKBOX" />

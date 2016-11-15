@@ -1,6 +1,8 @@
 AUI.add(
 	'liferay-search-container-move',
 	function(A) {
+		var AUA = A.UA;
+
 		var Lang = A.Lang;
 
 		var STR_BLANK = '';
@@ -15,9 +17,15 @@ AUI.add(
 
 		var STR_NODE = 'node';
 
+		var TOUCH_ENABLED = AUA.mobile && AUA.touchEnabled;
+
 		var SearchContainerMove = A.Component.create(
 			{
 				ATTRS: {
+					ddConfig: {
+						valueFn: '_valueDDConfig'
+					},
+
 					dropTargets: {
 						validator: Lang.isArray
 					},
@@ -29,7 +37,7 @@ AUI.add(
 
 					tooltipClass: {
 						validator: Lang.isString,
-						value: 'btn btn-group'
+						value: 'btn btn-default btn-group'
 					}
 				},
 
@@ -83,6 +91,7 @@ AUI.add(
 						instance._ddHandler = new A.DD.Delegate(
 							{
 								container: host.get(STR_CONTENT_BOX),
+								dragConfig: instance.get('ddConfig'),
 								nodes: instance.get('rowSelector'),
 								on: {
 									'drag:drophit': A.bind('_onDragDropHit', instance),
@@ -93,18 +102,21 @@ AUI.add(
 							}
 						);
 
-						var dd = instance._ddHandler.dd;
-
-						dd.set('groups', [host.get('id')]);
-						dd.set('offsetNode', false);
-
-						dd.plug(
+						instance._ddHandler.dd.plug(
 							[
 								{
 									cfg: {
 										moveOnEnd: false
 									},
 									fn: A.Plugin.DDProxy
+								},
+								{
+									cfg: {
+										horizontal: false,
+										scrollDelay: 100,
+										vertical: true
+									},
+									fn: A.Plugin.DDWinScroll
 								}
 							]
 						);
@@ -274,6 +286,19 @@ AUI.add(
 						proxyNode.html(Lang.sub(moveText, [selectedItemsCount]));
 
 						proxyNode.addClass(instance.get('tooltipClass'));
+					},
+
+					_valueDDConfig: function() {
+						var instance = this;
+
+						var host = instance.get(STR_HOST);
+
+						return {
+							clickPixelThresh: TOUCH_ENABLED ? 100000 : 50,
+							clickTimeThresh: TOUCH_ENABLED ? 150000 : 1000,
+							groups: [host.get('id')],
+							offsetNode: false
+						};
 					}
 				}
 			}

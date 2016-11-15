@@ -504,6 +504,26 @@ public class StringUtilTest {
 	}
 
 	@Test
+	public void testShortenStringWith4ByteChars() {
+		int space = CharPool.SPACE;
+
+		int[] codePoints = new int[] {
+			128515, 128516, space, 128517, 128518, 128519, 128520, 128521
+		};
+
+		String string = new String(codePoints, 0, codePoints.length);
+
+		Assert.assertEquals(
+			new String(codePoints, 0, 1), StringUtil.shorten(string, 1));
+		Assert.assertEquals(
+			new String(codePoints, 0, 1) + "...",
+			StringUtil.shorten(string, 4));
+		Assert.assertEquals(
+			new String(codePoints, 0, 2) + "...",
+			StringUtil.shorten(string, 7));
+	}
+
+	@Test
 	public void testSplit() {
 		Assert.assertArrayEquals(
 			new String[] {"Alice", "Bob", "Charlie"},
@@ -791,14 +811,12 @@ public class StringUtilTest {
 		// Leading spaces
 
 		Assert.assertEquals(
-			"\t\r\n\t\r",
-			StringUtil.trimLeading(" \t\r\n\t\r", exceptions));
+			"\t\r\n\t\r", StringUtil.trimLeading(" \t\r\n\t\r", exceptions));
 
 		// Trailing spaces
 
 		Assert.assertSame(
-			"\t\r \t\r\n",
-			StringUtil.trimLeading("\t\r \t\r\n", exceptions));
+			"\t\r \t\r\n", StringUtil.trimLeading("\t\r \t\r\n", exceptions));
 
 		// Surrounding spaces
 
@@ -884,14 +902,12 @@ public class StringUtilTest {
 		// Leading spaces
 
 		Assert.assertSame(
-			" \t\r\n\t\r",
-			StringUtil.trimTrailing(" \t\r\n\t\r", exceptions));
+			" \t\r\n\t\r", StringUtil.trimTrailing(" \t\r\n\t\r", exceptions));
 
 		// Trailing spaces
 
 		Assert.assertEquals(
-			"\t\r \t\r",
-			StringUtil.trimTrailing("\t\r \t\r\n", exceptions));
+			"\t\r \t\r", StringUtil.trimTrailing("\t\r \t\r\n", exceptions));
 
 		// Surrounding spaces
 

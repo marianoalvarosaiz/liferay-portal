@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.EmailAddress;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.ListType;
 import com.liferay.portal.kernel.model.ListTypeConstants;
 import com.liferay.portal.kernel.model.Phone;
@@ -124,6 +125,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
+		"javax.portlet.name=" + UsersAdminPortletKeys.MY_ORGANIZATIONS,
 		"javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN,
 		"mvc.command.name=/users_admin/edit_user"
 	},
@@ -317,8 +319,8 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 					actionRequest, actionResponse);
 
 				user = (User)returnValue[0];
-				oldScreenName = ((String)returnValue[1]);
-				updateLanguageId = ((Boolean)returnValue[2]);
+				oldScreenName = (String)returnValue[1];
+				updateLanguageId = (Boolean)returnValue[2];
 			}
 			else if (cmd.equals("unlock")) {
 				user = updateLockout(actionRequest);
@@ -383,8 +385,8 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			Group scopeGroup = themeDisplay.getScopeGroup();
 
 			if (scopeGroup.isUser() &&
-				(userLocalService.fetchUserById(
-					scopeGroup.getClassPK()) == null)) {
+				(userLocalService.fetchUserById(scopeGroup.getClassPK()) ==
+					null)) {
 
 				redirect = HttpUtil.setParameter(redirect, "doAsGroupId", 0);
 				redirect = HttpUtil.setParameter(redirect, "refererPlid", 0);
@@ -583,6 +585,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 
 		String oldPassword = AdminUtil.getUpdateUserPassword(
 			actionRequest, user.getUserId());
+
 		String newPassword1 = actionRequest.getParameter("password1");
 		String newPassword2 = actionRequest.getParameter("password2");
 		boolean passwordReset = ParamUtil.getBoolean(
@@ -647,6 +650,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "birthdayDay", birthdayCal.get(Calendar.DATE));
 		int birthdayYear = ParamUtil.getInteger(
 			actionRequest, "birthdayYear", birthdayCal.get(Calendar.YEAR));
+
 		String comments = BeanParamUtil.getString(
 			user, actionRequest, "comments");
 		String smsSn = BeanParamUtil.getString(contact, actionRequest, "smsSn");
@@ -711,8 +715,8 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 
 			// Reset the locale
 
-			HttpServletRequest request = PortalUtil.getHttpServletRequest(
-				actionRequest);
+			HttpServletRequest request = PortalUtil.getOriginalServletRequest(
+				PortalUtil.getHttpServletRequest(actionRequest));
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(
 				actionResponse);
 			HttpSession session = request.getSession();
@@ -747,12 +751,12 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			PortalMyAccountApplicationType.MyAccount.CLASS_NAME,
 			PortletProvider.Action.VIEW);
 
-		if (!portletId.equals(myAccountPortletId)) {
-			Group group = user.getGroup();
+		Group group = user.getGroup();
 
-			boolean hasGroupUpdatePermission = GroupPermissionUtil.contains(
+		if (!portletId.equals(myAccountPortletId) &&
+			GroupPermissionUtil.contains(
 				themeDisplay.getPermissionChecker(), group.getGroupId(),
-				ActionKeys.UPDATE);
+				ActionKeys.UPDATE)) {
 
 			long publicLayoutSetPrototypeId = ParamUtil.getLong(
 				actionRequest, "publicLayoutSetPrototypeId");
@@ -763,9 +767,15 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			boolean privateLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
 				actionRequest, "privateLayoutSetPrototypeLinkEnabled");
 
-			if (hasGroupUpdatePermission &&
-				((publicLayoutSetPrototypeId > 0) ||
-				 (privateLayoutSetPrototypeId > 0))) {
+			LayoutSet publicLayoutSet = group.getPublicLayoutSet();
+			LayoutSet privateLayoutSet = group.getPrivateLayoutSet();
+
+			if ((publicLayoutSetPrototypeId > 0) ||
+				(privateLayoutSetPrototypeId > 0) ||
+				(publicLayoutSetPrototypeLinkEnabled !=
+					publicLayoutSet.isLayoutSetPrototypeLinkEnabled()) ||
+				(privateLayoutSetPrototypeLinkEnabled !=
+					privateLayoutSet.isLayoutSetPrototypeLinkEnabled())) {
 
 				SitesUtil.updateLayoutSetPrototypesLinks(
 					group, publicLayoutSetPrototypeId,

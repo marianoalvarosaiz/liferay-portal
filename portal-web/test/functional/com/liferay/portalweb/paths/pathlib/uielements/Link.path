@@ -54,6 +54,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>FACEBOOK_LOGIN</td>
+	<td>//span[contains(.,'Facebook')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>GOOGLE_LOGIN</td>
 	<td>//span[contains(.,'Google')]</td>
 	<td></td>
@@ -94,6 +99,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>OPENID</td>
+	<td>//span[contains(.,'OpenID')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PAGE_LOCALE</td>
+	<td>//div[contains(@id,'portalMessageContainer')]/a[contains(.,'${key_pageLocale}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>PRINT</td>
 	<td>//a[contains(.,'Print')]</td>
 	<td></td>
@@ -125,7 +140,7 @@
 </tr>
 <tr>
 	<td>STAGING</td>
-	<td>//a[contains(@data-qa-id,'staging')]</td>
+	<td>//ul[contains(@data-qa-id,'header')]//span[contains(.,'Staging')]</td>
 	<td></td>
 </tr>
 <tr>

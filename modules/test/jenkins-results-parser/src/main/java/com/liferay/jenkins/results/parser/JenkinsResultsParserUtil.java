@@ -17,17 +17,19 @@ package com.liferay.jenkins.results.parser;
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.Writer;
 
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.net.UnknownHostException;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -59,8 +61,8 @@ public class JenkinsResultsParserUtil {
 
 		JSONObject jsonObject = new JSONObject(jsonString);
 
-		if (jsonObject.isNull("duration") ||
-			jsonObject.isNull("result") || jsonObject.isNull("url")) {
+		if (jsonObject.isNull("duration") || jsonObject.isNull("result") ||
+			jsonObject.isNull("url")) {
 
 			return jsonObject;
 		}
@@ -92,6 +94,16 @@ public class JenkinsResultsParserUtil {
 		URL url = new URL(urlString);
 
 		return encode(url);
+	}
+
+	public static String decode(String url) throws Exception {
+		return URLDecoder.decode(url, "UTF-8");
+	}
+
+	public static String encode(String url) throws Exception {
+		URL encodedURL = encode(new URL(url));
+
+		return encodedURL.toExternalForm();
 	}
 
 	public static URL encode(URL url) throws Exception {
@@ -183,6 +195,7 @@ public class JenkinsResultsParserUtil {
 			String prefix = hostName.substring(0, y);
 
 			int first = Integer.parseInt(hostName.substring(y, x));
+
 			int last = Integer.parseInt(hostName.substring(x + 2));
 
 			for (int current = first; current <= last; current++) {
@@ -332,6 +345,53 @@ public class JenkinsResultsParserUtil {
 		return "";
 	}
 
+	public static String getAxisVariable(String axisBuildURL) throws Exception {
+		String url = decode(axisBuildURL);
+
+		String label = "AXIS_VARIABLE=";
+
+		int x = url.indexOf(label);
+
+		if (x != -1) {
+			url = url.substring(x + label.length());
+
+			int y = url.indexOf(",");
+
+			return url.substring(0, y);
+		}
+
+		return "";
+	}
+
+	public static Properties getBuildProperties() throws Exception {
+		Properties properties = new Properties();
+
+		String url =
+			"http://mirrors-no-cache.lax.liferay.com/github.com/liferay" +
+				"/liferay-jenkins-ee/build.properties";
+
+		properties.load(new StringReader(toString(getLocalURL(url), false)));
+
+		url =
+			"http://mirrors-no-cache.lax.liferay.com/github.com/liferay" +
+				"/liferay-jenkins-ee/commands/build.properties";
+
+		properties.load(new StringReader(toString(getLocalURL(url), false)));
+
+		return properties;
+	}
+
+	public static String getHostName(String defaultHostName) {
+		try {
+			InetAddress inetAddress = InetAddress.getLocalHost();
+
+			return inetAddress.getHostName();
+		}
+		catch (UnknownHostException uhe) {
+			return defaultHostName;
+		}
+	}
+
 	public static String getJobVariant(JSONObject jsonObject) throws Exception {
 		JSONArray actionsJSONArray = jsonObject.getJSONArray("actions");
 
@@ -419,30 +479,87 @@ public class JenkinsResultsParserUtil {
 		return remoteURL;
 	}
 
-	public static List<String> getSlaves(String master) throws Exception {
-		List<String> slaves = new ArrayList<>(100);
+	public static List<String> getMasters(
+		Properties buildProperties, String prefix) {
 
-		Properties properties = new Properties();
+		List<String> masters = new ArrayList<>();
 
-		properties.load(
-			new StringReader(
-				toString(
-					getLocalURL(
-						"http://mirrors-no-cache.lax.liferay.com/github.com" +
-							"/liferay/liferay-jenkins-ee/build.properties"))));
+		for (int i = 1; buildProperties.containsKey(
+				"master.slaves(" + prefix + "-" + i + ")"); i++) {
 
-		String masterSlavesKey = "master.slaves(" + master + ")";
+			masters.add(prefix + "-" + i);
+		}
 
-		if (properties.containsKey(masterSlavesKey)) {
-			String slavesString = expandSlaveRange(
-				properties.getProperty(masterSlavesKey));
+		return masters;
+	}
 
-			for (String slave : slavesString.split(",")) {
-				slaves.add(slave.trim());
+	public static List<String> getRandomList(List<String> list, int size) {
+		if (list.size() < size) {
+			throw new IllegalStateException(
+				"Size must not exceed the size of the list");
+		}
+
+		if (size == list.size()) {
+			return list;
+		}
+
+		List<String> randomList = new ArrayList<>(size);
+
+		for (int i = 0; i < size; i++) {
+			String item = null;
+
+			while (true) {
+				item = list.get(getRandomValue(0, list.size() - 1));
+
+				if (randomList.contains(item)) {
+					continue;
+				}
+
+				randomList.add(item);
+
+				break;
+			}
+		}
+
+		return randomList;
+	}
+
+	public static int getRandomValue(int start, int end) {
+		int size = Math.abs(end - start);
+
+		double randomDouble = Math.random();
+
+		return start + (int)Math.round(size * randomDouble);
+	}
+
+	public static List<String> getSlaves(
+		Properties buildProperties, String masterPatternString) {
+
+		List<String> slaves = new ArrayList<>();
+
+		Pattern masterPattern = Pattern.compile(
+			"master.slaves\\(" + masterPatternString + "\\)");
+
+		for (Object key : buildProperties.keySet()) {
+			Matcher keyMatcher = masterPattern.matcher(key.toString());
+
+			if (keyMatcher.find()) {
+				String slavesString = expandSlaveRange(
+					buildProperties.getProperty(key.toString()));
+
+				for (String slave : slavesString.split(",")) {
+					slaves.add(slave.trim());
+				}
 			}
 		}
 
 		return slaves;
+	}
+
+	public static List<String> getSlaves(String masterPatternString)
+		throws Exception {
+
+		return getSlaves(getBuildProperties(), masterPatternString);
 	}
 
 	public static String read(File file) throws IOException {
@@ -506,33 +623,69 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static JSONObject toJSONObject(String url) throws Exception {
-		return toJSONObject(url, true, 0);
+		return toJSONObject(
+			url, true, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+			_TIMEOUT_DEFAULT);
 	}
 
 	public static JSONObject toJSONObject(String url, boolean checkCache)
 		throws Exception {
 
-		return createJSONObject(toString(url, checkCache, 0));
+		return createJSONObject(
+			toString(
+				url, checkCache, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+				_TIMEOUT_DEFAULT));
 	}
 
 	public static JSONObject toJSONObject(
 			String url, boolean checkCache, int timeout)
 		throws Exception {
 
-		return createJSONObject(toString(url, checkCache, timeout));
+		return toJSONObject(
+			url, checkCache, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+			timeout);
+	}
+
+	public static JSONObject toJSONObject(
+			String url, boolean checkCache, int maxRetries, int retryPeriod,
+			int timeout)
+		throws Exception {
+
+		String response = toString(
+			url, checkCache, maxRetries, retryPeriod, timeout);
+
+		if (response.endsWith("was truncated due to its size.")) {
+			return null;
+		}
+
+		return createJSONObject(response);
 	}
 
 	public static String toString(String url) throws Exception {
-		return toString(url, true, 0);
+		return toString(
+			url, true, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+			_TIMEOUT_DEFAULT);
 	}
 
 	public static String toString(String url, boolean checkCache)
 		throws Exception {
 
-		return toString(url, checkCache, 0);
+		return toString(
+			url, checkCache, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+			_TIMEOUT_DEFAULT);
 	}
 
 	public static String toString(String url, boolean checkCache, int timeout)
+		throws Exception {
+
+		return toString(
+			url, checkCache, _MAX_RETRIES_DEFAULT, _RETRY_PERIOD_DEFAULT,
+			timeout);
+	}
+
+	public static String toString(
+			String url, boolean checkCache, int maxRetries, int retryPeriod,
+			int timeout)
 		throws Exception {
 
 		url = fixURL(url);
@@ -564,43 +717,47 @@ public class JenkinsResultsParserUtil {
 					urlConnection.setReadTimeout(timeout);
 				}
 
-				InputStreamReader inputStreamReader = new InputStreamReader(
-					urlConnection.getInputStream());
-
-				BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
+				int bytes = 0;
 				String line = null;
 
-				while ((line = bufferedReader.readLine()) != null) {
-					sb.append(line);
-					sb.append("\n");
+				try (BufferedReader bufferedReader = new BufferedReader(
+						new InputStreamReader(
+							urlConnection.getInputStream()))) {
+
+					while ((line = bufferedReader.readLine()) != null) {
+						byte[] lineBytes = line.getBytes();
+
+						bytes += lineBytes.length;
+
+						if (bytes > (30 * 1024 * 1024)) {
+							sb.append("Response for ");
+							sb.append(url);
+							sb.append(" was truncated due to its size.");
+
+							break;
+						}
+
+						sb.append(line);
+						sb.append("\n");
+					}
 				}
 
-				bufferedReader.close();
-
-				String string = sb.toString();
-
-				byte[] bytes = string.getBytes();
-
-				if (!url.startsWith("file:") &&
-					(bytes.length < (3 * 1024 * 1024))) {
-
-					_toStringCache.put(key, string);
+				if (!url.startsWith("file:") && (bytes < (3 * 1024 * 1024))) {
+					_toStringCache.put(key, sb.toString());
 				}
 
-				return string;
+				return sb.toString();
 			}
-			catch (FileNotFoundException fnfe) {
+			catch (IOException ioe) {
 				retryCount++;
 
-				if (retryCount > 3) {
-					throw fnfe;
+				if ((maxRetries >= 0) && (retryCount >= maxRetries)) {
+					throw ioe;
 				}
 
-				System.out.println("Retry in 5 seconds");
+				System.out.println("Retry in " + retryPeriod + " seconds");
 
-				Thread.sleep(5000);
+				sleep(1000 * retryPeriod);
 			}
 		}
 	}
@@ -611,13 +768,23 @@ public class JenkinsResultsParserUtil {
 
 		File parentDir = file.getParentFile();
 
-		if (!parentDir.exists()) {
+		if ((parentDir != null) && !parentDir.exists()) {
 			System.out.println("Make parent directories for " + file);
 
 			parentDir.mkdirs();
 		}
 
 		Files.write(Paths.get(file.toURI()), content.getBytes());
+	}
+
+	public static void write(String path, String content) throws IOException {
+		if (path.startsWith("${dependencies.url}")) {
+			path = path.replace(
+				"${dependencies.url}",
+				DEPENDENCIES_URL_FILE.replace("file:", ""));
+		}
+
+		write(new File(path), content);
 	}
 
 	protected static final String DEPENDENCIES_URL_FILE;
@@ -640,6 +807,12 @@ public class JenkinsResultsParserUtil {
 			throw new RuntimeException(murle);
 		}
 	}
+
+	private static final int _MAX_RETRIES_DEFAULT = 3;
+
+	private static final int _RETRY_PERIOD_DEFAULT = 5;
+
+	private static final int _TIMEOUT_DEFAULT = 0;
 
 	private static final Pattern _localURLPattern1 = Pattern.compile(
 		"https://test.liferay.com/([0-9]+)/");

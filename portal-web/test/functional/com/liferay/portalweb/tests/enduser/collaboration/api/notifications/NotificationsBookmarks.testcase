@@ -1,7 +1,6 @@
 <definition component-name="portal-collaboration">
 	<property name="portal.release" value="true" />
 	<property name="custom.properties" value="default.layout.template.id=1_column" />
-	<property name="portlet.plugins.includes" value="notifications-portlet" />
 	<property name="testray.main.component.name" value="Notifications" />
 
 	<var name="pageName" value="Bookmarks Page" />
@@ -50,7 +49,7 @@
 		</execute>
 
 		<execute macro="User#assignRegularRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 	</set-up>
@@ -116,6 +115,10 @@
 		<execute macro="Bookmark#addPG">
 			<var name="bookmarkName" value="Bookmark Name" />
 			<var name="bookmarkURL" value="https://www.liferay.com" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute macro="Notifications#viewBadgeCount">
@@ -189,6 +192,10 @@
 		<execute macro="Bookmark#addPG">
 			<var name="bookmarkName" value="Bookmark Name" />
 			<var name="bookmarkURL" value="https://www.liferay.com" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="${pageName}" />
 		</execute>
 
 		<execute macro="Notifications#viewBadgeCount">

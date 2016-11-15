@@ -40,7 +40,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 %>
 
 <c:choose>
-	<c:when test="<%= (ListUtil.isEmpty(entries) && ListUtil.isNotEmpty(folders) && (folders.size() == 1)) %>">
+	<c:when test="<%= ListUtil.isEmpty(entries) && ListUtil.isNotEmpty(folders) && (folders.size() == 1) %>">
 
 		<%
 		BookmarksFolder folder = folders.get(0);
@@ -49,11 +49,10 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-header-actions">
 				<li>
 					<liferay-util:include page="/bookmarks/subscribe.jsp" servletContext="<%= application %>" />
 				</li>
-
 				<li>
 					<liferay-util:include page="/bookmarks/folder_action.jsp" servletContext="<%= application %>" />
 				</li>
@@ -105,11 +104,10 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-header-actions">
 				<li>
 					<liferay-util:include page="/bookmarks/subscribe.jsp" servletContext="<%= application %>" />
 				</li>
-
 				<li>
 					<liferay-util:include page="/bookmarks/entry_action.jsp" servletContext="<%= application %>" />
 				</li>

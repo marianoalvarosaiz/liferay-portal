@@ -261,6 +261,7 @@
 				<classpath mode="compile">lib/development/com.liferay.ant.bnd.jar</classpath>
 				<classpath mode="compile">lib/development/com.liferay.ant.build.logger.jar</classpath>
 				<classpath mode="compile">lib/development/com.liferay.ant.heap.dump.jar</classpath>
+				<classpath mode="compile">lib/development/com.liferay.ant.mirrors.get.jar</classpath>
 				<classpath mode="compile">lib/development/deployment.jar</classpath>
 				<classpath mode="compile">lib/development/dtddoc.jar</classpath>
 				<classpath mode="compile">lib/development/dtdparser.jar</classpath>
@@ -289,7 +290,6 @@
 				<classpath mode="compile">lib/development/junit.jar</classpath>
 				<classpath mode="compile">lib/development/jutf7.jar</classpath>
 				<classpath mode="compile">lib/development/jymsg.jar</classpath>
-				<classpath mode="compile">lib/development/liferay-doclet.jar</classpath>
 				<classpath mode="compile">lib/development/mail.jar</classpath>
 				<classpath mode="compile">lib/development/mariadb.jar</classpath>
 				<classpath mode="compile">lib/development/maven-ant-tasks.jar</classpath>
@@ -321,6 +321,7 @@
 				<classpath mode="compile">lib/development/tomcat-coyote.jar</classpath>
 				<classpath mode="compile">lib/development/velocity.jar</classpath>
 				<classpath mode="compile">lib/development/velocity-tools.jar</classpath>
+				<classpath mode="compile">lib/development/websocket-api.jar</classpath>
 				<classpath mode="compile">lib/development/xmltask.jar</classpath>
 				<classpath mode="compile">lib/global/portlet.jar</classpath>
 				<classpath mode="compile">lib/portal/abdera.jar</classpath>
@@ -378,7 +379,6 @@
 				<classpath mode="compile">lib/portal/easyconf.jar</classpath>
 				<classpath mode="compile">lib/portal/eclipse-core-runtime.jar</classpath>
 				<classpath mode="compile">lib/portal/ecs.jar</classpath>
-				<classpath mode="compile">lib/portal/fastutil.jar</classpath>
 				<classpath mode="compile">lib/portal/fontbox.jar</classpath>
 				<classpath mode="compile">lib/portal/freshcookies-security.jar</classpath>
 				<classpath mode="compile">lib/portal/gif89.jar</classpath>
@@ -422,8 +422,6 @@
 				<classpath mode="compile">lib/portal/jrcs-diff.jar</classpath>
 				<classpath mode="compile">lib/portal/json-java.jar</classpath>
 				<classpath mode="compile">lib/portal/json-schema-validator.jar</classpath>
-				<classpath mode="compile">lib/portal/jsonrpc.jar</classpath>
-				<classpath mode="compile">lib/portal/jspwiki.jar</classpath>
 				<classpath mode="compile">lib/portal/jsr107cache.jar</classpath>
 				<classpath mode="compile">lib/portal/jstl-api.jar</classpath>
 				<classpath mode="compile">lib/portal/jstl-impl.jar</classpath>
@@ -446,7 +444,6 @@
 				<classpath mode="compile">lib/portal/netty-all.jar</classpath>
 				<classpath mode="compile">lib/portal/odmg.jar</classpath>
 				<classpath mode="compile">lib/portal/oro.jar</classpath>
-				<classpath mode="compile">lib/portal/oscache.jar</classpath>
 				<classpath mode="compile">lib/portal/pdfbox.jar</classpath>
 				<classpath mode="compile">lib/portal/poi-ooxml-schemas.jar</classpath>
 				<classpath mode="compile">lib/portal/poi-ooxml.jar</classpath>

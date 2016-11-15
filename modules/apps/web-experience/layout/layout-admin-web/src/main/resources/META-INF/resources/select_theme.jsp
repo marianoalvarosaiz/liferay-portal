@@ -114,16 +114,9 @@ themes = ListUtil.sort(themes, new ThemeNameComparator(orderByType.equals("asc")
 						colspan="<%= 2 %>"
 					>
 						<h5>
-							<c:choose>
-								<c:when test="<%= !themeId.equals(theme.getThemeId()) %>">
-									<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
-										<%= theme.getName() %>
-									</aui:a>
-								</c:when>
-								<c:otherwise>
-									<%= theme.getName() %>
-								</c:otherwise>
-							</c:choose>
+							<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+								<%= theme.getName() %>
+							</aui:a>
 						</h5>
 
 						<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getAuthor()) %>">
@@ -147,7 +140,7 @@ themes = ListUtil.sort(themes, new ThemeNameComparator(orderByType.equals("asc")
 
 					<liferay-ui:search-container-column-text>
 						<liferay-frontend:vertical-card
-							cssClass='<%= themeId.equals(theme.getThemeId()) ? StringPool.BLANK : "selector-button" %>'
+							cssClass="selector-button"
 							data="<%= data %>"
 							imageCSSClass="aspect-ratio-4-to-3"
 							imageUrl='<%= theme.getStaticResourcePath() + theme.getImagesPath() + "/thumbnail.png" %>'
@@ -158,20 +151,12 @@ themes = ListUtil.sort(themes, new ThemeNameComparator(orderByType.equals("asc")
 				</c:when>
 				<c:when test='<%= displayStyle.equals("list") %>'>
 					<liferay-ui:search-container-column-text
-						cssClass="content-column name-column title-column"
 						name="name"
 						truncate="<%= true %>"
 					>
-						<c:choose>
-							<c:when test="<%= !themeId.equals(theme.getThemeId()) %>">
-								<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
-									<%= theme.getName() %>
-								</aui:a>
-							</c:when>
-							<c:otherwise>
-								<%= theme.getName() %>
-							</c:otherwise>
-						</c:choose>
+						<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+							<%= theme.getName() %>
+						</aui:a>
 					</liferay-ui:search-container-column-text>
 
 					<%
@@ -183,7 +168,6 @@ themes = ListUtil.sort(themes, new ThemeNameComparator(orderByType.equals("asc")
 					%>
 
 					<liferay-ui:search-container-column-text
-						cssClass="author-column text-column"
 						name="author"
 						value="<%= author %>"
 					/>

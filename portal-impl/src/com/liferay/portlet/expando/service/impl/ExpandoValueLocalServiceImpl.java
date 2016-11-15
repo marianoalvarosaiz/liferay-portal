@@ -711,11 +711,11 @@ public class ExpandoValueLocalServiceImpl
 		List<ExpandoColumn> columns = expandoColumnLocalService.getColumns(
 			table.getTableId(), attributes.keySet());
 
-		ExpandoValue value = new ExpandoValueImpl();
-
-		value.setCompanyId(companyId);
-
 		for (ExpandoColumn column : columns) {
+			ExpandoValue value = new ExpandoValueImpl();
+
+			value.setCompanyId(companyId);
+
 			Serializable attributeValue = attributes.get(column.getName());
 
 			value.setColumn(column);
@@ -1805,7 +1805,7 @@ public class ExpandoValueLocalServiceImpl
 		if (string.startsWith(StringPool.OPEN_BRACKET) &&
 			string.endsWith(StringPool.CLOSE_BRACKET)) {
 
-			string = string.substring(1, (string.length() - 1));
+			string = string.substring(1, string.length() - 1);
 		}
 
 		return string;

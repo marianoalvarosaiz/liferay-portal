@@ -24,13 +24,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>SCRIPT_VARIABLE</td>
+	<td>//div[contains(@class,'palette-section') and contains(@id,'variable')]//ul/li/span[contains(@data-title,'${key_fieldName}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SCRIPT_FIELD</td>
 	<td>//div[contains(@class,'palette-section') and contains(@id,'fields')]//ul/li/span[contains(.,'${key_fieldName}')]</td>
 	<td></td>
 </tr>
 <tr>
+	<td>SCRIPT_UTIL</td>
+	<td>//div[contains(@class,'palette-section') and contains(@id,'util')]//ul/li/span[contains(@data-title,'${key_fieldName}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SCRIPT_CONTENT_FIELD</td>
-	<td>//div[contains(@class,'ace_text-layer')]</td>
+	<td>//div[contains(@id,'richEditor')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -46,6 +56,11 @@
 <tr>
 	<td>DETAILS</td>
 	<td>//div[@id='templateDetailsSectionPanel']/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DETAILS_TOGGLE</td>
+	<td>//div[@id='templateDetailsSectionPanel']//a/span</td>
 	<td></td>
 </tr>
 <tr>

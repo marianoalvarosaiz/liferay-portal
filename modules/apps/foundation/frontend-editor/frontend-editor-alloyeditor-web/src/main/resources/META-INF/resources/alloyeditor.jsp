@@ -33,31 +33,10 @@ Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-ui
 String editorName = (String)request.getAttribute("liferay-ui:input-editor:editorName");
 String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
-
 String onBlurMethod = (String)request.getAttribute("liferay-ui:input-editor:onBlurMethod");
-
-if (Validator.isNotNull(onBlurMethod)) {
-	onBlurMethod = namespace + onBlurMethod;
-}
-
 String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
-
-if (Validator.isNotNull(onChangeMethod)) {
-	onChangeMethod = namespace + onChangeMethod;
-}
-
 String onFocusMethod = (String)request.getAttribute("liferay-ui:input-editor:onFocusMethod");
-
-if (Validator.isNotNull(onFocusMethod)) {
-	onFocusMethod = namespace + onFocusMethod;
-}
-
 String onInitMethod = (String)request.getAttribute("liferay-ui:input-editor:onInitMethod");
-
-if (Validator.isNotNull(onInitMethod)) {
-	onInitMethod = namespace + onInitMethod;
-}
-
 String placeholder = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:placeholder"));
 boolean showSource = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:showSource"));
 boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:skipEditorLoading"));
@@ -96,6 +75,8 @@ if (editorOptions != null) {
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + PortalWebResourcesUtil.getContextPath(PortalWebResourceConstants.RESOURCE_TYPE_EDITOR_CKEDITOR) + "/ckeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + PortalWebResourcesUtil.getContextPath(PortalWebResourceConstants.RESOURCE_TYPE_EDITOR_ALLOYEDITOR) + "/alloyeditor/liferay-alloy-editor-no-ckeditor-min.js", javaScriptLastModified)) %>" type="text/javascript"></script>
+
+		<liferay-util:dynamic-include key='<%= "com.liferay.frontend.editor.alloyeditor.web#" + editorName + "#additionalResources" %>' />
 
 		<script type="text/javascript">
 			AlloyEditor.regexBasePath = /(^|.*[\\\/])(?:liferay-alloy-editor[^/]+|liferay-alloy-editor)\.js(?:\?.*|;.*)?$/i;
@@ -138,7 +119,7 @@ if (editorOptions != null) {
 <liferay-util:buffer var="alloyEditor">
 	<div class="alloy-editor alloy-editor-placeholder <%= cssClass %>" contenteditable="false" data-placeholder="<%= LanguageUtil.get(request, placeholder) %>" id="<%= name %>" name="<%= name %>"></div>
 
-	<aui:icon cssClass="alloy-editor-icon" image="format" markupView="lexicon" />
+	<aui:icon cssClass="alloy-editor-icon" image="text-editor" markupView="lexicon" />
 </liferay-util:buffer>
 
 <liferay-util:buffer var="editor">
@@ -153,16 +134,17 @@ if (editorOptions != null) {
 					</div>
 				</div>
 			</div>
+
 			<div class="alloy-editor-switch hide">
-				<button class="btn btn-default btn-xs hide" id="<%= name %>Fullscreen" type="button">
+				<button class="btn btn-default btn-xs hide lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "fullscreen") %>" id="<%= name %>Fullscreen" type="button">
 					<aui:icon cssClass="icon-monospaced" image="expand" markupView="lexicon" />
 				</button>
 
-				<button class="btn btn-default btn-xs hide" id="<%= name %>SwitchTheme" type="button">
+				<button class="btn btn-default btn-xs hide lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "dark-theme") %>" id="<%= name %>SwitchTheme" type="button">
 					<aui:icon cssClass="icon-monospaced" image="moon" markupView="lexicon" />
 				</button>
 
-				<button class="btn btn-default btn-xs" id="<%= name %>Switch" type="button">
+				<button class="btn btn-default btn-xs editor-view lfr-portal-tooltip" data-title="<%= LanguageUtil.get(resourceBundle, "code-view") %>" id="<%= name %>Switch" type="button">
 					<aui:icon cssClass="icon-monospaced" image="code" markupView="lexicon" />
 				</button>
 			</div>
@@ -265,27 +247,33 @@ if (showSource) {
 				contents: '<%= HtmlUtil.escapeJS(contents) %>',
 				editorConfig: editorConfig,
 				namespace: '<%= name %>',
-				onBlurMethod: window['<%= HtmlUtil.escapeJS(onBlurMethod) %>'],
-				onChangeMethod: window['<%= HtmlUtil.escapeJS(onChangeMethod) %>'],
-				onFocusMethod: window['<%= HtmlUtil.escapeJS(onFocusMethod) %>'],
-				onInitMethod: window['<%= HtmlUtil.escapeJS(onInitMethod) %>'],
+
+				<c:if test="<%= Validator.isNotNull(onBlurMethod) %>">
+					onBlurMethod: '<%= HtmlUtil.escapeJS(namespace + onBlurMethod) %>',
+				</c:if>
+
+				<c:if test="<%= Validator.isNotNull(onChangeMethod) %>">
+					onChangeMethod: '<%= HtmlUtil.escapeJS(namespace + onChangeMethod) %>',
+				</c:if>
+
+				<c:if test="<%= Validator.isNotNull(onFocusMethod) %>">
+					onFocusMethod: '<%= HtmlUtil.escapeJS(namespace + onFocusMethod) %>',
+				</c:if>
+
+				<c:if test="<%= Validator.isNotNull(onInitMethod) %>">
+					onInitMethod: '<%= HtmlUtil.escapeJS(namespace + onInitMethod) %>',
+				</c:if>
+
 				plugins: plugins,
-				textMode: <%= (editorOptions != null) ? editorOptions.isTextMode() : Boolean.FALSE.toString() %>
+				textMode: <%= (editorOptions != null) ? editorOptions.isTextMode() : Boolean.FALSE.toString() %>,
+
+				<%
+				boolean useCustomDataProcessor = (editorOptionsDynamicAttributes != null) && GetterUtil.getBoolean(editorOptionsDynamicAttributes.get("useCustomDataProcessor"));
+				%>
+
+				useCustomDataProcessor: <%= useCustomDataProcessor %>
 			}
 		).render();
-
-		<%
-		boolean useCustomDataProcessor = (editorOptionsDynamicAttributes != null) && GetterUtil.getBoolean(editorOptionsDynamicAttributes.get("useCustomDataProcessor"));
-		%>
-
-		<c:if test="<%= useCustomDataProcessor %>">
-			alloyEditor.getNativeEditor().on(
-				'customDataProcessorLoaded',
-				function() {
-					alloyEditor.setHTML(getInitialContent());
-				}
-			);
-		</c:if>
 
 		<liferay-util:dynamic-include key='<%= "com.liferay.frontend.editor.alloyeditor.web#" + editorName + "#onEditorCreate" %>' />
 	};
@@ -356,7 +344,7 @@ if (showSource) {
 			var data = '';
 
 			if (alloyEditor && alloyEditor.instanceReady) {
-				data = A.Lang.String.escapeHTML(alloyEditor.getText());
+				data = alloyEditor.getText();
 			}
 			else {
 				data = getInitialContent();
@@ -376,7 +364,6 @@ if (showSource) {
 				alloyEditor.setHTML(value);
 			}
 		}
-
 	};
 
 	Liferay.fire(

@@ -67,7 +67,7 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 	@Override
 	public ColorScheme getColorScheme() {
 		return ThemeLocalServiceUtil.getColorScheme(
-			getCompanyId(), getTheme().getThemeId(), getColorSchemeId());
+			getCompanyId(), getThemeId(), getColorSchemeId());
 	}
 
 	@Override
@@ -78,8 +78,7 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 
 		_companyFallbackVirtualHostname = StringPool.BLANK;
 
-		if (Validator.isNotNull(
-				PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME) &&
+		if (Validator.isNotNull(PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME) &&
 			!isPrivateLayout()) {
 
 			Group group = GroupLocalServiceUtil.fetchGroup(

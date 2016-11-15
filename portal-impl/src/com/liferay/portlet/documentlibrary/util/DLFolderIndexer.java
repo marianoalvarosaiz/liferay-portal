@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
+import com.liferay.trash.kernel.util.TrashUtil;
 
 import java.util.Locale;
 
@@ -110,8 +111,16 @@ public class DLFolderIndexer
 		document.addText(Field.DESCRIPTION, dlFolder.getDescription());
 		document.addKeyword(Field.FOLDER_ID, dlFolder.getParentFolderId());
 		document.addKeyword(
-			Field.HIDDEN, (dlFolder.isHidden() || dlFolder.isInHiddenFolder()));
-		document.addText(Field.TITLE, dlFolder.getName());
+			Field.HIDDEN, dlFolder.isHidden() || dlFolder.isInHiddenFolder());
+
+		String title = dlFolder.getName();
+
+		if (dlFolder.isInTrash()) {
+			title = TrashUtil.getOriginalTitle(title);
+		}
+
+		document.addText(Field.TITLE, title);
+
 		document.addKeyword(Field.TREE_PATH, dlFolder.getTreePath());
 		document.addKeyword(
 			Field.TREE_PATH,

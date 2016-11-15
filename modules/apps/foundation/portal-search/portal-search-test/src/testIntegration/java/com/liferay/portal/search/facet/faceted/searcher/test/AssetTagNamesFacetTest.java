@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.test.IdempotentRetryAssert;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -83,20 +84,27 @@ public class AssetTagNamesFacetTest extends BaseFacetedSearcherTestCase {
 
 					FacetCollector facetCollector = facet.getFacetCollector();
 
-					List<TermCollector> termCollectors =
-						facetCollector.getTermCollectors();
+					Map<String, Integer> results = toMap(
+						facetCollector.getTermCollectors());
 
-					Assert.assertEquals(1, termCollectors.size());
-
-					TermCollector termCollector = termCollectors.get(0);
-
-					Assert.assertEquals(tag, termCollector.getTerm());
-					Assert.assertEquals(1, termCollector.getFrequency());
+					Assert.assertEquals((Integer)1, results.get(tag));
 
 					return null;
 				}
 
 			});
+	}
+
+	protected static Map<String, Integer> toMap(
+		List<TermCollector> termCollectors) {
+
+		Map<String, Integer> map = new HashMap<>(termCollectors.size());
+
+		for (TermCollector termCollector : termCollectors) {
+			map.put(termCollector.getTerm(), termCollector.getFrequency());
+		}
+
+		return map;
 	}
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {

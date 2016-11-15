@@ -14,8 +14,8 @@
 
 package com.liferay.portal.configuration.cluster.internal.messaging;
 
+import com.liferay.portal.configuration.cluster.constants.ConfigurationClusterDestinationNames;
 import com.liferay.portal.configuration.cluster.internal.ConfigurationThreadLocal;
-import com.liferay.portal.configuration.cluster.messaging.DestinationNames;
 import com.liferay.portal.configuration.persistence.ReloadablePersistenceManager;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Destination;
@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"destination.name=" + DestinationNames.CONFIGURATION},
+	property = {"destination.name=" + ConfigurationClusterDestinationNames.CONFIGURATION},
 	service = MessageListener.class
 )
 public class ConfigurationMessageListener extends BaseMessageListener {
@@ -51,32 +51,34 @@ public class ConfigurationMessageListener extends BaseMessageListener {
 
 	@Override
 	protected void doReceive(Message message) throws Exception {
+		if (message.contains(ConfigurationAdmin.SERVICE_FACTORYPID)) {
+			reloadConfiguration(
+				message.getString(ConfigurationAdmin.SERVICE_FACTORYPID),
+				ConfigurationAdmin.SERVICE_FACTORYPID,
+				message.getInteger("configuration.event.type"));
+		}
+
+		if (message.contains(Constants.SERVICE_PID)) {
+			reloadConfiguration(
+				message.getString(Constants.SERVICE_PID), Constants.SERVICE_PID,
+				message.getInteger("configuration.event.type"));
+		}
+	}
+
+	protected void reloadConfiguration(String pid, String filter, int type)
+		throws Exception {
+
 		StringBundler sb = new StringBundler(5);
 
 		sb.append("(");
-
-		String pid = null;
-
-		if (message.contains(ConfigurationAdmin.SERVICE_FACTORYPID)) {
-			pid = message.getString(ConfigurationAdmin.SERVICE_FACTORYPID);
-
-			sb.append(ConfigurationAdmin.SERVICE_FACTORYPID);
-			sb.append("=");
-			sb.append(pid);
-		}
-		else {
-			pid = message.getString(Constants.SERVICE_PID);
-
-			sb.append(Constants.SERVICE_PID);
-			sb.append("=");
-			sb.append(pid);
-		}
-
+		sb.append(filter);
+		sb.append("=");
+		sb.append(pid);
 		sb.append(")");
 
 		_reloadablePersistenceManager.reload(pid);
 
-		Dictionary<String, ?> properties = _reloadablePersistenceManager.load(
+		Dictionary<String, ?> dictionary = _reloadablePersistenceManager.load(
 			pid);
 
 		try {
@@ -89,14 +91,17 @@ public class ConfigurationMessageListener extends BaseMessageListener {
 				return;
 			}
 
-			int type = message.getInteger("configuration.event.type");
-
 			for (Configuration configuration : configurations) {
 				if (type == ConfigurationEvent.CM_DELETED) {
 					configuration.delete();
 				}
 				else {
-					configuration.update(properties);
+					if (dictionary == null) {
+						configuration.update();
+					}
+					else {
+						configuration.update(dictionary);
+					}
 				}
 			}
 		}
@@ -113,7 +118,7 @@ public class ConfigurationMessageListener extends BaseMessageListener {
 	}
 
 	@Reference(
-		target = "(destination.name=" + DestinationNames.CONFIGURATION + ")",
+		target = "(destination.name=" + ConfigurationClusterDestinationNames.CONFIGURATION + ")",
 		unbind = "-"
 	)
 	protected void setDestination(Destination destination) {

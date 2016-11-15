@@ -35,11 +35,12 @@
 	</tear-down>
 
 	<command name="ViewDocumentsAndMediaPortletRegRole" priority="5">
-		<property name="portal.acceptance" value="false" />
+		<property name="portal.acceptance" value="true" />
+		<property name="test.name.skip.portal.instance" value="CPRolesCPDocumentsandmedia#ViewDocumentsAndMediaPortletRegRole" />
 
 		<execute macro="Permissions#setUpRegRoleLoginUserCP">
 			<var name="portletName" value="Documents and Media" />
-			<var name="roleName" value="Regrole Name" />
+			<var name="roleTitle" value="Regrole Name" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -50,12 +51,10 @@
 
 		<execute macro="Navigator#openURL" />
 
-		<execute function="AssertElementNotPresent" locator1="ControlMenu#ADMIN" />
-
 		<execute macro="Permissions#definePermissionLoginUserCP">
 			<var name="permissionDefinitionKey" value="SITE_ADMIN_CONTENT_DOCUMENTS_AND_MEDIA_GENERAL_PERMISSIONS_ACCESS_IN_SITE_ADMINISTRATION_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Access in Site Administration" />
-			<var name="roleName" value="Regrole Name" />
+			<var name="roleTitle" value="Regrole Name" />
 			<var name="userLoginEmailAddress" value="userea@liferay.com" />
 			<var name="userLoginFullName" value="userfn userln" />
 		</execute>
@@ -71,7 +70,7 @@
 		<execute macro="Permissions#removePermissionLoginUserCP">
 			<var name="permissionDefinitionKey" value="SITE_ADMIN_PAGES_SITE_PAGES_RESOURCE_PERMISSIONS_SITE_GO_TO_SITE_ADMINISTRATION_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Go to Site Administration" />
-			<var name="roleName" value="Regrole Name" />
+			<var name="roleTitle" value="Regrole Name" />
 			<var name="userLoginEmailAddress" value="test@liferay.com" />
 			<var name="userLoginFullName" value="Test Test" />
 		</execute>
@@ -79,14 +78,10 @@
 		<execute macro="Permissions#removePermissionLoginUserCP">
 			<var name="permissionDefinitionKey" value="SITE_ADMIN_CONTENT_DOCUMENTS_AND_MEDIA_GENERAL_PERMISSIONS_ACCESS_IN_SITE_ADMINISTRATION_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Access in Site Administration" />
-			<var name="roleName" value="Regrole Name" />
+			<var name="roleTitle" value="Regrole Name" />
 			<var name="userLoginEmailAddress" value="userea@liferay.com" />
 			<var name="userLoginFullName" value="userfn userln" />
 		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute function="AssertElementNotPresent" locator1="ControlMenu#ADMIN" />
 	</command>
 
 	<command name="ViewDocumentsAndMediaPortletSiteRole" priority="4">
@@ -94,7 +89,7 @@
 			<var name="page" value="Public Pages" />
 			<var name="pageName" value="Documents and Media Page" />
 			<var name="portletName" value="Documents and Media" />
-			<var name="roleName" value="Roles Siterole Name" />
+			<var name="roleTitle" value="Roles Siterole Name" />
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
@@ -110,12 +105,10 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="ControlMenu#ADMIN" />
-
 		<execute macro="Permissions#definePermissionLoginUserCP">
 			<var name="permissionDefinitionKey" value="SITE_ADMIN_CONTENT_DOCUMENTS_AND_MEDIA_GENERAL_PERMISSIONS_ACCESS_IN_SITE_ADMINISTRATION_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Access in Site Administration" />
-			<var name="roleName" value="Roles Siterole Name" />
+			<var name="roleTitle" value="Roles Siterole Name" />
 			<var name="roleType" value="Site" />
 			<var name="userLoginEmailAddress" value="userea@liferay.com" />
 			<var name="userLoginFullName" value="userfn userln" />
@@ -125,12 +118,16 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
 		<execute macro="DMPortlet#viewNoPermissionCP" />
 
 		<execute macro="Permissions#removePermissionLoginUserCP">
 			<var name="permissionDefinitionKey" value="SITE_ADMIN_PAGES_SITE_PAGES_RESOURCE_PERMISSIONS_SITE_GO_TO_SITE_ADMINISTRATION_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Go to Site Administration" />
-			<var name="roleName" value="Roles Siterole Name" />
+			<var name="roleTitle" value="Roles Siterole Name" />
 			<var name="roleType" value="Site" />
 			<var name="userLoginEmailAddress" value="test@liferay.com" />
 			<var name="userLoginFullName" value="Test Test" />
@@ -139,17 +136,10 @@
 		<execute macro="Permissions#removePermissionLoginUserCP">
 			<var name="permissionDefinitionKey" value="SITE_ADMIN_CONTENT_DOCUMENTS_AND_MEDIA_GENERAL_PERMISSIONS_ACCESS_IN_SITE_ADMINISTRATION_CHECKBOX" />
 			<var name="permissionDefinitionValue" value="Access in Site Administration" />
-			<var name="roleName" value="Roles Siterole Name" />
+			<var name="roleTitle" value="Roles Siterole Name" />
 			<var name="roleType" value="Site" />
 			<var name="userLoginEmailAddress" value="userea@liferay.com" />
 			<var name="userLoginFullName" value="userfn userln" />
 		</execute>
-
-		<execute macro="Navigator#gotoSitePage">
-			<var name="pageName" value="Documents and Media Page" />
-			<var name="siteName" value="Site Name" />
-		</execute>
-
-		<execute function="AssertElementNotPresent" locator1="ControlMenu#ADMIN" />
 	</command>
 </definition>

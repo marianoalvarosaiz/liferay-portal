@@ -71,13 +71,13 @@ public class DDMFormValuesFactoryTest extends PowerMockito {
 		setUpDDMFormValuesFactoryServiceTrackerMap();
 		setUpDDMFormValuesJSONSerializer();
 		setUpJSONFactoryUtil();
-		setUpLocaleThreadLocale();
+		setUpLocaleThreadLocal();
 		setUpLocaleUtil();
 	}
 
 	@After
 	public void tearDown() {
-		LocaleThreadLocal.setThemeDisplayLocale(_originalThemeDisplayLocale);
+		LocaleThreadLocal.setSiteDefaultLocale(_originalSiteDefaultLocale);
 	}
 
 	@Test
@@ -280,8 +280,7 @@ public class DDMFormValuesFactoryTest extends PowerMockito {
 		expectedDDMFormValues.addDDMFormFieldValue(paulDDMFormFieldValue);
 
 		DDMFormFieldValue joeDDMFormFieldValue = createDDMFormFieldValue(
-			"fahu", "Name",
-			createLocalizedValue("Joe", "Joao", LocaleUtil.US));
+			"fahu", "Name", createLocalizedValue("Joe", "Joao", LocaleUtil.US));
 
 		joeDDMFormFieldValue.addNestedDDMFormFieldValue(
 			createDDMFormFieldValue(
@@ -379,8 +378,7 @@ public class DDMFormValuesFactoryTest extends PowerMockito {
 		expectedDDMFormValues.addDDMFormFieldValue(paulDDMFormFieldValue);
 
 		DDMFormFieldValue joeDDMFormFieldValue = createDDMFormFieldValue(
-			"fahu", "Name",
-			createLocalizedValue("Joe", "Joao", LocaleUtil.US));
+			"fahu", "Name", createLocalizedValue("Joe", "Joao", LocaleUtil.US));
 
 		joeDDMFormFieldValue.addNestedDDMFormFieldValue(
 			createDDMFormFieldValue(
@@ -690,6 +688,36 @@ public class DDMFormValuesFactoryTest extends PowerMockito {
 	}
 
 	@Test
+	public void testCreateWithTransientField() throws Exception {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm();
+
+		ddmForm.addDDMFormField(
+			DDMFormTestUtil.createDDMFormField(
+				"Paragraph", "Paragraph", "paragraph", StringPool.BLANK, false,
+				false, false));
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
+		mockHttpServletRequest.addParameter(
+			"availableLanguageIds", LocaleUtil.toLanguageId(LocaleUtil.US));
+		mockHttpServletRequest.addParameter(
+			"defaultLanguageId", LocaleUtil.toLanguageId(LocaleUtil.US));
+
+		DDMFormValues ddmFormValues = _ddmFormValuesFactory.create(
+			mockHttpServletRequest, ddmForm);
+
+		List<DDMFormFieldValue> ddmFormFieldValues =
+			ddmFormValues.getDDMFormFieldValues();
+
+		Assert.assertEquals(1, ddmFormFieldValues.size());
+
+		DDMFormFieldValue ddmFormFieldValue = ddmFormFieldValues.get(0);
+
+		Assert.assertEquals("Paragraph", ddmFormFieldValue.getName());
+	}
+
+	@Test
 	public void testCreateWithUncheckedCheckboxAndTextFieldWithSimilarNames()
 		throws Exception {
 
@@ -843,10 +871,10 @@ public class DDMFormValuesFactoryTest extends PowerMockito {
 		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 	}
 
-	protected void setUpLocaleThreadLocale() {
-		_originalThemeDisplayLocale = LocaleThreadLocal.getThemeDisplayLocale();
+	protected void setUpLocaleThreadLocal() {
+		_originalSiteDefaultLocale = LocaleThreadLocal.getSiteDefaultLocale();
 
-		LocaleThreadLocal.setThemeDisplayLocale(LocaleUtil.US);
+		LocaleThreadLocal.setSiteDefaultLocale(LocaleUtil.US);
 	}
 
 	protected void setUpLocaleUtil() {
@@ -887,7 +915,7 @@ public class DDMFormValuesFactoryTest extends PowerMockito {
 		new DDMFormValuesFactoryImpl();
 	private final DDMFormValuesJSONSerializer _ddmFormValuesJSONSerializer =
 		new DDMFormValuesJSONSerializerImpl();
-	private Locale _originalThemeDisplayLocale;
+	private Locale _originalSiteDefaultLocale;
 
 	@Mock
 	private ServiceTrackerMap

@@ -399,6 +399,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>SITE_SEARCH_KEYWORDS</td>
+	<td>//input[contains(@name,'keywords')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SKYPE</td>
 	<td>//div[label[contains(.,'Skype')]]//input[@type='text']</td>
 	<td></td>
@@ -481,6 +486,11 @@
 <tr>
 	<td>WEB_ID</td>
 	<td>//input[contains(@id,'webId') and contains(@class,'input-text')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>WORD</td>
+	<td>//input[@id='_com_liferay_dictionary_web_portlet_DictionaryPortlet_word']</td>
 	<td></td>
 </tr>
 <tr>

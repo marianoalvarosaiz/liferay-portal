@@ -570,7 +570,11 @@ public final class SummaryLoggerHandler {
 			LoggerElement majorStepLoggerElement = majorStepLoggerElements.get(
 				i);
 
-			boolean lastMajorStep = (i >= (majorStepLoggerElements.size() - 1));
+			boolean lastMajorStep = false;
+
+			if (i >= (majorStepLoggerElements.size() - 1)) {
+				lastMajorStep = true;
+			}
 
 			if (_containsMinorStepWarning && lastMajorStep) {
 				_warnStepLoggerElement(majorStepLoggerElement);
@@ -812,7 +816,7 @@ public final class SummaryLoggerHandler {
 			String varName = matcher.group(1);
 
 			String varValue = HtmlUtil.escape(
-				PoshiRunnerVariablesUtil.getValueFromExecuteMap(varName));
+				PoshiRunnerVariablesUtil.getStringFromExecuteMap(varName));
 
 			if ((element.attributeValue("function") != null) &&
 				varName.startsWith("locator")) {
@@ -820,7 +824,7 @@ public final class SummaryLoggerHandler {
 				varName = StringUtil.replace(varName, "locator", "locator-key");
 
 				String locatorKey =
-					PoshiRunnerVariablesUtil.getValueFromExecuteMap(varName);
+					PoshiRunnerVariablesUtil.getStringFromExecuteMap(varName);
 
 				if (Validator.isNotNull(locatorKey)) {
 					StringBuilder sb = new StringBuilder();
