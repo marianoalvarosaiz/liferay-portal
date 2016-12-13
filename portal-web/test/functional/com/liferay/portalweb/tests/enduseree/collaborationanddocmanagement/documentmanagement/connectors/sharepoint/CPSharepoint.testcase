@@ -48,6 +48,8 @@
 			<var name="portlet" value="Documents and Media" />
 		</execute>
 
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="DMNavigator#gotoAddRepositoryCP" />
 
 		<execute macro="DMRepository#edit">
@@ -226,15 +228,16 @@
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 
-		<execute macro="DMDocument#viewIconNotLockedCP">
-			<var name="dmDocumentTitle" value="Document_3.txt" />
-		</execute>
+		<var name="key_dmDocumentTitle" value="Document_3.txt" />
+
+		<execute function="AssertElementNotPresent" locator1="DocumentsAndMedia#ICON_DOCUMENT_ICON_NOT_LOCKED" />
 
 		<execute macro="DMNavigator#gotoDocumentCP">
 			<var name="dmDocumentTitle" value="Document_3.txt" />
 		</execute>
 
 		<execute macro="DMDocument#viewCheckedinCP" >
+			<var name="dmDocumentVersionNumber" value="1.1" />
 			<var name="dmRepositoryName" value="true" />
 		</execute>
 	</command>
@@ -292,6 +295,12 @@
 			<var name="recycleBinDisabled" value="true" />
 		</execute>
 
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -340,7 +349,11 @@
 			<var name="recycleBinDisabled" value="true" />
 		</execute>
 
-		<execute macro="DMNavigator#gotoHomeCP" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
 
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
@@ -371,6 +384,12 @@
 			<var name="recycleBinDisabled" value="true" />
 		</execute>
 
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
@@ -397,7 +416,11 @@
 			<var name="dmDocumentTitle" value="Document_3.doc" />
 		</execute>
 
-		<execute macro="DMNavigator#gotoHomeCP" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
 
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
@@ -419,108 +442,6 @@
 		<execute macro="DMDocument#cannotViewDocumentMetadataCP">
 			<var name="metadataData" value="ISO-8859-1" />
 			<var name="metadataLabel" value="Content Encoding" />
-		</execute>
-	</command>
-
-	<command name="EditDocumentTitleFileExtension" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_1.docx" />
-			<var name="dmDocumentTitle" value="Document_1.docx" />
-		</execute>
-
-		<execute macro="DMDocument#editCP">
-			<var name="dmDocumentTitle" value="Document_1.docx" />
-			<var name="dmDocumentTitleEdit" value="Document_1.jpg" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_1.docx" />
-		</execute>
-
-		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentTitle" value="Document_1.docx" />
-		</execute>
-	</command>
-
-	<command name="EditDocumentTitleFileNameAndFileExtension" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_2.docx" />
-			<var name="dmDocumentTitle" value="Document_2.docx" />
-		</execute>
-
-		<execute macro="DMDocument#editCP">
-			<var name="dmDocumentTitle" value="Document_2.docx" />
-			<var name="dmDocumentTitleEdit" value="Document_2_Edit.jpg" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_2_Edit.docx" />
-		</execute>
-
-		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentTitle" value="Document_2_Edit.docx" />
-		</execute>
-	</command>
-
-	<command name="EditDocumentTitleRemoveFileExtension" priority="4">
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMDocument#addCP">
-			<var name="dmDocumentFile" value="Document_3.docx" />
-			<var name="dmDocumentTitle" value="Document_3.docx" />
-		</execute>
-
-		<execute macro="DMDocument#editCP">
-			<var name="dmDocumentTitle" value="Document_3.docx" />
-			<var name="dmDocumentTitleEdit" value="Document_3" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoSitesContent">
-			<var name="portlet" value="Documents and Media" />
-		</execute>
-
-		<execute macro="DMRepository#gotoCP">
-			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
-		</execute>
-
-		<execute macro="DMNavigator#gotoDocumentCP">
-			<var name="dmDocumentTitle" value="Document_3.docx" />
-		</execute>
-
-		<execute macro="DMDocument#viewCP">
-			<var name="dmDocumentTitle" value="Document_3.docx" />
 		</execute>
 	</command>
 
@@ -594,6 +515,8 @@
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
+
+		<execute macro="DMPortlet#setIconView" />
 
 		<execute macro="DMDocument#moveToSubFolderCP">
 			<var name="dmDocumentTitle" value="Document_1.txt" />
@@ -693,7 +616,11 @@
 			<var name="dmDocumentTitle" value="Document_3.odt" />
 		</execute>
 
-		<execute macro="DMNavigator#gotoHomeCP" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
 
 		<execute macro="DMDocument#searchCP">
 			<var name="dmDocumentKeyword" value="Document_3.odt" />
@@ -731,12 +658,17 @@
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 
-		<execute macro="DMDocument#editCP">
-			<var name="checkedOut" value="true" />
+		<execute macro="DMNavigator#gotoEditDocument">
 			<var name="dmDocumentTitle" value="Document_1.xls" />
-			<var name="dmDocumentTitleEdit" value="Document_1_Edit.jpg" />
-			<var name="dmRepositoryName" value="true" />
 		</execute>
+
+		<execute macro="DMDocument#editCmd">
+			<var name="dmDocumentTitleEdit" value="Document_1_Edit.xls" />
+		</execute>
+
+		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
+		<execute macro="Alert#viewSuccessMessage" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -761,6 +693,92 @@
 		</execute>
 	</command>
 
+	<command name="ViewOriginalFileExtensionAfterUnsuccessfulExtensionChange" priority="4">
+		<execute macro="DMRepository#gotoCP">
+			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
+		</execute>
+
+		<execute macro="DMDocument#addCP">
+			<var name="dmDocumentFile" value="Document_1.docx" />
+			<var name="dmDocumentTitle" value="Document_1.docx" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoEditDocument">
+			<var name="dmDocumentTitle" value="Document_1.docx" />
+		</execute>
+
+		<execute macro="DMDocument#editCmd">
+			<var name="dmDocumentTitleEdit" value="Document_1.jpg" />
+		</execute>
+
+		<execute function="Click" locator1="Button#PUBLISH" />
+
+		<execute macro="Alert#viewRequestFailedToComplete" />
+
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="The source file does not have the same extension as the original file." />
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
+		<execute macro="DMRepository#gotoCP">
+			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoDocumentCP">
+			<var name="dmDocumentTitle" value="Document_1.docx" />
+		</execute>
+
+		<execute macro="DMDocument#viewCP">
+			<var name="dmDocumentTitle" value="Document_1.docx" />
+		</execute>
+	</command>
+
+	<command name="ViewOriginalFileExtensionAfterUnsuccessfulExtensionRemoval" priority="4">
+		<execute macro="DMRepository#gotoCP">
+			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
+		</execute>
+
+		<execute macro="DMDocument#addCP">
+			<var name="dmDocumentFile" value="Document_3.docx" />
+			<var name="dmDocumentTitle" value="Document_3.docx" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoEditDocument">
+			<var name="dmDocumentTitle" value="Document_3.docx" />
+		</execute>
+
+		<execute macro="DMDocument#editCmd">
+			<var name="dmDocumentTitleEdit" value="Document_3" />
+		</execute>
+
+		<execute function="Click" locator1="Button#PUBLISH" />
+
+		<execute macro="Alert#viewRequestFailedToComplete" />
+
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="The source file does not have the same extension as the original file." />
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Documents and Media" />
+		</execute>
+
+		<execute macro="DMRepository#gotoCP">
+			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
+		</execute>
+
+		<execute macro="DMNavigator#gotoDocumentCP">
+			<var name="dmDocumentTitle" value="Document_3.docx" />
+		</execute>
+
+		<execute macro="DMDocument#viewCP">
+			<var name="dmDocumentTitle" value="Document_3.docx" />
+		</execute>
+	</command>
+
 	<command name="ViewRepository" priority="4">
 		<execute macro="Navigator#openURL" />
 
@@ -773,7 +791,7 @@
 		</execute>
 
 		<execute macro="DMRepository#viewBreadcrumb">
-			<var name="dmRepositoryName" value="SHAREPOINT REPOSITORY NAME" />
+			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 	</command>
 </definition>

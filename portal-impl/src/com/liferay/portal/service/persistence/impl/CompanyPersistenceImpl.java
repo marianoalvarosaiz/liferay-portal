@@ -28,9 +28,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchCompanyException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.service.persistence.CompanyPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -436,11 +434,15 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"CompanyPersistenceImpl.fetchByMx(String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"CompanyPersistenceImpl.fetchByMx(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					Company company = list.get(0);
@@ -660,11 +662,15 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"CompanyPersistenceImpl.fetchByLogoId(long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"CompanyPersistenceImpl.fetchByLogoId(long, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					Company company = list.get(0);
@@ -1684,12 +1690,14 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	 */
 	@Override
 	public Company fetchByPrimaryKey(Serializable primaryKey) {
-		Company company = (Company)entityCache.getResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
 				CompanyImpl.class, primaryKey);
 
-		if (company == _nullCompany) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Company company = (Company)serializable;
 
 		if (company == null) {
 			Session session = null;
@@ -1704,7 +1712,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 				}
 				else {
 					entityCache.putResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
-						CompanyImpl.class, primaryKey, _nullCompany);
+						CompanyImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1758,18 +1766,20 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Company company = (Company)entityCache.getResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
 					CompanyImpl.class, primaryKey);
 
-			if (company == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, company);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Company)serializable);
+				}
 			}
 		}
 
@@ -1811,7 +1821,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(CompanyModelImpl.ENTITY_CACHE_ENABLED,
-					CompanyImpl.class, primaryKey, _nullCompany);
+					CompanyImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2051,34 +2061,4 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"key", "active"
 			});
-	private static final Company _nullCompany = new CompanyImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Company> toCacheModel() {
-				return _nullCompanyCacheModel;
-			}
-		};
-
-	private static final CacheModel<Company> _nullCompanyCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Company>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Company toEntityModel() {
-			return _nullCompany;
-		}
-	}
 }

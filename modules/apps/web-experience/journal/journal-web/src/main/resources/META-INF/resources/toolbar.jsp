@@ -27,7 +27,10 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 >
 	<liferay-frontend:management-bar-buttons>
 		<c:if test="<%= journalDisplayContext.isShowInfoPanel() %>">
-			<liferay-frontend:management-bar-sidenav-toggler-button />
+			<liferay-frontend:management-bar-sidenav-toggler-button
+				icon="info-circle"
+				label="info"
+			/>
 		</c:if>
 
 		<liferay-frontend:management-bar-display-buttons
@@ -84,14 +87,17 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 		<liferay-frontend:management-bar-sort
 			orderByCol="<%= journalDisplayContext.getOrderByCol() %>"
 			orderByType="<%= journalDisplayContext.getOrderByType() %>"
-			orderColumns='<%= new String[] {"display-date", "modified-date"} %>'
+			orderColumns='<%= new String[] {"display-date", "modified-date", "title"} %>'
 			portletURL="<%= journalDisplayContext.getPortletURL() %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
 		<c:if test="<%= journalDisplayContext.isShowInfoPanel() %>">
-			<liferay-frontend:management-bar-sidenav-toggler-button />
+			<liferay-frontend:management-bar-sidenav-toggler-button
+				icon="info-circle"
+				label="info"
+			/>
 		</c:if>
 
 		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>' icon='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>' label='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
@@ -123,16 +129,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 	}
 </aui:script>
 
-<aui:script use="liferay-item-selector-dialog">
-	var form = $(document.<portlet:namespace />fm);
-
-	<portlet:renderURL var="selectStructureURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-		<portlet:param name="mvcPath" value="/select_structure.jsp" />
-		<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
-		<portlet:param name="navigationStartsOn" value="<%= DDMNavigationHelper.SELECT_STRUCTURE %>" />
-		<portlet:param name="ddmStructureKey" value="<%= journalDisplayContext.getDDMStructureKey() %>" />
-	</portlet:renderURL>
-
+<aui:script>
 	<portlet:renderURL var="viewDDMStructureArticlesURL">
 		<portlet:param name="navigation" value="structure" />
 		<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
@@ -142,31 +139,36 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 	$('#<portlet:namespace />structures').on(
 		'click',
 		function(event) {
-			event.preventDefault();
-
-			var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+			Liferay.Util.openDDMPortlet(
 				{
-					eventName: '<portlet:namespace />selectStructure',
-					on: {
-						selectedItemChange: function(event) {
-							var selectedItem = event.newVal;
-
-							if (selectedItem) {
-								var uri = '<%= viewDDMStructureArticlesURL %>';
-
-								uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureKey=' + selectedItem, uri);
-
-								location.href = uri;
-							}
-						}
+					basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletProviderUtil.getPortletId(DDMStructure.class.getName(), PortletProvider.Action.VIEW), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
+					classPK: <%= journalDisplayContext.getDDMStructurePrimaryKey() %>,
+					dialog: {
+						destroyOnHide: true
 					},
-					'strings.add': '<liferay-ui:message key="done" />',
-					title: '<liferay-ui:message key="select-structure" />',
-					url: '<%= selectStructureURL %>'
+					eventName: '<portlet:namespace />selectStructure',
+					groupId: <%= themeDisplay.getScopeGroupId() %>,
+					mvcPath: '/select_structure.jsp',
+					navigationStartsOn: '<%= DDMNavigationHelper.SELECT_STRUCTURE %>',
+					refererPortletName: '<%= JournalPortletKeys.JOURNAL + ".filterStructure" %>',
+
+					<%
+					Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+					%>
+
+					refererWebDAVToken: '<%= HtmlUtil.escapeJS(WebDAVUtil.getStorageToken(portlet)) %>',
+
+					showAncestorScopes: true,
+					title: '<%= UnicodeLanguageUtil.get(request, "structures") %>'
+				},
+				function(event) {
+					var uri = '<%= viewDDMStructureArticlesURL %>';
+
+					uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureKey=' + event.ddmstructurekey, uri);
+
+					location.href = uri;
 				}
 			);
-
-			itemSelectorDialog.open();
 		}
 	);
 </aui:script>

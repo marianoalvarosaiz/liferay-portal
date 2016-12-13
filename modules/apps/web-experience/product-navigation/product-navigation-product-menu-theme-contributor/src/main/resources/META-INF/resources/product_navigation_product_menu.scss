@@ -1,5 +1,39 @@
 @import "bourbon";
 @import "variables";
+@import "mixins";
+
+body {
+	&.open #wrapper {
+		@include sm() {
+			padding-left: $product-menu-width;
+		}
+	}
+
+	&.open .control-menu {
+		@include sm() {
+			left: $product-menu-width;
+		}
+	}
+
+	&.open, &.sidenav-transition {
+		@include sm() {
+			overflow-x: hidden;
+		}
+	}
+
+	&.sidenav-transition #wrapper {
+		@include transition(padding 0.5s ease);
+	}
+}
+
+.lfr-product-menu-panel.sidenav-menu-slider {
+	z-index: $product-menu-zindex;
+
+	&.open,
+	.sidenav-menu {
+		width: $product-menu-width;
+	}
+}
 
 .product-menu {
 	background-color: $product-menu-body-bg;
@@ -125,6 +159,10 @@
 		> .panel-toggler {
 			line-height: 32px;
 			padding: 10px 40px 10px 24px;
+		}
+
+		.aspect-ratio-bg-cover {
+			background-size: contain;
 		}
 
 		.site-administration-toggler {
@@ -314,11 +352,6 @@
 }
 
 .product-menu {
-	li.tree-node .tree-node-content {
-		overflow: visible;
-		width: 100%;
-	}
-
 	.layout-prototype-tree {
 		padding-bottom: 30px;
 	}
@@ -341,17 +374,19 @@
 		}
 
 		li.tree-node .tree-node-content .tree-label {
-			@include ellipsis(200px);
-
-			display: inline-block;
-			max-width: 100%;
-			overflow: visible;
+			display: block;
 			padding-right: 20px;
 			width: 100%;
 		}
 
 		.icon-file {
 			display: none;
+		}
+
+		.layout-tree {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 
@@ -458,6 +493,7 @@
 
 	&.sidenav-fixed.sidenav-menu-slider {
 		overflow: auto;
+		visibility: visible;
 		width: 100%;
 	}
 }

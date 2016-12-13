@@ -79,12 +79,13 @@ public class ThemeServicePreAction extends Action {
 
 			theme = ThemeLocalServiceUtil.getTheme(
 				themeDisplay.getCompanyId(), themeId);
+
 			colorScheme = ThemeLocalServiceUtil.getColorScheme(
 				themeDisplay.getCompanyId(), theme.getThemeId(), colorSchemeId);
 		}
 
-		request.setAttribute(WebKeys.THEME, theme);
 		request.setAttribute(WebKeys.COLOR_SCHEME, colorScheme);
+		request.setAttribute(WebKeys.THEME, theme);
 
 		themeDisplay.setLookAndFeel(theme, colorScheme);
 	}

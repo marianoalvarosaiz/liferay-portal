@@ -124,6 +124,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
+		"javax.portlet.name=" + UsersAdminPortletKeys.MY_ORGANIZATIONS,
 		"javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN,
 		"mvc.command.name=/users_admin/edit_user"
 	},
@@ -383,8 +384,8 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			Group scopeGroup = themeDisplay.getScopeGroup();
 
 			if (scopeGroup.isUser() &&
-				(userLocalService.fetchUserById(
-					scopeGroup.getClassPK()) == null)) {
+				(userLocalService.fetchUserById(scopeGroup.getClassPK()) ==
+					null)) {
 
 				redirect = HttpUtil.setParameter(redirect, "doAsGroupId", 0);
 				redirect = HttpUtil.setParameter(redirect, "refererPlid", 0);
@@ -583,6 +584,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 
 		String oldPassword = AdminUtil.getUpdateUserPassword(
 			actionRequest, user.getUserId());
+
 		String newPassword1 = actionRequest.getParameter("password1");
 		String newPassword2 = actionRequest.getParameter("password2");
 		boolean passwordReset = ParamUtil.getBoolean(
@@ -647,6 +649,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "birthdayDay", birthdayCal.get(Calendar.DATE));
 		int birthdayYear = ParamUtil.getInteger(
 			actionRequest, "birthdayYear", birthdayCal.get(Calendar.YEAR));
+
 		String comments = BeanParamUtil.getString(
 			user, actionRequest, "comments");
 		String smsSn = BeanParamUtil.getString(contact, actionRequest, "smsSn");

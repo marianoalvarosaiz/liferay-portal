@@ -63,6 +63,8 @@ page import="com.liferay.portal.kernel.model.User" %><%@
 page import="com.liferay.portal.kernel.model.UserGroupRole" %><%@
 page import="com.liferay.portal.kernel.model.UserPersonalSite" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
+page import="com.liferay.portal.kernel.portlet.PortalPreferences" %><%@
+page import="com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletProvider" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletProviderUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletURLUtil" %><%@
@@ -105,6 +107,7 @@ page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.kernel.util.comparator.PortletTitleComparator" %><%@
 page import="com.liferay.portal.model.impl.ResourceImpl" %><%@
+page import="com.liferay.portal.service.persistence.constants.UserGroupFinderConstants" %><%@
 page import="com.liferay.portal.util.PropsValues" %><%@
 page import="com.liferay.portal.util.WebAppPool" %><%@
 page import="com.liferay.portlet.display.template.PortletDisplayTemplateUtil" %><%@
@@ -124,8 +127,9 @@ page import="com.liferay.portlet.usersadmin.search.OrganizationSearch" %><%@
 page import="com.liferay.portlet.usersadmin.search.OrganizationSearchTerms" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserSearch" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserSearchTerms" %><%@
+page import="com.liferay.roles.admin.constants.RolesAdminPortletKeys" %><%@
 page import="com.liferay.roles.admin.kernel.util.RolesAdminUtil" %><%@
-page import="com.liferay.roles.admin.web.search.RoleChecker" %><%@
+page import="com.liferay.roles.admin.web.internal.search.RoleChecker" %><%@
 page import="com.liferay.taglib.search.ResultRow" %><%@
 page import="com.liferay.users.admin.kernel.util.UsersAdmin" %><%@
 page import="com.liferay.users.admin.kernel.util.UsersAdminUtil" %>
@@ -151,6 +155,8 @@ page import="javax.portlet.WindowState" %>
 <portlet:defineObjects />
 
 <%
+PortalPreferences portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(liferayPortletRequest);
+
 boolean filterManageableGroups = true;
 boolean filterManageableOrganizations = true;
 boolean filterManageableRoles = true;
@@ -187,6 +193,20 @@ private String _getActionLabel(HttpServletRequest request, ThemeDisplay themeDis
 	return actionLabel;
 }
 
+private String _getAssigneesMessage(HttpServletRequest request, Role role) throws Exception {
+	if (_isImpliedRole(role)) {
+		return LanguageUtil.get(request, "this-role-is-automatically-assigned");
+	}
+
+	int count = RoleLocalServiceUtil.getAssigneesTotal(role.getRoleId());
+
+	if (count == 1) {
+		return LanguageUtil.get(request, "one-assignee");
+	}
+
+	return LanguageUtil.format(request, "x-assignees", count);
+}
+
 private StringBundler _getResourceHtmlId(String resource) {
 	StringBundler sb = new StringBundler(2);
 
@@ -194,6 +214,21 @@ private StringBundler _getResourceHtmlId(String resource) {
 	sb.append(resource.replace('.', '_'));
 
 	return sb;
+}
+
+private boolean _isImpliedRole(Role role) {
+	String name = role.getName();
+
+	if (name.equals(RoleConstants.GUEST) ||
+		name.equals(RoleConstants.ORGANIZATION_USER) ||
+		name.equals(RoleConstants.OWNER) ||
+		name.equals(RoleConstants.SITE_MEMBER) ||
+		name.equals(RoleConstants.USER)) {
+
+		return true;
+	}
+
+	return false;
 }
 
 private boolean _isShowScope(HttpServletRequest request, Role role, String curModelResource, String curPortletResource) throws SystemException {

@@ -58,11 +58,10 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-header-actions">
 				<li>
 					<liferay-util:include page="/document_library/subscribe.jsp" servletContext="<%= application %>" />
 				</li>
-
 				<li>
 					<liferay-util:include page="/document_library/folder_action.jsp" servletContext="<%= application %>" />
 				</li>
@@ -101,7 +100,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="created" />
 							</dt>
-
 							<dd>
 								<%= HtmlUtil.escape(folder.getUserName()) %>
 							</dd>
@@ -120,12 +118,9 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-header-actions">
 				<li>
 					<liferay-util:include page="/document_library/file_entry_action.jsp" servletContext="<%= application %>" />
-				</li>
-				<li>
-					<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" data="<%= infoPanelToggleData %>" image="times" markupView="lexicon" url="javascript:;" />
 				</li>
 			</ul>
 
@@ -171,10 +166,10 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						String webDavHelpMessage = null;
 
 						if (BrowserSnifferUtil.isWindows(request)) {
-							webDavHelpMessage = LanguageUtil.format(request, "webdav-windows-help", new Object[] {"http://www.microsoft.com/downloads/details.aspx?FamilyId=17C36612-632E-4C04-9382-987622ED1D64", "http://www.liferay.com/web/guest/community/wiki/-/wiki/Main/WebDAV"}, false);
+							webDavHelpMessage = LanguageUtil.format(request, "webdav-windows-help", new Object[] {"https://support.microsoft.com/en-us/kb/892211", "https://dev.liferay.com/discover/portal/-/knowledge_base/7-0/publishing-files#desktop-access-to-documents-and-media"}, false);
 						}
 						else {
-							webDavHelpMessage = LanguageUtil.format(request, "webdav-help", "http://www.liferay.com/web/guest/community/wiki/-/wiki/Main/WebDAV", false);
+							webDavHelpMessage = LanguageUtil.format(request, "webdav-help", "https://dev.liferay.com/discover/portal/-/knowledge_base/7-0/publishing-files#desktop-access-to-documents-and-media", false);
 						}
 						%>
 
@@ -185,7 +180,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="created" />
 						</dt>
-
 						<dd>
 							<%= HtmlUtil.escape(fileEntry.getUserName()) %>
 						</dd>
@@ -194,7 +188,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="description" />
 							</dt>
-
 							<dd>
 								<%= HtmlUtil.escape(fileEntry.getDescription()) %>
 							</dd>
@@ -203,7 +196,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="size" />
 						</dt>
-
 						<dd>
 							<%= HtmlUtil.escape(TextFormatter.formatStorageSize(fileEntry.getSize(), locale)) %>
 						</dd>
@@ -212,7 +204,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="extension" />
 							</dt>
-
 							<dd>
 								<%= HtmlUtil.escape(fileVersion.getExtension()) %>
 							</dd>
@@ -221,7 +212,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="version" />
 						</dt>
-
 						<dd>
 							<%= HtmlUtil.escape(fileVersion.getVersion()) %>
 						</dd>
@@ -302,12 +292,9 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-header-actions">
 				<li>
 					<liferay-util:include page="/document_library/file_entry_action.jsp" servletContext="<%= application %>" />
-				</li>
-				<li>
-					<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" data="<%= infoPanelToggleData %>" image="times" markupView="lexicon" url="javascript:;" />
 				</li>
 			</ul>
 
@@ -332,7 +319,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="description" />
 						</dt>
-
 						<dd>
 							<%= HtmlUtil.escape(fileEntry.getDescription()) %>
 						</dd>
@@ -351,7 +337,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="target-site" />
 							</dt>
-
 							<dd>
 								<%= HtmlUtil.escape(fileEntrySiteGroup.getName(locale)) %>
 							</dd>
@@ -360,7 +345,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="target-folder" />
 						</dt>
-
 						<dd>
 
 							<%
@@ -383,11 +367,9 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 								</c:choose>
 							</a>
 						</dd>
-
 						<dt class="h5">
 							<liferay-ui:message key="size" />
 						</dt>
-
 						<dd>
 							<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>
 						</dd>
@@ -402,7 +384,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="document-type" />
 							</dt>
-
 							<dd>
 								<%= HtmlUtil.escape(dlFileEntryType.getName(locale)) %>
 							</dd>
@@ -411,7 +392,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="content-type" />
 						</dt>
-
 						<dd>
 							<%= HtmlUtil.escape(fileEntry.getMimeType()) %>
 						</dd>>
@@ -424,9 +404,6 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 			<ul class="list-inline list-unstyled">
 				<li>
 					<h4><liferay-ui:message arguments="<%= folders.size() + fileEntries.size() %>" key="x-items-selected" /></h4>
-				</li>
-				<li>
-					<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" data="<%= infoPanelToggleData %>" image="times" markupView="lexicon" url="javascript:;" />
 				</li>
 			</ul>
 		</div>

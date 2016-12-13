@@ -205,7 +205,11 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 		int entriesCount = trashEntryPersistence.countByGroupId(groupId);
 
-		boolean approximate = entriesCount > PropsValues.TRASH_SEARCH_LIMIT;
+		boolean approximate = false;
+
+		if (entriesCount > PropsValues.TRASH_SEARCH_LIMIT) {
+			approximate = true;
+		}
 
 		trashEntriesList.setApproximate(approximate);
 
@@ -230,6 +234,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 		filteredEntries = filteredEntries.subList(start, end);
 
 		trashEntriesList.setArray(TrashEntrySoap.toSoapModels(filteredEntries));
+
 		trashEntriesList.setCount(total);
 
 		return trashEntriesList;

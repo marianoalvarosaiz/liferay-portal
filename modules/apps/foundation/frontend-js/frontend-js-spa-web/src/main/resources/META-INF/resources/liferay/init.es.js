@@ -8,7 +8,7 @@ import RenderURLScreen from './screen/RenderURLScreen.es';
 import Uri from 'metal-uri/src/Uri';
 import utils from 'senna/src/utils/utils';
 
-var initSPA = function() {
+var initSPA = function(callback) {
 	let app = new App();
 
 	app.addRoutes(
@@ -36,7 +36,9 @@ var initSPA = function() {
 						return false;
 					}
 
-					var excluded = Liferay.SPA.excludedPaths.some((excludedPath) => url.indexOf(excludedPath) === 0);
+					var excluded = Liferay.SPA.excludedPaths.some(
+						(excludedPath) => url.indexOf(excludedPath) === 0
+					);
 
 					if (excluded) {
 						return false;
@@ -58,7 +60,7 @@ var initSPA = function() {
 				let formElement = form.getDOM();
 				let url = formElement.action;
 
-				if (app.canNavigate(url) && formElement.method !== 'get') {
+				if (app.canNavigate(url) && (formElement.method !== 'get') && !app.isInPortletBlacklist(formElement)) {
 					Liferay.Util._submitLocked = false;
 
 					globals.capturedFormElement = formElement;
@@ -75,15 +77,22 @@ var initSPA = function() {
 	Liferay.SPA.app = app;
 
 	Liferay.fire('SPAReady');
+
+	return app;
 };
 
-if (globals.document.readyState == 'loading') {
-	globals.document.addEventListener('DOMContentLoaded', initSPA);
-}
-else {
-	initSPA();
-}
-
-Liferay.SPA = Liferay.SPA || {};
-
-export default Liferay.SPA;
+export default {
+	init: function(callback) {
+		if (globals.document.readyState == 'loading') {
+			globals.document.addEventListener(
+				'DOMContentLoaded',
+				() => {
+					callback.call(this, initSPA());
+				}
+			);
+		}
+		else {
+			callback.call(this, initSPA());
+		}
+	}
+};

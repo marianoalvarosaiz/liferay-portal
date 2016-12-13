@@ -17,8 +17,9 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
-<%@ page import="com.liferay.frontend.js.spa.web.constants.SPAWebKeys" %><%@
-page import="com.liferay.frontend.js.spa.web.servlet.taglib.util.SPAUtil" %>
+<%@ page import="com.liferay.frontend.js.spa.web.internal.constants.SPAWebKeys" %><%@
+page import="com.liferay.frontend.js.spa.web.internal.servlet.taglib.util.SPAUtil" %><%@
+page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 
 <liferay-theme:defineObjects />
 
@@ -26,23 +27,24 @@ page import="com.liferay.frontend.js.spa.web.servlet.taglib.util.SPAUtil" %>
 SPAUtil spaUtil = (SPAUtil)request.getAttribute(SPAWebKeys.SPA_UTIL);
 %>
 
-<aui:script require="frontend-js-spa-web/liferay/init.es">
-	Liferay.on(
-		'SPAReady',
-		function() {
-			var app = Liferay.SPA.app;
-
-			app.setPortletsBlacklist(<%= spaUtil.getPortletsBlacklist(themeDisplay) %>);
-			app.setValidStatusCodes(<%= spaUtil.getValidStatusCodes() %>);
-		}
-	);
-</aui:script>
-
-<aui:script>
+<aui:script position="inline" require="frontend-js-spa-web/liferay/init.es">
 	Liferay.SPA = Liferay.SPA || {};
 
 	Liferay.SPA.cacheExpirationTime = <%= spaUtil.getCacheExpirationTime(themeDisplay.getCompanyId()) %>;
 	Liferay.SPA.clearScreensCache = <%= spaUtil.isClearScreensCache(request, session) %>;
 	Liferay.SPA.excludedPaths = <%= spaUtil.getExcludedPaths() %>;
 	Liferay.SPA.loginRedirect = '<%= spaUtil.getLoginRedirect(request) %>';
+	Liferay.SPA.requestTimeout = <%= spaUtil.getRequestTimeout() %>;
+	Liferay.SPA.userNotification = {
+		message: '<%= LanguageUtil.get(spaUtil.getLanguageResourceBundle(themeDisplay.getLocale()), "it-looks-like-this-is-taking-longer-than-expected") %>',
+		timeout: <%= spaUtil.getUserNotificationTimeout() %>,
+		title: '<%= LanguageUtil.get(spaUtil.getLanguageResourceBundle(themeDisplay.getLocale()), "oops") %>'
+	};
+
+	frontendJsSpaWebLiferayInitEs.default.init(
+		function(app) {
+			app.setPortletsBlacklist(<%= spaUtil.getPortletsBlacklist(themeDisplay) %>);
+			app.setValidStatusCodes(<%= spaUtil.getValidStatusCodes() %>);
+		}
+	);
 </aui:script>

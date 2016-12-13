@@ -124,6 +124,8 @@ if (Validator.isNotNull(requestUpdateStructureURL)) {
 			<liferay-ui:message arguments="<%= mndfn.getFieldName() %>" key="the-definition-field-name-x-was-defined-more-than-once" translateArguments="<%= false %>" />
 		</liferay-ui:error>
 
+		<liferay-ui:error exception="<%= DDMFormValidationException.MustSetFieldsForForm.class %>" message="please-add-at-least-one-field" />
+
 		<liferay-ui:error exception="<%= DDMFormValidationException.MustSetOptionsForField.class %>">
 
 			<%
@@ -328,7 +330,7 @@ if (Validator.isNotNull(requestUpdateStructureURL)) {
 	function <portlet:namespace />openParentStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
-				basePortletURL: '<%= PortletURLFactoryUtil.create(request, DDMPortletKeys.DYNAMIC_DATA_MAPPING, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
+				basePortletURL: '<%= PortletURLFactoryUtil.create(request, DDMPortletKeys.DYNAMIC_DATA_MAPPING, PortletRequest.RENDER_PHASE) %>',
 				classPK: <%= (structure != null) ? structure.getPrimaryKey() : 0 %>,
 				dialog: {
 					destroyOnHide: true

@@ -552,7 +552,7 @@ public class PropsValues {
 
 	public static final String[] DL_REPOSITORY_IMPL = PropsUtil.getArray(PropsKeys.DL_REPOSITORY_IMPL);
 
-	public static boolean DL_STORE_ANTIVIRUS_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.DL_STORE_ANTIVIRUS_ENABLED), false);
+	public static boolean DL_STORE_ANTIVIRUS_ENABLED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.DL_STORE_ANTIVIRUS_ENABLED));
 
 	public static final String DL_STORE_ANTIVIRUS_IMPL = PropsUtil.get(PropsKeys.DL_STORE_ANTIVIRUS_IMPL);
 
@@ -920,9 +920,19 @@ public class PropsValues {
 
 	public static final int MODULE_FRAMEWORK_BEGINNING_START_LEVEL = GetterUtil.getInteger(PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_BEGINNING_START_LEVEL));
 
+	public static final String MODULE_FRAMEWORK_CONFIGS_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_CONFIGS_DIR);
+
 	public static final int MODULE_FRAMEWORK_DYNAMIC_INSTALL_START_LEVEL = GetterUtil.getInteger(PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_DYNAMIC_INSTALL_START_LEVEL));
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String[] MODULE_FRAMEWORK_INITIAL_BUNDLES = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_INITIAL_BUNDLES);
+
+	public static final String MODULE_FRAMEWORK_MARKETPLACE_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_MARKETPLACE_DIR);
+
+	public static final String MODULE_FRAMEWORK_MODULES_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_MODULES_DIR);
 
 	public static final String MODULE_FRAMEWORK_PORTAL_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_PORTAL_DIR);
 
@@ -937,6 +947,8 @@ public class PropsValues {
 	public static final long MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT = GetterUtil.getLong(PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT));
 
 	public static final String[] MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA);
+
+	public static final String MODULE_FRAMEWORK_WAR_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_WAR_DIR);
 
 	public static final String[] MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES);
 
@@ -1270,6 +1282,8 @@ public class PropsValues {
 
 	public static final String[] REQUEST_SHARED_ATTRIBUTES = PropsUtil.getArray(PropsKeys.REQUEST_SHARED_ATTRIBUTES);
 
+	public static final String[] REQUEST_UNWRAP_PACKAGES = PropsUtil.getArray(PropsKeys.REQUEST_UNWRAP_PACKAGES);
+
 	public static String[] RESOURCE_ACTIONS_CONFIGS = PropsUtil.getArray(PropsKeys.RESOURCE_ACTIONS_CONFIGS);
 
 	public static final boolean RESOURCE_ACTIONS_READ_PORTLET_RESOURCES = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.RESOURCE_ACTIONS_READ_PORTLET_RESOURCES));
@@ -1278,9 +1292,9 @@ public class PropsValues {
 
 	public static final String[] REST_PROXY_URL_PREFIXES_ALLOWED = PropsUtil.getArray(PropsKeys.REST_PROXY_URL_PREFIXES_ALLOWED);
 
-	public static final int RETRY_ADVICE_MAX_RETRIES =  GetterUtil.getInteger(PropsUtil.get(PropsKeys.RETRY_ADVICE_MAX_RETRIES));
+	public static final int RETRY_ADVICE_MAX_RETRIES = GetterUtil.getInteger(PropsUtil.get(PropsKeys.RETRY_ADVICE_MAX_RETRIES));
 
-	public static final int RETRY_DATA_SOURCE_MAX_RETRIES =  GetterUtil.getInteger(PropsUtil.get(PropsKeys.RETRY_DATA_SOURCE_MAX_RETRIES));
+	public static final int RETRY_DATA_SOURCE_MAX_RETRIES = GetterUtil.getInteger(PropsUtil.get(PropsKeys.RETRY_DATA_SOURCE_MAX_RETRIES));
 
 	public static final String ROBOTS_TXT_WITH_SITEMAP = PropsUtil.get(PropsKeys.ROBOTS_TXT_WITH_SITEMAP);
 

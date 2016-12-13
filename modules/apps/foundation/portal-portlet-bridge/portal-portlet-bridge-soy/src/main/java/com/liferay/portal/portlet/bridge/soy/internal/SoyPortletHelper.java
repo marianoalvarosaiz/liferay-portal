@@ -16,8 +16,8 @@ package com.liferay.portal.portlet.bridge.soy.internal;
 
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONSerializer;
 import com.liferay.portal.kernel.template.Template;
-import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.osgi.framework.Bundle;
@@ -45,9 +44,8 @@ public class SoyPortletHelper {
 	public SoyPortletHelper(Bundle bundle) throws Exception {
 		_bundle = bundle;
 
-		_moduleName = getModuleName();
-
 		_javaScriptTPL = getJavaScriptTPL();
+		_moduleName = getModuleName();
 	}
 
 	public String getPortletJavaScript(
@@ -58,14 +56,13 @@ public class SoyPortletHelper {
 			return StringPool.BLANK;
 		}
 
-		JSONObject contextJSONObject = createContextJSONObject(
-			template, portletNamespace);
+		String contextString = createContextString(template, portletNamespace);
 
 		Set<String> requiredModules = getRequiredModules(
 			path, additionalRequiredModules);
 
 		return getPortletJavaScript(
-			contextJSONObject.toJSONString(), portletNamespace,
+			contextString, portletNamespace,
 			getRequiredModulesString(requiredModules));
 	}
 
@@ -73,20 +70,12 @@ public class SoyPortletHelper {
 		return path.concat(".render");
 	}
 
-	protected JSONObject createContextJSONObject(
+	protected String createContextString(
 		Template template, String portletNamespace) {
 
-		JSONObject contextJSONObject = JSONFactoryUtil.createJSONObject();
+		JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 
-		for (String key : template.getKeys()) {
-			if (Objects.equals(key, TemplateConstants.NAMESPACE)) {
-				continue;
-			}
-
-			contextJSONObject.put(key, template.get(key));
-		}
-
-		return contextJSONObject;
+		return jsonSerializer.serializeDeep(template);
 	}
 
 	protected String getControllerName(String path) {

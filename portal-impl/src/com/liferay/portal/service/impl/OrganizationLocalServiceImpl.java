@@ -65,7 +65,6 @@ import com.liferay.portal.kernel.util.comparator.OrganizationIdComparator;
 import com.liferay.portal.kernel.util.comparator.OrganizationNameComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.impl.OrganizationImpl;
-import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.base.OrganizationLocalServiceBaseImpl;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsUtil;
@@ -97,19 +96,6 @@ import java.util.Set;
  */
 public class OrganizationLocalServiceImpl
 	extends OrganizationLocalServiceBaseImpl {
-
-	/**
-	 * Adds the organizations to the group.
-	 *
-	 * @param groupId the primary key of the group
-	 * @param organizationIds the primary keys of the organizations
-	 */
-	@Override
-	public void addGroupOrganizations(long groupId, long[] organizationIds) {
-		groupPersistence.addOrganizations(groupId, organizationIds);
-
-		PermissionCacheUtil.clearCache();
-	}
 
 	/**
 	 * Adds an organization.
@@ -416,10 +402,6 @@ public class OrganizationLocalServiceImpl
 
 		organizationPersistence.remove(organization);
 
-		// Permission cache
-
-		PermissionCacheUtil.clearCache();
-
 		return organization;
 	}
 
@@ -475,7 +457,7 @@ public class OrganizationLocalServiceImpl
 
 	@Override
 	public List<Organization> getNoAssetOrganizations() {
-		return organizationFinder.findByNoAssets();
+		return organizationFinder.findO_ByNoAssets();
 	}
 
 	/**
@@ -1151,7 +1133,7 @@ public class OrganizationLocalServiceImpl
 			parentOrganizationIdComparator = StringPool.NOT_EQUAL;
 		}
 
-		return organizationFinder.findByKeywords(
+		return organizationFinder.findO_ByKeywords(
 			companyId, parentOrganizationId, parentOrganizationIdComparator,
 			keywords, type, regionId, countryId, params, start, end, obc);
 	}
@@ -1271,7 +1253,7 @@ public class OrganizationLocalServiceImpl
 			parentOrganizationIdComparator = StringPool.NOT_EQUAL;
 		}
 
-		return organizationFinder.findByC_PO_N_T_S_C_Z_R_C(
+		return organizationFinder.findO_ByC_PO_N_T_S_C_Z_R_C(
 			companyId, parentOrganizationId, parentOrganizationIdComparator,
 			name, type, street, city, zip, regionId, countryId, params,
 			andOperator, start, end, obc);
@@ -1379,7 +1361,7 @@ public class OrganizationLocalServiceImpl
 				parentOrganizationIdComparator = StringPool.NOT_EQUAL;
 			}
 
-			return organizationFinder.countByKeywords(
+			return organizationFinder.countO_ByKeywords(
 				companyId, parentOrganizationId, parentOrganizationIdComparator,
 				keywords, type, regionId, countryId, params);
 		}
@@ -1466,7 +1448,7 @@ public class OrganizationLocalServiceImpl
 				parentOrganizationIdComparator = StringPool.NOT_EQUAL;
 			}
 
-			return organizationFinder.countByC_PO_N_T_S_C_Z_R_C(
+			return organizationFinder.countO_ByC_PO_N_T_S_C_Z_R_C(
 				companyId, parentOrganizationId, parentOrganizationIdComparator,
 				name, type, street, city, zip, regionId, countryId, params,
 				andOperator);
@@ -1554,20 +1536,6 @@ public class OrganizationLocalServiceImpl
 	}
 
 	/**
-	 * Sets the organizations in the group, removing and adding organizations to
-	 * the group as necessary.
-	 *
-	 * @param groupId the primary key of the group
-	 * @param organizationIds the primary keys of the organizations
-	 */
-	@Override
-	public void setGroupOrganizations(long groupId, long[] organizationIds) {
-		groupPersistence.setOrganizations(groupId, organizationIds);
-
-		PermissionCacheUtil.clearCache();
-	}
-
-	/**
 	 * Removes the organizations from the group.
 	 *
 	 * @param groupId the primary key of the group
@@ -1576,8 +1544,6 @@ public class OrganizationLocalServiceImpl
 	@Override
 	public void unsetGroupOrganizations(long groupId, long[] organizationIds) {
 		groupPersistence.removeOrganizations(groupId, organizationIds);
-
-		PermissionCacheUtil.clearCache();
 	}
 
 	/**

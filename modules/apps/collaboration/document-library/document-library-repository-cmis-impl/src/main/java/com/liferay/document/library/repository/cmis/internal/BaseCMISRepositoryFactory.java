@@ -43,16 +43,28 @@ public abstract class BaseCMISRepositoryFactory<T extends CMISRepositoryHandler>
 	public LocalRepository createLocalRepository(long repositoryId)
 		throws PortalException {
 
-		BaseRepository baseRepository = createBaseRepository(repositoryId);
+		try (ContextClassLoaderSetter contextClassLoaderSetter =
+				new ContextClassLoaderSetter(
+					BaseCMISRepositoryFactory.class.getClassLoader())) {
 
-		return baseRepository.getLocalRepository();
+			BaseRepository baseRepository = createBaseRepository(repositoryId);
+
+			return baseRepository.getLocalRepository();
+		}
 	}
 
 	@Override
 	public Repository createRepository(long repositoryId)
 		throws PortalException {
 
-		return createBaseRepository(repositoryId);
+		try (ContextClassLoaderSetter contextClassLoaderSetter =
+				new ContextClassLoaderSetter(
+					BaseCMISRepositoryFactory.class.getClassLoader())) {
+
+			return new RepositoryProxyBean(
+				createBaseRepository(repositoryId),
+				BaseCMISRepositoryFactory.class.getClassLoader());
+		}
 	}
 
 	protected abstract T createBaseRepository();
@@ -67,11 +79,12 @@ public abstract class BaseCMISRepositoryFactory<T extends CMISRepositoryHandler>
 
 		CMISRepository cmisRepository = new CMISRepository(
 			_cmisRepositoryConfiguration, baseRepository,
-			_cmisSearchQueryBuilder, _lockManager);
+			_cmisSearchQueryBuilder, _cmisSessionCache, _lockManager);
 
 		baseRepository.setCmisRepository(cmisRepository);
 
 		setupRepository(repositoryId, repository, cmisRepository);
+
 		setupRepository(repositoryId, repository, baseRepository);
 
 		if (!ExportImportThreadLocal.isImportInProcess()) {
@@ -91,6 +104,10 @@ public abstract class BaseCMISRepositoryFactory<T extends CMISRepositoryHandler>
 		CMISRepositoryConfiguration cmisRepositoryConfiguration) {
 
 		_cmisRepositoryConfiguration = cmisRepositoryConfiguration;
+	}
+
+	protected void setCMISSessionCache(CMISSessionCache cmisSessionCache) {
+		_cmisSessionCache = cmisSessionCache;
 	}
 
 	protected void setCompanyLocalService(
@@ -154,6 +171,7 @@ public abstract class BaseCMISRepositoryFactory<T extends CMISRepositoryHandler>
 	private CMISRepositoryConfiguration _cmisRepositoryConfiguration;
 	private final CMISSearchQueryBuilder _cmisSearchQueryBuilder =
 		new BaseCmisSearchQueryBuilder();
+	private CMISSessionCache _cmisSessionCache;
 	private CompanyLocalService _companyLocalService;
 	private DLAppHelperLocalService _dlAppHelperLocalService;
 	private DLFolderLocalService _dlFolderLocalService;

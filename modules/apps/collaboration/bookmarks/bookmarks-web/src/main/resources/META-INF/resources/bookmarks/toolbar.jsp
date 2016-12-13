@@ -23,6 +23,12 @@ int total = GetterUtil.getInteger((String)request.getAttribute("view.jsp-total")
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
+int deltaEntry = ParamUtil.getInteger(request, "deltaEntry");
+
+if (deltaEntry > 0) {
+	portletURL.setParameter("deltaEntry", String.valueOf(deltaEntry));
+}
+
 portletURL.setParameter("categoryId", StringPool.BLANK);
 portletURL.setParameter("tag", StringPool.BLANK);
 %>
@@ -33,7 +39,10 @@ portletURL.setParameter("tag", StringPool.BLANK);
 	searchContainerId="<%= searchContainerId %>"
 >
 	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-sidenav-toggler-button />
+		<liferay-frontend:management-bar-sidenav-toggler-button
+			icon="info-circle"
+			label="info"
+		/>
 
 		<liferay-util:include page="/bookmarks/display_style_buttons.jsp" servletContext="<%= application %>" />
 	</liferay-frontend:management-bar-buttons>
@@ -58,9 +67,12 @@ portletURL.setParameter("tag", StringPool.BLANK);
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-sidenav-toggler-button />
+		<liferay-frontend:management-bar-sidenav-toggler-button
+			icon="info-circle"
+			label="info"
+		/>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>' iconCssClass='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "icon-trash" : "icon-remove" %>' label='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
+		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteEntries();" %>' icon='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>' label='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 

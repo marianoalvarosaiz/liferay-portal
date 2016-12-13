@@ -65,25 +65,34 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 
 					<c:if test="<%= viewSingleEntry %>">
 						<div class="cover-image-caption">
-							<small><%= entry.getCoverImageCaption() %></small>
+							<small><%= HtmlUtil.escape(entry.getCoverImageCaption()) %></small>
 						</div>
 					</c:if>
 				</c:if>
 
-				<c:if test="<%= !viewSingleEntry %>">
-					<div class="<%= colCssClass %> entry-info text-muted ">
-						<small>
-							<strong><%= entry.getUserName() %></strong>
-							<span> - </span>
-							<span class="hide-accessible"><liferay-ui:message key="published-date" /></span>
-							<%= dateFormatDate.format(entry.getDisplayDate()) %>
-						</small>
-					</div>
-				</c:if>
+				<div class="<%= colCssClass %> entry-info text-muted ">
+					<small>
+						<strong><%= HtmlUtil.escape(entry.getUserName()) %></strong>
+						<span> - </span>
+						<span class="hide-accessible"><liferay-ui:message key="published-date" /></span>
+						<%= dateFormatDate.format(entry.getDisplayDate()) %>
+						<span> - </span>
+						<span><%= LanguageUtil.format(resourceBundle, "x-minutes-read", new String[] {String.valueOf(com.liferay.blogs.web.internal.util.BlogsUtil.getReadingTimeMinutes(entry.getContent()))}, false) %></span>
+					</small>
+				</div>
 
 				<portlet:renderURL var="viewEntryURL">
 					<portlet:param name="mvcRenderCommandName" value="/blogs/view_entry" />
-					<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+
+					<c:choose>
+						<c:when test="<%= Validator.isNotNull(entry.getUrlTitle()) %>">
+							<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+						</c:when>
+						<c:otherwise>
+							<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
+						</c:otherwise>
+					</c:choose>
 				</portlet:renderURL>
 
 				<div class="<%= colCssClass %>">
@@ -91,7 +100,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 						<c:choose>
 							<c:when test="<%= !viewSingleEntry %>">
 								<h2>
-									<aui:a href="<%= viewEntryURL %>"><%= HtmlUtil.escape(entry.getTitle()) %></aui:a>
+									<aui:a href="<%= viewEntryURL %>"><%= BlogsEntryUtil.getDisplayTitle(resourceBundle, entry) %></aui:a>
 								</h2>
 
 								<c:if test="<%= !entry.isApproved() %>">
@@ -105,7 +114,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 								</c:if>
 							</c:when>
 							<c:otherwise>
-								<h1><%= HtmlUtil.escape(entry.getTitle()) %></h1>
+								<h1><%= BlogsEntryUtil.getDisplayTitle(resourceBundle, entry) %></h1>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -125,6 +134,11 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 			<div class="<%= colCssClass %> entry-body">
 				<c:choose>
 					<c:when test="<%= blogsPortletInstanceConfiguration.displayStyle().equals(BlogsUtil.DISPLAY_STYLE_ABSTRACT) && !viewSingleEntry %>">
+						<c:if test="<%= entry.isSmallImage() && Validator.isNull(coverImageURL) %>">
+							<div class="asset-small-image">
+								<img alt="" class="asset-small-image img-thumbnail" src="<%= HtmlUtil.escape(entry.getSmallImageURL(themeDisplay)) %>" width="150" />
+							</div>
+						</c:if>
 
 						<%
 						String summary = entry.getDescription();
@@ -230,7 +244,15 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 						<portlet:renderURL var="viewEntryCommentsURL">
 							<portlet:param name="mvcRenderCommandName" value="/blogs/view_entry" />
 							<portlet:param name="scroll" value='<%= renderResponse.getNamespace() + "discussionContainer" %>' />
-							<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+
+							<c:choose>
+								<c:when test="<%= Validator.isNotNull(entry.getUrlTitle()) %>">
+									<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+								</c:when>
+								<c:otherwise>
+									<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
+								</c:otherwise>
+							</c:choose>
 						</portlet:renderURL>
 
 						<div class="comments">
@@ -253,7 +275,15 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 					<c:if test="<%= blogsPortletInstanceConfiguration.enableSocialBookmarks() %>">
 						<portlet:renderURL var="bookmarkURL" windowState="<%= WindowState.NORMAL.toString() %>">
 							<portlet:param name="mvcRenderCommandName" value="/blogs/view_entry" />
-							<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+
+							<c:choose>
+								<c:when test="<%= Validator.isNotNull(entry.getUrlTitle()) %>">
+									<portlet:param name="urlTitle" value="<%= entry.getUrlTitle() %>" />
+								</c:when>
+								<c:otherwise>
+									<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
+								</c:otherwise>
+							</c:choose>
 						</portlet:renderURL>
 
 						<div class="social-bookmarks">
@@ -261,7 +291,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 								contentId="<%= String.valueOf(entry.getEntryId()) %>"
 								displayStyle="<%= blogsPortletInstanceConfiguration.socialBookmarksDisplayStyle() %>"
 								target="_blank"
-								title="<%= entry.getTitle() %>"
+								title="<%= BlogsEntryUtil.getDisplayTitle(resourceBundle, entry) %>"
 								types="<%= blogsPortletInstanceConfiguration.socialBookmarksTypes() %>"
 								url="<%= PortalUtil.getCanonicalURL(bookmarkURL.toString(), themeDisplay, layout) %>"
 							/>
@@ -273,7 +303,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 							<liferay-flags:flags
 								className="<%= BlogsEntry.class.getName() %>"
 								classPK="<%= entry.getEntryId() %>"
-								contentTitle="<%= entry.getTitle() %>"
+								contentTitle="<%= BlogsEntryUtil.getDisplayTitle(resourceBundle, entry) %>"
 								reportedUserId="<%= entry.getUserId() %>"
 							/>
 						</div>

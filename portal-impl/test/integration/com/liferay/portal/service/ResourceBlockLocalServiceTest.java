@@ -63,8 +63,8 @@ public class ResourceBlockLocalServiceTest {
 		Connection connection = DataAccess.getConnection();
 
 		PreparedStatement preparedStatement = connection.prepareStatement(
-			"DELETE FROM ResourceBlock WHERE companyId = ? AND groupId " +
-				"= ? AND name = ?");
+			"DELETE FROM ResourceBlock WHERE companyId = ? AND groupId = ? " +
+				"AND name = ?");
 
 		preparedStatement.setLong(1, _COMPANY_ID);
 		preparedStatement.setLong(2, _GROUP_ID);
@@ -89,16 +89,12 @@ public class ResourceBlockLocalServiceTest {
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.HYPERSONIC,
-				expectedLog =
-					"integrity constraint violation: unique constraint or " +
-						"index violation:",
+				expectedLog = "integrity constraint violation: unique constraint or index violation:",
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.MYSQL,
-				expectedLog =
-					"Deadlock found when trying to get lock; try restarting " +
-						"transaction",
+				expectedLog = "Deadlock found when trying to get lock; try restarting transaction",
 				expectedType = ExpectedType.EXACT
 			),
 			@ExpectedLog(
@@ -108,7 +104,7 @@ public class ResourceBlockLocalServiceTest {
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.ORACLE,
-				expectedLog ="ORA-00001: unique constraint",
+				expectedLog = "ORA-00001: unique constraint",
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
@@ -118,15 +114,12 @@ public class ResourceBlockLocalServiceTest {
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.POSTGRESQL,
-				expectedLog =
-					"ERROR: duplicate key value violates unique constraint ",
+				expectedLog = "ERROR: duplicate key value violates unique constraint ",
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.SYBASE,
-				expectedLog =
-					"Attempt to insert duplicate key row in object " +
-						"'ResourceBlock'",
+				expectedLog = "Attempt to insert duplicate key row in object 'ResourceBlock'",
 				expectedType = ExpectedType.CONTAINS
 			)
 		},
@@ -221,16 +214,12 @@ public class ResourceBlockLocalServiceTest {
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.HYPERSONIC,
-				expectedLog =
-					"integrity constraint violation: unique constraint or " +
-						"index violation:",
+				expectedLog = "integrity constraint violation: unique constraint or index violation:",
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.MYSQL,
-				expectedLog =
-					"Deadlock found when trying to get lock; try restarting " +
-						"transaction",
+				expectedLog = "Deadlock found when trying to get lock; try restarting transaction",
 				expectedType = ExpectedType.EXACT
 			),
 			@ExpectedLog(
@@ -240,7 +229,7 @@ public class ResourceBlockLocalServiceTest {
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.ORACLE,
-				expectedLog ="ORA-00001: unique constraint",
+				expectedLog = "ORA-00001: unique constraint",
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
@@ -250,15 +239,12 @@ public class ResourceBlockLocalServiceTest {
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.POSTGRESQL,
-				expectedLog =
-					"ERROR: duplicate key value violates unique constraint ",
+				expectedLog = "ERROR: duplicate key value violates unique constraint ",
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
 				expectedDBType = ExpectedDBType.SYBASE,
-				expectedLog =
-					"Attempt to insert duplicate key row in object " +
-						"'ResourceBlock'",
+				expectedLog = "Attempt to insert duplicate key row in object 'ResourceBlock'",
 				expectedType = ExpectedType.CONTAINS
 			)
 		},
@@ -344,8 +330,8 @@ public class ResourceBlockLocalServiceTest {
 		Connection connection = DataAccess.getConnection();
 
 		PreparedStatement preparedStatement = connection.prepareStatement(
-			"SELECT * FROM ResourceBlock WHERE companyId = ? AND groupId " +
-				"= ? AND name = ?");
+			"SELECT * FROM ResourceBlock WHERE companyId = ? AND groupId = ? " +
+				"AND name = ?");
 
 		preparedStatement.setLong(1, companyId);
 		preparedStatement.setLong(2, groupId);
@@ -365,8 +351,8 @@ public class ResourceBlockLocalServiceTest {
 		Connection connection = DataAccess.getConnection();
 
 		PreparedStatement preparedStatement = connection.prepareStatement(
-			"SELECT referenceCount FROM ResourceBlock WHERE " +
-				"resourceBlockId = " + resourceBlockId);
+			"SELECT referenceCount FROM ResourceBlock WHERE resourceBlockId " +
+				"= " + resourceBlockId);
 
 		ResultSet resultSet = preparedStatement.executeQuery();
 

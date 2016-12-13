@@ -64,14 +64,14 @@ public class RatingsDataTransformerUtilTest {
 		oldPortletPreferences.setValue(
 			"com.liferay.bookmarks.model.BookmarksEntry_RatingsType", "like");
 		oldPortletPreferences.setValue(
-			"com.liferay.journal.model.JournalArticle_RatingsType", "like");
-		oldPortletPreferences.setValue(
-			"com.liferay.document.library.kernel.model.DLFileEntry" +
-				"_RatingsType",
+			"com.liferay.document.library.kernel.model.DLFileEntry_RatingsType",
 			"like");
 		oldPortletPreferences.setValue(
-			"com.liferay.message.boards.kernel.model.MBDiscussion" +
-				"_RatingsType",
+			"com.liferay.journal.model.JournalArticle_RatingsType", "like");
+		oldPortletPreferences.setValue(
+			"com.liferay.knowledge.base.model.KBArticle_RatingsType", "like");
+		oldPortletPreferences.setValue(
+			"com.liferay.message.boards.kernel.model.MBDiscussion_RatingsType",
 			"like");
 		oldPortletPreferences.setValue(
 			"com.liferay.message.boards.kernel.model.MBMessage_RatingsType",
@@ -86,14 +86,14 @@ public class RatingsDataTransformerUtilTest {
 		unicodeProperties.setProperty(
 			"com.liferay.bookmarks.model.BookmarksEntry_RatingsType", "stars");
 		unicodeProperties.setProperty(
-			"com.liferay.journal.model.JournalArticle_RatingsType", "stars");
-		unicodeProperties.setProperty(
-			"com.liferay.document.library.kernel.model.DLFileEntry" +
-				"_RatingsType",
+			"com.liferay.document.library.kernel.model.DLFileEntry_RatingsType",
 			"stars");
 		unicodeProperties.setProperty(
-			"com.liferay.message.boards.kernel.model.MBDiscussion" +
-				"_RatingsType",
+			"com.liferay.journal.model.JournalArticle_RatingsType", "stars");
+		unicodeProperties.setProperty(
+			"com.liferay.knowledge.base.model.KBArticle_RatingsType", "stars");
+		unicodeProperties.setProperty(
+			"com.liferay.message.boards.kernel.model.MBDiscussion_RatingsType",
 			"stars");
 		unicodeProperties.setProperty(
 			"com.liferay.message.boards.kernel.model.MBMessage_RatingsType",
@@ -118,14 +118,14 @@ public class RatingsDataTransformerUtilTest {
 		oldUnicodeProperties.setProperty(
 			"com.liferay.bookmarks.model.BookmarksEntry_RatingsType", "like");
 		oldUnicodeProperties.setProperty(
-			"com.liferay.journal.model.JournalArticle_RatingsType", "like");
-		oldUnicodeProperties.setProperty(
-			"com.liferay.document.library.kernel.model.DLFileEntry" +
-				"_RatingsType",
+			"com.liferay.document.library.kernel.model.DLFileEntry_RatingsType",
 			"like");
 		oldUnicodeProperties.setProperty(
-			"com.liferay.message.boards.kernel.model.MBDiscussion" +
-				"_RatingsType",
+			"com.liferay.journal.model.JournalArticle_RatingsType", "like");
+		oldUnicodeProperties.setProperty(
+			"com.liferay.knowledge.base.model.KBArticle_RatingsType", "like");
+		oldUnicodeProperties.setProperty(
+			"com.liferay.message.boards.kernel.model.MBDiscussion_RatingsType",
 			"like");
 		oldUnicodeProperties.setProperty(
 			"com.liferay.message.boards.kernel.model.MBMessage_RatingsType",
@@ -140,14 +140,14 @@ public class RatingsDataTransformerUtilTest {
 		unicodeProperties.setProperty(
 			"com.liferay.bookmarks.model.BookmarksEntry_RatingsType", "stars");
 		unicodeProperties.setProperty(
-			"com.liferay.journal.model.JournalArticle_RatingsType", "stars");
-		unicodeProperties.setProperty(
-			"com.liferay.document.library.kernel.model.DLFileEntry" +
-				"_RatingsType",
+			"com.liferay.document.library.kernel.model.DLFileEntry_RatingsType",
 			"stars");
 		unicodeProperties.setProperty(
-			"com.liferay.message.boards.kernel.model.MBDiscussion" +
-				"_RatingsType",
+			"com.liferay.journal.model.JournalArticle_RatingsType", "stars");
+		unicodeProperties.setProperty(
+			"com.liferay.knowledge.base.model.KBArticle_RatingsType", "stars");
+		unicodeProperties.setProperty(
+			"com.liferay.message.boards.kernel.model.MBDiscussion_RatingsType",
 			"stars");
 		unicodeProperties.setProperty(
 			"com.liferay.message.boards.kernel.model.MBMessage_RatingsType",

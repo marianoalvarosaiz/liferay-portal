@@ -71,6 +71,16 @@ public class BaselineJarTask extends BaseBndTask {
 			throw new BuildException("New jar file is invalid");
 		}
 
+		_forceVersionOneOnAddedPackages = true;
+
+		String forceVersionOneOnAddedPackages = project.getProperty(
+			"baseline.added.packages.force.version.one");
+
+		if (forceVersionOneOnAddedPackages != null) {
+			_forceVersionOneOnAddedPackages = Boolean.parseBoolean(
+				forceVersionOneOnAddedPackages);
+		}
+
 		_reportLevel = project.getProperty("baseline.jar.report.level");
 
 		if (_reportLevel == null) {
@@ -79,10 +89,9 @@ public class BaselineJarTask extends BaseBndTask {
 
 		_reportLevelIsDiff = _reportLevel.equals("diff");
 		_reportLevelIsOff = _reportLevel.equals("off");
+		_reportLevelIsPersist = _reportLevel.equals("persist");
 
-		boolean reportLevelIsPersist = _reportLevel.equals("persist");
-
-		if (reportLevelIsPersist) {
+		if (_reportLevelIsPersist) {
 			_reportLevelIsDiff = true;
 
 			File baselineReportsDir = new File(
@@ -124,11 +133,17 @@ public class BaselineJarTask extends BaseBndTask {
 
 		};
 
+		if (_reportLevelIsPersist) {
+			baseline.setBndFile(_bndFile);
+		}
+
 		Properties properties = baseline.getProperties();
 
 		properties.putAll(project.getProperties());
 		properties.putAll(getBndFileProperties());
 
+		baseline.setForceVersionOneOnAddedPackages(
+			_forceVersionOneOnAddedPackages);
 		baseline.setLogFile(_logFile);
 		baseline.setNewJarFile(_newJarFile);
 		baseline.setOldJarFile(_oldJarFile);
@@ -168,12 +183,14 @@ public class BaselineJarTask extends BaseBndTask {
 
 	private String _baselineReportsDirName;
 	private File _bndFile;
+	private boolean _forceVersionOneOnAddedPackages;
 	private File _logFile;
 	private File _newJarFile;
 	private File _oldJarFile;
 	private String _reportLevel;
 	private boolean _reportLevelIsDiff;
 	private boolean _reportLevelIsOff = true;
+	private boolean _reportLevelIsPersist;
 	private boolean _reportOnlyDirtyPackages;
 	private File _sourceDir;
 

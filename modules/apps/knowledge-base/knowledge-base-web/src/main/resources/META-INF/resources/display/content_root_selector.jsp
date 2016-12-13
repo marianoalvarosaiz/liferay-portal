@@ -23,7 +23,7 @@ KBNavigationDisplayContext kbNavigationDisplayContext = (KBNavigationDisplayCont
 
 String currentKBFolderURLTitle = kbNavigationDisplayContext.getCurrentKBFolderURLTitle();
 
-List<KBFolder> kbFolders = KnowledgeBaseUtil.getAlternateRootKBFolders(scopeGroupId, resourcePrimKey);
+List<KBFolder> kbFolders = KBUtil.getAlternateRootKBFolders(scopeGroupId, kbDisplayPortletInstanceConfiguration.resourcePrimKey());
 %>
 
 <c:if test="<%= kbFolders.size() > 1 %>">
@@ -35,7 +35,7 @@ List<KBFolder> kbFolders = KnowledgeBaseUtil.getAlternateRootKBFolders(scopeGrou
 
 	<div class="kb-field-wrapper kbarticle-root-selector">
 		<aui:form action="<%= updateRootKBFolderIdURL %>" name="updateRootKBFolderIdFm">
-			<aui:select label="" name="rootKBFolderId" title="root-folder">
+			<aui:select label="" name="rootKBFolderId">
 
 				<%
 				for (KBFolder kbFolder : kbFolders) {
@@ -45,7 +45,7 @@ List<KBFolder> kbFolders = KnowledgeBaseUtil.getAlternateRootKBFolders(scopeGrou
 						selected="<%= currentKBFolderURLTitle.equals(kbFolder.getUrlTitle()) %>"
 						value="<%= kbFolder.getKbFolderId() %>"
 					>
-						<%= contentRootPrefix + " " + kbFolder.getName() %>
+						<%= kbDisplayPortletInstanceConfiguration.contentRootPrefix() + " " + kbFolder.getName() %>
 					</aui:option>
 
 				<%

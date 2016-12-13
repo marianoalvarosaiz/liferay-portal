@@ -51,6 +51,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		module = modulePersistence.create(moduleId);
 
 		module.setModuleId(moduleId);
+
 		module.setAppId(appId);
 		module.setBundleSymbolicName(bundleSymbolicName);
 		module.setBundleVersion(bundleVersion);
@@ -59,6 +60,11 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		modulePersistence.update(module);
 
 		return module;
+	}
+
+	@Override
+	public void deleteModules(long appId) {
+		modulePersistence.removeByAppId(appId);
 	}
 
 	@Override

@@ -58,7 +58,7 @@ public interface LDAPServerConfiguration {
 	@Meta.AD(
 		deflt = "(mail=@email_address@)",
 		description = "authentication-search-filter-help",
-		name ="%authentication-search-filter", required = false
+		name = "authentication-search-filter", required = false
 	)
 	public String authSearchFilter();
 
@@ -86,7 +86,7 @@ public interface LDAPServerConfiguration {
 	public String[] userIgnoreAttributes();
 
 	@Meta.AD(
-		deflt = "birthday=|facebookSn=|jabberSn=|jobTitle=|skypeSn=|smsSn=|twitterSn=",
+		deflt = "birthday=|facebookSn=|jabberSn=|skypeSn=|smsSn=|twitterSn=",
 		description = "contact-mappings-help", required = false
 	)
 	public String[] contactMappings();

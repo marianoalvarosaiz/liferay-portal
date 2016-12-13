@@ -28,13 +28,12 @@ import com.liferay.dynamic.data.mapping.annotations.DDMFormLayoutRow;
 @DDMFormLayout(
 	{
 		@DDMFormLayoutPage(
-			title = "advanced",
+			title = "properties",
 			value = {
 				@DDMFormLayoutRow(
 					{
 						@DDMFormLayoutColumn(
-							size = 12,
-							value = {"dataType", "name", "type"}
+							size = 12, value = {"dataType", "name", "type"}
 						)
 					}
 				)

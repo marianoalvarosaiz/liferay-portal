@@ -96,8 +96,24 @@ public class FormatSourceTask extends Task {
 		_sourceFormatterArgs.setFormatLocalChanges(formatLocalChanges);
 	}
 
+	public void setGitWorkingBranchName(String gitWorkingBranchName) {
+		_sourceFormatterArgs.setGitWorkingBranchName(gitWorkingBranchName);
+	}
+
+	public void setIncludeSubrepositories(boolean includeSubrepositories) {
+		_sourceFormatterArgs.setIncludeSubrepositories(includeSubrepositories);
+	}
+
+	public void setMaxLineLength(int maxLineLength) {
+		_sourceFormatterArgs.setMaxLineLength(maxLineLength);
+	}
+
 	public void setPrintErrors(boolean printErrors) {
 		_sourceFormatterArgs.setPrintErrors(printErrors);
+	}
+
+	public void setProcessorThreadCount(int processorThreadCount) {
+		_sourceFormatterArgs.setProcessorThreadCount(processorThreadCount);
 	}
 
 	public void setThrowException(boolean throwException) {

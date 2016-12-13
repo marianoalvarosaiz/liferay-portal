@@ -14,9 +14,12 @@
 
 package com.liferay.petra.json.web.service.client;
 
+import com.liferay.petra.json.web.service.client.jcifs.JCIFSNTLMSchemeFactory;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
+import java.net.ProxySelector;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -43,17 +46,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpMessage;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScheme;
+import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.ChallengeState;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -63,6 +69,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.config.Lookup;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -81,6 +88,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -96,6 +104,8 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 
 	public void afterPropertiesSet() {
 		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+
+		httpClientBuilder = httpClientBuilder.useSystemProperties();
 
 		HttpClientConnectionManager httpClientConnectionManager =
 			getPoolingHttpClientConnectionManager();
@@ -133,7 +143,31 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		}
 
 		try {
-			setProxyHost(httpClientBuilder);
+			if (_proxySelector != null) {
+				httpClientBuilder.setRoutePlanner(
+					new SystemDefaultRoutePlanner(_proxySelector));
+			}
+			else {
+				setProxyHost(httpClientBuilder);
+			}
+
+			if (!isNull(_proxyAuthType) &&
+				_proxyAuthType.equalsIgnoreCase("ntlm")) {
+
+				RegistryBuilder registerBuilder =
+					RegistryBuilder.<AuthSchemeProvider>create();
+
+				registerBuilder = registerBuilder.register(
+					AuthSchemes.NTLM,
+					new JCIFSNTLMSchemeFactory(
+						_proxyDomain, _proxyWorkstation));
+
+				Lookup<AuthSchemeProvider> authSchemeRegistry =
+					registerBuilder.build();
+
+				httpClientBuilder.setDefaultAuthSchemeRegistry(
+					authSchemeRegistry);
+			}
 
 			_closeableHttpClient = httpClientBuilder.build();
 
@@ -195,17 +229,15 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		if (_logger.isDebugEnabled()) {
 			_logger.debug(
 				"Sending DELETE request to " + _login + "@" + _hostName + url);
+
+			log("HTTP parameters", parameters);
+
+			log("HTTP headers", headers);
 		}
 
 		HttpDelete httpDelete = new HttpDelete(url);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
-			httpDelete.addHeader(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : _headers.entrySet()) {
-			httpDelete.addHeader(entry.getKey(), entry.getValue());
-		}
+		addHeaders(httpDelete, headers);
 
 		return execute(httpDelete);
 	}
@@ -239,17 +271,15 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		if (_logger.isDebugEnabled()) {
 			_logger.debug(
 				"Sending GET request to " + _login + "@" + _hostName + url);
+
+			log("HTTP parameters", parameters);
+
+			log("HTTP headers", headers);
 		}
 
 		HttpGet httpGet = new HttpGet(url);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
-			httpGet.addHeader(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : _headers.entrySet()) {
-			httpGet.addHeader(entry.getKey(), entry.getValue());
-		}
+		addHeaders(httpGet, headers);
 
 		return execute(httpGet);
 	}
@@ -274,6 +304,10 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		if (_logger.isDebugEnabled()) {
 			_logger.debug(
 				"Sending POST request to " + _login + "@" + _hostName + url);
+
+			log("HTTP parameters", parameters);
+
+			log("HTTP headers", headers);
 		}
 
 		HttpPost httpPost = new HttpPost(url);
@@ -283,13 +317,7 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		HttpEntity httpEntity = new UrlEncodedFormEntity(
 			nameValuePairs, StandardCharsets.UTF_8);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
-			httpPost.addHeader(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : _headers.entrySet()) {
-			httpPost.addHeader(entry.getKey(), entry.getValue());
-		}
+		addHeaders(httpPost, headers);
 
 		httpPost.setEntity(httpEntity);
 
@@ -310,13 +338,7 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 
 		HttpPost httpPost = new HttpPost(url);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
-			httpPost.addHeader(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : _headers.entrySet()) {
-			httpPost.addHeader(entry.getKey(), entry.getValue());
-		}
+		addHeaders(httpPost, headers);
 
 		StringEntity stringEntity = new StringEntity(
 			json.toString(), StandardCharsets.UTF_8);
@@ -348,6 +370,10 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		if (_logger.isDebugEnabled()) {
 			_logger.debug(
 				"Sending PUT request to " + _login + "@" + _hostName + url);
+
+			log("HTTP parameters", parameters);
+
+			log("HTTP headers", headers);
 		}
 
 		HttpPut httpPut = new HttpPut(url);
@@ -357,13 +383,7 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		HttpEntity httpEntity = new UrlEncodedFormEntity(
 			nameValuePairs, StandardCharsets.UTF_8);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
-			httpPut.addHeader(entry.getKey(), entry.getValue());
-		}
-
-		for (Map.Entry<String, String> entry : _headers.entrySet()) {
-			httpPut.addHeader(entry.getKey(), entry.getValue());
-		}
+		addHeaders(httpPut, headers);
 
 		httpPut.setEntity(httpEntity);
 
@@ -428,6 +448,14 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		_protocol = protocol;
 	}
 
+	public void setProxyAuthType(String proxyAuthType) {
+		_proxyAuthType = proxyAuthType;
+	}
+
+	public void setProxyDomain(String proxyDomain) {
+		_proxyDomain = proxyDomain;
+	}
+
 	public void setProxyHostName(String proxyHostName) {
 		_proxyHostName = proxyHostName;
 	}
@@ -442,6 +470,26 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 
 	public void setProxyPassword(String proxyPassword) {
 		_proxyPassword = proxyPassword;
+	}
+
+	public void setProxySelector(ProxySelector proxySelector) {
+		_proxySelector = proxySelector;
+	}
+
+	public void setProxyWorkstation(String proxyWorkstation) {
+		_proxyWorkstation = proxyWorkstation;
+	}
+
+	protected void addHeaders(
+		HttpMessage httpMessage, Map<String, String> headers) {
+
+		for (Map.Entry<String, String> entry : headers.entrySet()) {
+			httpMessage.addHeader(entry.getKey(), entry.getValue());
+		}
+
+		for (Map.Entry<String, String> entry : _headers.entrySet()) {
+			httpMessage.addHeader(entry.getKey(), entry.getValue());
+		}
 	}
 
 	protected String execute(HttpRequestBase httpRequestBase)
@@ -544,7 +592,7 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 
 	protected Registry<ConnectionSocketFactory> getSocketFactoryRegistry() {
 		RegistryBuilder<ConnectionSocketFactory> registryBuilder =
-			RegistryBuilder.<ConnectionSocketFactory> create();
+			RegistryBuilder.<ConnectionSocketFactory>create();
 
 		registryBuilder.register("http", new PlainConnectionSocketFactory());
 		registryBuilder.register("https", getSSLConnectionSocketFactory());
@@ -580,6 +628,34 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 		}
 
 		return false;
+	}
+
+	protected void log(String message, Map<String, String> map) {
+		if (!_logger.isDebugEnabled() || map.isEmpty()) {
+			return;
+		}
+
+		StringBuilder sb = new StringBuilder((map.size() * 4) + 2);
+
+		sb.append(message);
+		sb.append(":");
+
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+
+			if (value == null) {
+				key = "-" + key;
+				value = "";
+			}
+
+			sb.append("\n");
+			sb.append(key);
+			sb.append("=");
+			sb.append(value);
+		}
+
+		_logger.debug(sb.toString());
 	}
 
 	protected void setProxyHost(HttpClientBuilder httpClientBuilder) {
@@ -630,10 +706,14 @@ public class JSONWebServiceClientImpl implements JSONWebServiceClient {
 	private String _login;
 	private String _password;
 	private String _protocol = "http";
+	private String _proxyAuthType;
+	private String _proxyDomain;
 	private String _proxyHostName;
 	private int _proxyHostPort;
 	private String _proxyLogin;
 	private String _proxyPassword;
+	private ProxySelector _proxySelector;
+	private String _proxyWorkstation;
 
 	private class HttpRequestRetryHandlerImpl
 		implements HttpRequestRetryHandler {

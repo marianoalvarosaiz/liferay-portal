@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1224,11 +1223,15 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"KaleoConditionPersistenceImpl.fetchByKaleoNodeId(long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"KaleoConditionPersistenceImpl.fetchByKaleoNodeId(long, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					KaleoCondition kaleoCondition = list.get(0);
@@ -1743,12 +1746,14 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 	 */
 	@Override
 	public KaleoCondition fetchByPrimaryKey(Serializable primaryKey) {
-		KaleoCondition kaleoCondition = (KaleoCondition)entityCache.getResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,
 				KaleoConditionImpl.class, primaryKey);
 
-		if (kaleoCondition == _nullKaleoCondition) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KaleoCondition kaleoCondition = (KaleoCondition)serializable;
 
 		if (kaleoCondition == null) {
 			Session session = null;
@@ -1764,8 +1769,7 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 				}
 				else {
 					entityCache.putResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,
-						KaleoConditionImpl.class, primaryKey,
-						_nullKaleoCondition);
+						KaleoConditionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1819,18 +1823,20 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KaleoCondition kaleoCondition = (KaleoCondition)entityCache.getResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,
 					KaleoConditionImpl.class, primaryKey);
 
-			if (kaleoCondition == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kaleoCondition);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KaleoCondition)serializable);
+				}
 			}
 		}
 
@@ -1872,7 +1878,7 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,
-					KaleoConditionImpl.class, primaryKey, _nullKaleoCondition);
+					KaleoConditionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2109,23 +2115,4 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No KaleoCondition exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No KaleoCondition exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(KaleoConditionPersistenceImpl.class);
-	private static final KaleoCondition _nullKaleoCondition = new KaleoConditionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KaleoCondition> toCacheModel() {
-				return _nullKaleoConditionCacheModel;
-			}
-		};
-
-	private static final CacheModel<KaleoCondition> _nullKaleoConditionCacheModel =
-		new CacheModel<KaleoCondition>() {
-			@Override
-			public KaleoCondition toEntityModel() {
-				return _nullKaleoCondition;
-			}
-		};
 }

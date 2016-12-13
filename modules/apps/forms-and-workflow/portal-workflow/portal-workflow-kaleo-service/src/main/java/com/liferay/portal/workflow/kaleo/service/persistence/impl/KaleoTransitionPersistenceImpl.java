@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1765,11 +1764,15 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"KaleoTransitionPersistenceImpl.fetchByKNI_N(long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"KaleoTransitionPersistenceImpl.fetchByKNI_N(long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					KaleoTransition kaleoTransition = list.get(0);
@@ -2015,11 +2018,15 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"KaleoTransitionPersistenceImpl.fetchByKNI_DT(long, boolean, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"KaleoTransitionPersistenceImpl.fetchByKNI_DT(long, boolean, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					KaleoTransition kaleoTransition = list.get(0);
@@ -2622,12 +2629,14 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 	 */
 	@Override
 	public KaleoTransition fetchByPrimaryKey(Serializable primaryKey) {
-		KaleoTransition kaleoTransition = (KaleoTransition)entityCache.getResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,
 				KaleoTransitionImpl.class, primaryKey);
 
-		if (kaleoTransition == _nullKaleoTransition) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KaleoTransition kaleoTransition = (KaleoTransition)serializable;
 
 		if (kaleoTransition == null) {
 			Session session = null;
@@ -2643,8 +2652,7 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 				}
 				else {
 					entityCache.putResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,
-						KaleoTransitionImpl.class, primaryKey,
-						_nullKaleoTransition);
+						KaleoTransitionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2698,18 +2706,20 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KaleoTransition kaleoTransition = (KaleoTransition)entityCache.getResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,
 					KaleoTransitionImpl.class, primaryKey);
 
-			if (kaleoTransition == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kaleoTransition);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KaleoTransition)serializable);
+				}
 			}
 		}
 
@@ -2751,7 +2761,7 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,
-					KaleoTransitionImpl.class, primaryKey, _nullKaleoTransition);
+					KaleoTransitionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2988,23 +2998,4 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No KaleoTransition exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No KaleoTransition exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(KaleoTransitionPersistenceImpl.class);
-	private static final KaleoTransition _nullKaleoTransition = new KaleoTransitionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KaleoTransition> toCacheModel() {
-				return _nullKaleoTransitionCacheModel;
-			}
-		};
-
-	private static final CacheModel<KaleoTransition> _nullKaleoTransitionCacheModel =
-		new CacheModel<KaleoTransition>() {
-			@Override
-			public KaleoTransition toEntityModel() {
-				return _nullKaleoTransition;
-			}
-		};
 }

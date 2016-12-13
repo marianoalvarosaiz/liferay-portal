@@ -14,8 +14,7 @@
 
 package com.liferay.gradle.plugins.workspace;
 
-import com.liferay.gradle.plugins.workspace.configurators.ProjectConfigurator;
-import com.liferay.gradle.plugins.workspace.util.GradleUtil;
+import com.liferay.gradle.plugins.workspace.internal.util.GradleUtil;
 
 import groovy.lang.Closure;
 
@@ -45,29 +44,29 @@ public class WorkspacePlugin implements Plugin<Settings> {
 	public void apply(Settings settings) {
 		Gradle gradle = settings.getGradle();
 
-		final WorkspaceExtension workspaceExtension = addWorkspaceExtension(
+		final WorkspaceExtension workspaceExtension = _addWorkspaceExtension(
 			settings);
 
 		for (ProjectConfigurator projectConfigurator :
 				workspaceExtension.getProjectConfigurators()) {
 
-			File rootDir = projectConfigurator.getDefaultRootDir();
+			for (File rootDir : projectConfigurator.getDefaultRootDirs()) {
+				for (File projectDir : projectConfigurator.getProjectDirs(
+						rootDir)) {
 
-			Iterable<File> projectDirs = projectConfigurator.getProjectDirs(
-				rootDir);
+					String projectPath = GradleUtil.getProjectPath(
+						projectDir, settings.getRootDir());
 
-			for (File projectDir : projectDirs) {
-				String projectPath = GradleUtil.getProjectPath(
-					projectDir, settings.getRootDir());
+					settings.include(new String[] {projectPath});
 
-				settings.include(new String[] {projectPath});
-
-				_projectConfiguratorsMap.put(projectPath, projectConfigurator);
+					_projectConfiguratorsMap.put(
+						projectPath, projectConfigurator);
+				}
 			}
 		}
 
 		gradle.beforeProject(
-			new Closure<Void>(null) {
+			new Closure<Void>(settings) {
 
 				@SuppressWarnings("unused")
 				public void doCall(Project project) {
@@ -90,7 +89,7 @@ public class WorkspacePlugin implements Plugin<Settings> {
 			});
 	}
 
-	protected WorkspaceExtension addWorkspaceExtension(Settings settings) {
+	private WorkspaceExtension _addWorkspaceExtension(Settings settings) {
 		ExtensionAware extensionAware = (ExtensionAware)settings.getGradle();
 
 		ExtensionContainer extensionContainer = extensionAware.getExtensions();

@@ -44,6 +44,7 @@ long usedMemory = totalMemory - runtime.freeMemory();
 
 				<%= numberFormat.format(hours) %>:<%= numberFormat.format(minutes) %>:<%= numberFormat.format(seconds) %>
 			</div>
+
 			<div class="meter-wrapper text-center">
 				<portlet:resourceURL id="/server_admin/view_chart" var="totalMemoryChartURL">
 					<portlet:param name="type" value="total" />
@@ -295,6 +296,15 @@ long usedMemory = totalMemory - runtime.freeMemory();
 
 				<div class="pull-right">
 					<aui:button cssClass="save-server-button" data-cmd="cleanUpPermissions" value="execute" />
+				</div>
+			</li>
+			<li class="clearfix list-group-item">
+				<div class="pull-left">
+					<h5><liferay-ui:message key="clean-up-portlet-preferences" /> <liferay-ui:icon-help message="clean-up-portlet-preferences-help" /></h5>
+				</div>
+
+				<div class="pull-right">
+					<aui:button cssClass="save-server-button" data-cmd="cleanUpPortletPreferences" value="execute" />
 				</div>
 			</li>
 		</ul>
