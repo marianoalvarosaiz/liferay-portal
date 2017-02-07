@@ -323,8 +323,6 @@
 
 		<execute function="Select" locator1="ReportContent#REASON_SELECT" value1="${flagReason}" />
 
-		<execute function="Type" locator1="TextInput#EMAIL" value1="${userEmailAddress}" />
-
 		<execute macro="Button#clickSave" />
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="ReportContent#SUCCESS_MESSAGE" value1="Although we cannot disclose our final decision, we do review every report and appreciate your effort to make sure ${siteName} is a safe environment for everyone." />
@@ -1011,6 +1009,8 @@
 
 	<command name="viewRSS">
 		<execute function="AssertClick" locator1="Link#RSS" value1="RSS" />
+
+		<execute function="Pause" locator1="3000" />
 
 		<execute function="SelectWindow" locator1="title=${siteName}" />
 

@@ -171,10 +171,18 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 			<div class="form-group">
 				<label class="control-label ddl-publish-checkbox" for="<portlet:namespace />publishCheckbox">
 					<span class="pull-left">
-						<small><liferay-ui:message key="make-this-form-public" /></small>
+						<small><liferay-ui:message key="publish-this-form" /></small>
 					</span>
 
 					<aui:input label="" name="publishCheckbox" type="toggle-switch" value="<%= ddlFormAdminDisplayContext.isFormPublished() %>" />
+				</label>
+
+				<label class="control-label ddl-publish-checkbox" for="<portlet:namespace />publishCheckbox">
+					<span class="pull-left">
+						<small><liferay-ui:message key="require-user-authentication" /></small>
+					</span>
+
+					<aui:input label="" name="requireAuthenticationCheckbox" type="toggle-switch" value="<%= ddlFormAdminDisplayContext.isAuthenticationRequired() %>" />
 				</label>
 			</div>
 
@@ -201,7 +209,13 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 
 		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="saveRecordSet" var="saveRecordSetURL" />
 
+		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="getDataProviderInstances" var="getDataProviderInstancesURL" />
+
+		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="getDataProviderParametersSettings" var="getDataProviderParametersSettings" />
+
 		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="getFieldSettingsDDMFormContext" var="getFieldSettingsDDMFormContext" />
+
+		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="getRoles" var="getRoles" />
 
 		<aui:script>
 			var initHandler = Liferay.after(
@@ -243,14 +257,18 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 											editForm: event.form,
 											evaluatorURL: '<%= ddlFormAdminDisplayContext.getDDMFormContextProviderServletURL() %>',
 											fieldTypesDefinitions: <%= ddlFormAdminDisplayContext.getDDMFormFieldTypesDefinitionsMap() %>,
-											formURL: '<%= ddlFormAdminDisplayContext.getFormURL() %>',
+											getDataProviderParametersSettingsURL: '<%= getDataProviderParametersSettings.toString() %>',
+											getDataProviderInstancesURL: '<%= getDataProviderInstancesURL.toString() %>',
 											getFieldTypeSettingFormContextURL: '<%= getFieldSettingsDDMFormContext.toString() %>',
+											getRolesURL: '<%= getRoles.toString() %>',
 											layout: <%= ddlFormAdminDisplayContext.getSerializedDDMFormLayout() %>,
 											name: '<%= HtmlUtil.escapeJS(name) %>',
 											namespace: '<portlet:namespace />',
 											publishRecordSetURL: '<%= publishRecordSetURL.toString() %>',
 											recordSetId: <%= recordSetId %>,
-											rules: <%= ddlFormAdminDisplayContext.getSerializedDDMFormRules() %>
+											restrictedFormURL: '<%= ddlFormAdminDisplayContext.getRestrictedFormURL() %>',
+											rules: <%= ddlFormAdminDisplayContext.getSerializedDDMFormRules() %>,
+											sharedFormURL: '<%= ddlFormAdminDisplayContext.getSharedFormURL() %>'
 										}
 									)
 								);

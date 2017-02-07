@@ -1,7 +1,7 @@
 <definition component-name="portal-collaboration">
 	<property name="custom.properties" value="default.layout.template.id=1_column" />
-	<property name="hook.plugins.includes" value="social-bookmarks-hook" />
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Social Bookmarks" />
 
 	<set-up>
@@ -34,6 +34,8 @@
 	</tear-down>
 
 	<command name="ChangeSocialBookmarkSitesForKBArticle" priority="4">
+		<property name="osgi.app.includes" value="social-bookmarks, knowledge-base" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Knowledge Base Display Page" />
 		</execute>
@@ -114,6 +116,9 @@
 	</command>
 
 	<command name="ViewBlogsEntryWithSocialBookmarksSites" priority="3">
+		<property name="osgi.app.includes" value="social-bookmarks" />
+		<property name="test.assert.warning.exceptions" value="true" />
+
 		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
@@ -165,6 +170,8 @@
 	</command>
 
 	<command name="ViewKBArticleWithAllSocialBookmarkSites" priority="3">
+		<property name="osgi.app.includes" value="social-bookmarks, knowledge-base" />
+
 		<var name="socialBookmarkSites" value="twitter,facebook,plusone,addthis,delicious,digg,evernote,linkedin,newsvine,reddit,slashdot,stumbleupon,tuenti" />
 
 		<execute macro="Page#add">

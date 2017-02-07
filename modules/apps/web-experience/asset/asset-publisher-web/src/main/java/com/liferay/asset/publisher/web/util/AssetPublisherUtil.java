@@ -135,7 +135,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Raymond Augé
  * @author Julio Camarero
  */
-@Component(service = AssetPublisherUtil.class)
+@Component(immediate = true, service = AssetPublisherUtil.class)
 @ProviderType
 public class AssetPublisherUtil {
 
@@ -338,10 +338,11 @@ public class AssetPublisherUtil {
 			String queryName = portletPreferences.getValue(
 				"queryName" + i, StringPool.BLANK);
 
-			if (Objects.equals(queryName, "assetCategories") &&
-				queryContains && queryAndOperator) {
+			if (Objects.equals(queryName, "assetCategories") && queryContains &&
+				(queryAndOperator || (queryValues.length == 1))) {
 
-				assetCategoryIds = GetterUtil.getLongValues(queryValues);
+				assetCategoryIds = ArrayUtil.append(
+					assetCategoryIds, GetterUtil.getLongValues(queryValues));
 			}
 		}
 
@@ -475,6 +476,20 @@ public class AssetPublisherUtil {
 			boolean includeNonVisibleAssets)
 		throws Exception {
 
+		return getAssetEntries(
+			portletRequest, portletPreferences, permissionChecker, groupIds,
+			deleteMissingAssetEntries, checkPermission, includeNonVisibleAssets,
+			AssetRendererFactory.TYPE_LATEST_APPROVED);
+	}
+
+	public static List<AssetEntry> getAssetEntries(
+			PortletRequest portletRequest,
+			PortletPreferences portletPreferences,
+			PermissionChecker permissionChecker, long[] groupIds,
+			boolean deleteMissingAssetEntries, boolean checkPermission,
+			boolean includeNonVisibleAssets, int type)
+		throws Exception {
+
 		String[] assetEntryXmls = portletPreferences.getValues(
 			"assetEntryXml", new String[0]);
 
@@ -519,8 +534,7 @@ public class AssetPublisherUtil {
 
 			AssetRenderer<?> assetRenderer =
 				assetRendererFactory.getAssetRenderer(
-					assetEntry.getClassPK(),
-					AssetRendererFactory.TYPE_LATEST_APPROVED);
+					assetEntry.getClassPK(), type);
 
 			if (!assetRendererFactory.isActive(
 					permissionChecker.getCompanyId())) {
@@ -804,7 +818,8 @@ public class AssetPublisherUtil {
 				"queryName" + i, StringPool.BLANK);
 
 			if (!Objects.equals(queryName, "assetCategories") &&
-				queryContains && queryAndOperator) {
+				queryContains &&
+				(queryAndOperator || (queryValues.length == 1))) {
 
 				allAssetTagNames = queryValues;
 			}

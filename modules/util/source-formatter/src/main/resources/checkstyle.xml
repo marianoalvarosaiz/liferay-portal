@@ -98,6 +98,12 @@
 			<message key="name.collectionPrivatePattern" value="Private collection ''{0}'' must match pattern ''{1}''" />
 			<message key="name.collectionProtectedPublicPattern" value="Protected or public collection ''{0}'' must match pattern ''{1}''" />
 		</module>
+		<module name="com.liferay.source.formatter.checkstyle.checks.Indentation">
+			<message key="indentation.incorrect" value="Line starts with ''{0}'' tabs, but ''{1}'' tabs are expected" />
+		</module>
+		<module name="com.liferay.source.formatter.checkstyle.checks.InstanceofOrder">
+			<message key="instanceof.order" value="''{0}'' should come before ''{1}''" />
+		</module>
 		<module name="com.liferay.source.formatter.checkstyle.checks.Javadoc">
 			<message key="javadoc.empty.line" value="First or last line in javadoc should not be empty" />
 			<message key="javadoc.incorrect.first.line" value="Javadoc should start with ''/**''" />
@@ -134,9 +140,9 @@
 		<module name="com.liferay.source.formatter.checkstyle.checks.MissingModifier">
 			<message key="modifier.missing" value="Missing modifier for ''{0}''" />
 		</module>
-		<module name="com.liferay.source.formatter.checkstyle.checks.MissingOverride">
+		<!--<module name="com.liferay.source.formatter.checkstyle.checks.MissingOverride">
 			<message key="override.missing" value="Missing @Override" />
-		</module>
+		</module>-->
 		<module name="com.liferay.source.formatter.checkstyle.checks.NotRequireThis">
 			<message key="variable.not.require.this" value="Reference to variable ''{0}'' does not need ''.this''" />
 		</module>
@@ -166,6 +172,9 @@
 			<message key="parameter.invalidName" value="'sub' should be followed by a lowercase character for parameter ''{0}''" />
 			<message key="variable.invalidName" value="'sub' should be followed by a lowercase character for variable ''{0}''" />
 		</module>
+		<module name="com.liferay.source.formatter.checkstyle.checks.TernaryOperator">
+			<message key="ternary.operator.avoid" value="Use if-else-statement instead of ternary conditional operator for better readability" />
+		</module>
 		<module name="com.liferay.source.formatter.checkstyle.checks.TransactionalTestRule">
 			<message key="import.invalid" value="Avoid using import TransactionalTestRule in *StagedModelDataHandlerTest, see LPS-68908" />
 		</module>
@@ -177,6 +186,9 @@
 		</module>
 		<module name="com.liferay.source.formatter.checkstyle.checks.ValidatorIsNull">
 			<message key="method.invalidName" value="Avoid using method ''{0}''" />
+		</module>
+		<module name="com.liferay.source.formatter.checkstyle.checks.VariableName">
+			<message key="variable.rename" value="Rename variable ''{0}'' to ''{1}''" />
 		</module>
 	</module>
 </module>

@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
-import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.portal.xml.SAXReaderFactory;
@@ -51,6 +50,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,6 +73,8 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.Text;
 import org.dom4j.io.SAXReader;
 
 /**
@@ -362,13 +364,18 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	protected void checkIfClauseParentheses(
 		String ifClause, String fileName, int lineCount) {
 
-		int quoteCount = StringUtil.count(ifClause, CharPool.QUOTE);
+		ifClause = stripQuotes(ifClause);
 
-		if ((quoteCount % 2) == 1) {
+		if (ifClause.matches(
+				"[^()]*\\((\\(?\\w+ instanceof \\w+\\)?( \\|\\| )?)+" +
+					"\\)[^()]*") &&
+			!ifClause.matches("[^()]*\\([^()]*\\)[^()]*")) {
+
+			processMessage(
+				fileName, "Redundant parentheses in if-statement", lineCount);
+
 			return;
 		}
-
-		ifClause = stripQuotes(ifClause);
 
 		if (ifClause.contains(StringPool.DOUBLE_SLASH) ||
 			ifClause.contains("/*") || ifClause.contains("*/")) {
@@ -509,7 +516,9 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 		String fileExtension = FilenameUtils.getExtension(fileName);
 
-		if (!portalSource || fileExtension.equals("vm")) {
+		if (!portalSource || fileExtension.equals("vm") ||
+			isExcludedPath(LANGUAGE_KEYS_CHECK_EXCLUDES, absolutePath)) {
+
 			return;
 		}
 
@@ -537,11 +546,13 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 			for (String languageKey : languageKeys) {
 				if (Validator.isNumber(languageKey) ||
+					languageKey.endsWith(StringPool.CLOSE_CURLY_BRACE) ||
 					languageKey.endsWith(StringPool.DASH) ||
 					languageKey.endsWith(StringPool.OPEN_BRACKET) ||
 					languageKey.endsWith(StringPool.PERIOD) ||
 					languageKey.endsWith(StringPool.UNDERLINE) ||
 					languageKey.startsWith(StringPool.DASH) ||
+					languageKey.startsWith(StringPool.DOLLAR) ||
 					languageKey.startsWith(StringPool.OPEN_BRACKET) ||
 					languageKey.startsWith(StringPool.OPEN_CURLY_BRACE) ||
 					languageKey.startsWith(StringPool.PERIOD) ||
@@ -571,6 +582,13 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 				BNDSettings bndSettings = getBNDSettings(fileName);
 
+				if (bndSettings == null) {
+					processMessage(
+						fileName, "Missing language key '" + languageKey + "'");
+
+					continue;
+				}
+
 				Properties bndFileLanguageProperties =
 					bndSettings.getLanguageProperties();
 
@@ -594,32 +612,54 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 			return;
 		}
 
-		List<Element> elements = rootElement.elements(elementName);
+		Node previousNode = null;
 
-		Element previousElement = null;
+		Iterator<Node> iterator = rootElement.nodeIterator();
 
-		for (Element element : elements) {
-			if ((previousElement != null) &&
-				(elementComparator.compare(previousElement, element) > 0)) {
+		while (iterator.hasNext()) {
+			Node curNode = (Node)iterator.next();
 
-				StringBundler sb = new StringBundler(7);
-
-				sb.append("Incorrect order '");
-				sb.append(elementName);
-				sb.append("':");
-
-				if (Validator.isNotNull(parentElementName)) {
-					sb.append(StringPool.SPACE);
-					sb.append(parentElementName);
-				}
-
-				sb.append(StringPool.SPACE);
-				sb.append(elementComparator.getElementName(element));
-
-				processMessage(fileName, sb.toString());
+			if (curNode instanceof Text) {
+				continue;
 			}
 
-			previousElement = element;
+			if (previousNode == null) {
+				previousNode = curNode;
+
+				continue;
+			}
+
+			if (curNode instanceof Element && previousNode instanceof Element) {
+				Element curElement = (Element)curNode;
+				Element previousElement = (Element)previousNode;
+
+				String curElementName = curElement.getName();
+				String previousElementName = previousElement.getName();
+
+				if (curElementName.equals(elementName) &&
+					previousElementName.equals(elementName) &&
+					(elementComparator.compare(previousElement, curElement) >
+						0)) {
+
+					StringBundler sb = new StringBundler(7);
+
+					sb.append("Incorrect order '");
+					sb.append(elementName);
+					sb.append("':");
+
+					if (Validator.isNotNull(parentElementName)) {
+						sb.append(StringPool.SPACE);
+						sb.append(parentElementName);
+					}
+
+					sb.append(StringPool.SPACE);
+					sb.append(elementComparator.getElementName(curElement));
+
+					processMessage(fileName, sb.toString());
+				}
+			}
+
+			previousNode = curNode;
 		}
 	}
 
@@ -656,7 +696,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	protected void checkResourceUtil(
 		String line, String fileName, String absolutePath, int lineCount) {
 
-		if (!portalSource || fileName.endsWith("ResourceBundleUtil.java") ||
+		if ((!portalSource && !subrepository) ||
+			fileName.endsWith("ResourceBundleUtil.java") ||
 			isExcludedPath(RUN_OUTSIDE_PORTAL_EXCLUDES, absolutePath)) {
 
 			return;
@@ -752,7 +793,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	protected String fixCompatClassImports(String absolutePath, String content)
 		throws Exception {
 
-		if (portalSource || !_usePortalCompatImport ||
+		if (portalSource || subrepository || !_usePortalCompatImport ||
 			absolutePath.contains("/ext-") ||
 			absolutePath.contains("/portal-compat-shared/")) {
 
@@ -955,7 +996,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	protected String fixIncorrectParameterTypeForLanguageUtil(
 		String content, boolean autoFix, String fileName) {
 
-		if (portalSource) {
+		if (portalSource || subrepository) {
 			return content;
 		}
 
@@ -1700,8 +1741,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 		_annotationsExclusions = SetUtil.fromArray(
 			new String[] {
-				"ArquillianResource", "BeanReference", "Captor", "Inject",
-				"Mock", "Parameter", "Reference", "ServiceReference",
+				"ArquillianResource", "Autowired", "BeanReference", "Captor",
+				"Inject", "Mock", "Parameter", "Reference", "ServiceReference",
 				"SuppressWarnings"
 			});
 
@@ -1918,7 +1959,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		else if (groupCount == 2) {
 			String languageKey = matcher.group(2);
 
-			languageKey = TextFormatter.format(languageKey, TextFormatter.P);
+			languageKey = TextFormatter.format(languageKey, TextFormatter.K);
 
 			return new String[] {languageKey};
 		}
@@ -2109,6 +2150,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		}
 		else {
 			BNDSettings bndSettings = getBNDSettings(fileName);
+
+			if (bndSettings == null) {
+				return null;
+			}
 
 			releaseVersion = bndSettings.getReleaseVersion();
 
@@ -2412,6 +2457,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	}
 
 	protected boolean hasRedundantParentheses(String s) {
+		//if (s.matches("\\w+ instanceof \\w+")) {
+		//	return true;
+		//}
+
 		int x = -1;
 
 		while (true) {
@@ -2535,6 +2584,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 	protected boolean isExcludedPath(
 		String property, String path, int lineCount, String javaTermName) {
+
+		if (property == null) {
+			return false;
+		}
 
 		List<String> excludes = _exclusionPropertiesMap.get(property);
 
@@ -2702,7 +2755,9 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 			String definition = matcher.group();
 
-			if (Validator.isNotNull(matcher.group(1))) {
+			if (Validator.isNotNull(matcher.group(1)) &&
+				definition.endsWith("\n")) {
+
 				definition = definition.substring(0, definition.length() - 1);
 			}
 
@@ -2939,6 +2994,9 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		return line;
 	}
 
+	protected static final String LANGUAGE_KEYS_CHECK_EXCLUDES =
+		"language.keys.check.excludes";
+
 	protected static final String METHOD_CALL_SORT_EXCLUDES =
 		"method.call.sort.excludes";
 
@@ -2981,6 +3039,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		"^(\".\"|StringPool\\.([A-Z_]+))$");
 	protected static Pattern stringUtilReplacePattern = Pattern.compile(
 		"StringUtil\\.(replace(First|Last)?)\\((.*?)\\);\n", Pattern.DOTALL);
+	protected static boolean subrepository;
 	protected static Pattern taglibSessionKeyPattern = Pattern.compile(
 		"<liferay-ui:error [^>]+>|<liferay-ui:success [^>]+>",
 		Pattern.MULTILINE);
@@ -3015,6 +3074,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 			_sourceFormatterHelper.init();
 
 			portalSource = _isPortalSource();
+			subrepository = _isSubrepository();
 
 			_sourceFormatterMessagesMap = new HashMap<>();
 		}
@@ -3043,8 +3103,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 			return true;
 		}
 
-		// Subrepositories should be treated as portal
+		return false;
+	}
 
+	private boolean _isSubrepository() {
 		String baseDirAbsolutePath = getAbsolutePath(
 			sourceFormatterArgs.getBaseDirName());
 
@@ -3086,7 +3148,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	private Map<String, String> _compatClassNamesMap;
 	private String _copyright;
 	private final Pattern _definitionPattern = Pattern.compile(
-		"^([A-Za-z-]+?)[:=][\\s\\S]*?([^\\\\]\n|\\Z)", Pattern.MULTILINE);
+		"^([A-Za-z-]+?)[:=](\n|[\\s\\S]*?([^\\\\]\n|\\Z))", Pattern.MULTILINE);
 	private final Pattern _emptyLineBetweenTagsPattern = Pattern.compile(
 		"\n(\t*)</([-\\w:]+)>(\n*)(\t*)<([-\\w:]+)[> ]");
 	private final Pattern _emptyLineInNestedTagsPattern1 = Pattern.compile(

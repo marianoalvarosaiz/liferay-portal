@@ -14,6 +14,13 @@
 
 package com.liferay.jenkins.results.parser;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.dom4j.Element;
+
+import org.json.JSONObject;
+
 /**
  * @author Peter Yoo
  */
@@ -30,5 +37,33 @@ public class SourceBuild extends BaseBuild {
 	@Override
 	public void findDownstreamBuilds() {
 	}
+
+	@Override
+	public JSONObject getTestReportJSONObject() {
+		return null;
+	}
+
+	@Override
+	public List<TestResult> getTestResults(String testStatus) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	protected FailureMessageGenerator[] getFailureMessageGenerators() {
+		return _FAILURE_MESSAGE_GENERATORS;
+	}
+
+	@Override
+	protected Element getGitHubMessageJobResultsElement() {
+		return null;
+	}
+
+	private static final FailureMessageGenerator[] _FAILURE_MESSAGE_GENERATORS =
+		{
+			new RebaseFailureMessageGenerator(),
+			new SourceFormatFailureMessageGenerator(),
+
+			new GenericFailureMessageGenerator()
+		};
 
 }

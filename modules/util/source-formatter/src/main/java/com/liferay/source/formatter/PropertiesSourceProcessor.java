@@ -231,7 +231,8 @@ public class PropertiesSourceProcessor extends BaseSourceProcessor {
 		String newContent = content;
 
 		if (portalSource && !fileName.contains("/samples/") &&
-			fileName.endsWith("Language.properties")) {
+			fileName.endsWith("Language.properties") &&
+			!isExcludedPath(LANGUAGE_KEYS_CHECK_EXCLUDES, absolutePath)) {
 
 			checkLanguageProperties(fileName);
 		}
@@ -245,7 +246,9 @@ public class PropertiesSourceProcessor extends BaseSourceProcessor {
 		else if (fileName.endsWith("source-formatter.properties")) {
 			formatSourceFormatterProperties(fileName, content);
 		}
-		else if (!portalSource || !fileName.endsWith("portal.properties")) {
+		else if ((!portalSource && !subrepository) ||
+				 !fileName.endsWith("portal.properties")) {
+
 			formatPortalProperties(fileName, content);
 		}
 
@@ -395,7 +398,7 @@ public class PropertiesSourceProcessor extends BaseSourceProcessor {
 				"include-and-override=portlet-ext.properties\n\n" + content;
 		}
 
-		if (!portalSource) {
+		if (!portalSource && !subrepository) {
 			return content;
 		}
 
@@ -664,6 +667,10 @@ public class PropertiesSourceProcessor extends BaseSourceProcessor {
 			true);
 
 		for (String fileName : modulesLanguagePropertiesNames) {
+			if (isExcludedPath(LANGUAGE_KEYS_CHECK_EXCLUDES, fileName)) {
+				continue;
+			}
+
 			Properties properties = new Properties();
 
 			fileName = StringUtil.replace(
