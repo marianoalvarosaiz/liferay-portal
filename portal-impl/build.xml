@@ -322,6 +322,7 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 
 		<gradle-execute dir="../modules" task="buildService">
 			<arg value="-DbuildService.skipReadOnly=${build.services.skip.read.only}" />
+			<arg value="-Pcom.liferay.portal.tools.service.builder.ignore.local=false" />
 		</gradle-execute>
 	</target>
 
@@ -563,6 +564,7 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 			classname="com.liferay.source.formatter.SourceFormatter"
 			classpathref="source.formatter.classpath"
 			dir="${source.formatter.dir}"
+			failonerror="${source.fail.on.error}"
 			fork="true"
 			newenvironment="true"
 		>

@@ -1710,6 +1710,7 @@ public class VerifyProperties extends VerifyProcess {
 		"com.liferay.portal.servlet.filters.charbufferpool." +
 			"CharBufferPoolFilter",
 		"com.liferay.portal.servlet.filters.monitoring.MonitoringFilter",
+		"com.liferay.portal.servlet.filters.secure.SecureFilter",
 		"com.liferay.portal.servlet.filters.validhtml.ValidHtmlFilter",
 		"commons.pool.enabled", "company.settings.form.configuration",
 		"company.settings.form.identification",
@@ -1809,6 +1810,7 @@ public class VerifyProperties extends VerifyProcess {
 		"message.boards.thread.locking.enabled",
 		"message.boards.thread.previous.and.next.navigation.enabled",
 		"message.boards.thread.views", "message.boards.thread.views.default",
+		"microsoft.translator.client.id", "microsoft.translator.client.secret",
 		"mobile.device.styling.wap.enabled", "module.framework.initial.bundles",
 		"msn.login", "msn.password", "multicast.group.address[\"hibernate\"]",
 		"multicast.group.port[\"hibernate\"]",

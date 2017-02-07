@@ -46,7 +46,7 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 	protected void checkDirectoryAndBundleName(
 		String fileName, String absolutePath, String content) {
 
-		if (!portalSource || !isModulesFile(absolutePath) ||
+		if ((!portalSource && !subrepository) || !isModulesFile(absolutePath) ||
 			!fileName.endsWith("/bnd.bnd") ||
 			absolutePath.contains("/testIntegration/") ||
 			absolutePath.contains("/third-party/")) {
@@ -250,7 +250,14 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 		content = formatBundleClassPath(content);
 
-		if (portalSource && isModulesFile(absolutePath) &&
+		int pos = fileName.lastIndexOf(StringPool.SLASH);
+
+		String shortFileName = fileName.substring(pos + 1);
+
+		content = formatLineBreaks(shortFileName, content);
+		content = formatWhitespace(shortFileName, content);
+
+		if ((portalSource || subrepository) && isModulesFile(absolutePath) &&
 			!fileName.endsWith("test-bnd.bnd")) {
 
 			content = formatIncludeResource(content);
@@ -381,6 +388,73 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 
 		return sortDefinitionProperties(
 			content, includeResources, new IncludeResourceComparator());
+	}
+
+	protected String formatLineBreaks(
+		String content, Map<String, String> definitionsKeysMap) {
+
+		if (definitionsKeysMap == null) {
+			return content;
+		}
+
+		for (Map.Entry<String, String> entry : definitionsKeysMap.entrySet()) {
+			String definitionKey = entry.getValue();
+
+			Pattern pattern = Pattern.compile(" " + definitionKey + ":");
+
+			Matcher matcher = pattern.matcher(content);
+
+			if (matcher.find()) {
+				return StringUtil.replaceFirst(
+					content, " ", "\n", matcher.start());
+			}
+		}
+
+		return content;
+	}
+
+	protected String formatLineBreaks(String shortFileName, String content) {
+		content = formatLineBreaks(content, getDefinitionKeysMap());
+
+		Map<String, Map<String, String>> fileSpecificDefinitionKeysMap =
+			getFileSpecificDefinitionKeysMap();
+
+		return formatLineBreaks(
+			content, fileSpecificDefinitionKeysMap.get(shortFileName));
+	}
+
+	protected String formatWhitespace(
+		String content, Map<String, String> definitionsKeysMap) {
+
+		if (definitionsKeysMap == null) {
+			return content;
+		}
+
+		for (Map.Entry<String, String> entry : definitionsKeysMap.entrySet()) {
+			String definitionKey = entry.getValue();
+
+			Pattern pattern = Pattern.compile(
+				"(\\A|\n)" + definitionKey + ":[^ \\\\\n]");
+
+			Matcher matcher = pattern.matcher(content);
+
+			if (matcher.find()) {
+				return StringUtil.insert(
+					content, StringPool.SPACE, matcher.end() - 1);
+			}
+		}
+
+		return content;
+	}
+
+	protected String formatWhitespace(String shortFileName, String content) {
+		content = formatWhitespace(content, getDefinitionKeysMap());
+
+		Map<String, Map<String, String>> fileSpecificDefinitionKeysMap =
+			getFileSpecificDefinitionKeysMap();
+
+		return formatWhitespace(
+			content, fileSpecificDefinitionKeysMap.get(shortFileName));
 	}
 
 	protected Map<String, String> getDefinitionKeysMap() {
@@ -579,10 +653,23 @@ public class BNDSourceProcessor extends BaseSourceProcessor {
 				return includeResource1.compareToIgnoreCase(includeResource2);
 			}
 
+			String importString1 = includeResource1.substring(pos1 + 6);
+			String importString2 = includeResource2.substring(pos2 + 6);
+
+			if (importString1.endsWith(".class")) {
+				importString1 = importString1.substring(
+					0, importString1.length() - 6);
+			}
+
+			if (importString2.endsWith(".class")) {
+				importString2 = importString2.substring(
+					0, importString2.length() - 6);
+			}
+
 			ImportPackage importPackage1 = new ImportPackage(
-				includeResource1.substring(pos1 + 6), false, includeResource1);
+				importString1, false, includeResource1);
 			ImportPackage importPackage2 = new ImportPackage(
-				includeResource2.substring(pos2 + 6), false, includeResource2);
+				importString2, false, includeResource2);
 
 			return importPackage1.compareTo(importPackage2);
 		}

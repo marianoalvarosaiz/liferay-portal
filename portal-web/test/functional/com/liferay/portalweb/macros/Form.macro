@@ -74,7 +74,11 @@
 	</command>
 
 	<command name="configureWorkflow">
-		<execute function="Select" locator1="AssetWorkflow#ALL_STRUCTURES_WORKFLOW_SELECT" value1="${workflowDefinition}" />
+		<execute function="Click" locator1="Form#SETTINGS_TAB_WORKFLOW_CONFIGURATION_FIELD" />
+
+		<var name="key_workflowDefinition" value="${workflowDefinition}" />
+
+		<execute function="AssertClick" locator1="Form#SETTINGS_TAB_WORKFLOW_CONFIGURATION" value1="${workflowDefinition}" />
 
 		<execute macro="Button#clickDone" />
 	</command>
@@ -92,6 +96,11 @@
 		<execute macro="FormFields#selectSelectOption">
 			<var name="fieldName" value="ddmDataProviderInstanceId" />
 			<var name="selectOption" value="${dataProvider}" />
+		</execute>
+
+		<execute macro="FormFields#selectSelectOption">
+			<var name="fieldName" value="ddmDataProviderInstanceOutput" />
+			<var name="selectOption" value="${dataProviderOutput}" />
 		</execute>
 	</command>
 
@@ -169,6 +178,12 @@
 
 	<command name="gotoBasicTab">
 		<execute function="AssertClick" locator1="Form#SIDEBAR_BASIC_TAB" value1="Basic" />
+	</command>
+
+	<command name="gotoFormPage">
+		<var name="key_formPageName" value="${formPageName}" />
+
+		<execute function="Click" locator1="Form#FORM_PAGE" />
 	</command>
 
 	<command name="previewForm">

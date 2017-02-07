@@ -1,4 +1,10 @@
 <definition>
+	<command name="_addCP">
+		<execute macro="LexiconEntry#gotoAdd" />
+
+		<execute function="Type" locator1="TextInput#NAME" value1="${tagName}" />
+	</command>
+
 	<command name="addAutoAssertionTagViaBlogsPG">
 		<execute macro="BlogsNavigator#gotoAddEntry" />
 
@@ -23,48 +29,21 @@
 	</command>
 
 	<command name="addCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="Tag#_addCP">
+			<var name="tagName" value="${tagName}" />
+		</execute>
 
-		<if>
-			<equals arg1="${tagNameVariation}" arg2="Variation" />
-			<then>
-				<var name="errorMessage1"><![CDATA[, = > / < [ { % | + # ` ? " ; / * ~.]]></var>
+		<execute macro="PortletEntry#save" />
+	</command>
 
-				<execute function="Type" locator1="TextInput#NAME" value1="${tagEntry}" />
-				<execute macro="Button#clickSave" />
+	<command name="addInvalidCP">
+		<execute macro="Tag#_addCP">
+			<var name="tagName" value="${tagName}" />
+		</execute>
 
-				<execute macro="Alert#viewRequestFailedToComplete" />
-			</then>
-			<elseif>
-				<equals arg1="${tagNameVariation}" arg2="Duplicate" />
-				<then>
-					<execute function="Type" locator1="TextInput#NAME" value1="${tagName}" />
+		<execute macro="Button#clickSave" />
 
-					<execute macro="Button#clickSave" />
-
-					<execute macro="Alert#viewSuccessMessage" />
-
-					<var name="key_tagName" value="${tagName}" />
-
-					<execute function="AssertTextEquals" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName}" />
-
-					<execute function="Click" locator1="Button#PLUS" />
-
-					<execute function="Type" locator1="TextInput#NAME" value1="${tagName}" />
-
-					<execute macro="Button#clickSave" />
-
-					<execute macro="Alert#viewRequestFailedToComplete" />
-				</then>
-			</elseif>
-			<else>
-				<execute function="Type" locator1="TextInput#NAME" value1="${tagName}" />
-
-				<execute macro="Button#clickSave" />
-
-				<execute macro="Alert#viewSuccessMessage" />
-			</else>
-		</if>
+		<execute macro="Alert#viewRequestFailedToComplete" />
 	</command>
 
 	<command name="addViaSiteCP">
@@ -80,9 +59,9 @@
 	</command>
 
 	<command name="addWithNullTitleCP">
-		<execute function="Click" locator1="Button#PLUS" />
-
-		<execute function="Type" locator1="TextInput#NAME" value1="${tagEntry}" />
+		<execute macro="Tag#_addCP">
+			<var name="tagName" value="${tagName}" />
+		</execute>
 
 		<execute macro="Button#clickSave" />
 
@@ -129,57 +108,35 @@
 	</command>
 
 	<command name="editCancelCP">
-		<var name="key_tagName" value="${tagName}" />
-
-		<execute function="Click" locator1="Tags#TAG_ENTRY_TABLE_ACTIONS_ARROW" />
-
-		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Edit" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="${tagName}" />
+		</execute>
 
 		<execute macro="SiteAdmin#viewPortletTitle">
 			<var name="portletTitle" value="${tagName}" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#CANCEL" value1="Cancel" />
+		<execute macro="Button#clickCancel" />
 
-		<execute function="AssertTextEquals" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName}" />
+		<execute function="AssertTextEquals" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName}">
+			<var name="key_tagName" value="${tagName}" />
+		</execute>
 	</command>
 
 	<command name="editCP">
-		<var name="key_tagName" value="${tagName}" />
-
-		<execute function="Click" locator1="Tags#TAG_ENTRY_TABLE_ACTIONS_ARROW" />
-
-		<execute function="AssertClick" locator1="MenuItem#EDIT" value1="Edit" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="${tagName}" />
+		</execute>
 
 		<execute macro="SiteAdmin#viewPortletTitle">
 			<var name="portletTitle" value="${tagName}" />
 		</execute>
 
-		<execute function="Type" locator1="Tags#NAME_FIELD" value1="${tagNameEdit}" />
+		<execute function="Type" locator1="TextInput#NAME" value1="${tagNameEdit}" />
 
 		<execute macro="PortletEntry#save" />
-	</command>
-
-	<command name="mergeMultipleTags">
-		<execute function="Check#checkAll" locator1="Tags#ALL_TAGS_CHECKBOX" />
-
-		<execute function="Click" locator1="Icon#MERGE" />
-
-		<execute function="Select" locator1="Tags#MERGE_TAGS_INTO_THIS_TAG_SELECT" value1="${tagName2}" />
-
-		<execute function="AssertClickNoError" locator1="Button#SAVE" value1="Save" />
-
-		<execute function="Confirm#assertPartialConfirmation" locator1="${mergeConfirmation}" />
-
-		<execute macro="Alert#viewSuccessMessage" />
-
-		<var name="key_tagName" value="${tagName2}" />
-
-		<execute function="AssertTextEquals" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName2}" />
-
-		<var name="key_tagName" value="${tagName1}" />
-
-		<execute function="AssertTextNotPresent" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName1}" />
 	</command>
 
 	<command name="mergeSingleTagWarning">
@@ -192,6 +149,49 @@
 		<execute function="AssertClickNoError" locator1="Button#SAVE" value1="Save" />
 
 		<execute function="Confirm" value1="Please choose at least 2 tags." />
+	</command>
+
+	<command name="mergeTags">
+		<if>
+			<isset var="tagNameList" />
+			<then>
+				<for list="${tagNameList}" param="tagName">
+					<execute function="Check" locator1="Tags#TAG_ENTRY_TABLE_CHECKBOX">
+						<var name="key_tagName" value="${tagName}" />
+					</execute>
+				</for>
+			</then>
+			<else>
+				<execute function="Check#checkAll" locator1="Tags#ALL_TAGS_CHECKBOX" />
+			</else>
+		</if>
+
+		<execute function="Click" locator1="Icon#MERGE" />
+
+		<if>
+			<isset var="selectTagName" />
+			<then>
+				<execute function="Click" locator1="Button#SELECT" value1="Select" />
+
+				<execute function="SelectFrame" locator1="IFrame#DIALOG" />
+
+				<execute function="Check" locator1="Tags#TAG_ENTRY_TABLE_CHECKBOX">
+					<var name="key_tagName" value="${selectTagName}" />
+				</execute>
+
+				<execute function="SelectFrameTop" />
+
+				<execute macro="Button#clickDone" />
+			</then>
+		</if>
+
+		<execute function="Select" locator1="Tags#MERGE_TAGS_INTO_THIS_TAG_SELECT" value1="${selectTagToMergeTo}" />
+
+		<execute function="AssertClickNoError" locator1="Button#SAVE" value1="Save" />
+
+		<execute function="Confirm#assertPartialConfirmation" locator1="${mergeConfirmation}" />
+
+		<execute macro="Alert#viewSuccessMessage" />
 	</command>
 
 	<command name="searchTagCP">
@@ -245,6 +245,12 @@
 		<var name="key_tagName" value="${tagName}" />
 
 		<execute function="AssertTextEquals" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName}" />
+	</command>
+
+	<command name="viewMergedTagsCP">
+		<execute function="AssertTextNotPresent" locator1="Tags#TAG_ENTRY_TABLE_NAME" value1="${tagName}">
+			<var name="key_tagName" value="${tagName}" />
+		</execute>
 	</command>
 
 	<command name="viewTagsCP">

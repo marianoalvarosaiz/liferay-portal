@@ -117,6 +117,11 @@ public class LiferayThemeDefaultsPlugin implements Plugin<Project> {
 			zipResourcesImporterArchivesTask, frontendThemeStyledProject,
 			frontendThemeUnstyledProject);
 
+		GradleUtil.excludeTasksWithProperty(
+			project, LiferayOSGiDefaultsPlugin.SNAPSHOT_IF_STALE_PROPERTY_NAME,
+			true, MavenPlugin.INSTALL_TASK_NAME,
+			BasePlugin.UPLOAD_ARCHIVES_TASK_NAME);
+
 		project.afterEvaluate(
 			new Action<Project>() {
 
@@ -376,7 +381,10 @@ public class LiferayThemeDefaultsPlugin implements Plugin<Project> {
 	}
 
 	private void _configureProject(Project project) {
-		project.setGroup(_GROUP);
+		String group = GradleUtil.getGradlePropertiesValue(
+			project, "project.group", _GROUP);
+
+		project.setGroup(group);
 	}
 
 	private void _configureTaskExecuteGulp(

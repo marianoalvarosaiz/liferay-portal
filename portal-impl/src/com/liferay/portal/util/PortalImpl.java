@@ -189,6 +189,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.QName;
 import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.model.impl.CookieRemotePreference;
+import com.liferay.portal.model.impl.LayoutTypeImpl;
 import com.liferay.portal.plugin.PluginPackageUtil;
 import com.liferay.portal.security.jaas.JAASHelper;
 import com.liferay.portal.security.lang.DoPrivilegedUtil;
@@ -2725,14 +2726,16 @@ public class PortalImpl implements Portal {
 			variables.put("liferay:pvlsgid", "0");
 		}
 
-		LayoutType layoutType = layout.getLayoutType();
-
 		UnicodeProperties typeSettingsProperties =
-			layoutType.getTypeSettingsProperties();
+			layout.getTypeSettingsProperties();
 
 		variables.putAll(typeSettingsProperties);
 
-		return layoutType.getURL(variables);
+		LayoutTypeController layoutTypeController =
+			LayoutTypeControllerTracker.getLayoutTypeController(
+				layout.getType());
+
+		return LayoutTypeImpl.getURL(layoutTypeController.getURL(), variables);
 	}
 
 	@Override
@@ -2765,10 +2768,8 @@ public class PortalImpl implements Portal {
 			layoutActualURL = layoutActualURL.concat(queryString);
 		}
 		else if (params.isEmpty()) {
-			LayoutType layoutType = layout.getLayoutType();
-
 			UnicodeProperties typeSettingsProperties =
-				layoutType.getTypeSettingsProperties();
+				layout.getTypeSettingsProperties();
 
 			queryString = typeSettingsProperties.getProperty("query-string");
 
@@ -2787,9 +2788,11 @@ public class PortalImpl implements Portal {
 	public String getLayoutFriendlyURL(Layout layout, ThemeDisplay themeDisplay)
 		throws PortalException {
 
-		LayoutType layoutType = layout.getLayoutType();
+		LayoutTypeController layoutTypeController =
+			LayoutTypeControllerTracker.getLayoutTypeController(
+				layout.getType());
 
-		if (!layoutType.isURLFriendliable()) {
+		if (!layoutTypeController.isURLFriendliable()) {
 			return null;
 		}
 
@@ -3494,9 +3497,8 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public String getLocalizedFriendlyURL(
-			HttpServletRequest request, Layout layout, Locale locale,
-			Locale originalLocale)
-		throws Exception {
+		HttpServletRequest request, Layout layout, Locale locale,
+		Locale originalLocale) {
 
 		String contextPath = getPathContext();
 
@@ -3658,11 +3660,9 @@ public class PortalImpl implements Portal {
 	public HttpServletRequest getOriginalServletRequest(
 		HttpServletRequest request) {
 
-		HttpServletRequest originalRequest = null;
-
-		HttpServletRequestWrapper currentRequestWrapper = null;
-
 		HttpServletRequest currentRequest = request;
+		HttpServletRequestWrapper currentRequestWrapper = null;
+		HttpServletRequest originalRequest = null;
 
 		while (currentRequest instanceof HttpServletRequestWrapper) {
 			if (currentRequest instanceof
@@ -4380,8 +4380,18 @@ public class PortalImpl implements Portal {
 			friendlyURL = friendlyURL.substring(0, friendlyURL.length() - 1);
 		}
 
-		Layout layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
-			groupId, privateLayout, friendlyURL);
+		Layout layout = null;
+
+		if (Validator.isNotNull(friendlyURL)) {
+			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
+				groupId, privateLayout, friendlyURL);
+		}
+		else {
+			long defaultPlid = LayoutLocalServiceUtil.getDefaultPlid(
+				groupId, privateLayout);
+
+			layout = LayoutLocalServiceUtil.getLayout(defaultPlid);
+		}
 
 		return new LayoutQueryStringComposite(layout, friendlyURL, queryString);
 	}
@@ -6670,8 +6680,8 @@ public class PortalImpl implements Portal {
 			}
 		}
 		else if ((e instanceof PortalException) && _log.isDebugEnabled()) {
-			if ((e instanceof NoSuchLayoutException) ||
-				(e instanceof PrincipalException)) {
+			if (e instanceof NoSuchLayoutException ||
+				e instanceof PrincipalException) {
 
 				String msg = e.getMessage();
 
@@ -7065,13 +7075,6 @@ public class PortalImpl implements Portal {
 			Portlet portlet = PortletLocalServiceUtil.getPortletById(
 				getCompanyId(request), portletId);
 
-			if (!PortletPermissionUtil.contains(
-					permissionChecker, getScopeGroupId(request), layout,
-					portlet, ActionKeys.VIEW)) {
-
-				return portletMode;
-			}
-
 			boolean updateLayout = false;
 
 			if (portletMode.equals(LiferayPortletMode.ABOUT) &&
@@ -7150,7 +7153,11 @@ public class PortalImpl implements Portal {
 				updateLayout = true;
 			}
 
-			if (updateLayout) {
+			if (updateLayout &&
+				PortletPermissionUtil.contains(
+					permissionChecker, getScopeGroupId(request), layout,
+					portlet, ActionKeys.VIEW)) {
+
 				LayoutClone layoutClone = LayoutCloneFactory.getInstance();
 
 				if (layoutClone != null) {
@@ -7314,7 +7321,12 @@ public class PortalImpl implements Portal {
 			long companyId, long groupId, Portlet portlet)
 		throws PortalException {
 
-		String rootPortletId = portlet.getRootPortletId();
+		String name = ResourceActionsUtil.getPortletBaseResource(
+			portlet.getRootPortletId());
+
+		if (Validator.isNull(name)) {
+			return;
+		}
 
 		Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
@@ -7322,12 +7334,7 @@ public class PortalImpl implements Portal {
 			groupId = group.getLiveGroupId();
 		}
 
-		String name = ResourceActionsUtil.getPortletBaseResource(rootPortletId);
 		String primaryKey = String.valueOf(groupId);
-
-		if (Validator.isNull(name)) {
-			return;
-		}
 
 		int count =
 			ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
@@ -7493,9 +7500,11 @@ public class PortalImpl implements Portal {
 	}
 
 	protected Layout getBrowsableLayout(Layout layout) {
-		LayoutType layoutType = layout.getLayoutType();
+		LayoutTypeController layoutTypeController =
+			LayoutTypeControllerTracker.getLayoutTypeController(
+				layout.getType());
 
-		if (layoutType.isBrowsable()) {
+		if (layoutTypeController.isBrowsable()) {
 			return layout;
 		}
 
@@ -7504,9 +7513,11 @@ public class PortalImpl implements Portal {
 		List<Layout> childLayouts = layout.getAllChildren();
 
 		for (Layout childLayout : childLayouts) {
-			LayoutType childLayoutType = childLayout.getLayoutType();
+			LayoutTypeController childLayoutTypeController =
+				LayoutTypeControllerTracker.getLayoutTypeController(
+					childLayout.getType());
 
-			if (childLayoutType.isBrowsable()) {
+			if (childLayoutTypeController.isBrowsable()) {
 				browsableChildLayout = childLayout;
 
 				break;
@@ -7571,8 +7582,7 @@ public class PortalImpl implements Portal {
 			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_SITES) ||
 			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_SYSTEM) ||
 			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_USERS) ||
-			portletCategory.equals(
-				PortletCategoryKeys.USER_MY_ACCOUNT)) {
+			portletCategory.equals(PortletCategoryKeys.USER_MY_ACCOUNT)) {
 
 			return GroupLocalServiceUtil.fetchGroup(
 				companyId, GroupConstants.CONTROL_PANEL);
@@ -7714,14 +7724,14 @@ public class PortalImpl implements Portal {
 				(canonicalURL ||
 				 !StringUtil.equalsIgnoreCase(virtualHostname, _LOCALHOST))) {
 
-				virtualHostname = getCanonicalDomain(
+				String canonicalDomain = getCanonicalDomain(
 					virtualHostname, portalDomain);
 
 				virtualHostname = getPortalURL(
-					virtualHostname, themeDisplay.getServerPort(),
+					canonicalDomain, themeDisplay.getServerPort(),
 					themeDisplay.isSecure());
 
-				if (canonicalURL || virtualHostname.contains(portalDomain)) {
+				if (canonicalURL || canonicalDomain.startsWith(portalDomain)) {
 					String path = StringPool.BLANK;
 
 					if (themeDisplay.isWidget()) {

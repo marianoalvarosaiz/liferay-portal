@@ -1,5 +1,6 @@
 <definition component-name="portal-workflow">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="custom.properties" value="default.layout.template.id=1_column${line.separator}company.default.time.zone=America/Los_Angeles" />
 	<property name="testray.main.component.name" value="Workflow" />
 
@@ -82,7 +83,7 @@
 	</tear-down>
 
 	<command name="ApproveEventWithInvitedUser" priority="5">
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 
 		<execute macro="TestCase#getSiteName">
 			<return from="siteName" name="siteName" />
@@ -403,7 +404,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewPendingStatusInEventDetails">
+	<command name="ViewPendingStatusInEventDetails" priority="2">
 		<execute macro="CalendarNavigator#gotoView">
 			<var name="viewType" value="Week" />
 		</execute>
