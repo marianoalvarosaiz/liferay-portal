@@ -1,6 +1,8 @@
 AUI.add(
 	'liferay-ddm-form-field-select',
 	function(A) {
+		var CSS_SELECT_TRIGGER_ACTION = 'form-builder-select-field';
+
 		var Lang = A.Lang;
 
 		var TPL_OPTION = '<option>{label}</option>';
@@ -41,11 +43,25 @@ AUI.add(
 					}
 				},
 
+				AUGMENTS: [
+					Liferay.DDM.Field.SelectFieldSearchSupport
+				],
+
 				EXTENDS: Liferay.DDM.Renderer.Field,
 
 				NAME: 'liferay-ddm-form-field-select',
 
 				prototype: {
+					initializer: function() {
+						var instance = this;
+
+						instance._eventHandlers.push(
+							A.one('doc').after('click', A.bind(instance._afterClickOutside, instance)),
+							instance.bindContainerEvent('mousedown', instance._afterClickSelectTrigger, '.' + CSS_SELECT_TRIGGER_ACTION),
+							instance.bindContainerEvent('mousedown', instance._onClickItem, 'li')
+						);
+					},
+
 					cleanSelect: function() {
 						var instance = this;
 
@@ -56,6 +72,20 @@ AUI.add(
 						instance.set('value', []);
 					},
 
+					closeList: function() {
+						var instance = this;
+
+						if (!instance.get('readOnly') && instance._isListOpen()) {
+							var container = instance.get('container');
+
+							container.one('.drop-chosen').addClass('hide');
+
+							container.one('.form-builder-select-field').removeClass('active');
+
+							instance.fire('closeList');
+						}
+					},
+
 					getTemplateContext: function() {
 						var instance = this;
 
@@ -63,8 +93,10 @@ AUI.add(
 							SelectField.superclass.getTemplateContext.apply(instance, arguments),
 							{
 								options: instance.get('options'),
+								selectCaretDoubleIcon: Liferay.Util.getLexiconIconTpl('caret-double-l', 'icon-monospaced'),
+								selectSearchIcon: Liferay.Util.getLexiconIconTpl('search', 'icon-monospaced'),
 								strings: instance.get('strings'),
-								value: instance.getValueArray()
+								value: instance.getValueSelected()
 							}
 						);
 					},
@@ -93,10 +125,20 @@ AUI.add(
 							value = inputNode.val();
 						}
 
+						if (!value) {
+							var contextValue = instance._getContextValue();
+
+							var hasOption = instance._hasOption(contextValue);
+
+							if (contextValue && !hasOption) {
+								value = contextValue;
+							}
+						}
+
 						return value;
 					},
 
-					getValueArray: function() {
+					getValueSelected: function() {
 						var instance = this;
 
 						var value = instance.get('value');
@@ -105,7 +147,21 @@ AUI.add(
 							value = [value];
 						}
 
-						return value;
+						var values = instance._getOptionsSelected(value);
+
+						if (!instance.get('multiple')) {
+							values = values[0];
+						}
+
+						return values;
+					},
+
+					openList: function() {
+						var instance = this;
+
+						instance._getSelectTriggerAction().addClass('active');
+
+						instance.get('container').one('.drop-chosen').toggleClass('hide');
 					},
 
 					render: function() {
@@ -140,27 +196,19 @@ AUI.add(
 
 						var inputNode = instance.getInputNode();
 
-						if (Lang.isArray(value)) {
-							inputNode.all('option').each(
-								function(optionNode, index) {
-									var selected = value.indexOf(optionNode.val()) > -1;
-
-									if (index === 0 && value.length === 0) {
-										selected = true;
-									}
-
-									if (selected) {
-										optionNode.attr('selected', selected);
-									}
-									else {
-										optionNode.removeAttribute('selected');
-									}
-								}
-							);
+						if (!Lang.isArray(value)) {
+							value = [value];
 						}
-						else {
-							inputNode.val(value);
-						}
+
+						inputNode.all('option').each(
+							function(optionNode) {
+								instance._setSelectNodeOptions(optionNode, value);
+							}
+						);
+
+						instance.set('value', value);
+
+						instance.render();
 					},
 
 					showErrorMessage: function() {
@@ -173,6 +221,42 @@ AUI.add(
 						var inputGroup = container.one('.input-select-wrapper');
 
 						inputGroup.insert(container.one('.help-block'), 'after');
+					},
+
+					_afterClickOutside: function(event) {
+						var instance = this;
+
+						if (instance._isClickingOutSide(event)) {
+							instance.closeList();
+						}
+					},
+
+					_afterClickSelectTrigger: function(event) {
+						event.preventDefault();
+
+						var instance = this;
+
+						if (!instance.get('readOnly')) {
+							var target = event.target;
+
+							if (target.ancestor('.search-chosen')) {
+								return;
+							}
+
+							instance.openList();
+						}
+					},
+
+					_getContextValue: function() {
+						var instance = this;
+
+						var contextValue = instance.get('value');
+
+						if (Lang.isArray(contextValue)) {
+							contextValue = contextValue[0];
+						}
+
+						return contextValue;
 					},
 
 					_getDataSourceType: function(value) {
@@ -192,9 +276,119 @@ AUI.add(
 					},
 
 					_getOptions: function(options) {
+						return options || [];
+					},
+
+					_getOptionsSelected: function(value) {
 						var instance = this;
 
-						return options || [];
+						var options = instance.get('options');
+
+						var optionsSelected = [];
+
+						if (Lang.isArray(value)) {
+							value.forEach(
+								function(value, index) {
+									options.forEach(
+										function(option, index) {
+											if (value && option.value === value) {
+												optionsSelected.push(option);
+											}
+										}
+									);
+								}
+							);
+						}
+
+						return optionsSelected;
+					},
+
+					_getSelectTriggerAction: function() {
+						var instance = this;
+
+						return instance.get('container').one('.' + CSS_SELECT_TRIGGER_ACTION);
+					},
+
+					_hasOption: function(value) {
+						var instance = this;
+
+						var hasOption = false;
+
+						var inputNode = instance.getInputNode();
+
+						inputNode.all('option').each(
+							function(optionNode) {
+								if (optionNode.val() === value) {
+									hasOption = true;
+								}
+							}
+						);
+
+						return hasOption;
+					},
+
+					_isClickingOutSide: function(event) {
+						var instance = this;
+
+						var ancestor = event.target.ancestor('.' + CSS_SELECT_TRIGGER_ACTION);
+
+						return !ancestor || ancestor !== instance._getSelectTriggerAction();
+					},
+
+					_isListOpen: function() {
+						var instance = this;
+
+						var container = instance.get('container');
+
+						if (!container.one('.drop-chosen')) {
+							return false;
+						}
+
+						var openList = container.one('.drop-chosen').hasClass('hide');
+
+						return !openList;
+					},
+
+					_onClickItem: function(event) {
+						var instance = this;
+
+						var value = event.target.getAttribute('data-option-value');
+
+						instance.setValue(value);
+					},
+
+					_selectDOMOption: function(optionNode, value) {
+						var selected = false;
+
+						if (Lang.isArray(value)) {
+							value = value[0];
+						}
+
+						if (value) {
+							if (optionNode.val()) {
+								selected = value.indexOf(optionNode.val()) > -1;
+							}
+
+							if (selected) {
+								optionNode.attr('selected', selected);
+							}
+							else {
+								optionNode.removeAttribute('selected');
+							}
+						}
+					},
+
+					_setSelectNodeOptions: function(optionNode, value) {
+						var instance = this;
+
+						if (instance.get('multiple')) {
+							for (var i = 0; i < value.length; i++) {
+								instance._selectDOMOption(optionNode, value[i]);
+							}
+						}
+						else {
+							instance._selectDOMOption(optionNode, value);
+						}
 					}
 				}
 			}
@@ -204,6 +398,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['liferay-ddm-form-renderer-field']
+		requires: ['liferay-ddm-form-field-select', 'liferay-ddm-form-field-select-search-support', 'liferay-ddm-form-renderer-field']
 	}
 );

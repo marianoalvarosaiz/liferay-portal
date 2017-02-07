@@ -51,8 +51,8 @@
 							{/call}
 
 							{if not isLast($condition)}
-							, <br />
-							<b> and </b>
+							<br />
+							<b> {$condition.logicOperator} </b>
 							{/if}
 						{/foreach}
 
@@ -159,5 +159,5 @@
  * @param action
  */
 {template .action autoescape="deprecated-contextual"}
-	<b>{$action.action}</b> {call .badge} {param content: isNonnull($action.label) ? $action.label : $action.target /} {/call}
+	<b>{$action|noAutoescape}</b>
 {/template}

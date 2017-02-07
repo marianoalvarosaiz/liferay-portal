@@ -23,10 +23,12 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.gradle.StartParameter;
@@ -43,6 +45,7 @@ import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.invocation.Gradle;
 import org.gradle.api.plugins.BasePluginConvention;
 import org.gradle.api.plugins.PluginContainer;
+import org.gradle.util.GUtil;
 
 /**
  * @author Andrea Di Giorgi
@@ -66,11 +69,45 @@ public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
 		return (T)project.task(args, name);
 	}
 
+	public static void excludeTasksWithProperty(
+		Project project, String propertyName, boolean defaultValue,
+		String... taskNames) {
+
+		if (!project.hasProperty(propertyName) ||
+			!getProperty(project, propertyName, defaultValue)) {
+
+			return;
+		}
+
+		for (String taskName : taskNames) {
+			Task task = getTask(project, taskName);
+
+			task.setDependsOn(Collections.emptySet());
+			task.setEnabled(false);
+			task.setFinalizedBy(Collections.emptySet());
+		}
+	}
+
 	public static String getArchivesBaseName(Project project) {
 		BasePluginConvention basePluginConvention = getConvention(
 			project, BasePluginConvention.class);
 
 		return basePluginConvention.getArchivesBaseName();
+	}
+
+	public static String getGradlePropertiesValue(
+		Project project, String key, String defaultValue) {
+
+		File dir = getRootDir(project, "gradle.properties");
+
+		if (dir == null) {
+			return defaultValue;
+		}
+
+		Properties properties = GUtil.loadProperties(
+			new File(dir, "gradle.properties"));
+
+		return properties.getProperty(key, defaultValue);
 	}
 
 	public static Project getProject(Project rootProject, String name) {

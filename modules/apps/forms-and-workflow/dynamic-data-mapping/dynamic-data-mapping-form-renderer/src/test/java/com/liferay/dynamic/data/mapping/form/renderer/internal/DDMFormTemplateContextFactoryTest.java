@@ -17,8 +17,12 @@ package com.liferay.dynamic.data.mapping.form.renderer.internal;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluationResult;
+import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluator;
+import com.liferay.dynamic.data.mapping.form.evaluator.DDMFormEvaluatorContext;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.renderer.DDMFormRenderingContext;
+import com.liferay.dynamic.data.mapping.internal.util.DDMImpl;
 import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesJSONSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormLayoutJSONSerializer;
@@ -29,7 +33,6 @@ import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldValidation;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormTestUtil;
-import com.liferay.dynamic.data.mapping.util.impl.DDMImpl;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.language.Language;
@@ -77,6 +80,7 @@ public class DDMFormTemplateContextFactoryTest {
 
 		setUpDDM();
 		setUpDDMFormContextProviderServlet();
+		setUpDDMFormEvaluator();
 		setUpDDMFormFieldTypeServicesTracker();
 		setUpDDMFormFieldTypesJSONSerializer();
 		setUpDDMFormJSONSerializer();
@@ -453,6 +457,21 @@ public class DDMFormTemplateContextFactoryTest {
 		setDeclaredField(
 			_ddmFormTemplateContextFactory, "_ddmFormContextProviderServlet",
 			ddmFormContextProviderServlet);
+	}
+
+	protected void setUpDDMFormEvaluator() throws Exception {
+		DDMFormEvaluator ddmFormEvaluator = mock(DDMFormEvaluator.class);
+
+		when(
+			ddmFormEvaluator.evaluate(
+				Matchers.any(DDMFormEvaluatorContext.class))
+		).thenReturn(
+			new DDMFormEvaluationResult()
+		);
+
+		setDeclaredField(
+			_ddmFormTemplateContextFactory, "_ddmFormEvaluator",
+			ddmFormEvaluator);
 	}
 
 	protected void setUpDDMFormFieldTypeServicesTracker() throws Exception {

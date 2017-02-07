@@ -54,6 +54,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>FORM_PAGE</td>
+	<td>//ul[contains(@class,'multi-step-progress-bar')]//li/div[contains(.,'${key_formPageName}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -128,6 +133,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>PUBLISH_URL_FORM_PAGE</td>
+	<td>//div[contains(@class,'form-builder-app')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -136,6 +146,16 @@
 <tr>
 	<td>SETTINGS_TAB_EMAIL_NOTIFICATIONS</td>
 	<td>//a[contains(@class,'tab-content') and contains(.,'Email Notifications')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SETTINGS_TAB_WORKFLOW_CONFIGURATION_FIELD</td>
+	<td>//div[contains(@data-fieldname,'workflowDefinition')]//a[contains(@id,'workflowDefinition')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SETTINGS_TAB_WORKFLOW_CONFIGURATION</td>
+	<td>//div[contains(@data-fieldname,'workflowDefinition')]//a[contains(@id,'workflowDefinition')]/following-sibling::div[@class='drop-chosen']//li[contains(.,'${key_workflowDefinition}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -185,70 +205,50 @@
 	<td>//div[contains(@class,'sidebar-header')]//a[contains(@class,'close')]</td>
 	<td></td>
 </tr>
-<!--RULE_BUILDER-->
+<!--DATA_PROVIDER_OUTPUT_PARAMETER-->
 <tr>
-	<td>RULE_BUILDER_ADD_RULE_BUTTON</td>
-	<td>//button[contains(@class,'add-rule-button-icon')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_PATH_FIELD</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]//input[@type='text' and contains(@id,'outputParameters') and contains(@placeholder,'path')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_ADD_CONDITION</td>
-	<td>//a[contains(@class,'form-builder-rule-add-condition')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_PATH_FIELD_2</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]/../following-sibling::div/div//input[@type='text' and contains(@id,'outputParameters') and contains(@placeholder,'path')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_RULE_CONDITION_DROPDOWN</td>
-	<td>//button[contains(@class,'dropdown-toggle-operator')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_NAME_FIELD</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]//input[@type='text' and contains(@id,'outputParameters') and contains(@placeholder,'name')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_SELECT_RULE_CONDITION</td>
-	<td>//ul[@class='dropdown-menu']//li[contains(.,'${key_condition}')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_NAME_FIELD_2</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]/../following-sibling::div/div//input[@type='text' and contains(@id,'outputParameters') and contains(@placeholder,'name')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_SELECT_CONDITION_FIELD</td>
-	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@class,'condition-if')]//select[contains(@id,'condition-first')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_TYPE_FIELD</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]//div[contains(@class,'select-field')]//a[contains(@id,'outputParameterType')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_SELECT_CONDITION_OPERATOR</td>
-	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@class,'condition-operator')]//select[contains(@id,'condition-operator')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_TYPE_FIELD_2</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]/../following-sibling::div//div[contains(@class,'select-field')]//a[contains(@id,'outputParameterType')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_SELECT_CONDITION_VALUE_TYPE</td>
-	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@class,'condition-the')]//select[contains(@id,'type')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_TYPE_FIELD_OPTIONS_LIST</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]//div[contains(@class,'select-field')]//ul[@class='results-chosen']//li[contains(.,'${key_outputParameterType}')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_SELECT_CONDITION_VALUE_FIELD</td>
-	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@class,'condition-type-value-options')]//select[contains(@id,'select')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_TYPE_FIELD_OPTIONS_LIST_2</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]/../following-sibling::div//div[contains(@class,'select-field')]//ul[@class='results-chosen']//li[contains(.,'${key_outputParameterType}')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RULE_BUILDER_CONDITION_VALUE_TEXT_FIELD</td>
-	<td>//li[contains(@class,'form-builder-rule-condition')][${key_conditionRowNumber}]//div[contains(@class,'condition-type-value')]//input[@type='text']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>RULE_BUILDER_TIMELINE_RULE_CONDITION</td>
-	<td>//li[contains(@class,'condition-container') and contains(@class,'timeline-item')][${key_conditonRowNumber}]//div[contains(.,'${key_condition}')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>RULE_BUILDER_SELECT_ACTION</td>
-	<td>//li[contains(@class,'form-builder-rule-action')][${key_actionRowNumber}]//div[contains(@class,'action')]//select[contains(@id,'target')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>RULE_BUILDER_SELECT_ACTION_TARGET</td>
-	<td>//li[contains(@class,'form-builder-rule-action')][${key_actionRowNumber}]//div[contains(@class,'target')]//select[contains(@id,'action')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>RULE_BUILDER_SAVE_BUTTON</td>
-	<td>//button[contains(@class,'form-builder-rule-settings-save')]</td>
+	<td>DATA_PROVIDER_OUTPUT_PARAMETER_REPEAT_ICON</td>
+	<td>//div[contains(@data-fieldname,'outputParameters')]/following-sibling::div[contains(@class,'field-repeatable')]//a[contains(@class,'add-button')]</td>
 	<td></td>
 </tr>
 </tbody>
