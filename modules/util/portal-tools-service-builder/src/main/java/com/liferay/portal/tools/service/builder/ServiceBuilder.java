@@ -107,6 +107,7 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -5849,5 +5850,163 @@ public class ServiceBuilder {
 	private String _tplServiceUtil = _TPL_ROOT + "service_util.ftl";
 	private String _tplServiceWrapper = _TPL_ROOT + "service_wrapper.ftl";
 	private String _tplSpringXml = _TPL_ROOT + "spring_xml.ftl";
+
+	private class EntityMappingMetadata {
+
+		public EntityMappingMetadata(EntityMapping entityMapping) throws Exception {
+			_allColumns = new ArrayList<>();
+			_entityMapping = entityMapping;
+			_indexesMetadata = new ArrayList<>();
+			_pkColumns = new ArrayList<>();
+		}
+
+		public List<EntityColumn> getAllColumns() throws Exception {
+			if (!_allColumns.isEmpty()) {
+				return _allColumns;
+			}
+
+			Entity[] entities = getEntities();
+
+			if (entities == null) {
+				return null;
+			}
+
+			Arrays.stream(entities).forEach(e -> _allColumns.addAll(e.getPKList()));
+
+			return _allColumns;
+		}
+
+		public Entity[] getEntities() throws Exception {
+			if (_entities != null) {
+				return _entities;
+			}
+
+			_entities = new Entity[3];
+
+			for (int i = 0; i < _entities.length; i++) {
+				_entities[i] = getEntity(_entityMapping.getEntity(i));
+
+				if (_entities[i] == null) {
+					_entities = null;
+					return null;
+				}
+			}
+
+			Arrays.sort(
+				_entities,
+				(Entity e1, Entity e2) -> e1.getName().compareTo(e2.getName()));
+
+			return _entities;
+		}
+
+		public EntityMapping getEntityMapping() {
+			return _entityMapping;
+		}
+
+		public List<IndexMetadata> getIndexesMetadata() throws Exception {
+			if (!_indexesMetadata.isEmpty()) {
+				return _indexesMetadata;
+			}
+
+			List<EntityColumn> allColumns = getAllColumns();
+
+			_indexesMetadata = allColumns.stream().map(
+				column ->
+					IndexMetadataFactoryUtil.createIndexMetadata(
+						false, _entityMapping.getTable(), column.getDBName())
+			).filter(
+					indexMetadata -> !_isRedundantToPk(indexMetadata)).collect(
+					Collectors.toList());
+
+			return _indexesMetadata;
+		}
+
+		public List<EntityColumn> getPkColumns() throws Exception {
+			if (!_pkColumns.isEmpty()) {
+				return _pkColumns;
+			}
+
+			Entity[] entities = _getPkEntities();
+
+			if (entities == null) {
+				return null;
+			}
+
+			Arrays.stream(entities).forEach(e -> _pkColumns.addAll(e.getPKList()));
+
+			return _pkColumns;
+		}
+
+		private Entity[] _getPkEntities() throws Exception {
+			Entity[] entities = getEntities();
+
+			if (entities == null) {
+				return null;
+			}
+
+			entities = Arrays.stream(entities).filter(
+				e -> !_isDefaultMappingEntity(e)).toArray(Entity[]::new);
+
+			return entities;
+		}
+
+		private IndexMetadata _getPkMetadata() throws Exception {
+			if (_pkMetadata != null) {
+				return _pkMetadata;
+			}
+
+			List<EntityColumn> pkColumns = getPkColumns();
+
+			List<String> pkColumnsName = pkColumns.stream().map(
+				pkColumn -> pkColumn.getDBName()).collect(Collectors.toList());
+
+			_pkMetadata = new IndexMetadata(
+				"PRIMARY", _entityMapping.getTable(), true,
+				pkColumnsName.stream().toArray(String[]::new));
+
+			return _pkMetadata;
+		}
+
+		private boolean _isDefaultMappingEntity(Entity entity) {
+			String packagePath = entity.getPackagePath();
+			String name = entity.getName();
+
+			if (Objects.equals(
+					packagePath, EntityMapping.DEFAULT_MAPPING_PACKAGE) &&
+				name.equals(EntityMapping.DEFAULT_MAPPING_CLASS)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		private boolean _isRedundantToPk(IndexMetadata indexMetadata) {
+			IndexMetadata pkMetadata = null;
+
+			try {
+				pkMetadata = _getPkMetadata();
+			}
+			catch (Exception e) {
+				return true;
+			}
+
+			Boolean redundantTo = indexMetadata.redundantTo(pkMetadata);
+
+			if ((redundantTo != null) && redundantTo) {
+				return true;
+			}
+
+			return false;
+		}
+
+		private final List<EntityColumn> _allColumns;
+		private Entity[] _entities;
+		private final EntityMapping _entityMapping;
+		private List<IndexMetadata> _indexesMetadata;
+		private final List<EntityColumn> _pkColumns;
+		private IndexMetadata _pkMetadata;
+
+	}
 
 }
