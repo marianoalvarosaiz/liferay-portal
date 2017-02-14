@@ -4147,40 +4147,6 @@ public class ServiceBuilder {
 		return context;
 	}
 
-	private void _getCreateMappingTableIndex(
-			EntityMapping entityMapping,
-			Map<String, List<IndexMetadata>> indexMetadataMap)
-		throws Exception {
-
-		Entity[] entities = new Entity[3];
-
-		for (int i = 0; i < entities.length; i++) {
-			entities[i] = getEntity(entityMapping.getEntity(i));
-
-			if (entities[i] == null) {
-				return;
-			}
-		}
-
-		String tableName = entityMapping.getTable();
-
-		for (Entity entity : entities) {
-			List<EntityColumn> pkList = entity.getPKList();
-
-			for (int j = 0; j < pkList.size(); j++) {
-				EntityColumn col = pkList.get(j);
-
-				String colDBName = col.getDBName();
-
-				IndexMetadata indexMetadata =
-					IndexMetadataFactoryUtil.createIndexMetadata(
-						false, tableName, colDBName);
-
-				_addIndexMetadata(indexMetadataMap, tableName, indexMetadata);
-			}
-		}
-	}
-
 	private String _getCreateMappingTableSQL(EntityMapping entityMapping)
 		throws Exception {
 
