@@ -708,7 +708,7 @@ public class ServiceBuilder {
 			}
 
 			_ejbList = new ArrayList<>();
-			_entityMappings = new HashMap<>();
+			_entityMappingsMetadata = new HashMap<>();
 
 			List<Element> entityElements = rootElement.elements("entity");
 
@@ -1242,7 +1242,10 @@ public class ServiceBuilder {
 	}
 
 	public EntityMapping getEntityMapping(String mappingTable) {
-		return _entityMappings.get(mappingTable);
+		EntityMappingMetadata entityMappingMetadata =
+			_entityMappingsMetadata.get(mappingTable);
+
+		return entityMappingMetadata.getEntityMapping();
 	}
 
 	public String getGeneratorClass(String idType) {
@@ -1292,21 +1295,15 @@ public class ServiceBuilder {
 	public List<EntityColumn> getMappingEntities(String mappingTable)
 		throws Exception {
 
-		List<EntityColumn> mappingEntitiesPKList = new ArrayList<>();
+		EntityMappingMetadata entityMappingMetadata =
+			_entityMappingsMetadata.get(mappingTable);
 
-		EntityMapping entityMapping = _entityMappings.get(mappingTable);
-
-		for (int i = 0; i < 3; i++) {
-			Entity entity = getEntity(entityMapping.getEntity(i));
-
-			if (entity == null) {
-				return null;
-			}
-
-			mappingEntitiesPKList.addAll(entity.getPKList());
+		if (entityMappingMetadata != null) {
+			return entityMappingMetadata.getAllColumns();
 		}
-
-		return mappingEntitiesPKList;
+		else {
+			return null;
+		}
 	}
 
 	public int getMaxLength(String model, String field) {
@@ -3565,12 +3562,15 @@ public class ServiceBuilder {
 			}
 		}
 
-		for (Map.Entry<String, EntityMapping> entry :
-				_entityMappings.entrySet()) {
+		for (EntityMappingMetadata entityMappingMetadata :
+				_entityMappingsMetadata.values()) {
 
-			EntityMapping entityMapping = entry.getValue();
+			EntityMapping entityMapping =
+				entityMappingMetadata.getEntityMapping();
 
-			_getCreateMappingTableIndex(entityMapping, indexMetadataMap);
+			indexMetadataMap.put(
+				entityMapping.getTable(),
+				entityMappingMetadata.getIndexesMetadata());
 		}
 
 		StringBundler sb = new StringBundler();
@@ -3801,10 +3801,11 @@ public class ServiceBuilder {
 			}
 		}
 
-		for (Map.Entry<String, EntityMapping> entry :
-				_entityMappings.entrySet()) {
+		for (EntityMappingMetadata entityMappingMetadata :
+				_entityMappingsMetadata.values()) {
 
-			EntityMapping entityMapping = entry.getValue();
+			EntityMapping entityMapping =
+				entityMappingMetadata.getEntityMapping();
 
 			String createMappingTableSQL = _getCreateMappingTableSQL(
 				entityMapping);
@@ -5188,8 +5189,9 @@ public class ServiceBuilder {
 				EntityMapping entityMapping = new EntityMapping(
 					mappingTable, ejbName, collectionEntity);
 
-				if (!_entityMappings.containsKey(mappingTable)) {
-					_entityMappings.put(mappingTable, entityMapping);
+				if (!_entityMappingsMetadata.containsKey(mappingTable)) {
+					_entityMappingsMetadata.put(
+						mappingTable, new EntityMappingMetadata(entityMapping));
 				}
 			}
 		}
@@ -5775,7 +5777,7 @@ public class ServiceBuilder {
 	private boolean _buildNumberIncrement;
 	private String _currentTplName;
 	private List<Entity> _ejbList;
-	private Map<String, EntityMapping> _entityMappings;
+	private Map<String, EntityMappingMetadata> _entityMappingsMetadata;
 	private Map<String, Entity> _entityPool = new HashMap<>();
 	private String _hbmFileName;
 	private String _implDirName;
