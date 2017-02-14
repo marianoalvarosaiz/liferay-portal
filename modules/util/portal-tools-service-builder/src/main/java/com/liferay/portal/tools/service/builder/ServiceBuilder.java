@@ -4184,14 +4184,13 @@ public class ServiceBuilder {
 	private String _getCreateMappingTableSQL(EntityMapping entityMapping)
 		throws Exception {
 
-		Entity[] entities = new Entity[3];
+		EntityMappingMetadata entityMappingMetadata =
+			_entityMappingsMetadata.get(entityMapping.getTable());
 
-		for (int i = 0; i < entities.length; i++) {
-			entities[i] = getEntity(entityMapping.getEntity(i));
+		Entity[] entities = entityMappingMetadata.getEntities();
 
-			if (entities[i] == null) {
-				return null;
-			}
+		if (entities == null) {
+			return null;
 		}
 
 		Arrays.sort(
@@ -4301,23 +4300,11 @@ public class ServiceBuilder {
 
 		sb.append("\tprimary key (");
 
-		for (int i = 1; i < entities.length; i++) {
-			Entity entity = entities[i];
+		List<String> columnsName =
+			entityMappingMetadata.getPkColumns().stream().map(
+				col -> col.getDBName()).collect(Collectors.toList());
 
-			List<EntityColumn> pkList = entity.getPKList();
-
-			for (int j = 0; j < pkList.size(); j++) {
-				EntityColumn col = pkList.get(j);
-
-				String colDBName = col.getDBName();
-
-				if ((i != 1) || (j != 0)) {
-					sb.append(", ");
-				}
-
-				sb.append(colDBName);
-			}
-		}
+		sb.append(String.join(", ", columnsName));
 
 		sb.append(")\n");
 		sb.append(");");
@@ -4431,15 +4418,10 @@ public class ServiceBuilder {
 		if (entity.hasCompoundPK()) {
 			sb.append("\tprimary key (");
 
-			for (int j = 0; j < pkList.size(); j++) {
-				EntityColumn pk = pkList.get(j);
+			List<String> columnsName = pkList.stream().map(
+				col -> col.getDBName()).collect(Collectors.toList());
 
-				sb.append(pk.getDBName());
-
-				if ((j + 1) != pkList.size()) {
-					sb.append(", ");
-				}
-			}
+			sb.append(String.join(", ", columnsName));
 
 			sb.append(")\n");
 		}
