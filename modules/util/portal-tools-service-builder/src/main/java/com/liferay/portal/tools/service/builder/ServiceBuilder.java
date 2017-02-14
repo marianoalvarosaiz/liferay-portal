@@ -4202,15 +4202,15 @@ public class ServiceBuilder {
 					String name2 = entity2.getName();
 
 					if (Objects.equals(
-							entity1.getPackagePath(), "com.liferay.portal") &&
-						name1.equals("Company")) {
+							entity1.getPackagePath(), EntityMapping.DEFAULT_MAPPING_PACKAGE) &&
+						name1.equals(EntityMapping.DEFAULT_MAPPING_CLASS)) {
 
 						return -1;
 					}
 
 					if (Objects.equals(
-							entity2.getPackagePath(), "com.liferay.portal") &&
-						name2.equals("Company")) {
+							entity2.getPackagePath(), EntityMapping.DEFAULT_MAPPING_PACKAGE) &&
+						name2.equals(EntityMapping.DEFAULT_MAPPING_CLASS)) {
 
 						return 1;
 					}
