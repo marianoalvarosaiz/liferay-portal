@@ -108,6 +108,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -4159,34 +4160,6 @@ public class ServiceBuilder {
 			return null;
 		}
 
-		Arrays.sort(
-			entities,
-			new Comparator<Entity>() {
-
-				@Override
-				public int compare(Entity entity1, Entity entity2) {
-					String name1 = entity1.getName();
-					String name2 = entity2.getName();
-
-					if (Objects.equals(
-							entity1.getPackagePath(), EntityMapping.DEFAULT_MAPPING_PACKAGE) &&
-						name1.equals(EntityMapping.DEFAULT_MAPPING_CLASS)) {
-
-						return -1;
-					}
-
-					if (Objects.equals(
-							entity2.getPackagePath(), EntityMapping.DEFAULT_MAPPING_PACKAGE) &&
-						name2.equals(EntityMapping.DEFAULT_MAPPING_CLASS)) {
-
-						return 1;
-					}
-
-					return name1.compareTo(name2);
-				}
-
-			});
-
 		StringBundler sb = new StringBundler();
 
 		sb.append(_SQL_CREATE_TABLE);
@@ -5842,9 +5815,19 @@ public class ServiceBuilder {
 				}
 			}
 
+			Entity[] defaultEntities = Arrays.stream(_entities).filter(
+				e -> _isDefaultMappingEntity(e)).toArray(Entity[]::new);
+
+			Entity[] mappingEntities = Arrays.stream(_entities).filter(
+				e -> !_isDefaultMappingEntity(e)).toArray(Entity[]::new);
+
 			Arrays.sort(
-				_entities,
+				mappingEntities,
 				(Entity e1, Entity e2) -> e1.getName().compareTo(e2.getName()));
+
+			_entities = Stream.concat(
+				Arrays.stream(defaultEntities), Arrays.stream(mappingEntities)).
+					toArray(Entity[]::new);
 
 			return _entities;
 		}
