@@ -40,6 +40,7 @@ page import="com.liferay.portal.kernel.log.Log" %><%@
 page import="com.liferay.portal.kernel.log.LogFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.model.Layout" %><%@
 page import="com.liferay.portal.kernel.model.LayoutBranch" %><%@
+page import="com.liferay.portal.kernel.model.LayoutBranchConstants" %><%@
 page import="com.liferay.portal.kernel.model.LayoutRevision" %><%@
 page import="com.liferay.portal.kernel.model.LayoutRevisionConstants" %><%@
 page import="com.liferay.portal.kernel.model.LayoutSetBranch" %><%@
@@ -106,6 +107,16 @@ if (selLayout != null) {
 
 	privateLayout = selLayout.isPrivateLayout();
 }
+%>
+
+<%!
+	static boolean translateLayoutSetBranchName(String layoutSetBranchName) {
+		return LayoutSetBranchConstants.MASTER_BRANCH_NAME.equals(layoutSetBranchName);
+	}
+
+	static boolean translateLayoutBranchName(String layoutBranchName) {
+		return LayoutBranchConstants.MASTER_BRANCH_NAME.equals(layoutBranchName);
+	}
 %>
 
 <%@ include file="/init-ext.jsp" %>
