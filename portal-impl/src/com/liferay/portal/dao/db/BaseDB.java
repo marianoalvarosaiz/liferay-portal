@@ -19,6 +19,7 @@ import com.liferay.portal.dao.orm.common.SQLTransformer;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBType;
+import com.liferay.portal.kernel.dao.db.EnhancedDBSQL;
 import com.liferay.portal.kernel.dao.db.Index;
 import com.liferay.portal.kernel.dao.db.IndexMetadata;
 import com.liferay.portal.kernel.dao.db.IndexMetadataFactoryUtil;
@@ -256,6 +257,15 @@ public abstract class BaseDB implements DB {
 	}
 
 	@Override
+	public void runSQL(Connection con, EnhancedDBSQL enhancedDBSQL)
+		throws IOException, SQLException {
+
+		String sql = enhancedDBSQL.getDBSQL(getDBType());
+
+		runSQL(con, new String[] {sql});
+	}
+
+	@Override
 	public void runSQL(Connection con, String sql)
 		throws IOException, SQLException {
 
@@ -299,6 +309,15 @@ public abstract class BaseDB implements DB {
 		finally {
 			DataAccess.cleanUp(s);
 		}
+	}
+
+	@Override
+	public void runSQL(EnhancedDBSQL enhancedDBSQL)
+		throws IOException, SQLException {
+
+		String sql = enhancedDBSQL.getDBSQL(getDBType());
+
+		runSQL(new String[] {sql});
 	}
 
 	@Override
