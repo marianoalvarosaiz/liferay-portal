@@ -109,4 +109,14 @@ if (selLayout != null) {
 }
 %>
 
+<%!
+	static boolean translateLayoutSetBranchName(String layoutSetBranchName) {
+		return LayoutSetBranchConstants.MASTER_BRANCH_NAME.equals(layoutSetBranchName);
+	}
+
+	static boolean translateLayoutBranchName(String layoutBranchName) {
+		return LayoutBranchConstants.MASTER_BRANCH_NAME.equals(layoutBranchName);
+	}
+%>
+
 <%@ include file="/init-ext.jsp" %>

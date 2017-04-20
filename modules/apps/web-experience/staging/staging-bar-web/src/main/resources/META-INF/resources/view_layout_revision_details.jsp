@@ -41,7 +41,7 @@ String taglibHelpMessage = null;
 
 String layoutSetBranchName = HtmlUtil.escape(layoutSetBranch.getName());
 
-if (LayoutSetBranchConstants.MASTER_BRANCH_NAME.equals(layoutSetBranch.getName())) {
+if (translateLayoutSetBranchName(layoutSetBranch.getName())) {
 	layoutSetBranchName = LanguageUtil.get(request, layoutSetBranchName);
 }
 
