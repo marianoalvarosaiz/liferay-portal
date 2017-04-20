@@ -84,6 +84,7 @@ if (Validator.isNull(publisherName)) {
 }
 
 String lastImportLayoutSetBranchDisplayName = HtmlUtil.escape(lastImportLayoutSetBranchName);
+
 if (translateLayoutSetBranchName(lastImportLayoutSetBranchName)) {
 	lastImportLayoutSetBranchDisplayName = LanguageUtil.get(request, lastImportLayoutSetBranchDisplayName);
 }

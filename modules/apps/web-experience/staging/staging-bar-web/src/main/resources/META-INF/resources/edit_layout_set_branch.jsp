@@ -96,7 +96,7 @@ if (layoutSetBranch != null) {
 					for (LayoutSetBranch curLayoutSetBranch : layoutSetBranches) {
 					%>
 
-						<aui:option label="<%= HtmlUtil.escape(curLayoutSetBranch.getName()) %>" value="<%= curLayoutSetBranch.getLayoutSetBranchId() %>" localizeLabel="<%= translateLayoutSetBranchName(curLayoutSetBranch.getName()) %>"/>
+						<aui:option label="<%= HtmlUtil.escape(curLayoutSetBranch.getName()) %>" localizeLabel="<%= translateLayoutSetBranchName(curLayoutSetBranch.getName()) %>" value="<%= curLayoutSetBranch.getLayoutSetBranchId() %>" />
 
 					<%
 					}
