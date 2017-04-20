@@ -611,38 +611,45 @@ public class JournalServiceVerifyProcess extends VerifyLayout {
 	}
 
 	protected void verifyArticleContents() throws Exception {
-		try (LoggingTimer loggingTimer = new LoggingTimer();
-			PreparedStatement ps = connection.prepareStatement(
-				"select id_ from JournalArticle where (content like " +
-					"'%document_library%' or content like " +
-						"'%link_to_layout%') and DDMStructureKey != ''");
-			ResultSet rs = ps.executeQuery()) {
+		try (LoggingTimer loggingTimer = new LoggingTimer();) {
+			StringBundler sb = new StringBundler(15);
 
-			while (rs.next()) {
-				long id = rs.getLong("id_");
+			sb.append("select id_ from JournalArticle join DDMStructure  ");
+			sb.append("on JournalArticle.DDMstructureKey = ");
+			sb.append("DDMStructure.structureKey where (definition like  ");
+			sb.append("'%document_library%' or definition like ");
+			sb.append("'%link_to_layout%')");
 
-				JournalArticle article = _journalArticleLocalService.getArticle(
-					id);
+			try (PreparedStatement ps = connection.prepareStatement(
+				sb.toString()); ResultSet rs = ps.executeQuery()) {
 
-				try {
-					Document document = SAXReaderUtil.read(
-						article.getContent());
+				while (rs.next()) {
+					long id = rs.getLong("id_");
 
-					Element rootElement = document.getRootElement();
+					JournalArticle article =
+						_journalArticleLocalService.getArticle(id);
 
-					for (Element element : rootElement.elements()) {
-						updateElement(article.getGroupId(), element);
+					try {
+						Document document = SAXReaderUtil.read(
+							article.getContent());
+
+						Element rootElement = document.getRootElement();
+
+						for (Element element : rootElement.elements()) {
+							updateElement(article.getGroupId(), element);
+						}
+
+						article.setContent(document.asXML());
+
+						_journalArticleLocalService.updateJournalArticle(
+							article);
 					}
-
-					article.setContent(document.asXML());
-
-					_journalArticleLocalService.updateJournalArticle(article);
-				}
-				catch (Exception e) {
-					_log.error(
-						"Unable to update content for article " +
-							article.getId(),
-						e);
+					catch (Exception e) {
+						_log.error(
+							"Unable to update content for article " +
+								article.getId(),
+							e);
+					}
 				}
 			}
 		}

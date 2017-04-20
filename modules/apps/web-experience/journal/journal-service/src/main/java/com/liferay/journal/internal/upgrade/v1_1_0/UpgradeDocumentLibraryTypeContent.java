@@ -155,10 +155,11 @@ public class UpgradeDocumentLibraryTypeContent extends UpgradeProcess {
 	protected void updateContent() throws Exception {
 		try (LoggingTimer loggingTimer = new LoggingTimer();
 			PreparedStatement ps1 = connection.prepareStatement(
-				"select content, id_ from JournalArticle where content like " +
-					"?")) {
+				"select content, id_ from JournalArticle join DDMStructure " +
+					"on JournalArticle.DDMstructureKey = " +
+					"DDMStructure.structureKey where definition like ?")) {
 
-			ps1.setString(1, "%type=\"document_library\"%");
+			ps1.setString(1, "%\"type\":\"ddm-documentlibrary\"%");
 
 			ResultSet rs1 = ps1.executeQuery();
 
