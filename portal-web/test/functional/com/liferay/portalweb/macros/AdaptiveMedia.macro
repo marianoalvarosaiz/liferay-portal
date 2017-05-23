@@ -15,9 +15,44 @@
 			</then>
 		</if>
 
+		<if>
+			<isset var="customID" />
+			<then>
+				<execute function="Click" locator1="Radio#CUSTOM_ID" />
+
+				<execute function="Type" locator1="TextInput#IMAGE_ID" value1="${customID}" />
+			</then>
+		</if>
+
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute macro="Alert#viewSuccessMessage" />
+		<if>
+			<isset var="duplicate" />
+			<then>
+				<execute macro="Alert#viewErrorMessage">
+					<var name="errorMessage" value="A configuration with this ID already exists. Please enter a unique ID." />
+				</execute>
+			</then>
+			<else>
+				<execute macro="Alert#viewSuccessMessage" />
+			</else>
+		</if>
+	</command>
+
+	<command name="addNonNumericImageResolution">
+		<execute function="Click" locator1="Button#PLUS" />
+
+		<execute function="Type" locator1="TextInput#NAME" value1="${imageName}" />
+
+		<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidth}" />
+
+		<execute function="Type" locator1="TextInput#MAX_HEIGHT" value1="${maxHeight}" />
+
+		<execute function="AssertElementPresent" locator1="Message#ERROR_FIELD_REQUIRED" />
+
+		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
+		<execute function="AssertElementNotPresent" locator1="Message#SUCCESS" />
 	</command>
 
 	<command name="deleteImageResolution">
@@ -112,6 +147,12 @@
 		<execute macro="PortletEntry#save" />
 	</command>
 
+	<command name="gotoImageVariantEntry">
+		<var name="key_imageName" value="${imageName}" />
+
+		<execute function="AssertClick" locator1="AdaptiveMediaTable#NAME" value1="${imageName}" />
+	</command>
+
 	<command name="optimizeRemainingImages">
 		<var name="key_imageName" value="${imageName}" />
 		<var name="key_percentOptimized" value="${percentOptimized}" />
@@ -162,11 +203,20 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="AdaptiveMediaTable#MAX_HEIGHT" value1="${maxHeight}" />
 	</command>
 
+	<command name="viewImageVariantID">
+		<execute function="AssertTextEquals" locator1="TextInput#IMAGE_ID" value1="${imageVariantID}" />
+	</command>
+
 	<command name="viewImageVariantURL">
-		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 		<var name="key_imageName" value="${imageName}" />
 
 		<execute function="AssertElementPresent" locator1="AdaptiveMedia#IMAGE_VARIANT_SOURCE_URL" />
+	</command>
+
+	<command name="viewNoImageResolution">
+		<var name="key_imageName" value="${imageName}" />
+
+		<execute function="AssertElementNotPresent" locator1="AdaptiveMediaTable#NAME" />
 	</command>
 
 	<command name="viewNumberOfOptimizedImages">

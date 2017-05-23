@@ -32,6 +32,7 @@ import com.liferay.exportimport.test.util.TestReaderWriter;
 import com.liferay.exportimport.test.util.TestUserIdStrategy;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -43,6 +44,7 @@ import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
@@ -54,6 +56,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -306,6 +309,9 @@ public class DefaultExportImportContentProcessorTest {
 
 		portalUtil.setPortal(portalImpl);
 
+		Portal originalPortal = ReflectionTestUtil.getAndSetFieldValue(
+			_exportImportContentProcessor, "_portal", portalImpl);
+
 		_oldLayoutFriendlyURLPrivateUserServletMapping =
 			PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING;
 
@@ -351,6 +357,9 @@ public class DefaultExportImportContentProcessorTest {
 				StringPool.SLASH);
 
 		portalUtil.setPortal(new PortalImpl());
+
+		ReflectionTestUtil.setFieldValue(
+			_exportImportContentProcessor, "_portal", originalPortal);
 	}
 
 	@Test
@@ -575,6 +584,52 @@ public class DefaultExportImportContentProcessorTest {
 				_portletDataContextImport, _referrerStagedModel, content);
 
 		Assert.assertEquals(expectedContent, importedContent);
+	}
+
+	@Test
+	public void testInvalidLayoutReferencesCauseNoSuchLayoutException()
+		throws Exception {
+
+		PortalImpl portalImpl = new PortalImpl() {
+
+			@Override
+			public String getPathContext() {
+				return "/de";
+			}
+
+		};
+
+		PortalUtil portalUtil = new PortalUtil();
+
+		portalUtil.setPortal(portalImpl);
+
+		String content = replaceParameters(
+			getContent("invalid_layout_references.txt"), _fileEntry);
+
+		String[] layoutReferences = StringUtil.split(
+			content, StringPool.NEW_LINE);
+
+		for (String layoutReference : layoutReferences) {
+			if (!layoutReference.contains(PortalUtil.getPathContext())) {
+				continue;
+			}
+
+			boolean noSuchLayoutExceptionThrown = false;
+
+			try {
+				_exportImportContentProcessor.validateContentReferences(
+					_stagingGroup.getGroupId(), layoutReference);
+			}
+			catch (NoSuchLayoutException nsle) {
+				noSuchLayoutExceptionThrown = true;
+			}
+
+			Assert.assertTrue(
+				layoutReference + " was not flagged as invalid",
+				noSuchLayoutExceptionThrown);
+		}
+
+		portalUtil.setPortal(new PortalImpl());
 	}
 
 	protected void assertLinksToLayouts(

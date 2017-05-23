@@ -46,6 +46,7 @@ page import="com.liferay.document.library.kernel.exception.FileExtensionExceptio
 page import="com.liferay.document.library.kernel.exception.FileNameException" %><%@
 page import="com.liferay.document.library.kernel.exception.FileSizeException" %><%@
 page import="com.liferay.document.library.kernel.model.DLFileEntry" %><%@
+page import="com.liferay.document.library.kernel.util.DLValidatorUtil" %><%@
 page import="com.liferay.message.boards.display.context.MBHomeDisplayContext" %><%@
 page import="com.liferay.message.boards.display.context.MBListDisplayContext" %><%@
 page import="com.liferay.message.boards.kernel.constants.MBConstants" %><%@
@@ -144,6 +145,7 @@ page import="com.liferay.portal.kernel.util.StringBundler" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.TextFormatter" %><%@
+page import="com.liferay.portal.kernel.util.Time" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %><%@
@@ -160,8 +162,7 @@ page import="com.liferay.portlet.messageboards.service.permission.MBPermission" 
 page import="com.liferay.portlet.messageboards.util.MBMessageAttachmentsUtil" %><%@
 page import="com.liferay.portlet.messageboards.util.MBUtil" %><%@
 page import="com.liferay.subscription.service.SubscriptionLocalServiceUtil" %><%@
-page import="com.liferay.taglib.search.ResultRow" %><%@
-page import="com.liferay.trash.kernel.util.TrashUtil" %>
+page import="com.liferay.taglib.search.ResultRow" %>
 
 <%@ page import="java.text.Format" %><%@
 page import="java.text.NumberFormat" %>
@@ -182,6 +183,8 @@ page import="javax.portlet.WindowState" %>
 <liferay-frontend:defineObjects />
 
 <liferay-theme:defineObjects />
+
+<liferay-trash:defineObjects />
 
 <portlet:defineObjects />
 

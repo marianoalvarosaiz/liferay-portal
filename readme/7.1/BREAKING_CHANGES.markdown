@@ -113,8 +113,8 @@ portlet URLs without passing the request as a necessary parameter.
 #### What changed?
 
 The Users File Uploads portlet properties have been moved from Server
-Administration to an OSGI configuration named `UserFileUploadsConfiguration`
-in the `users-admin-api` module.
+Administration to an OSGI configuration named
+`UserFileUploadsConfiguration.java` in the `users-admin-api` module.
 
 #### Who is affected?
 
@@ -129,9 +129,9 @@ This affects anyone who is using the following portlet properties:
 
 Instead of overriding the `portal.properties` file, you can manage the
 properties from Portal's configuration administrator. This can be accessed by
-navigating to Liferay's *Control Panel* &rarr; *Configuration* &rarr; *System
-Settings* &rarr; *Foundation* &rarr; *User Images* and editing the settings
-there.
+navigating to Liferay Portal's *Control Panel* &rarr; *Configuration* &rarr;
+*System Settings* &rarr; *Foundation* &rarr; *User Images* and editing the
+settings there.
 
 If you would like to include the new configuration in your application, follow
 the instructions for
@@ -192,5 +192,108 @@ the instructions for
 
 This change was made as part of the modularization efforts to ease portal
 configuration changes.
+
+---------------------------------------
+
+### Moved OpenOffice Properties to OSGi Configuration
+- **Date:** 2017-March-24
+- **JIRA Ticket:** LPS-71382
+
+#### What changed?
+
+The OpenOffice properties have been moved from Server Administration to an OSGi
+configuration named `OpenOfficeConfiguration.java` in the
+`document-library-document-conversion` module.
+
+#### Who is affected?
+
+This affects anyone who is using the following portal properties:
+
+- `openoffice.cache.enabled`
+- `openoffice.server.enabled`
+- `openoffice.server.host`
+- `openoffice.server.port`
+
+#### How should I update my code?
+
+Instead of overriding the `portal.properties` file, you can manage the
+properties from Portal's configuration administrator. This can be accessed by
+navigating to Liferay Portal's *Control Panel* &rarr; *Configuration* &rarr;
+*System Settings* &rarr; *Other* &rarr; *OpenOffice Integration* and editing the
+settings there.
+
+If you would like to include the new configuration in your application, follow
+the instructions for
+[making your applications configurable in Liferay 7.0](https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/making-your-applications-configurable).
+
+#### Why was this change made?
+
+This change was made as part of the modularization efforts to ease portal
+configuration changes.
+
+---------------------------------------
+
+### Standardize data attribute names passed into selectors
+- **Date:** 2016-Oct-26
+- **JIRA Ticket:** LPS-66646
+
+#### What changed?
+
+The data attributes passed into the event when someone uses a selector (asset selector, document selector, file selector, role selector, site selector, user group selector, etc) have been standardized from being selector specific (`groupid`, `groupdescriptivename`, `teamid`, `teamname`, etc) to being more generic (`entityid` and `entityname`).
+
+#### Who is affected?
+
+This affects anyone who is passing selector specific data attributes to a selector.
+
+#### How should I update my code?
+
+Instead of using selector specific data attributes, you should change your data attributes to use `entityid` and `entityname`.
+
+**Example**
+
+Old way:
+    <portlet:namespace />selectFileEntryType(event.fileentrytypeid, event.fileentrytypename);
+
+New way
+    <portlet:namespace />selectFileEntryType(event.entityid, event.entityname);
+
+Old way:
+    data.put("roleid", role.getRoleId());
+    data.put("roletitle", role.getTitle(locale));
+
+New way:
+    data.put("entityid", role.getRoleId());
+    data.put("entityname", role.getTitle(locale));
+
+#### Why was this change made?
+
+This change was made to standardize the data attribute names and allow the utility methods to accept standardized event parameters.
+
+---------------------------------------
+
+### Removed indexation of fields 'ratings' and 'viewCount'
+- **Date:** 2017-May-16
+- **JIRA Ticket:** LPS-70724
+
+#### What changed?
+
+Fields 'ratings' and 'viewCount' are no longer indexed in BaseIndexer for AssetEntry objects.
+
+#### Who is affected?
+
+Any search related custom code where these fields are used in queries.
+
+#### How should I update my code?
+
+There are several alternatives:
+ - Use Liferay portlets "Highest rated assets" and "Most viewed assets"
+ - Replace index query with a database query
+ - Implement an IndexerPostProcessor to index these fields in certain documents
+
+#### Why was this change made?
+
+Keeping ratings and view count in the search index in sync with the database has a negative impact on the normal operation due to the significantly increased number of index write requests causing throughput issues and therefore performance degradation.
+
+In addition, the view count is not always up-to-date in the database either. This behavior is controlled by the _Buffered Increment_ mechanism. You can find more information about it in the `portal.properties`.
 
 ---------------------------------------

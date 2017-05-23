@@ -21,13 +21,13 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.wiki.asset.WikiNodeTrashRenderer;
@@ -143,40 +143,6 @@ public class WikiNodeTrashHandler extends BaseWikiTrashHandler {
 	}
 
 	@Override
-	public List<TrashRenderer> getTrashContainedModelTrashRenderers(
-			long classPK, int start, int end)
-		throws PortalException {
-
-		List<TrashRenderer> trashRenderers = new ArrayList<>();
-
-		List<WikiPage> pages = _wikiPageLocalService.getPages(
-			classPK, true, WorkflowConstants.STATUS_IN_TRASH, start, end);
-
-		for (WikiPage page : pages) {
-			if (page.isInTrashExplicitly()) {
-				continue;
-			}
-
-			WikiPage redirectPage = page.getRedirectPage();
-
-			if ((redirectPage != null) && redirectPage.isInTrash()) {
-				continue;
-			}
-
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					WikiPage.class.getName());
-
-			TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
-				page.getResourcePrimKey());
-
-			trashRenderers.add(trashRenderer);
-		}
-
-		return trashRenderers;
-	}
-
-	@Override
 	public TrashedModel getTrashedModel(long classPK) {
 		return _wikiNodeLocalService.fetchWikiNode(classPK);
 	}
@@ -188,7 +154,7 @@ public class WikiNodeTrashHandler extends BaseWikiTrashHandler {
 	}
 
 	@Override
-	public List<TrashRenderer> getTrashModelTrashRenderers(
+	public List<TrashedModel> getTrashModelTrashedModels(
 			long classPK, int start, int end, OrderByComparator<?> obc)
 		throws PortalException {
 
@@ -196,24 +162,20 @@ public class WikiNodeTrashHandler extends BaseWikiTrashHandler {
 			classPK, true, WorkflowConstants.STATUS_IN_TRASH, start, end,
 			(OrderByComparator<WikiPage>)obc);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			WikiPage.class.getName());
-
-		List<TrashRenderer> trashRenderers = new ArrayList<>(pages.size());
+		List<TrashedModel> trashedModels = new ArrayList<>(pages.size());
 
 		for (WikiPage page : pages) {
-			trashRenderers.add(
-				trashHandler.getTrashRenderer(page.getResourcePrimKey()));
+			trashedModels.add(page);
 		}
 
-		return trashRenderers;
+		return trashedModels;
 	}
 
 	@Override
 	public TrashRenderer getTrashRenderer(long classPK) throws PortalException {
 		WikiNode node = _wikiNodeLocalService.getNode(classPK);
 
-		return new WikiNodeTrashRenderer(node);
+		return new WikiNodeTrashRenderer(node, _trashHelper);
 	}
 
 	@Override
@@ -293,6 +255,9 @@ public class WikiNodeTrashHandler extends BaseWikiTrashHandler {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	private WikiNodeLocalService _wikiNodeLocalService;
 	private WikiPageLocalService _wikiPageLocalService;
