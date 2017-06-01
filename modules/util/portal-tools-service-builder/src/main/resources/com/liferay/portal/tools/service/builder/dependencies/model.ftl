@@ -361,11 +361,21 @@ public interface ${entity.name}Model extends
 		</#if>
 	</#list>
 
-	<#list entity.localizationColumns as column>
-		public String get${column.methodName}(String languageId);
+	<#if entity.localizedEntity??>
+		public String[] getAvailableLanguageIds();
 
-		public String get${column.methodName}(String languageId, boolean useDefault);
-	</#list>
+		<#list entity.localizedColumns as column>
+			public String get${column.methodName}();
+
+			public String get${column.methodName}(String languageId);
+
+			public String get${column.methodName}(String languageId, boolean useDefault);
+
+			public String get${column.methodName}MapAsXML();
+
+			public Map<String, String> getLanguageIdTo${column.methodName}Map();
+		</#list>
+	</#if>
 
 	<#if entity.isTrashEnabled()>
 		<#if !entity.isWorkflowEnabled()>

@@ -19,6 +19,8 @@
 <liferay-util:dynamic-include key="com.liferay.wiki.web#/wiki/view.jsp#pre" />
 
 <%
+WikiPortletInstanceOverriddenConfiguration wikiPortletInstanceOverriddenConfiguration = wikiRequestHelper.getWikiPortletInstanceOverridenConfiguration();
+
 boolean followRedirect = ParamUtil.getBoolean(request, "followRedirect", true);
 
 WikiNode node = (WikiNode)request.getAttribute(WikiWebKeys.WIKI_NODE);
@@ -354,13 +356,9 @@ if (portletTitleBasedNavigation) {
 										<div class="row">
 
 											<%
-											Map<String, Object> data = new HashMap<String, Object>();
-
-											data.put("senna-off", "true");
+											List<FileEntry> attachmentsFileEntries = wikiPage.getAttachmentsFileEntries();
 
 											DLMimeTypeDisplayContext dlMimeTypeDisplayContext = (DLMimeTypeDisplayContext)request.getAttribute(WikiWebKeys.DL_MIME_TYPE_DISPLAY_CONTEXT);
-
-											List<FileEntry> attachmentsFileEntries = wikiPage.getAttachmentsFileEntries();
 
 											for (FileEntry fileEntry : attachmentsFileEntries) {
 												String rowURL = PortletFileRepositoryUtil.getDownloadPortletFileEntryURL(themeDisplay, fileEntry, "status=" + WorkflowConstants.STATUS_APPROVED);
@@ -368,7 +366,6 @@ if (portletTitleBasedNavigation) {
 
 												<div class="col-md-4">
 													<liferay-frontend:horizontal-card
-														linkData="<%= data %>"
 														text="<%= fileEntry.getTitle() %>"
 														url="<%= rowURL %>"
 													>

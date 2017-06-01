@@ -14,6 +14,9 @@
 
 package com.liferay.source.formatter.checks;
 
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -35,17 +38,16 @@ import java.util.regex.Pattern;
  */
 public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 
-	public JavaVariableTypeCheck(
-		List<String> excludes, List<String> staticLogExcludes,
-		List<String> annotationsExclusions,
-		Map<String, String> defaultPrimitiveValues,
-		Set<String> immutableFieldTypes) {
+	@Override
+	public void init() {
+		_annotationsExclusions = _getAnnotationsExclusions();
+		_defaultPrimitiveValues = _getDefaultPrimitiveValues();
+		_immutableFieldTypes = _getImmutableFieldTypes();
+	}
 
-		_excludes = excludes;
-		_staticLogExcludes = staticLogExcludes;
-		_annotationsExclusions = annotationsExclusions;
-		_defaultPrimitiveValues = defaultPrimitiveValues;
-		_immutableFieldTypes = immutableFieldTypes;
+	@Override
+	public boolean isPortalCheck() {
+		return true;
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		String fileName, String absolutePath, JavaTerm javaTerm,
 		String fileContent) {
 
-		if (isExcludedPath(_excludes, absolutePath)) {
+		if (isExcludedPath(_CHECK_JAVA_FIELD_TYPES_EXCLUDES, absolutePath)) {
 			return javaTerm.getContent();
 		}
 
@@ -72,6 +74,7 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		return classContent;
 	}
 
+	@Override
 	protected String[] getCheckableJavaTermNames() {
 		return new String[] {JAVA_CLASS};
 	}
@@ -102,7 +105,7 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 			if (!javaVariable.isStatic() &&
 				(_immutableFieldTypes.contains(fieldType) ||
 				 (fieldType.equals("Log") &&
-				  !isExcludedPath(_staticLogExcludes, absolutePath)))) {
+				  !isExcludedPath(_STATIC_LOG_EXCLUDES, absolutePath)))) {
 
 				classContent = _formatStaticableFieldType(
 					classContent, javaVariable.getContent());
@@ -242,6 +245,23 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		return childJavaTerms;
 	}
 
+	private List<String> _getAnnotationsExclusions() {
+		return ListUtil.fromArray(
+			new String[] {
+				"ArquillianResource", "Autowired", "BeanReference", "Captor",
+				"Context", "Inject", "Mock", "Parameter", "Reference",
+				"ServiceReference", "SuppressWarnings", "Value"
+			});
+	}
+
+	private Map<String, String> _getDefaultPrimitiveValues() {
+		return MapUtil.fromArray(
+			new String[] {
+				"boolean", "false", "char", "'\\\\0'", "byte", "0", "double",
+				"0\\.0", "float", "0\\.0", "int", "0", "long", "0", "short", "0"
+			});
+	}
+
 	private String _getFieldType(JavaVariable javaVariable) {
 		StringBundler sb = new StringBundler(4);
 
@@ -259,6 +279,19 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		}
 
 		return null;
+	}
+
+	private Set<String> _getImmutableFieldTypes() {
+		Set<String> immutableFieldTypes = SetUtil.fromArray(
+			new String[] {
+				"boolean", "byte", "char", "double", "float", "int", "long",
+				"short", "Boolean", "Byte", "Character", "Class", "Double",
+				"Float", "Int", "Long", "Number", "Short", "String"
+			});
+
+		immutableFieldTypes.addAll(getPropertyList("immutable.field.types"));
+
+		return immutableFieldTypes;
 	}
 
 	private boolean _isFinalableField(
@@ -296,10 +329,13 @@ public class JavaVariableTypeCheck extends BaseJavaTermCheck {
 		return true;
 	}
 
-	private final List<String> _annotationsExclusions;
-	private final Map<String, String> _defaultPrimitiveValues;
-	private final List<String> _excludes;
-	private final Set<String> _immutableFieldTypes;
-	private final List<String> _staticLogExcludes;
+	private static final String _CHECK_JAVA_FIELD_TYPES_EXCLUDES =
+		"check.java.field.types.excludes";
+
+	private static final String _STATIC_LOG_EXCLUDES = "static.log.excludes";
+
+	private List<String> _annotationsExclusions;
+	private Map<String, String> _defaultPrimitiveValues;
+	private Set<String> _immutableFieldTypes;
 
 }
