@@ -14,6 +14,9 @@
 
 package com.liferay.journal.util.impl;
 
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
@@ -35,15 +38,18 @@ import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiServic
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.io.Serializable;
@@ -205,9 +211,34 @@ public class JournalContentImpl
 			secure = themeDisplay.isSecure();
 		}
 
+		String templateVersion = null;
+
+		try {
+			if (Validator.isNotNull(ddmTemplateKey)) {
+				DDMTemplate ddmTemplate =
+					_ddmTemplateLocalService.fetchTemplate(
+						_portal.getSiteGroupId(article.getGroupId()),
+						_classNameLocalService.getClassNameId(
+							DDMStructure.class),
+						ddmTemplateKey, true);
+
+				if (ddmTemplate != null) {
+					templateVersion = ddmTemplate.getVersion();
+				}
+			}
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Unable to retrieve template version for {" + groupId +
+						", " + ddmTemplateKey + "}",
+					pe);
+			}
+		}
+
 		JournalContentKey journalContentKey = new JournalContentKey(
-			groupId, articleId, version, ddmTemplateKey, layoutSetId, viewMode,
-			languageId, page, secure);
+			groupId, articleId, version, ddmTemplateKey, templateVersion,
+			layoutSetId, viewMode, languageId, page, secure);
 
 		JournalArticleDisplay articleDisplay = _portalCache.get(
 			journalContentKey);
@@ -399,6 +430,20 @@ public class JournalContentImpl
 	}
 
 	@Reference(unbind = "-")
+	protected void setClassNameLocalService(
+		ClassNameLocalService classNameLocalService) {
+
+		_classNameLocalService = classNameLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setDDMTemplateLocalService(
+		DDMTemplateLocalService ddmTemplateLocalService) {
+
+		_ddmTemplateLocalService = ddmTemplateLocalService;
+	}
+
+	@Reference(unbind = "-")
 	protected void setJournalArticleLocalService(
 		JournalArticleLocalService journalArticleLocalService) {
 
@@ -447,7 +492,12 @@ public class JournalContentImpl
 		}
 	}
 
+	private ClassNameLocalService _classNameLocalService;
+	private DDMTemplateLocalService _ddmTemplateLocalService;
 	private JournalArticleLocalService _journalArticleLocalService;
+
+	@Reference
+	private Portal _portal;
 
 	private static class JournalContentKey implements Serializable {
 
@@ -460,6 +510,9 @@ public class JournalContentImpl
 				(journalContentKey._version == _version) &&
 				Objects.equals(
 					journalContentKey._ddmTemplateKey, _ddmTemplateKey) &&
+				Objects.equals(
+					journalContentKey._ddmTemplateVersion,
+					_ddmTemplateVersion) &&
 				(journalContentKey._layoutSetId == _layoutSetId) &&
 				Objects.equals(journalContentKey._viewMode, _viewMode) &&
 				Objects.equals(journalContentKey._languageId, _languageId) &&
@@ -479,6 +532,7 @@ public class JournalContentImpl
 			hashCode = HashUtil.hash(hashCode, _articleId);
 			hashCode = HashUtil.hash(hashCode, _version);
 			hashCode = HashUtil.hash(hashCode, _ddmTemplateKey);
+			hashCode = HashUtil.hash(hashCode, _ddmTemplateVersion);
 			hashCode = HashUtil.hash(hashCode, _layoutSetId);
 			hashCode = HashUtil.hash(hashCode, _viewMode);
 			hashCode = HashUtil.hash(hashCode, _languageId);
@@ -489,13 +543,14 @@ public class JournalContentImpl
 
 		private JournalContentKey(
 			long groupId, String articleId, double version,
-			String ddmTemplateKey, long layoutSetId, String viewMode,
-			String languageId, int page, boolean secure) {
+			String ddmTemplateKey, String ddmTemplateVersion, long layoutSetId,
+			String viewMode, String languageId, int page, boolean secure) {
 
 			_groupId = groupId;
 			_articleId = articleId;
 			_version = version;
 			_ddmTemplateKey = ddmTemplateKey;
+			_ddmTemplateVersion = ddmTemplateVersion;
 			_layoutSetId = layoutSetId;
 			_viewMode = viewMode;
 			_languageId = languageId;
@@ -503,10 +558,11 @@ public class JournalContentImpl
 			_secure = secure;
 		}
 
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 2L;
 
 		private final String _articleId;
 		private final String _ddmTemplateKey;
+		private final String _ddmTemplateVersion;
 		private final long _groupId;
 		private final String _languageId;
 		private final long _layoutSetId;
