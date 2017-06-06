@@ -33,6 +33,7 @@ import com.liferay.gradle.plugins.defaults.internal.util.GitUtil;
 import com.liferay.gradle.plugins.defaults.internal.util.GradleUtil;
 import com.liferay.gradle.plugins.defaults.internal.util.IncrementVersionClosure;
 import com.liferay.gradle.plugins.defaults.internal.util.copy.RenameDependencyAction;
+import com.liferay.gradle.plugins.defaults.tasks.CheckOSGiBundleStateTask;
 import com.liferay.gradle.plugins.defaults.tasks.InstallCacheTask;
 import com.liferay.gradle.plugins.defaults.tasks.ReplaceRegexTask;
 import com.liferay.gradle.plugins.defaults.tasks.WriteArtifactPublishCommandsTask;
@@ -176,6 +177,8 @@ import org.gradle.api.plugins.quality.Pmd;
 import org.gradle.api.plugins.quality.PmdExtension;
 import org.gradle.api.plugins.quality.PmdPlugin;
 import org.gradle.api.reporting.SingleFileReport;
+import org.gradle.api.resources.ResourceHandler;
+import org.gradle.api.resources.TextResourceFactory;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.SourceSet;
@@ -202,6 +205,7 @@ import org.gradle.external.javadoc.CoreJavadocOptions;
 import org.gradle.external.javadoc.StandardJavadocDocletOptions;
 import org.gradle.internal.authentication.DefaultBasicAuthentication;
 import org.gradle.internal.service.ServiceRegistry;
+import org.gradle.language.base.plugins.LifecycleBasePlugin;
 import org.gradle.plugins.ide.api.XmlFileContentMerger;
 import org.gradle.plugins.ide.eclipse.EclipsePlugin;
 import org.gradle.plugins.ide.eclipse.model.Classpath;
@@ -227,6 +231,9 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 	public static final String ASPECTJ_WEAVER_CONFIGURATION_NAME =
 		"aspectJWeaver";
+
+	public static final String CHECK_OSGI_BUNDLE_STATE_TASK_NAME =
+		"checkOSGiBundleState";
 
 	public static final String COMMIT_CACHE_TASK_NAME = "commitCache";
 
@@ -367,6 +374,10 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 				baselineTask, versionOverrideFile);
 		}
 
+		if (!testProject) {
+			_addTaskCheckOSGiBundleState(project);
+		}
+
 		InstallCacheTask installCacheTask = _addTaskInstallCache(project);
 
 		_addTaskCommitCache(project, installCacheTask);
@@ -419,6 +430,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		_configureTaskTestIntegration(project);
 		_configureTaskTlddoc(project, portalRootDir);
 		_configureTasksBaseline(project);
+		_configureTasksCheckOSGiBundleState(project, liferayExtension);
 		_configureTasksFindBugs(project);
 		_configureTasksJavaCompile(project);
 		_configureTasksPmd(project);
@@ -480,7 +492,8 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 							updateVersionTask);
 					}
 
-					_configureTaskCompileJSP(project, liferayExtension);
+					_configureTaskCompileJSP(
+						project, jarJSPsTask, liferayExtension);
 
 					// setProjectSnapshotVersion must be called before
 					// configureTaskUploadArchives, because the latter one needs
@@ -684,6 +697,32 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		return task;
 	}
 
+	private CheckOSGiBundleStateTask _addTaskCheckOSGiBundleState(
+		final Project project) {
+
+		CheckOSGiBundleStateTask checkOSGiBundleStateTask = GradleUtil.addTask(
+			project, CHECK_OSGI_BUNDLE_STATE_TASK_NAME,
+			CheckOSGiBundleStateTask.class);
+
+		checkOSGiBundleStateTask.setBundleSymbolicName(
+			new Callable<String>() {
+
+				@Override
+				public String call() throws Exception {
+					return _getBundleInstruction(
+						project, Constants.BUNDLE_SYMBOLICNAME);
+				}
+
+			});
+
+		checkOSGiBundleStateTask.setDescription(
+			"Checks the state of the deployed OSGi bundle.");
+		checkOSGiBundleStateTask.setGroup(
+			LifecycleBasePlugin.VERIFICATION_GROUP);
+
+		return checkOSGiBundleStateTask;
+	}
+
 	private Task _addTaskCommitCache(
 		Project project, final InstallCacheTask installCacheTask) {
 
@@ -882,7 +921,8 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	}
 
 	private Copy _addTaskDownloadCompiledJSP(
-		JavaCompile compileJSPTask, Properties artifactProperties) {
+		JavaCompile compileJSPTask, final Jar jarJSPsTask,
+		Properties artifactProperties) {
 
 		final String artifactJspcURL = artifactProperties.getProperty(
 			"artifact.jspc.url");
@@ -903,7 +943,54 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 				@Override
 				public FileTree call() throws Exception {
-					File file = FileUtil.get(project, artifactJspcURL);
+					File file;
+
+					try {
+						file = FileUtil.get(project, artifactJspcURL);
+					}
+					catch (Exception e) {
+						String message = e.getMessage();
+
+						if (!message.equals("HTTP Authorization failure")) {
+							throw e;
+						}
+
+						int start = artifactJspcURL.lastIndexOf('/');
+
+						start = artifactJspcURL.indexOf('-', start) + 1;
+
+						String classifier = jarJSPsTask.getClassifier();
+						String extension = jarJSPsTask.getExtension();
+
+						int end =
+							artifactJspcURL.length() - classifier.length() -
+								extension.length() - 2;
+
+						String version = artifactJspcURL.substring(start, end);
+
+						DependencyHandler dependencyHandler =
+							project.getDependencies();
+
+						Map<String, Object> args = new HashMap<>();
+
+						args.put("classifier", classifier);
+						args.put("ext", extension);
+						args.put("group", project.getGroup());
+						args.put(
+							"name", GradleUtil.getArchivesBaseName(project));
+						args.put("version", version);
+
+						Dependency dependency = dependencyHandler.create(args);
+
+						ConfigurationContainer configurationContainer =
+							project.getConfigurations();
+
+						Configuration configuration =
+							configurationContainer.detachedConfiguration(
+								dependency);
+
+						file = configuration.getSingleFile();
+					}
 
 					return project.zipTree(file);
 				}
@@ -2222,16 +2309,22 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		PmdExtension pmdExtension = GradleUtil.getExtension(
 			project, PmdExtension.class);
 
-		Gradle gradle = project.getGradle();
+		ResourceHandler resourceHandler = project.getResources();
 
-		File ruleSetFile = new File(
-			gradle.getGradleUserHomeDir(),
-			"../tools/sdk/dependencies/net.sourceforge.pmd/rulesets/java" +
-				"/standard-rules.xml");
+		TextResourceFactory textResourceFactory = resourceHandler.getText();
 
-		if (ruleSetFile.exists()) {
-			pmdExtension.setRuleSetFiles(project.files(ruleSetFile));
+		String ruleSet;
+
+		try {
+			ruleSet = FileUtil.read(
+				"com/liferay/gradle/plugins/defaults/dependencies" +
+					"/standard-rules.xml");
 		}
+		catch (IOException ioe) {
+			throw new UncheckedIOException(ioe);
+		}
+
+		pmdExtension.setRuleSetConfig(textResourceFactory.fromString(ruleSet));
 
 		List<String> ruleSets = Collections.emptyList();
 
@@ -2559,8 +2652,23 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 		}
 	}
 
+	private void _configureTaskCheckOSGiBundleState(
+		CheckOSGiBundleStateTask checkOSGiBundleState,
+		final LiferayExtension liferayExtension) {
+
+		checkOSGiBundleState.setJmxPort(
+			new Callable<Integer>() {
+
+				@Override
+				public Integer call() throws Exception {
+					return liferayExtension.getJmxRemotePort();
+				}
+
+			});
+	}
+
 	private void _configureTaskCompileJSP(
-		Project project, LiferayExtension liferayExtension) {
+		Project project, Jar jarJSPsTask, LiferayExtension liferayExtension) {
 
 		boolean jspPrecompileEnabled = GradleUtil.getProperty(
 			project, "jsp.precompile.enabled", false);
@@ -2617,7 +2725,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 
 		if (!jspPrecompileFromSource && (artifactProperties != null)) {
 			Copy copy = _addTaskDownloadCompiledJSP(
-				javaCompile, artifactProperties);
+				javaCompile, jarJSPsTask, artifactProperties);
 
 			if (copy != null) {
 				javaCompile.deleteAllActions();
@@ -2956,6 +3064,26 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 				@Override
 				public void execute(BaselineTask baselineTask) {
 					_configureTaskBaseline(baselineTask);
+				}
+
+			});
+	}
+
+	private void _configureTasksCheckOSGiBundleState(
+		Project project, final LiferayExtension liferayExtension) {
+
+		TaskContainer taskContainer = project.getTasks();
+
+		taskContainer.withType(
+			CheckOSGiBundleStateTask.class,
+			new Action<CheckOSGiBundleStateTask>() {
+
+				@Override
+				public void execute(
+					CheckOSGiBundleStateTask checkOSGiBundleState) {
+
+					_configureTaskCheckOSGiBundleState(
+						checkOSGiBundleState, liferayExtension);
 				}
 
 			});

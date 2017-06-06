@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch.internal.connection;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.SecureRandomUtil;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -39,8 +40,18 @@ import java.util.Map;
 import org.apache.commons.lang.time.StopWatch;
 
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.inject.Injector;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.discovery.DiscoveryService;
 import org.elasticsearch.node.Node;
+import org.elasticsearch.node.NodeBuilder;
+import org.elasticsearch.search.SearchService;
+import org.elasticsearch.search.action.SearchServiceTransportAction;
+import org.elasticsearch.search.internal.ShardSearchTransportRequest;
+import org.elasticsearch.threadpool.ThreadPool;
+import org.elasticsearch.transport.TransportChannel;
+import org.elasticsearch.transport.TransportRequestHandler;
+import org.elasticsearch.transport.TransportService;
 
 import org.jboss.netty.util.internal.ByteBufferUtil;
 
@@ -300,7 +311,23 @@ public class EmbeddedElasticsearchConnection
 		thread.setContextClassLoader(clazz.getClassLoader());
 
 		try {
-			return new Node(settings);
+			NodeBuilder nodeBuilder = new NodeBuilder();
+
+			nodeBuilder.settings(settings);
+
+			nodeBuilder.local(true);
+
+			Node node = nodeBuilder.build();
+
+			if (elasticsearchConfiguration.syncSearch()) {
+				Injector injector = node.injector();
+
+				_replaceTransportRequestHandler(
+					injector.getInstance(TransportService.class),
+					injector.getInstance(SearchService.class));
+			}
+
+			return node;
 		}
 		finally {
 			thread.setContextClassLoader(contextClassLoader);
@@ -330,7 +357,9 @@ public class EmbeddedElasticsearchConnection
 
 		settingsBuilder.put("node.client", false);
 		settingsBuilder.put("node.data", true);
-		settingsBuilder.put("node.local", true);
+		settingsBuilder.put(
+			DiscoveryService.SETTING_DISCOVERY_SEED,
+			SecureRandomUtil.nextLong());
 
 		configurePaths();
 
@@ -355,6 +384,31 @@ public class EmbeddedElasticsearchConnection
 
 	@Reference
 	protected Props props;
+
+	private void _replaceTransportRequestHandler(
+		TransportService transportService, SearchService searchService) {
+
+		String action = SearchServiceTransportAction.QUERY_FETCH_ACTION_NAME;
+
+		transportService.removeHandler(action);
+
+		transportService.registerRequestHandler(
+			action, ShardSearchTransportRequest.class, ThreadPool.Names.SAME,
+			new TransportRequestHandler<ShardSearchTransportRequest>() {
+
+				@Override
+				public void messageReceived(
+						ShardSearchTransportRequest shardSearchTransportRequest,
+						TransportChannel transportChannel)
+					throws Exception {
+
+					transportChannel.sendResponse(
+						searchService.executeFetchPhase(
+							shardSearchTransportRequest));
+				}
+
+			});
+	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		EmbeddedElasticsearchConnection.class);

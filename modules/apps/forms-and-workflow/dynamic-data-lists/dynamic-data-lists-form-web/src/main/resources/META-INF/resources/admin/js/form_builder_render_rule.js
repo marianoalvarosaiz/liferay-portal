@@ -12,10 +12,6 @@ AUI.add(
 						value: []
 					},
 
-					getDataProviderParametersSettingsURL: {
-						value: ''
-					},
-
 					getDataProviders: {
 						value: []
 					},
@@ -32,8 +28,8 @@ AUI.add(
 						value: 0
 					},
 
-					portletNamespace: {
-						value: ''
+					roles: {
+						value: []
 					},
 
 					strings: {
@@ -43,6 +39,7 @@ AUI.add(
 							calculate: Liferay.Language.get('calculate'),
 							cancel: Liferay.Language.get('cancel'),
 							description: Liferay.Language.get('define-condition-and-action-to-change-fields-and-elements-on-the-form'),
+							do: Liferay.Language.get('do'),
 							enable: Liferay.Language.get('enable'),
 							if: Liferay.Language.get('if'),
 							jumpToPage: Liferay.Language.get('jump-to-page'),
@@ -76,10 +73,8 @@ AUI.add(
 							{
 								bubbleTargets: [instance],
 								fields: instance.get('fields'),
-								getDataProviderParametersSettingsURL: instance.get('getDataProviderParametersSettingsURL'),
 								getDataProviders: instance.get('getDataProviders'),
-								pages: instance.get('pages'),
-								portletNamespace: instance.get('portletNamespace')
+								pages: instance.get('pages')
 							}
 						);
 
@@ -96,15 +91,44 @@ AUI.add(
 						boundingBox.delegate('click', A.bind(instance._handleDeleteActionClick, instance), '.action-card-delete');
 						boundingBox.delegate('click', A.bind(instance._handleSaveClick, instance), '.form-builder-rule-settings-save');
 
-						instance.after(instance._toggleShowRemoveButton, instance, '_addAction');
+						instance.after(instance._toggleDeleteActionButton, instance, '_addAction');
+						instance.after(instance._validateRule, instance, '_addCondition');
 
 						instance.after('fieldsChange', A.bind(instance._afterFieldsChange, instance));
 						instance.after('pagesChange', A.bind(instance._afterPagesChange, instance));
+
 						instance.after('*:valueChange', A.bind(instance._afterValueChange, instance));
 
 						instance.on('*:valueChange', A.bind(instance._handleActionChange, instance));
-
 						instance.on('*:valueChange', A.bind(instance._handleActionUpdates, instance));
+					},
+
+					createSelectField: function(context) {
+						var instance = this;
+
+						var config = A.merge(
+							context,
+							{
+								bubbleTargets: [instance],
+								context: A.clone(context)
+							}
+						);
+
+						return new Liferay.DDM.Field.Select(config);
+					},
+
+					createTextField: function(context) {
+						var instance = this;
+
+						var config = A.merge(
+							context,
+							{
+								bubbleTargets: [instance],
+								context: A.clone(context)
+							}
+						);
+
+						return new Liferay.DDM.Field.Text(config);
 					},
 
 					render: function(rule) {
@@ -130,6 +154,8 @@ AUI.add(
 						instance._renderActions(rule.actions);
 
 						instance._validateRule();
+
+						instance._updateLogicOperatorEnableState();
 
 						return FormBuilderRenderRule.superclass.render.apply(instance, []);
 					},
@@ -171,15 +197,14 @@ AUI.add(
 					_createActionSelect: function(index, action, container) {
 						var instance = this;
 
-						var value;
+						var value = [];
 
 						if (action && action.action) {
-							value = action.action;
+							value = [action.action];
 						}
 
-						var field = new Liferay.DDM.Field.Select(
+						var field = instance.createSelectField(
 							{
-								bubbleTargets: [instance],
 								fieldName: index + '-target',
 								options: instance._getActionOptions(),
 								showLabel: false,
@@ -190,8 +215,8 @@ AUI.add(
 
 						field.render(container);
 
-						if (value) {
-							instance._createTargetSelect(index, value, action);
+						if (value.length) {
+							instance._createTargetSelect(index, value[0], action);
 						}
 
 						instance._actions[index + '-target'] = field;
@@ -286,9 +311,9 @@ AUI.add(
 
 						for (var conditionKey in instance._conditions) {
 							if (!!conditionKey.match('-condition-second-operand-select') || !!conditionKey.match('-condition-first-operand')) {
-								var fieldName = instance._conditions[conditionKey].getValue();
+								var fieldName = instance._getSelectFieldFirstValue(instance._conditions[conditionKey]);
 
-								if (fieldName) {
+								if (fieldName && fieldName != 'user') {
 									fields.push(instance._getFieldPageIndex(fieldName));
 								}
 							}
@@ -306,7 +331,11 @@ AUI.add(
 							}
 						);
 
-						return field.dataType;
+						if (field) {
+							return field.dataType;
+						}
+
+						return fieldName.toLowerCase();
 					},
 
 					_getFieldPageIndex: function(fieldName) {
@@ -352,6 +381,21 @@ AUI.add(
 						);
 					},
 
+					_getSelectFieldFirstValue: function(selectField) {
+						var instance = this;
+
+						var value = selectField.getValue();
+
+						if (!A.Lang.isArray(value)) {
+							value = value || '';
+						}
+						else {
+							value = value[0];
+						}
+
+						return value;
+					},
+
 					_handleActionChange: function(event) {
 						var instance = this;
 
@@ -395,16 +439,21 @@ AUI.add(
 
 						var actionTemplateRenderer = SoyTemplateUtil.getTemplateRenderer('ddl.rule.action');
 
+						var strings = instance.get('strings');
+
 						actionListNode.append(
 							actionTemplateRenderer(
 								{
 									deleteIcon: Liferay.Util.getLexiconIconTpl('trash', 'icon-monospaced'),
+									do: strings.do,
 									index: index
 								}
 							)
 						);
 
 						instance._addAction(index);
+
+						instance._validateRule();
 					},
 
 					_handleCancelClick: function() {
@@ -442,20 +491,36 @@ AUI.add(
 							}
 						}
 
-						instance._toggleShowRemoveButton();
+						instance._toggleDeleteActionButton();
+
+						instance._validateRule();
 					},
 
 					_handleSaveClick: function() {
 						var instance = this;
 
+						if (!instance._isButtonEnabled()) {
+							return;
+						}
+
 						instance.fire(
 							'saveRule',
 							{
 								actions: instance._getActions(),
-								condition: instance._getConditions(),
+								conditions: instance._getConditions(),
 								'logical-operator': instance.get('logicOperator')
 							}
 						);
+					},
+
+					_isButtonEnabled: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						var saveButton = contentBox.one('.form-builder-rule-settings-save');
+
+						return !saveButton.hasAttribute('disabled');
 					},
 
 					_isValidRule: function(rule) {
@@ -480,20 +545,14 @@ AUI.add(
 						}
 					},
 
-					_toggleShowRemoveButton: function() {
+					_toggleDeleteActionButton: function() {
 						var instance = this;
 
 						var contentBox = instance.get('contentBox');
 
-						var conditionList = contentBox.one('.liferay-ddl-form-builder-rule-condition-list');
-
 						var actionList = contentBox.one('.liferay-ddl-form-builder-rule-action-list');
 
-						var conditionItems = conditionList.all('.timeline-item');
-
 						var actionItems = actionList.all('.timeline-item');
-
-						conditionList.toggleClass(CSS_CAN_REMOVE_ITEM, conditionItems.size() > 2);
 
 						actionList.toggleClass(CSS_CAN_REMOVE_ITEM, actionItems.size() > 2);
 					},
@@ -507,7 +566,7 @@ AUI.add(
 
 						var rule = {
 							actions: instance._getActions(),
-							condition: instance._getConditions(),
+							conditions: instance._getConditions(),
 							'logical-operator': instance.get('logicOperator')
 						};
 

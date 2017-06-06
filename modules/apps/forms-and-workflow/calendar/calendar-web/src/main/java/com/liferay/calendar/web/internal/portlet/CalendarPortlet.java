@@ -93,7 +93,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -530,7 +530,7 @@ public class CalendarPortlet extends MVCPortlet {
 
 		String redirect = getRedirect(actionRequest, actionResponse);
 
-		redirect = HttpUtil.setParameter(
+		redirect = _http.setParameter(
 			redirect, actionResponse.getNamespace() + "calendarBookingId",
 			calendarBooking.getCalendarBookingId());
 
@@ -758,18 +758,18 @@ public class CalendarPortlet extends MVCPortlet {
 
 		String namespace = actionResponse.getNamespace();
 
-		editCalendarURL = HttpUtil.setParameter(
+		editCalendarURL = _http.setParameter(
 			editCalendarURL, "p_p_id", themeDisplay.getPpid());
-		editCalendarURL = HttpUtil.setParameter(
+		editCalendarURL = _http.setParameter(
 			editCalendarURL, namespace + "mvcPath",
 			templatePath + "edit_calendar.jsp");
-		editCalendarURL = HttpUtil.setParameter(
+		editCalendarURL = _http.setParameter(
 			editCalendarURL, namespace + "redirect",
 			getRedirect(actionRequest, actionResponse));
-		editCalendarURL = HttpUtil.setParameter(
+		editCalendarURL = _http.setParameter(
 			editCalendarURL, namespace + "backURL",
 			ParamUtil.getString(actionRequest, "backURL"));
-		editCalendarURL = HttpUtil.setParameter(
+		editCalendarURL = _http.setParameter(
 			editCalendarURL, namespace + "calendarId",
 			calendar.getCalendarId());
 
@@ -1538,8 +1538,8 @@ public class CalendarPortlet extends MVCPortlet {
 
 		CalendarDisplayContext calendarDisplayContext =
 			new CalendarDisplayContext(
-				_groupLocalService, _calendarService, _calendarLocalService,
-				themeDisplay);
+				_groupLocalService, _calendarBookingLocalService,
+				_calendarService, _calendarLocalService, themeDisplay);
 
 		renderRequest.setAttribute(
 			CalendarWebKeys.CALENDAR_DISPLAY_CONTEXT, calendarDisplayContext);
@@ -1594,21 +1594,24 @@ public class CalendarPortlet extends MVCPortlet {
 							calendarBookingId, instanceIndex,
 							calendar.getCalendarId(), childCalendarIds,
 							titleMap, descriptionMap, location, startTime,
-							endTime, allDay,
-							RecurrenceSerializer.serialize(recurrence),
-							allFollowing, reminders[0], remindersType[0],
-							reminders[1], remindersType[1], serviceContext);
+							endTime, allDay, allFollowing, reminders[0],
+							remindersType[0], reminders[1], remindersType[1],
+							serviceContext);
 				}
 				else {
 					calendarBooking =
 						_calendarBookingService.updateRecurringCalendarBooking(
 							calendarBookingId, calendar.getCalendarId(),
 							childCalendarIds, titleMap, descriptionMap,
-							location, startTime, endTime, allDay,
-							RecurrenceSerializer.serialize(recurrence),
-							reminders[0], remindersType[0], reminders[1],
-							remindersType[1], serviceContext);
+							location, startTime, endTime, allDay, reminders[0],
+							remindersType[0], reminders[1], remindersType[1],
+							serviceContext);
 				}
+
+				_calendarBookingService.
+					updateLastInstanceCalendarBookingRecurrence(
+						calendarBooking.getCalendarBookingId(),
+						RecurrenceSerializer.serialize(recurrence));
 			}
 			else {
 				calendarBooking =
@@ -1651,6 +1654,9 @@ public class CalendarPortlet extends MVCPortlet {
 	private CalendarResourceService _calendarResourceService;
 	private CalendarService _calendarService;
 	private GroupLocalService _groupLocalService;
+
+	@Reference
+	private Http _http;
 
 	@Reference
 	private Portal _portal;

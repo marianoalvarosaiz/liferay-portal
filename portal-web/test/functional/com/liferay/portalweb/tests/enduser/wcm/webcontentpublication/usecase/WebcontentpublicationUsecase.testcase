@@ -64,6 +64,7 @@
 
 	<command name="AddAndEditAssetsViaVirtualHostOrganizations" priority="4">
 		<property name="custom.properties" value="virtual.hosts.valid.hosts=localhost,127.0.0.1,www.able.com,www.baker.com" />
+		<property name="test.name.skip.portal.instance" value="WebcontentpublicationUsecase#AddAndEditAssetsViaVirtualHostOrganizations" />
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
 			<var name="portlet" value="Users and Organizations" />
@@ -336,6 +337,8 @@
 	</command>
 
 	<command name="AssetPublisherCategoriesLocalization" priority="3">
+		<property name="test.name.skip.portal.instance" value="WebcontentpublicationUsecase#AssetPublisherCategoriesLocalization" />
+
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -711,7 +714,6 @@
 
 		<execute macro="AssetPublisherPortlet#configureAssetDisplayOrderPG">
 			<var name="fieldNameOrder" value="Modified Date" />
-			<var name="sortOrder" value="Ascending" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1092,13 +1094,25 @@
 	</command>
 
 	<command name="AssetPublisherHasOpenOfficeFileTypeLinks" priority="3">
+		<property name="test.name.skip.portal.instance" value="WebcontentpublicationUsecase#AssetPublisherHasOpenOfficeFileTypeLinks" />
+
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
-			<var name="portlet" value="Server Administration" />
+			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="ServerAdministration#configureExternalServices">
-			<var name="enableOpenOfficeIntegration" value="true" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Other" />
 		</execute>
+
+		<execute macro="SystemSettings#editConfiguration">
+			<var name="configurationName" value="OpenOffice Integration" />
+		</execute>
+
+		<execute macro="SystemSettings#enableSetting">
+			<var name="checkboxSetting" value="SERVER_ENABLED" />
+		</execute>
+
+		<execute macro="SystemSettings#saveConfiguration" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Asset Publisher Page" />
@@ -1256,6 +1270,11 @@
 				<var name="assetTitle" value="${siteName} WC Title" />
 			</execute>
 		</for>
+
+		<execute macro="AssetPublisherPortlet#viewAssetNotPresentPG">
+			<var name="assetContent" value="Liferay WC Content" />
+			<var name="assetTitle" value="Liferay WC Title" />
+		</execute>
 	</command>
 
 	<command name="AssetPublisherTogglingBetweenSites" priority="4">
@@ -1845,7 +1864,7 @@
 			<var name="pageName" value="Web Content Display Page" />
 		</execute>
 
-		<execute macro="WebContent#viewNoContentPGViaWCD" />
+		<execute macro="WebContentDisplayPortlet#viewDeletedArticle" />
 
 		<execute macro="User#logoutPG" />
 
@@ -2113,9 +2132,8 @@
 			<var name="pageName" value="Asset Publisher Page 2" />
 		</execute>
 
-		<execute macro="AssetPublisherPortlet#configureFlaggableDisplaySettingsPG">
-			<var name="portletName" value="Asset Publisher" />
-			<var name="setAsDefaultPage" value="true" />
+		<execute macro="AssetPublisherPortlet#configureDisplaySettings">
+			<var name="displaySettings" value="Set as the Default Asset Publisher for This Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
