@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
+import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
@@ -80,6 +81,11 @@ public class PortalSettingsLDAPFormMVCActionCommand
 			actionRequest, _ldapAuthConfigurationProvider,
 			themeDisplay.getCompanyId(), LDAPConstants.AUTH_METHOD,
 			LDAPConstants.PASSWORD_ENCRYPTION_ALGORITHM);
+
+		updateStringProperties(
+				actionRequest, _ldapAuthServerPriorityConfigurationProvider,
+				themeDisplay.getCompanyId(),
+				LDAPConstants.AUTH_SERVER_PRIORITY);
 
 		updateBooleanProperties(
 			actionRequest, _ldapExportConfigurationProvider,
@@ -148,6 +154,16 @@ public class PortalSettingsLDAPFormMVCActionCommand
 			ldapAuthConfigurationProvider) {
 
 		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
+	}
+
+	@Reference(
+			target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration)",
+			unbind = "-")
+	protected void setLDAPAuthServerPriorityConfigurationProvider(
+			ConfigurationProvider<LDAPAuthServerPriorityConfiguration> ldapAuthServerPriorityConfigurationProvider) {
+
+		_ldapAuthServerPriorityConfigurationProvider =
+				ldapAuthServerPriorityConfigurationProvider;
 	}
 
 	@Reference(
@@ -246,6 +262,8 @@ public class PortalSettingsLDAPFormMVCActionCommand
 
 	private ConfigurationProvider<LDAPAuthConfiguration>
 		_ldapAuthConfigurationProvider;
+	private ConfigurationProvider<
+			LDAPAuthServerPriorityConfiguration> _ldapAuthServerPriorityConfigurationProvider;
 	private ConfigurationProvider<LDAPExportConfiguration>
 		_ldapExportConfigurationProvider;
 	private ConfigurationProvider<LDAPImportConfiguration>

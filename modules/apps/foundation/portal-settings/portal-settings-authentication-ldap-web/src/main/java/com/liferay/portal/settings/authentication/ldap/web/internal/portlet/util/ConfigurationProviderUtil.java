@@ -15,6 +15,7 @@
 package com.liferay.portal.settings.authentication.ldap.web.internal.portlet.util;
 
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
+import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
@@ -33,6 +34,12 @@ public class ConfigurationProviderUtil {
 		getLDAPAuthConfigurationProvider() {
 
 		return _ldapAuthConfigurationProvider;
+	}
+
+	public static ConfigurationProvider<LDAPAuthServerPriorityConfiguration>
+			getLDAPAuthServerPriorityConfigurationProvider() {
+
+		return _ldapAuthServerPriorityConfigurationProvider;
 	}
 
 	public static ConfigurationProvider<LDAPExportConfiguration>
@@ -62,6 +69,17 @@ public class ConfigurationProviderUtil {
 			ldapAuthConfigurationProvider) {
 
 		_ldapAuthConfigurationProvider = ldapAuthConfigurationProvider;
+	}
+
+	@Reference(
+			target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration)",
+			unbind = "-")
+	protected void setLDAPAuthServerPriorityConfigurationProvider(
+			ConfigurationProvider<
+					LDAPAuthServerPriorityConfiguration> ldapAuthServerPriorityConfigurationProvider) {
+
+		_ldapAuthServerPriorityConfigurationProvider =
+				ldapAuthServerPriorityConfigurationProvider;
 	}
 
 	@Reference(
@@ -97,8 +115,10 @@ public class ConfigurationProviderUtil {
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
+	private static ConfigurationProvider<
+			LDAPAuthServerPriorityConfiguration> _ldapAuthServerPriorityConfigurationProvider;
 	private static ConfigurationProvider<LDAPAuthConfiguration>
-		_ldapAuthConfigurationProvider;
+	_ldapAuthConfigurationProvider;
 	private static ConfigurationProvider<LDAPExportConfiguration>
 		_ldapExportConfigurationProvider;
 	private static ConfigurationProvider<LDAPImportConfiguration>
