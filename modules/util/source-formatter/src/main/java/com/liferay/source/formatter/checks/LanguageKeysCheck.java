@@ -41,11 +41,14 @@ import java.util.regex.Pattern;
  */
 public class LanguageKeysCheck extends BaseFileCheck {
 
-	public LanguageKeysCheck(
-		List<String> excludes, Properties portalLanguageProperties) {
+	@Override
+	public void init() throws Exception {
+		_portalLanguageProperties = getPortalLanguageProperties();
+	}
 
-		_excludes = excludes;
-		_portalLanguageProperties = portalLanguageProperties;
+	@Override
+	public boolean isPortalCheck() {
+		return true;
 	}
 
 	@Override
@@ -53,7 +56,9 @@ public class LanguageKeysCheck extends BaseFileCheck {
 			String fileName, String absolutePath, String content)
 		throws Exception {
 
-		if (!fileName.endsWith("JSPLanguageUtilCheck.java")) {
+		if (!isSubrepository() &&
+			!fileName.endsWith("JSPLanguageUtilCheck.java")) {
+
 			_checkLanguageKeys(fileName, absolutePath, content, getPatterns());
 		}
 
@@ -72,9 +77,7 @@ public class LanguageKeysCheck extends BaseFileCheck {
 			List<Pattern> patterns)
 		throws Exception {
 
-		if (fileName.endsWith(".vm") ||
-			isExcludedPath(_excludes, absolutePath)) {
-
+		if (fileName.endsWith(".vm")) {
 			return;
 		}
 
@@ -391,13 +394,12 @@ public class LanguageKeysCheck extends BaseFileCheck {
 	private final Pattern _applyLangMergerPluginPattern = Pattern.compile(
 		"^apply[ \t]+plugin[ \t]*:[ \t]+\"com.liferay.lang.merger\"$",
 		Pattern.MULTILINE);
-	private final List<String> _excludes;
 	private final Pattern _mergeLangPattern = Pattern.compile(
 		"mergeLang \\{\\s*sourceDirs = \\[(.*?)\\]", Pattern.DOTALL);
 	private final Map<String, Properties> _moduleLangLanguagePropertiesMap =
 		new HashMap<>();
 	private final Map<String, Properties> _moduleLanguagePropertiesMap =
 		new HashMap<>();
-	private final Properties _portalLanguageProperties;
+	private Properties _portalLanguageProperties;
 
 }

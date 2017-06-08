@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -67,8 +68,14 @@ public class AlloyEditorConfigContributor
 
 		jsonObject.put("extraPlugins", extraPlugins);
 
-		jsonObject.put(
-			"toolbars", getToolbarsJSONObject(themeDisplay.getLocale()));
+		JSONObject toolbarsJSONObject =
+			_toolbarsJSONObjectCache.computeIfAbsent(
+				themeDisplay.getLanguageId(),
+				(key) -> {
+					return getToolbarsJSONObject(themeDisplay.getLocale());
+				});
+
+		jsonObject.put("toolbars", toolbarsJSONObject);
 	}
 
 	protected JSONObject getStyleFormatJSONObject(
@@ -285,12 +292,7 @@ public class AlloyEditorConfigContributor
 	protected void setResourceBundleLoader(
 		ResourceBundleLoader resourceBundleLoader) {
 
-		ClassLoader classLoader =
-			AlloyEditorConfigContributor.class.getClassLoader();
-
 		_resourceBundleLoader = new AggregateResourceBundleLoader(
-			ResourceBundleUtil.getResourceBundleLoader(
-				"content.Language", classLoader),
 			resourceBundleLoader,
 			ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
 	}
@@ -298,6 +300,9 @@ public class AlloyEditorConfigContributor
 	private static final int _CKEDITOR_STYLE_BLOCK = 1;
 
 	private static final int _CKEDITOR_STYLE_INLINE = 2;
+
+	private static final Map<String, JSONObject> _toolbarsJSONObjectCache =
+		new ConcurrentHashMap<>();
 
 	private volatile ResourceBundleLoader _resourceBundleLoader;
 

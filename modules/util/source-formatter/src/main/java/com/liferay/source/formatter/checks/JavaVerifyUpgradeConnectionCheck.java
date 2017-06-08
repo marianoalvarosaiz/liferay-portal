@@ -16,23 +16,16 @@ package com.liferay.source.formatter.checks;
 
 import com.liferay.source.formatter.checks.util.JavaSourceUtil;
 
-import java.util.List;
-
 /**
  * @author Hugo Huijser
  */
 public class JavaVerifyUpgradeConnectionCheck extends BaseFileCheck {
 
-	public JavaVerifyUpgradeConnectionCheck(List<String> excludes) {
-		_excludes = excludes;
-	}
-
 	@Override
 	protected String doProcess(
 		String fileName, String absolutePath, String content) {
 
-		if (isExcludedPath(_excludes, absolutePath) ||
-			fileName.endsWith("Test.java") ||
+		if (fileName.endsWith("Test.java") ||
 			fileName.endsWith("UpgradeTableListener.java") ||
 			content.contains("ThrowableAwareRunnable")) {
 
@@ -64,7 +57,5 @@ public class JavaVerifyUpgradeConnectionCheck extends BaseFileCheck {
 
 		return content;
 	}
-
-	private final List<String> _excludes;
 
 }

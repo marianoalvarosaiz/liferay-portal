@@ -20,6 +20,8 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
+import com.liferay.item.selector.criteria.PortletFileEntryItemSelectorReturnType;
+import com.liferay.item.selector.criteria.PortletFileEntryURLItemSelectorReturnType;
 import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
 import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion;
 import com.liferay.item.selector.criteria.upload.criterion.UploadItemSelectorCriterion;
@@ -71,7 +73,7 @@ public class BlogsContentEditorConfigContributor
 
 		sb.append("a[*](*); ");
 		sb.append(getAllowedContentText());
-		sb.append(" div(*); img[alt, class, !src] {height, width}; ");
+		sb.append(" div(*); img[*] {height, width}; ");
 		sb.append(getAllowedContentLists());
 		sb.append(" p {text-align}; ");
 		sb.append(getAllowedContentTable());
@@ -112,27 +114,33 @@ public class BlogsContentEditorConfigContributor
 		RequestBackedPortletURLFactory requestBackedPortletURLFactory,
 		String eventName) {
 
-		List<ItemSelectorReturnType>
-			blogsContentEditorDesiredItemSelectorReturnTypes =
-				new ArrayList<>();
-
-		blogsContentEditorDesiredItemSelectorReturnTypes.add(
-			new FileEntryItemSelectorReturnType());
-
-		blogsContentEditorDesiredItemSelectorReturnTypes.add(
-			new URLItemSelectorReturnType());
-
 		ItemSelectorCriterion blogsItemSelectorCriterion =
 			new BlogsItemSelectorCriterion();
 
+		List<ItemSelectorReturnType> blogsDesiredItemSelectorReturnTypes =
+			new ArrayList<>();
+
+		blogsDesiredItemSelectorReturnTypes.add(
+			new PortletFileEntryItemSelectorReturnType());
+		blogsDesiredItemSelectorReturnTypes.add(
+			new PortletFileEntryURLItemSelectorReturnType());
+
 		blogsItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			blogsContentEditorDesiredItemSelectorReturnTypes);
+			blogsDesiredItemSelectorReturnTypes);
 
 		ItemSelectorCriterion imageItemSelectorCriterion =
 			new ImageItemSelectorCriterion();
 
+		List<ItemSelectorReturnType> imageDesiredItemSelectorReturnTypes =
+			new ArrayList<>();
+
+		imageDesiredItemSelectorReturnTypes.add(
+			new FileEntryItemSelectorReturnType());
+		imageDesiredItemSelectorReturnTypes.add(
+			new URLItemSelectorReturnType());
+
 		imageItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			blogsContentEditorDesiredItemSelectorReturnTypes);
+			imageDesiredItemSelectorReturnTypes);
 
 		ItemSelectorCriterion urlItemSelectorCriterion =
 			new URLItemSelectorCriterion();
@@ -156,7 +164,7 @@ public class BlogsContentEditorConfigContributor
 
 		ItemSelectorCriterion uploadItemSelectorCriterion =
 			new UploadItemSelectorCriterion(
-				uploadURL.toString(),
+				PortletKeys.BLOGS, uploadURL.toString(),
 				LanguageUtil.get(themeDisplay.getLocale(), "blog-images"),
 				PropsValues.BLOGS_IMAGE_MAX_SIZE, extensions);
 

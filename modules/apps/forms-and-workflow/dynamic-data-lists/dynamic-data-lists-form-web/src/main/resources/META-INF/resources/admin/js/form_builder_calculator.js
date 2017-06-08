@@ -3,26 +3,23 @@ AUI.add(
 	function(A) {
 		var CSS_CALCULATOR_ADD_FIELD = A.getClassName('calculator', 'add', 'field', 'button');
 
-		var CSS_CALCULATOR_BUTTON = A.getClassName('calculator', 'button');
-
 		var CSS_CALCULATOR_ADD_FIELD_CONTANIER = A.getClassName('calculator', 'add', 'field', 'button', 'container');
 
 		var CSS_CALCULATOR_ADD_OPERATOR = A.getClassName('calculator', 'add', 'operator', 'button');
 
+		var CSS_CALCULATOR_BUTTON = A.getClassName('calculator', 'button');
+
 		var FormBuilderCalculator = A.Component.create(
 			{
 				ATTRS: {
-					advancedOperators: {
-						value: [
-							{
-								label: 'SUM',
-								value: 'sum'
-							}
-						]
+					functions: {
+						value: []
 					},
+
 					options: {
 						value: []
 					},
+
 					strings: {
 						value: {
 							addField: Liferay.Language.get('add-field')
@@ -61,7 +58,7 @@ AUI.add(
 						instance.fire(
 							'clickedKey',
 							{
-								key: event.newVal.join()
+								key: '[' + event.newVal.join() + ']'
 							}
 						);
 					},
@@ -76,7 +73,9 @@ AUI.add(
 								after: {
 									valueChange: A.bind(instance._afterSelectValueChange, instance)
 								},
-								options: instance.get('options'),
+								context: {
+									options: instance.get('options')
+								},
 								triggers: [
 									instance.get('boundingBox').one('.' + CSS_CALCULATOR_ADD_FIELD)
 								]
@@ -88,7 +87,7 @@ AUI.add(
 						return select;
 					},
 
-					_createSelectOperator: function() {
+					_createSelectFunction: function() {
 						var instance = this;
 
 						var operatorsListContainer = instance.get('boundingBox').one('.container-list-advanced-operators');
@@ -98,7 +97,9 @@ AUI.add(
 								after: {
 									valueChange: A.bind(instance._afterSelectValueChange, instance)
 								},
-								options: instance.get('advancedOperators'),
+								context: {
+									options: instance.get('advancedOperators')
+								},
 								triggers: [instance.get('boundingBox').one('.' + CSS_CALCULATOR_ADD_OPERATOR)]
 							}
 						);
@@ -118,11 +119,11 @@ AUI.add(
 						return instance._select;
 					},
 
-					_getSelectOperators: function() {
+					_getSelectFunctions: function() {
 						var instance = this;
 
 						if (!instance._selectOperators) {
-							instance._selectOperators = instance._createSelectOperator();
+							instance._selectOperators = instance._createSelectFunction();
 						}
 
 						return instance._selectOperators;
@@ -164,7 +165,7 @@ AUI.add(
 					_onAddOperatorClick: function() {
 						var instance = this;
 
-						instance._getSelectOperators().toggleList();
+						instance._getSelectFunctions().toggleList();
 					}
 				}
 			}

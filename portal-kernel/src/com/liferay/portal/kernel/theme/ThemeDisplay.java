@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.model.ColorScheme;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
@@ -38,12 +39,14 @@ import com.liferay.portal.kernel.model.ThemeSetting;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.VirtualLayoutConstants;
 import com.liferay.portal.kernel.model.impl.VirtualLayout;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.Mergeable;
@@ -63,6 +66,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
@@ -102,6 +106,20 @@ public class ThemeDisplay
 		}
 
 		_portletDisplay.setThemeDisplay(this);
+	}
+
+	public void clearLayoutFriendlyURL(Layout layout) {
+		if (_layoutFriendlyURLs == null) {
+			return;
+		}
+
+		if (layout instanceof VirtualLayout) {
+			VirtualLayout virtualLayout = (VirtualLayout)layout;
+
+			layout = virtualLayout.getSourceLayout();
+		}
+
+		_layoutFriendlyURLs.remove(layout.getPlid());
 	}
 
 	@Override
@@ -285,6 +303,31 @@ public class ThemeDisplay
 		}
 
 		return _contact;
+	}
+
+	public Group getControlPanelGroup() {
+		if (_controlPanelGroup == null) {
+			try {
+				_controlPanelGroup = GroupLocalServiceUtil.getGroup(
+					_company.getCompanyId(), GroupConstants.CONTROL_PANEL);
+			}
+			catch (PortalException pe) {
+				ReflectionUtil.throwException(pe);
+			}
+		}
+
+		return _controlPanelGroup;
+	}
+
+	public Layout getControlPanelLayout() {
+		if (_controlPanelLayout == null) {
+			Group controlPanelGroup = getControlPanelGroup();
+
+			_controlPanelLayout = LayoutLocalServiceUtil.fetchDefaultLayout(
+				controlPanelGroup.getGroupId(), true);
+		}
+
+		return _controlPanelLayout;
 	}
 
 	/**
@@ -862,6 +905,32 @@ public class ThemeDisplay
 		}
 
 		return _siteGroup.getDescriptiveName();
+	}
+
+	public PortletPreferences getStrictLayoutPortletSetup(
+		Layout layout, String portletId) {
+
+		PortletPreferences portletPreferences = null;
+
+		if ((_layout.getPlid() == layout.getPlid()) &&
+			(_layout.getMvccVersion() == layout.getMvccVersion()) &&
+			(_layoutTypePortlet != null)) {
+
+			if (_layoutPortletPreferences == null) {
+				_layoutPortletPreferences =
+					PortletPreferencesLocalServiceUtil.getStrictPreferences(
+						_layout, _layoutTypePortlet.getAllPortlets());
+			}
+
+			portletPreferences = _layoutPortletPreferences.get(portletId);
+		}
+
+		if (portletPreferences == null) {
+			return PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
+				layout, portletId);
+		}
+
+		return portletPreferences;
 	}
 
 	public Theme getTheme() {
@@ -1882,6 +1951,8 @@ public class ThemeDisplay
 	private int _companyLogoHeight;
 	private int _companyLogoWidth;
 	private Contact _contact;
+	private Group _controlPanelGroup;
+	private Layout _controlPanelLayout;
 	private User _defaultUser;
 	private Device _device;
 	private long _doAsGroupId;
@@ -1902,7 +1973,8 @@ public class ThemeDisplay
 	private boolean _isolated;
 	private String _languageId;
 	private Layout _layout;
-	private Map<Long, String> _layoutFriendlyURLs;
+	private transient Map<Long, String> _layoutFriendlyURLs;
+	private transient Map<String, PortletPreferences> _layoutPortletPreferences;
 	private List<Layout> _layouts;
 	private LayoutSet _layoutSet;
 	private String _layoutSetLogo = StringPool.BLANK;
