@@ -22,7 +22,7 @@ String authenticationURL = currentURL + "#_LFR_FN_authentication";
 boolean ldapAuthEnabled = ldapAuthConfiguration.enabled();
 String ldapAuthMethod = ldapAuthConfiguration.method();
 boolean ldapAuthRequired = ldapAuthConfiguration.required();
-String ldapAuthServerPriority = ldapAuthServerPriorityConfiguration.authServerPriority();
+String ldapServerPriority = ldapServerPriorityConfiguration.authServerPriority();
 boolean ldapExportGroupEnabled = ldapExportConfiguration.exportGroupEnabled();
 boolean ldapImportCreateRolePerGroup = ldapImportConfiguration.importCreateRolePerGroup();
 boolean ldapImportEnabled = ldapImportConfiguration.importEnabled();
@@ -88,7 +88,7 @@ boolean ldapExportEnabled = !(ldapImportConfiguration.importUserPasswordAutogene
 
 <aui:fieldset>
 	<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" value="/portal_settings/ldap" />
-	<aui:input name='<%= "ldap--" + LDAPConstants.AUTH_SERVER_PRIORITY +"--"%>' type="hidden" value="<%=ldapAuthServerPriority %>" />
+	<aui:input name='<%= "ldap--" + LDAPConstants.AUTH_SERVER_PRIORITY +"--" %>' type="hidden" value="<%= ldapServerPriority %>" />
 
 	<c:if test="<%= !ldapServerConfigurations.isEmpty() %>">
 		<br /><br />

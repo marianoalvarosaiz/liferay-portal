@@ -11,28 +11,35 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.security.ldap.authenticator.configuration;
+
+import aQute.bnd.annotation.metatype.Meta;
 
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.portal.security.ldap.configuration.CompanyScopedConfiguration;
 
-import aQute.bnd.annotation.metatype.Meta;
+/**
+ * @author Javier Moral
+ */
+@ExtendedObjectClassDefinition(
+	factoryInstanceLabelAttribute = "companyId",
+	scope = ExtendedObjectClassDefinition.Scope.COMPANY
+)
+@Meta.OCD(
+	factory = true,
+	id = "com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration",
+	localization = "content/Language",
+	name = "ldap.auth.server.priority.configuration.name"
+)
+public interface LDAPServerPriorityConfiguration
+	extends CompanyScopedConfiguration {
 
-@ExtendedObjectClassDefinition(category = "foundation",
-		factoryInstanceLabelAttribute = "companyId",
-		scope = ExtendedObjectClassDefinition.Scope.COMPANY)
-@Meta.OCD(factory = true,
-		id = "com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration",
-		localization = "content/Language",
-		name = "ldap.auth.server.priority.configuration.name")
-public interface LDAPAuthServerPriorityConfiguration
-		extends CompanyScopedConfiguration {
-	
 	@Meta.AD(deflt = "0", required = false)
 	@Override
 	public long companyId();
-	
-	@Meta.AD(deflt = "", description = "LDAP server priority order",
-			required = false)
+
+	@Meta.AD(deflt = "", description = "LDAP server priority", required = false)
 	public String authServerPriority();
+
 }

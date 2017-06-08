@@ -11,9 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.security.ldap.internal.authenticator.configuration;
 
-import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration;
+import com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.CompanyScopedConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 
@@ -21,25 +22,27 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+/**
+ * @author Javier Moral
+ */
 @Component(
-		immediate = true,
-		property = {
-				"factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthServerPriorityConfiguration"
-		},
-		service = ConfigurationProvider.class)
-public class LDAPAuthServerPriorityConfigurationProviderImpl
-		extends
-		CompanyScopedConfigurationProvider<LDAPAuthServerPriorityConfiguration> {
+	immediate = true, property = {
+		"factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration"},
+	service = ConfigurationProvider.class
+)
+public class LDAPServerPriorityConfigurationProviderImpl
+	extends
+		CompanyScopedConfigurationProvider<LDAPServerPriorityConfiguration> {
 
 	@Override
-	public Class<LDAPAuthServerPriorityConfiguration> getMetatype() {
-		return LDAPAuthServerPriorityConfiguration.class;
+	public Class<LDAPServerPriorityConfiguration> getMetatype() {
+		return LDAPServerPriorityConfiguration.class;
 	}
 
 	@Override
 	@Reference(unbind = "-")
 	protected void setConfigurationAdmin(
-			ConfigurationAdmin configurationAdmin) {
+		ConfigurationAdmin configurationAdmin) {
 
 		super.configurationAdmin = configurationAdmin;
 	}
