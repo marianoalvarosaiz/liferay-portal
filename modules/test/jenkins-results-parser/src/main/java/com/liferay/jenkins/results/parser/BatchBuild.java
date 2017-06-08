@@ -68,9 +68,6 @@ public class BatchBuild extends BaseBuild {
 			return messageElement;
 		}
 
-		Element downstreamBuildOrderedListElement = Dom4JUtil.getNewElement(
-			"ol", messageElement);
-
 		List<Element> failureElements = new ArrayList<>();
 
 		for (Build downstreamBuild : getDownstreamBuilds(null)) {
@@ -93,23 +90,7 @@ public class BatchBuild extends BaseBuild {
 			}
 		}
 
-		int failCount = 0;
-
-		for (Element failureElement : failureElements) {
-			failCount++;
-
-			if (failCount < 4) {
-				Dom4JUtil.getNewElement(
-					"li", downstreamBuildOrderedListElement, failureElement);
-
-				continue;
-			}
-
-			Dom4JUtil.getNewElement(
-				"li", downstreamBuildOrderedListElement, "...");
-
-			break;
-		}
+		Dom4JUtil.getOrderedListElement(failureElements, messageElement, 4);
 
 		if (failureElements.size() >= 4) {
 			Dom4JUtil.getNewElement(
@@ -182,6 +163,51 @@ public class BatchBuild extends BaseBuild {
 		}
 
 		return testResults;
+	}
+
+	@Override
+	public void update() {
+		super.update();
+
+		String status = getStatus();
+
+		if (badBuildNumbers.size() >= MAX_REINVOCATIONS) {
+			return;
+		}
+
+		if ((status.equals("completed") && result.equals("SUCCESS")) ||
+			fromArchive) {
+
+			return;
+		}
+
+		boolean reinvoked = false;
+
+		for (Build downstreamBuild : getDownstreamBuilds("completed")) {
+			if (reinvoked) {
+				break;
+			}
+
+			for (ReinvokeRule reinvokeRule : reinvokeRules) {
+				String downstreamBuildResult = downstreamBuild.getResult();
+
+				if ((downstreamBuildResult == null) ||
+					downstreamBuildResult.equals("SUCCESS")) {
+
+					continue;
+				}
+
+				if (!reinvokeRule.matches(downstreamBuild)) {
+					continue;
+				}
+
+				reinvoke(reinvokeRule);
+
+				reinvoked = true;
+
+				break;
+			}
+		}
 	}
 
 	protected BatchBuild(String url) {

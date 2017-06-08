@@ -399,6 +399,22 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 	}
 
 	@Override
+	public FileEntry fetchPortletFileEntry(
+		long groupId, long folderId, String fileName) {
+
+		try {
+			return getPortletFileEntry(groupId, folderId, fileName);
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+		}
+
+		return null;
+	}
+
+	@Override
 	public Repository fetchPortletRepository(long groupId, String portletId) {
 		return RepositoryLocalServiceUtil.fetchRepository(groupId, portletId);
 	}
@@ -469,6 +485,19 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 	}
 
 	@Override
+	public List<FileEntry> getPortletFileEntries(
+			long groupId, long folderId, String[] mimeTypes, int status,
+			int start, int end, OrderByComparator<FileEntry> obc)
+		throws PortalException {
+
+		LocalRepository localRepository =
+			RepositoryProviderUtil.getLocalRepository(groupId);
+
+		return localRepository.getFileEntries(
+			folderId, mimeTypes, status, start, end, obc);
+	}
+
+	@Override
 	public int getPortletFileEntriesCount(long groupId, long folderId)
 		throws PortalException {
 
@@ -487,6 +516,17 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 			RepositoryProviderUtil.getLocalRepository(groupId);
 
 		return localRepository.getFileEntriesCount(folderId, status);
+	}
+
+	@Override
+	public int getPortletFileEntriesCount(
+			long groupId, long folderId, String[] mimeTypes, int status)
+		throws PortalException {
+
+		LocalRepository localRepository =
+			RepositoryProviderUtil.getLocalRepository(groupId);
+
+		return localRepository.getFileEntriesCount(folderId, mimeTypes, status);
 	}
 
 	@Override

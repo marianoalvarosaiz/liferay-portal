@@ -17,7 +17,6 @@ package com.liferay.source.formatter.checks;
 import com.liferay.source.formatter.parser.JavaClass;
 import com.liferay.source.formatter.parser.JavaTerm;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,8 +25,9 @@ import java.util.regex.Pattern;
  */
 public class JavaTestMethodAnnotationsCheck extends BaseJavaTermCheck {
 
-	public JavaTestMethodAnnotationsCheck(List<String> excludes) {
-		_excludes = excludes;
+	@Override
+	public boolean isPortalCheck() {
+		return true;
 	}
 
 	@Override
@@ -35,9 +35,7 @@ public class JavaTestMethodAnnotationsCheck extends BaseJavaTermCheck {
 		String fileName, String absolutePath, JavaTerm javaTerm,
 		String fileContent) {
 
-		if (!fileName.endsWith("Test.java") ||
-			isExcludedPath(_excludes, absolutePath)) {
-
+		if (!fileName.endsWith("Test.java")) {
 			return javaTerm.getContent();
 		}
 
@@ -66,6 +64,7 @@ public class JavaTestMethodAnnotationsCheck extends BaseJavaTermCheck {
 		return javaTerm.getContent();
 	}
 
+	@Override
 	protected String[] getCheckableJavaTermNames() {
 		return new String[] {JAVA_METHOD};
 	}
@@ -101,7 +100,5 @@ public class JavaTestMethodAnnotationsCheck extends BaseJavaTermCheck {
 					"', see LPS-36303");
 		}
 	}
-
-	private final List<String> _excludes;
 
 }

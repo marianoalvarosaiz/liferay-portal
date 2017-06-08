@@ -14,10 +14,16 @@
 
 package com.liferay.calendar.web.internal.display.context;
 
+import com.liferay.calendar.constants.CalendarActionKeys;
 import com.liferay.calendar.model.Calendar;
+import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.model.CalendarResource;
+import com.liferay.calendar.recurrence.Recurrence;
+import com.liferay.calendar.service.CalendarBookingLocalService;
 import com.liferay.calendar.service.CalendarLocalService;
 import com.liferay.calendar.service.CalendarService;
+import com.liferay.calendar.service.permission.CalendarPermission;
+import com.liferay.calendar.util.RecurrenceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -38,13 +44,78 @@ import java.util.List;
 public class CalendarDisplayContext {
 
 	public CalendarDisplayContext(
-		GroupLocalService groupLocalService, CalendarService calendarService,
+		GroupLocalService groupLocalService,
+		CalendarBookingLocalService calendarBookingLocalService,
+		CalendarService calendarService,
 		CalendarLocalService calendarLocalService, ThemeDisplay themeDisplay) {
 
 		_groupLocalService = groupLocalService;
+		_calendarBookingLocalService = calendarBookingLocalService;
 		_calendarService = calendarService;
 		_calendarLocalService = calendarLocalService;
 		_themeDisplay = themeDisplay;
+	}
+
+	public Calendar getDefaultCalendar(
+		List<Calendar> groupCalendars, List<Calendar> userCalendars) {
+
+		Calendar defaultCalendar = null;
+
+		for (Calendar groupCalendar : groupCalendars) {
+			if (groupCalendar.isDefaultCalendar() &&
+				CalendarPermission.contains(
+					_themeDisplay.getPermissionChecker(), groupCalendar,
+					CalendarActionKeys.MANAGE_BOOKINGS)) {
+
+				defaultCalendar = groupCalendar;
+			}
+		}
+
+		if (defaultCalendar == null) {
+			for (Calendar userCalendar : userCalendars) {
+				if (userCalendar.isDefaultCalendar()) {
+					defaultCalendar = userCalendar;
+				}
+			}
+		}
+
+		if (defaultCalendar == null) {
+			for (Calendar groupCalendar : groupCalendars) {
+				if (CalendarPermission.contains(
+						_themeDisplay.getPermissionChecker(), groupCalendar,
+						CalendarActionKeys.MANAGE_BOOKINGS)) {
+
+					defaultCalendar = groupCalendar;
+				}
+			}
+		}
+
+		if (defaultCalendar == null) {
+			for (Calendar groupCalendar : groupCalendars) {
+				if (groupCalendar.isDefaultCalendar() &&
+					CalendarPermission.contains(
+						_themeDisplay.getPermissionChecker(), groupCalendar,
+						CalendarActionKeys.VIEW_BOOKING_DETAILS)) {
+
+					defaultCalendar = groupCalendar;
+				}
+			}
+		}
+
+		return defaultCalendar;
+	}
+
+	public Recurrence getLastRecurrence(CalendarBooking calendarBooking)
+		throws PortalException {
+
+		List<CalendarBooking> calendarBookings =
+			_calendarBookingLocalService.getRecurringCalendarBookings(
+				calendarBooking);
+
+		CalendarBooking lastCalendarBooking =
+			RecurrenceUtil.getLastInstanceCalendarBooking(calendarBookings);
+
+		return lastCalendarBooking.getRecurrenceObj();
 	}
 
 	public List<Calendar> getOtherCalendars(User user, long[] calendarIds)
@@ -128,6 +199,7 @@ public class CalendarDisplayContext {
 	private static final Log _log = LogFactoryUtil.getLog(
 		CalendarDisplayContext.class.getName());
 
+	private final CalendarBookingLocalService _calendarBookingLocalService;
 	private final CalendarLocalService _calendarLocalService;
 	private final CalendarService _calendarService;
 	private final GroupLocalService _groupLocalService;

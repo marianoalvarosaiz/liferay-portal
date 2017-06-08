@@ -15,6 +15,7 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.source.formatter.parser.JavaClass;
 import com.liferay.source.formatter.parser.JavaStaticBlock;
 import com.liferay.source.formatter.parser.JavaTerm;
@@ -24,20 +25,17 @@ import com.liferay.source.formatter.util.FileUtil;
 import java.io.File;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Hugo Huijser
  */
 public class JavaTermOrderCheck extends BaseJavaTermCheck {
 
-	public JavaTermOrderCheck(
-		List<String> excludes, boolean portalSource, boolean subrepository,
-		String portalCustomSQLContent) {
-
-		_excludes = excludes;
-		_portalSource = portalSource;
-		_subrepository = subrepository;
-		_portalCustomSQLContent = portalCustomSQLContent;
+	@Override
+	public void init() throws Exception {
+		_portalCustomSQLContent = _getPortalCustomSQLContent();
 	}
 
 	@Override
@@ -66,14 +64,41 @@ public class JavaTermOrderCheck extends BaseJavaTermCheck {
 			fileName, absolutePath, (JavaClass)javaTerm, customSQLContent);
 	}
 
+	@Override
 	protected String[] getCheckableJavaTermNames() {
 		return new String[] {JAVA_CLASS};
+	}
+
+	private String _getPortalCustomSQLContent() throws Exception {
+		if (!isPortalSource()) {
+			return null;
+		}
+
+		File portalCustomSQLFile = getFile(
+			"portal-impl/src/custom-sql/default.xml",
+			ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+
+		String portalCustomSQLContent = FileUtil.read(portalCustomSQLFile);
+
+		Matcher matcher = _customSQLFilePattern.matcher(portalCustomSQLContent);
+
+		while (matcher.find()) {
+			File customSQLFile = getFile(
+				"portal-impl/src/" + matcher.group(1),
+				ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+
+			if (customSQLFile != null) {
+				portalCustomSQLContent += FileUtil.read(customSQLFile);
+			}
+		}
+
+		return portalCustomSQLContent;
 	}
 
 	private String _getCustomSQLContent(String fileName, String absolutePath)
 		throws Exception {
 
-		if (_portalSource && !isModulesFile(absolutePath, _subrepository)) {
+		if (isPortalSource() && !isModulesFile(absolutePath)) {
 			return _portalCustomSQLContent;
 		}
 
@@ -138,9 +163,11 @@ public class JavaTermOrderCheck extends BaseJavaTermCheck {
 				addMessage(fileName, "Duplicate " + javaTerm.getName());
 			}
 			else if (!isExcludedPath(
-						_excludes, absolutePath, previousJavaTerm.getName()) &&
+						JAVATERM_SORT_EXCLUDES, absolutePath,
+						previousJavaTerm.getName()) &&
 					 !isExcludedPath(
-						 _excludes, absolutePath, javaTerm.getName()) &&
+						 JAVATERM_SORT_EXCLUDES, absolutePath,
+						 javaTerm.getName()) &&
 					 (compare > 0)) {
 
 				String classContent = javaClass.getContent();
@@ -162,9 +189,8 @@ public class JavaTermOrderCheck extends BaseJavaTermCheck {
 		return javaClass.getContent();
 	}
 
-	private final List<String> _excludes;
-	private final String _portalCustomSQLContent;
-	private final boolean _portalSource;
-	private final boolean _subrepository;
+	private final Pattern _customSQLFilePattern = Pattern.compile(
+		"<sql file=\"(.*)\" \\/>");
+	private String _portalCustomSQLContent;
 
 }

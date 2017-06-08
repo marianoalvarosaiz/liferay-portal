@@ -272,6 +272,7 @@ public class AlloyEditorCreoleConfigContributor
 
 		JSONObject cfgJSONObject = JSONFactoryUtil.createJSONObject();
 
+		cfgJSONObject.put("appendProtocol", false);
 		cfgJSONObject.put("showTargetSelector", false);
 
 		linkEditJSONObject.put("cfg", cfgJSONObject);
@@ -335,12 +336,7 @@ public class AlloyEditorCreoleConfigContributor
 	protected void setResourceBundleLoader(
 		ResourceBundleLoader resourceBundleLoader) {
 
-		ClassLoader classLoader =
-			AlloyEditorConfigContributor.class.getClassLoader();
-
 		_resourceBundleLoader = new AggregateResourceBundleLoader(
-			ResourceBundleUtil.getResourceBundleLoader(
-				"content.Language", classLoader),
 			resourceBundleLoader,
 			ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
 	}

@@ -5,10 +5,18 @@ AUI.add(
 
 		var CSS_CALCULATE_CONTAINER_FIELDS = A.getClassName('calculate', 'container', 'fields');
 
+		var OPERATORS_MAP = ['+', '-', '*', '/', '.'];
+
+		var Settings = Liferay.DDL.Settings;
+
 		var FormBuilderActionCalculate = A.Component.create(
 			{
 				ATTRS: {
 					action: {
+						value: ''
+					},
+
+					functions: {
 						value: ''
 					},
 
@@ -18,6 +26,10 @@ AUI.add(
 
 					options: {
 						value: []
+					},
+
+					type: {
+						value: 'calculate'
 					}
 				},
 
@@ -28,12 +40,20 @@ AUI.add(
 				NAME: 'liferay-ddl-form-builder-action-calculate',
 
 				prototype: {
+					initializer: function() {
+						var instance = this;
+
+						instance._regexExpression = new RegExp('\\[([^\\]]+)\\]|sum|(.)', 'g');
+
+						instance.on('liferay-ddl-form-builder-calculator:clickedKey', A.bind(instance._handleClickedKey, instance));
+					},
+
 					getValue: function() {
 						var instance = this;
 
 						return {
 							action: 'calculate',
-							expression: instance._expressionField.getValue(),
+							expression: instance._getCalculateKeyActions().join().replace(/\,/g, ''),
 							target: instance._targetField.getValue()
 						};
 					},
@@ -49,7 +69,21 @@ AUI.add(
 
 						calculateContainer.setHTML(instance._getRuleContainerTemplate());
 
-						instance._getCalculator().render(calculateContainer.one('.' + CSS_CALCULATE_CONTAINER_CALCULATOR));
+						A.io.request(
+							Settings.getFunctionsURL,
+							{
+								method: 'GET',
+								on: {
+									success: function(event, id, xhr) {
+										var result = JSON.parse(xhr.responseText);
+
+										instance.set('functions', result);
+
+										instance._getCalculator().render(calculateContainer.one('.' + CSS_CALCULATE_CONTAINER_CALCULATOR));
+									}
+								}
+							}
+						);
 
 						var expressionField = instance._createExpressionField();
 
@@ -65,9 +99,12 @@ AUI.add(
 
 						var calculator = new Liferay.DDL.FormBuilderCalculator(
 							{
+								functions: instance.get('functions'),
 								options: instance.get('options')
 							}
 						);
+
+						calculator.addTarget(instance);
 
 						return calculator;
 					},
@@ -75,19 +112,23 @@ AUI.add(
 					_createExpressionField: function() {
 						var instance = this;
 
-						var value;
+						var value = '';
 
 						var action = instance.get('action');
 
 						if (action && action.expression) {
-							value = action.expression;
+							instance._setCalculateKeyActions(action.expression.match(instance._regexExpression));
+
+							value = action.expression.replace(/\[|\]/g, '');
 						}
 
-						instance._expressionField = new Liferay.DDM.Field.Text(
+						instance._expressionField = instance.createTextField(
 							{
+								bubbleTargets: [instance],
 								displayStyle: 'multiline',
 								fieldName: instance.get('index') + '-action',
 								placeholder: Liferay.Language.get('the-expression-will-be-displayed-here'),
+								readOnly: true,
 								value: value,
 								visible: true
 							}
@@ -99,16 +140,17 @@ AUI.add(
 					_createTargetField: function() {
 						var instance = this;
 
-						var value;
+						var value = [];
 
 						var action = instance.get('action');
 
 						if (action && action.target) {
-							value = action.target;
+							value = [action.target];
 						}
 
-						instance._targetField = new Liferay.DDM.Field.Select(
+						instance._targetField = instance.createSelectField(
 							{
+								bubbleTargets: [instance],
 								fieldName: instance.get('index') + '-action',
 								label: Liferay.Language.get('choose-a-field-to-show-the-result'),
 								options: instance.get('options'),
@@ -122,6 +164,16 @@ AUI.add(
 						container.addClass('calculate-field-target');
 
 						return instance._targetField;
+					},
+
+					_getCalculateKeyActions: function() {
+						var instance = this;
+
+						if (!instance._keyActions) {
+							instance._keyActions = [];
+						}
+
+						return instance._keyActions;
 					},
 
 					_getCalculator: function() {
@@ -140,6 +192,48 @@ AUI.add(
 						var calculateTemplateRenderer = Liferay.DDM.SoyTemplateUtil.getTemplateRenderer('ddl.calculate.settings');
 
 						return calculateTemplateRenderer();
+					},
+
+					_handleClickedKey: function(event) {
+						var instance = this;
+
+						if (event.key !== undefined) {
+							if (event.key === 'backspace') {
+								instance._getCalculateKeyActions().pop();
+							}
+							else {
+								instance._removeRepeatedOperatorKey(event.key);
+
+								instance._getCalculateKeyActions().push(event.key);
+							}
+						}
+
+						instance._expressionField.set('value', instance._processExpressionString());
+						instance._expressionField.render();
+					},
+
+					_processExpressionString: function(keyActions) {
+						var instance = this;
+
+						return instance._getCalculateKeyActions().join('').replace(/\[|\]/g, '');
+					},
+
+					_removeRepeatedOperatorKey: function(key) {
+						var instance = this;
+
+						if (OPERATORS_MAP.includes(key) && instance._getCalculateKeyActions().length >= 1) {
+							var lastKey = instance._getCalculateKeyActions()[instance._getCalculateKeyActions().length - 1];
+
+							if (OPERATORS_MAP.includes(lastKey)) {
+								instance._getCalculateKeyActions().pop();
+							}
+						}
+					},
+
+					_setCalculateKeyActions: function(value) {
+						var instance = this;
+
+						instance._keyActions = value;
 					}
 				}
 			}
