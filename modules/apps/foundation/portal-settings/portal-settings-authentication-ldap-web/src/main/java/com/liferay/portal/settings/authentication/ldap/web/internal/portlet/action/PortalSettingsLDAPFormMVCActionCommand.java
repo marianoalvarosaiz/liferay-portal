@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
+import com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
@@ -80,6 +81,10 @@ public class PortalSettingsLDAPFormMVCActionCommand
 			actionRequest, _ldapAuthConfigurationProvider,
 			themeDisplay.getCompanyId(), LDAPConstants.AUTH_METHOD,
 			LDAPConstants.PASSWORD_ENCRYPTION_ALGORITHM);
+
+		updateStringProperties(
+			actionRequest, _ldapServerPriorityConfigurationProvider,
+			themeDisplay.getCompanyId(), LDAPConstants.AUTH_SERVER_PRIORITY);
 
 		updateBooleanProperties(
 			actionRequest, _ldapExportConfigurationProvider,
@@ -172,6 +177,18 @@ public class PortalSettingsLDAPFormMVCActionCommand
 		_ldapImportConfigurationProvider = ldapImportConfigurationProvider;
 	}
 
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPServerPriorityConfigurationProvider(
+		ConfigurationProvider<LDAPServerPriorityConfiguration>
+			ldapServerPriorityConfigurationProvider) {
+
+		_ldapServerPriorityConfigurationProvider =
+			ldapServerPriorityConfigurationProvider;
+	}
+
 	protected void updateBooleanProperties(
 		ActionRequest actionRequest,
 		ConfigurationProvider<?> configurationProvider, long companyId,
@@ -250,5 +267,7 @@ public class PortalSettingsLDAPFormMVCActionCommand
 		_ldapExportConfigurationProvider;
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
+	private ConfigurationProvider<LDAPServerPriorityConfiguration>
+		_ldapServerPriorityConfigurationProvider;
 
 }

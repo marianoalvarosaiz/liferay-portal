@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.BaseConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
@@ -247,7 +249,8 @@ public class LDAPServerConfigurationProviderImpl
 			}
 		}
 
-		return ldapServerConfigurations;
+		return _sortConfigurationsByPriority(
+			companyId, ldapServerConfigurations);
 	}
 
 	@Override
@@ -409,10 +412,80 @@ public class LDAPServerConfigurationProviderImpl
 		super.configurationAdmin = configurationAdmin;
 	}
 
-	private final Map<Long, Map<Long, ObjectValuePair<Configuration, LDAPServerConfiguration>>>
-		_configurations = new ConcurrentHashMap<>();
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPServerPriorityConfigurationProvider(
+		ConfigurationProvider<LDAPServerPriorityConfiguration>
+			ldapServerPriorityConfigurationProvider) {
+
+		_ldapServerPriorityConfigurationProvider =
+			ldapServerPriorityConfigurationProvider;
+	}
+
+	private List<LDAPServerConfiguration> _sortConfigurationsByPriority(
+		long companyId,
+		List<LDAPServerConfiguration> ldapServerConfigurations) {
+
+		LDAPServerPriorityConfiguration ldapServerPriorityConfiguration =
+			_ldapServerPriorityConfigurationProvider.getConfiguration(
+				companyId);
+
+		String authServerPriority =
+			ldapServerPriorityConfiguration.authServerPriority();
+
+		if (Validator.isNotNull(authServerPriority)) {
+			Map<Long, LDAPServerConfiguration> serverConfigurationsMap =
+				new HashMap<>();
+
+			for (LDAPServerConfiguration serverConfiguration :
+					ldapServerConfigurations) {
+
+				serverConfigurationsMap.put(
+					serverConfiguration.ldapServerId(), serverConfiguration);
+			}
+
+			List<LDAPServerConfiguration> sortedLdapServerConfigurations =
+				new ArrayList<>();
+
+			String[] serverIds = authServerPriority.split(",");
+
+			for (String serverId : serverIds) {
+				if (Validator.isNumber(serverId)) {
+					Long id = Long.valueOf(serverId);
+
+					LDAPServerConfiguration ldapServerConfiguration =
+						serverConfigurationsMap.remove(id);
+
+					if (ldapServerConfiguration != null) {
+						sortedLdapServerConfigurations.add(
+							ldapServerConfiguration);
+					}
+				}
+			}
+
+			if (!serverConfigurationsMap.isEmpty()) {
+				sortedLdapServerConfigurations.addAll(
+					serverConfigurationsMap.values());
+			}
+
+			return sortedLdapServerConfigurations;
+		}
+
+		else
+		{
+			return ldapServerConfigurations;
+		}
+	}
+
+	private final Map<Long,
+		Map<Long, ObjectValuePair<Configuration, LDAPServerConfiguration>>>
+			_configurations = new ConcurrentHashMap<>();
 	private final LDAPServerConfiguration _defaultLDAPServerConfiguration =
 		ConfigurableUtil.createConfigurable(
 			LDAPServerConfiguration.class, Collections.emptyMap());
+	private ConfigurationProvider<LDAPServerPriorityConfiguration>
+		_ldapServerPriorityConfigurationProvider;
 
 }
