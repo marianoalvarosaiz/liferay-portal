@@ -81,6 +81,10 @@ public class PortalSettingsLDAPFormMVCActionCommand
 			themeDisplay.getCompanyId(), LDAPConstants.AUTH_METHOD,
 			LDAPConstants.PASSWORD_ENCRYPTION_ALGORITHM);
 
+		updateStringProperties(
+			actionRequest, _ldapServerPriorityConfigurationProvider,
+			themeDisplay.getCompanyId(), LDAPConstants.AUTH_SERVER_PRIORITY);
+
 		updateBooleanProperties(
 			actionRequest, _ldapExportConfigurationProvider,
 			themeDisplay.getCompanyId(), LDAPConstants.EXPORT_ENABLED,

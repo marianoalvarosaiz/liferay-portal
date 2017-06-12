@@ -87,6 +87,7 @@ boolean ldapExportEnabled = !(ldapImportConfiguration.importUserPasswordAutogene
 
 <aui:fieldset>
 	<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" value="/portal_settings/ldap" />
+	<aui:input name='<%= "ldap--" + LDAPConstants.AUTH_SERVER_PRIORITY +"--" %>' type="hidden" value="<%= ldapServerPriority %>" />
 
 	<c:if test="<%= !ldapServerConfigurations.isEmpty() %>">
 		<br /><br />
