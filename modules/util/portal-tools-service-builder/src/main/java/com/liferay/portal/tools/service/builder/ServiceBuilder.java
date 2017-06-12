@@ -1290,10 +1290,11 @@ public class ServiceBuilder {
 		return sb.toString();
 	}
 
-	public List<EntityColumn> getMappingEntities(String mappingTable)
+	public Map<String, List<EntityColumn>> getMappingEntities(
+			String mappingTable)
 		throws Exception {
 
-		List<EntityColumn> mappingEntitiesPKList = new ArrayList<>();
+		Map<String, List<EntityColumn>> mappingEntities = new LinkedHashMap<>();
 
 		EntityMapping entityMapping = _entityMappings.get(mappingTable);
 
@@ -1304,10 +1305,10 @@ public class ServiceBuilder {
 				return null;
 			}
 
-			mappingEntitiesPKList.addAll(entity.getPKList());
+			mappingEntities.put(entity.getName(), entity.getPKList());
 		}
 
-		return mappingEntitiesPKList;
+		return mappingEntities;
 	}
 
 	public int getMaxLength(String model, String field) {
@@ -1510,6 +1511,9 @@ public class ServiceBuilder {
 		}
 		else if (type.equals("Date")) {
 			return "TIMESTAMP";
+		}
+		else if (type.equals("String")) {
+			return "VARCHAR";
 		}
 		else {
 			return null;
@@ -2998,7 +3002,7 @@ public class ServiceBuilder {
 
 		JavaSource javaSource = javaClass.getSource();
 
-		imports.addAll(Arrays.asList(javaSource.getImports()));
+		Collections.addAll(imports, javaSource.getImports());
 
 		JavaMethod[] methods = _getMethods(javaClass);
 
@@ -3016,7 +3020,7 @@ public class ServiceBuilder {
 
 			JavaSource parentJavaSource = parentJavaClass.getSource();
 
-			imports.addAll(Arrays.asList(parentJavaSource.getImports()));
+			Collections.addAll(imports, parentJavaSource.getImports());
 
 			methods = _mergeMethods(
 				methods, parentJavaClass.getMethods(), true);
@@ -5480,10 +5484,17 @@ public class ServiceBuilder {
 		List<Element> txRequiredElements = entityElement.elements(
 			"tx-required");
 
-		for (Element txRequiredEl : txRequiredElements) {
-			String txRequired = txRequiredEl.getText();
+		if (!txRequiredElements.isEmpty()) {
+			System.err.println(
+				"The tx-required attribute is deprecated in favor annotating " +
+					"the service impl method with " +
+						"com.liferay.portal.kernel.transaction.Transactional");
 
-			txRequiredList.add(txRequired);
+			for (Element txRequiredEl : txRequiredElements) {
+				String txRequired = txRequiredEl.getText();
+
+				txRequiredList.add(txRequired);
+			}
 		}
 
 		boolean resourceActionModel = _resourceActionModels.contains(

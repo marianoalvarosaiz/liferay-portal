@@ -4,8 +4,8 @@
 [subrepo]
 	autopull = false
 	cmdver = liferay
-	commit = 70aa5e6a509bcb46334a2520375e8e48f0355d01
+	commit = 7761bf0df61dc40c6255fce2dd1c461a969c8b2e
 	mergebuttonmergecommits = false
 	mode = push
-	parent = 51ba6cc98af63dbabd804c3ea5d99bff05fb6d31
+	parent = 7218e43ed5aeb864dcc4a5b6e7618d165eea9f4e
 	remote = git@github.com:liferay/com-liferay-item-selector.git

@@ -80,11 +80,11 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.util.LayoutURLUtil;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.subscription.service.SubscriptionLocalService;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.model.TrashVersion;
-import com.liferay.trash.kernel.util.TrashUtil;
 import com.liferay.wiki.configuration.WikiGroupServiceOverriddenConfiguration;
 import com.liferay.wiki.constants.WikiConstants;
 import com.liferay.wiki.constants.WikiPortletKeys;
@@ -596,12 +596,11 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Resource
 
-		WikiPageResource pageResource =
-			wikiPageResourceLocalService.fetchPageResource(
-				page.getNodeId(), page.getTitle());
+		WikiPageResource pageResource = wikiPageResourcePersistence.fetchByN_T(
+			page.getNodeId(), page.getTitle());
 
 		if (pageResource != null) {
-			wikiPageResourceLocalService.deleteWikiPageResource(pageResource);
+			wikiPageResourcePersistence.remove(pageResource);
 		}
 
 		// Attachments
@@ -655,7 +654,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		if (page.isInTrash()) {
 			if (page.isInTrashExplicitly()) {
-				page.setTitle(TrashUtil.getOriginalTitle(page.getTitle()));
+				page.setTitle(trashHelper.getOriginalTitle(page.getTitle()));
 
 				trashEntryLocalService.deleteEntry(
 					WikiPage.class.getName(), page.getResourcePrimKey());
@@ -878,7 +877,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	@Override
 	public WikiPage fetchPage(long resourcePrimKey) {
 		WikiPageResource pageResource =
-			wikiPageResourceLocalService.fetchWikiPageResource(resourcePrimKey);
+			wikiPageResourcePersistence.fetchByPrimaryKey(resourcePrimKey);
 
 		if (pageResource == null) {
 			return null;
@@ -1164,7 +1163,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		throws PortalException {
 
 		WikiPageResource pageResource =
-			wikiPageResourceLocalService.getPageResource(resourcePrimKey);
+			wikiPageResourcePersistence.findByPrimaryKey(resourcePrimKey);
 
 		return getPage(pageResource.getNodeId(), pageResource.getTitle(), head);
 	}
@@ -1560,7 +1559,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		extraDataJSONObject.put("fileEntryId", fileEntry.getFileEntryId());
 		extraDataJSONObject.put(
-			"fileEntryTitle", TrashUtil.getOriginalTitle(fileEntry.getTitle()));
+			"fileEntryTitle",
+			trashHelper.getOriginalTitle(fileEntry.getTitle()));
 		extraDataJSONObject.put("title", page.getTitle());
 		extraDataJSONObject.put("version", page.getVersion());
 
@@ -1682,7 +1682,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			page.getResourcePrimKey(), page.getUuid(), null, oldStatus,
 			pageVersionStatusOVPs, typeSettingsProperties);
 
-		String trashTitle = TrashUtil.getTrashTitle(trashEntry.getEntryId());
+		String trashTitle = trashHelper.getTrashTitle(trashEntry.getEntryId());
 
 		for (WikiPage pageVersion : pageVersions) {
 			pageVersion.setTitle(trashTitle);
@@ -1733,7 +1733,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
 
 		extraDataJSONObject.put(
-			"title", TrashUtil.getOriginalTitle(page.getTitle()));
+			"title", trashHelper.getOriginalTitle(page.getTitle()));
 		extraDataJSONObject.put("version", page.getVersion());
 
 		SocialActivityManagerUtil.addActivity(
@@ -1861,7 +1861,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		extraDataJSONObject.put("fileEntryId", fileEntry.getFileEntryId());
 		extraDataJSONObject.put(
-			"fileEntryTitle", TrashUtil.getOriginalTitle(fileEntry.getTitle()));
+			"fileEntryTitle",
+			trashHelper.getOriginalTitle(fileEntry.getTitle()));
 		extraDataJSONObject.put("title", page.getTitle());
 		extraDataJSONObject.put("version", page.getVersion());
 
@@ -2021,7 +2022,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		throws PortalException {
 
 		WikiPageResource pageResource =
-			wikiPageResourceLocalService.getPageResource(resourcePrimKey);
+			wikiPageResourcePersistence.findByPrimaryKey(resourcePrimKey);
 
 		List<WikiPage> pages = wikiPagePersistence.findByN_T(
 			pageResource.getNodeId(), pageResource.getTitle(), 0, 1,
@@ -2578,7 +2579,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		pageResource.setNodeId(newNodeId);
 
 		if (trashVersion != null) {
-			String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
+			String originalTitle = trashHelper.getOriginalTitle(
+				page.getTitle());
 
 			pageResource.setTitle(originalTitle);
 
@@ -2729,7 +2731,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 					trashEntryId, WikiPage.class.getName(), page.getPageId(),
 					page.getStatus(), typeSettingsProperties);
 
-			trashTitle = TrashUtil.getTrashTitle(trashVersion.getVersionId());
+			trashTitle = trashHelper.getTrashTitle(trashVersion.getVersionId());
 
 			WikiPageResource pageResource =
 				wikiPageResourcePersistence.findByPrimaryKey(
@@ -2840,7 +2842,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		String trashTitle = page.getTitle();
 
-		String originalTitle = TrashUtil.getOriginalTitle(trashTitle);
+		String originalTitle = trashHelper.getOriginalTitle(trashTitle);
 
 		long oldNodeId = page.getNodeId();
 
@@ -3299,6 +3301,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 	@ServiceReference(type = SubscriptionLocalService.class)
 	protected SubscriptionLocalService subscriptionLocalService;
+
+	@ServiceReference(type = TrashHelper.class)
+	protected TrashHelper trashHelper;
 
 	@ServiceReference(type = WikiCacheHelper.class)
 	protected WikiCacheHelper wikiCacheHelper;

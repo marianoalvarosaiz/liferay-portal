@@ -1639,8 +1639,9 @@ public class PortalImpl implements Portal {
 				WebKeys.THEME_DISPLAY);
 
 			group = getControlPanelDisplayGroup(
-				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
-				themeDisplay.getDoAsGroupId(), portletId);
+				themeDisplay.getControlPanelGroup(),
+				themeDisplay.getScopeGroup(), themeDisplay.getDoAsGroupId(),
+				portletId);
 		}
 
 		return requestBackedPortletURLFactory.createControlPanelPortletURL(
@@ -1669,8 +1670,9 @@ public class PortalImpl implements Portal {
 					WebKeys.THEME_DISPLAY);
 
 			group = getControlPanelDisplayGroup(
-				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
-				themeDisplay.getDoAsGroupId(), portletId);
+				themeDisplay.getControlPanelGroup(),
+				themeDisplay.getScopeGroup(), themeDisplay.getDoAsGroupId(),
+				portletId);
 		}
 
 		return requestBackedPortletURLFactory.createControlPanelPortletURL(
@@ -4624,6 +4626,8 @@ public class PortalImpl implements Portal {
 		throws PortalException {
 
 		Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		long scopeGroupId = 0;
 
@@ -4694,8 +4698,8 @@ public class PortalImpl implements Portal {
 					if ((liveGroupLayout != null) &&
 						liveGroupLayout.hasScopeGroup()) {
 
-						scopeGroupId = getScopeGroupId(
-							liveGroupLayout, portletId);
+						scopeGroupId = _getScopeGroupId(
+							themeDisplay, liveGroupLayout, portletId);
 					}
 					else if (checkStagingGroup &&
 							 !liveGroup.isStagedRemotely()) {
@@ -4712,7 +4716,7 @@ public class PortalImpl implements Portal {
 		}
 
 		if (scopeGroupId <= 0) {
-			scopeGroupId = getScopeGroupId(layout, portletId);
+			scopeGroupId = _getScopeGroupId(themeDisplay, layout, portletId);
 		}
 
 		return scopeGroupId;
@@ -4730,48 +4734,7 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public long getScopeGroupId(Layout layout, String portletId) {
-		if (layout == null) {
-			return 0;
-		}
-
-		if (Validator.isNull(portletId)) {
-			return layout.getGroupId();
-		}
-
-		try {
-			PortletPreferences portletSetup =
-				PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
-					layout, portletId);
-
-			String scopeType = GetterUtil.getString(
-				portletSetup.getValue("lfrScopeType", null));
-
-			if (Validator.isNull(scopeType)) {
-				return layout.getGroupId();
-			}
-
-			if (scopeType.equals("company")) {
-				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
-					layout.getCompanyId());
-
-				return companyGroup.getGroupId();
-			}
-
-			String scopeLayoutUuid = GetterUtil.getString(
-				portletSetup.getValue("lfrScopeLayoutUuid", null));
-
-			Layout scopeLayout =
-				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					scopeLayoutUuid, layout.getGroupId(),
-					layout.isPrivateLayout());
-
-			Group scopeGroup = scopeLayout.getScopeGroup();
-
-			return scopeGroup.getGroupId();
-		}
-		catch (Exception e) {
-			return layout.getGroupId();
-		}
+		return _getScopeGroupId(null, layout, portletId);
 	}
 
 	@Override
@@ -7610,10 +7573,11 @@ public class PortalImpl implements Portal {
 	}
 
 	protected Group getControlPanelDisplayGroup(
-		long companyId, long scopeGroupId, long doAsGroupId, String portletId) {
+		Group controlPanelGroup, Group scopeGroup, long doAsGroupId,
+		String portletId) {
 
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			companyId, portletId);
+			controlPanelGroup.getCompanyId(), portletId);
 
 		String portletCategory = portlet.getControlPanelEntryCategory();
 
@@ -7625,22 +7589,28 @@ public class PortalImpl implements Portal {
 			portletCategory.equals(PortletCategoryKeys.CONTROL_PANEL_USERS) ||
 			portletCategory.equals(PortletCategoryKeys.USER_MY_ACCOUNT)) {
 
-			return GroupLocalServiceUtil.fetchGroup(
-				companyId, GroupConstants.CONTROL_PANEL);
+			return controlPanelGroup;
 		}
-		else {
-			Group group = null;
 
-			if (doAsGroupId > 0) {
-				group = GroupLocalServiceUtil.fetchGroup(doAsGroupId);
+		if (doAsGroupId > 0) {
+			Group doAsGroup = GroupLocalServiceUtil.fetchGroup(doAsGroupId);
+
+			if (doAsGroup != null) {
+				return doAsGroup;
 			}
-
-			if (group == null) {
-				group = GroupLocalServiceUtil.fetchGroup(scopeGroupId);
-			}
-
-			return group;
 		}
+
+		return scopeGroup;
+	}
+
+	protected Group getControlPanelDisplayGroup(
+		long companyId, long scopeGroupId, long doAsGroupId, String portletId) {
+
+		return getControlPanelDisplayGroup(
+			GroupLocalServiceUtil.fetchGroup(
+				companyId, GroupConstants.CONTROL_PANEL),
+			GroupLocalServiceUtil.fetchGroup(scopeGroupId), doAsGroupId,
+			portletId);
 	}
 
 	protected long getDoAsUserId(
@@ -8539,6 +8509,61 @@ public class PortalImpl implements Portal {
 		}
 
 		return portletTitle;
+	}
+
+	private long _getScopeGroupId(
+		ThemeDisplay themeDisplay, Layout layout, String portletId) {
+
+		if (layout == null) {
+			return 0;
+		}
+
+		if (Validator.isNull(portletId)) {
+			return layout.getGroupId();
+		}
+
+		try {
+			PortletPreferences portletSetup = null;
+
+			if (themeDisplay == null) {
+				portletSetup =
+					PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
+						layout, portletId);
+			}
+			else {
+				portletSetup = themeDisplay.getStrictLayoutPortletSetup(
+					layout, portletId);
+			}
+
+			String scopeType = GetterUtil.getString(
+				portletSetup.getValue("lfrScopeType", null));
+
+			if (Validator.isNull(scopeType)) {
+				return layout.getGroupId();
+			}
+
+			if (scopeType.equals("company")) {
+				Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+					layout.getCompanyId());
+
+				return companyGroup.getGroupId();
+			}
+
+			String scopeLayoutUuid = GetterUtil.getString(
+				portletSetup.getValue("lfrScopeLayoutUuid", null));
+
+			Layout scopeLayout =
+				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
+					scopeLayoutUuid, layout.getGroupId(),
+					layout.isPrivateLayout());
+
+			Group scopeGroup = scopeLayout.getScopeGroup();
+
+			return scopeGroup.getGroupId();
+		}
+		catch (Exception e) {
+			return layout.getGroupId();
+		}
 	}
 
 	private Group _getSiteGroup(long groupId) {
