@@ -17,6 +17,7 @@ package com.liferay.portal.security.ldap.internal.configuration;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.CompanyConstants;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
@@ -31,6 +32,7 @@ import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -38,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -249,8 +253,9 @@ public class LDAPServerConfigurationProviderImpl
 			}
 		}
 
-		return _sortConfigurationsByPriority(
-			companyId, ldapServerConfigurations);
+		_sortConfigurationsByPriority(companyId, ldapServerConfigurations);
+
+		return ldapServerConfigurations;
 	}
 
 	@Override
@@ -424,7 +429,7 @@ public class LDAPServerConfigurationProviderImpl
 			ldapServerPriorityConfigurationProvider;
 	}
 
-	private List<LDAPServerConfiguration> _sortConfigurationsByPriority(
+	private void _sortConfigurationsByPriority(
 		long companyId,
 		List<LDAPServerConfiguration> ldapServerConfigurations) {
 
@@ -436,46 +441,19 @@ public class LDAPServerConfigurationProviderImpl
 			ldapServerPriorityConfiguration.authServerPriority();
 
 		if (Validator.isNotNull(authServerPriority)) {
-			Map<Long, LDAPServerConfiguration> serverConfigurationsMap =
-				new HashMap<>();
+			Stream<String> idsStream = Arrays.stream(
+				authServerPriority.split(","));
 
-			for (LDAPServerConfiguration serverConfiguration :
-					ldapServerConfigurations) {
+			List<Long> sortedIds = idsStream.map(
+				GetterUtil::getLong
+			).collect(
+				Collectors.toList()
+			);
 
-				serverConfigurationsMap.put(
-					serverConfiguration.ldapServerId(), serverConfiguration);
-			}
-
-			List<LDAPServerConfiguration> sortedLdapServerConfigurations =
-				new ArrayList<>();
-
-			String[] serverIds = authServerPriority.split(",");
-
-			for (String serverId : serverIds) {
-				if (Validator.isNumber(serverId)) {
-					Long id = Long.valueOf(serverId);
-
-					LDAPServerConfiguration ldapServerConfiguration =
-						serverConfigurationsMap.remove(id);
-
-					if (ldapServerConfiguration != null) {
-						sortedLdapServerConfigurations.add(
-							ldapServerConfiguration);
-					}
-				}
-			}
-
-			if (!serverConfigurationsMap.isEmpty()) {
-				sortedLdapServerConfigurations.addAll(
-					serverConfigurationsMap.values());
-			}
-
-			return sortedLdapServerConfigurations;
-		}
-
-		else
-		{
-			return ldapServerConfigurations;
+			ldapServerConfigurations.sort(
+				(LDAPServerConfiguration one, LDAPServerConfiguration other) ->
+					sortedIds.indexOf(one.ldapServerId()) -
+						sortedIds.indexOf(other.ldapServerId()));
 		}
 	}
 
