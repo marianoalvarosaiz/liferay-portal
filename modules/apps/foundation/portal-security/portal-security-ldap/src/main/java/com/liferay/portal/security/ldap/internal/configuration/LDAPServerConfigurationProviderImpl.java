@@ -17,10 +17,13 @@ package com.liferay.portal.security.ldap.internal.configuration;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.CompanyConstants;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.BaseConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
@@ -29,6 +32,7 @@ import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -36,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -247,6 +253,8 @@ public class LDAPServerConfigurationProviderImpl
 			}
 		}
 
+		_sortConfigurationsByPriority(companyId, ldapServerConfigurations);
+
 		return ldapServerConfigurations;
 	}
 
@@ -409,10 +417,53 @@ public class LDAPServerConfigurationProviderImpl
 		super.configurationAdmin = configurationAdmin;
 	}
 
-	private final Map<Long, Map<Long, ObjectValuePair<Configuration, LDAPServerConfiguration>>>
-		_configurations = new ConcurrentHashMap<>();
+	@Reference(
+		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration)",
+		unbind = "-"
+	)
+	protected void setLDAPServerPriorityConfigurationProvider(
+		ConfigurationProvider<LDAPServerPriorityConfiguration>
+			ldapServerPriorityConfigurationProvider) {
+
+		_ldapServerPriorityConfigurationProvider =
+			ldapServerPriorityConfigurationProvider;
+	}
+
+	private void _sortConfigurationsByPriority(
+		long companyId,
+		List<LDAPServerConfiguration> ldapServerConfigurations) {
+
+		LDAPServerPriorityConfiguration ldapServerPriorityConfiguration =
+			_ldapServerPriorityConfigurationProvider.getConfiguration(
+				companyId);
+
+		String authServerPriority =
+			ldapServerPriorityConfiguration.authServerPriority();
+
+		if (Validator.isNotNull(authServerPriority)) {
+			Stream<String> idsStream = Arrays.stream(
+				authServerPriority.split(","));
+
+			List<Long> sortedIds = idsStream.map(
+				GetterUtil::getLong
+			).collect(
+				Collectors.toList()
+			);
+
+			ldapServerConfigurations.sort(
+				(LDAPServerConfiguration one, LDAPServerConfiguration other) ->
+					sortedIds.indexOf(one.ldapServerId()) -
+						sortedIds.indexOf(other.ldapServerId()));
+		}
+	}
+
+	private final Map<Long,
+		Map<Long, ObjectValuePair<Configuration, LDAPServerConfiguration>>>
+			_configurations = new ConcurrentHashMap<>();
 	private final LDAPServerConfiguration _defaultLDAPServerConfiguration =
 		ConfigurableUtil.createConfigurable(
 			LDAPServerConfiguration.class, Collections.emptyMap());
+	private ConfigurationProvider<LDAPServerPriorityConfiguration>
+		_ldapServerPriorityConfigurationProvider;
 
 }
