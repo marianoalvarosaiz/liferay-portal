@@ -309,16 +309,8 @@ public class LDAPServerConfigurationProviderImpl
 
 		synchronized (_configurations) {
 			Map<Long, ObjectValuePair<Configuration, LDAPServerConfiguration>>
-				ldapServerConfigurations = _configurations.get(
-					ldapServerConfiguration.companyId());
-
-			if (ldapServerConfigurations == null) {
-				ldapServerConfigurations = new TreeMap<>();
-
-				_configurations.put(
-					ldapServerConfiguration.companyId(),
-					ldapServerConfigurations);
-			}
+				ldapServerConfigurations = _configurations.computeIfAbsent(
+					ldapServerConfiguration.companyId(), k -> new TreeMap<>());
 
 			ldapServerConfigurations.put(
 				ldapServerConfiguration.ldapServerId(),
@@ -372,13 +364,8 @@ public class LDAPServerConfigurationProviderImpl
 		properties.put(LDAPConstants.LDAP_SERVER_ID, ldapServerId);
 
 		Map<Long, ObjectValuePair<Configuration, LDAPServerConfiguration>>
-			objectValuePairs = _configurations.get(companyId);
-
-		if (objectValuePairs == null) {
-			objectValuePairs = new HashMap<>();
-
-			_configurations.put(companyId, objectValuePairs);
-		}
+			objectValuePairs = _configurations.computeIfAbsent(
+				companyId, k -> new HashMap<>());
 
 		try {
 			ObjectValuePair<Configuration, LDAPServerConfiguration>
