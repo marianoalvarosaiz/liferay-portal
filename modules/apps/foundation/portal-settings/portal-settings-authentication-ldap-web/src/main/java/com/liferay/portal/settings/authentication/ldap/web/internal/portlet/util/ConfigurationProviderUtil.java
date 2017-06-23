@@ -15,7 +15,6 @@
 package com.liferay.portal.settings.authentication.ldap.web.internal.portlet.util;
 
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
-import com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
@@ -52,12 +51,6 @@ public class ConfigurationProviderUtil {
 		getLDAPServerConfigurationProvider() {
 
 		return _ldapServerConfigurationProvider;
-	}
-
-	public static ConfigurationProvider<LDAPServerPriorityConfiguration>
-		getLDAPServerPriorityConfigurationProvider() {
-
-		return _ldapServerPriorityConfigurationProvider;
 	}
 
 	@Reference(
@@ -104,19 +97,6 @@ public class ConfigurationProviderUtil {
 		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
 	}
 
-	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration)",
-		unbind = "-"
-	)
-	protected void setLDAPServerPriorityConfigurationProvider(
-		ConfigurationProvider<
-			LDAPServerPriorityConfiguration>
-				ldapServerPriorityConfigurationProvider) {
-
-		_ldapServerPriorityConfigurationProvider =
-			ldapServerPriorityConfigurationProvider;
-	}
-
 	private static ConfigurationProvider<LDAPAuthConfiguration>
 		_ldapAuthConfigurationProvider;
 	private static ConfigurationProvider<LDAPExportConfiguration>
@@ -125,8 +105,5 @@ public class ConfigurationProviderUtil {
 		_ldapImportConfigurationProvider;
 	private static ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
-	private static ConfigurationProvider<
-		LDAPServerPriorityConfiguration>
-			_ldapServerPriorityConfigurationProvider;
 
 }

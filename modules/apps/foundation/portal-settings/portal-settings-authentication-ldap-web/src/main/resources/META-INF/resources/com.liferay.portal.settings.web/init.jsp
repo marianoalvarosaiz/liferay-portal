@@ -43,7 +43,6 @@ page import="com.liferay.portal.security.ldap.DuplicateLDAPServerNameException" 
 page import="com.liferay.portal.security.ldap.LDAPServerNameException" %><%@
 page import="com.liferay.portal.security.ldap.PortalLDAPUtil" %><%@
 page import="com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration" %><%@
-page import="com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration" %><%@
 page import="com.liferay.portal.security.ldap.configuration.ConfigurationProvider" %><%@
 page import="com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration" %><%@
 page import="com.liferay.portal.security.ldap.constants.LDAPConstants" %><%@
@@ -76,11 +75,7 @@ page import="javax.portlet.PortletURL" %>
 <%
 ConfigurationProvider<LDAPAuthConfiguration> ldapAuthConfigurationProvider = ConfigurationProviderUtil.getLDAPAuthConfigurationProvider();
 
-ConfigurationProvider<LDAPServerPriorityConfiguration> ldapServerPriorityConfigurationProvider = ConfigurationProviderUtil.getLDAPServerPriorityConfigurationProvider();
-
 LDAPAuthConfiguration ldapAuthConfiguration = ldapAuthConfigurationProvider.getConfiguration(themeDisplay.getCompanyId());
-
-LDAPServerPriorityConfiguration ldapServerPriorityConfiguration = ldapServerPriorityConfigurationProvider.getConfiguration(themeDisplay.getCompanyId());
 
 ConfigurationProvider<LDAPExportConfiguration> ldapExportConfigurationProvider = ConfigurationProviderUtil.getLDAPExportConfigurationProvider();
 
