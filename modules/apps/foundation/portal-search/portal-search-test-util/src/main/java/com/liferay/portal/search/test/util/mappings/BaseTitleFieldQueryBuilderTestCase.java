@@ -15,6 +15,7 @@
 package com.liferay.portal.search.test.util.mappings;
 
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.analysis.FieldQueryBuilder;
 import com.liferay.portal.search.internal.analysis.SimpleKeywordTokenizer;
 import com.liferay.portal.search.internal.analysis.TitleFieldQueryBuilder;
@@ -103,6 +104,37 @@ public abstract class BaseTitleFieldQueryBuilderTestCase
 			Arrays.asList(
 				"three four five six seven",
 				"one two three four five six seven eight"));
+	}
+
+	protected void testLuceneUnfriendlyTerms() throws Exception {
+		assertSearchNoHits(StringPool.STAR);
+
+		assertSearchNoHits(StringPool.AMPERSAND);
+		assertSearchNoHits(StringPool.DASH);
+		assertSearchNoHits(StringPool.EXCLAMATION);
+
+		assertSearchNoHits(StringPool.CLOSE_PARENTHESIS);
+		assertSearchNoHits(StringPool.OPEN_PARENTHESIS);
+
+		assertSearchNoHits(StringPool.CLOSE_BRACKET);
+		assertSearchNoHits(StringPool.OPEN_BRACKET);
+
+		assertSearchNoHits(StringPool.CLOSE_CURLY_BRACE);
+		assertSearchNoHits(StringPool.OPEN_CURLY_BRACE);
+
+		assertSearchNoHits(StringPool.BACK_SLASH);
+
+		assertSearchNoHits(
+			StringPool.STAR + StringPool.SPACE + StringPool.AMPERSAND +
+				StringPool.DASH + StringPool.SPACE + StringPool.EXCLAMATION);
+
+		assertSearchNoHits("AND");
+		assertSearchNoHits("NOT");
+		assertSearchNoHits("OR");
+
+		assertSearchNoHits("ONE AND TWO OR THREE NOT FOUR");
+
+		assertSearchNoHits("\"ONE\" NOT \"TWO\"");
 	}
 
 	protected void testMultiwordPhrasePrefixes() throws Exception {
@@ -283,6 +315,53 @@ public abstract class BaseTitleFieldQueryBuilderTestCase
 
 		assertSearch("Names of tags", 2);
 		assertSearch("tags names", 2);
+	}
+
+	protected void testWhitespace() throws Exception {
+		String ideographicSpace = "\u3000";
+
+		assertSearchNoHits(ideographicSpace);
+		assertSearchNoHits("ONE" + ideographicSpace + "TWO");
+		assertSearchNoHits("\"ONE\"" + ideographicSpace + "\"TWO\"");
+	}
+
+	protected void testWildcardCharacters() throws Exception {
+		addDocument("AAA+BBB-CCC{DDD]");
+		addDocument("AAA BBB CCC DDD");
+		addDocument("M*A*S*H");
+		addDocument("M... A... S... H");
+		addDocument("Who? When? Where?");
+		addDocument("Who. When. Where.");
+
+		assertSearch(
+			"AAA+???-CCC?DDD]",
+			Arrays.asList("AAA+BBB-CCC{DDD]", "AAA BBB CCC DDD"));
+		assertSearch(
+			"AAA+*{DDD*", Arrays.asList("AAA+BBB-CCC{DDD]", "AAA BBB CCC DDD"));
+		assertSearch("AA?+BB?-CC?{DD?]", Arrays.asList());
+		assertSearch("AA*+BB*-CC*{DD*]", Arrays.asList());
+
+		assertSearch("M*A*S*H", Arrays.asList("M*A*S*H", "M... A... S... H"));
+		assertSearch("M A S H", Arrays.asList("M*A*S*H", "M... A... S... H"));
+		assertSearch(
+			"M* A* *S *H", Arrays.asList("M*A*S*H", "M... A... S... H"));
+
+		assertSearch(
+			"When?", Arrays.asList("Who? When? Where?", "Who. When. Where."));
+		assertSearch(
+			"Who? When?",
+			Arrays.asList("Who? When? Where?", "Who. When. Where."));
+		assertSearch(
+			"Who? *en? Where?",
+			Arrays.asList("Who? When? Where?", "Who. When. Where."));
+		assertSearch(
+			"Who? * Where?",
+			Arrays.asList("Who? When? Where?", "Who. When. Where."));
+		assertSearch(
+			"Who?   When?   Where?",
+			Arrays.asList("Who? When? Where?", "Who. When. Where."));
+		assertSearch("Wh?? W?en? Wher??", Arrays.asList());
+		assertSearch("Wh* W*en* Wher*", Arrays.asList());
 	}
 
 	protected void testWordPrefixes() throws Exception {

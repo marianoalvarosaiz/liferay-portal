@@ -151,7 +151,7 @@ public class FindSecurityBugsPlugin implements Plugin<Project> {
 			project, FIND_SECURITY_BUGS_TASK_NAME, JavaExec.class);
 
 		javaExec.args(
-			"-bugCategories", "SECURITY", "-effort:max", "-html", "-low",
+			"-bugCategories", "SECURITY", "-effort:max", "-html", "-medium",
 			"-progress", "-timestampNow");
 
 		File excludeDir = GradleUtil.getRootDir(
@@ -314,7 +314,7 @@ public class FindSecurityBugsPlugin implements Plugin<Project> {
 
 		if (derivedSummariesTxtFile.exists()) {
 			customConfigFile =
-				customConfigFile + ":" +
+				customConfigFile + File.pathSeparator +
 					FileUtil.getAbsolutePath(derivedSummariesTxtFile);
 		}
 
@@ -323,7 +323,7 @@ public class FindSecurityBugsPlugin implements Plugin<Project> {
 
 		if (falsePositivesTxtFile.exists()) {
 			customConfigFile =
-				customConfigFile + ":" +
+				customConfigFile + File.pathSeparator +
 					FileUtil.getAbsolutePath(falsePositivesTxtFile);
 		}
 
@@ -416,6 +416,6 @@ public class FindSecurityBugsPlugin implements Plugin<Project> {
 	 */
 	private static final String _UNZIP_JAR_TASK_NAME = "unzipJar";
 
-	private static final String _VERSION = "1.6.0.LIFERAY-PATCHED-2";
+	private static final String _VERSION = "1.6.0.LIFERAY-PATCHED-3";
 
 }
