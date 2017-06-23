@@ -21,16 +21,20 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.ldap.authenticator.configuration.LDAPAuthConfiguration;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
+import com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration;
 import com.liferay.portal.security.ldap.constants.LDAPConstants;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPExportConfiguration;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
 import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 
 import java.util.Dictionary;
+import java.util.List;
+import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -79,11 +83,8 @@ public class PortalSettingsLDAPFormMVCActionCommand
 		updateStringProperties(
 			actionRequest, _ldapAuthConfigurationProvider,
 			themeDisplay.getCompanyId(), LDAPConstants.AUTH_METHOD,
+			LDAPConstants.AUTH_SERVER_PRIORITY,
 			LDAPConstants.PASSWORD_ENCRYPTION_ALGORITHM);
-
-		updateStringProperties(
-			actionRequest, _ldapServerPriorityConfigurationProvider,
-			themeDisplay.getCompanyId(), LDAPConstants.AUTH_SERVER_PRIORITY);
 
 		updateBooleanProperties(
 			actionRequest, _ldapExportConfigurationProvider,
@@ -115,6 +116,12 @@ public class PortalSettingsLDAPFormMVCActionCommand
 			themeDisplay.getCompanyId(), LDAPConstants.IMPORT_METHOD,
 			LDAPConstants.IMPORT_USER_PASSWORD_DEFAULT,
 			LDAPConstants.IMPORT_USER_SYNC_STRATEGY);
+
+		sortLdapServerConfigurations(
+			themeDisplay.getCompanyId(),
+			ParamUtil.getString(
+				actionRequest,
+				"ldap--" + LDAPConstants.AUTH_SERVER_PRIORITY + "--"));
 	}
 
 	@Override
@@ -177,15 +184,48 @@ public class PortalSettingsLDAPFormMVCActionCommand
 	}
 
 	@Reference(
-		target = "(factoryPid=com.liferay.portal.security.ldap.authenticator.configuration.LDAPServerPriorityConfiguration)",
+		target = "(factoryPid=com.liferay.portal.security.ldap.configuration.LDAPServerConfiguration)",
 		unbind = "-"
 	)
-	protected void setLDAPServerPriorityConfigurationProvider(
-		ConfigurationProvider<LDAPServerPriorityConfiguration>
-			ldapServerPriorityConfigurationProvider) {
+	protected void setLDAPServerConfigurationProvider(
+		ConfigurationProvider<LDAPServerConfiguration>
+			ldapServerConfigurationProvider) {
 
-		_ldapServerPriorityConfigurationProvider =
-			ldapServerPriorityConfigurationProvider;
+		_ldapServerConfigurationProvider = ldapServerConfigurationProvider;
+	}
+
+	protected void sortLdapServerConfigurations(
+		long companyId, String authServerPriorityString) {
+
+		String[] authServerPriorityStrings = authServerPriorityString.split(
+			",");
+
+		List<Dictionary<String, Object>> dictionaries =
+			_ldapServerConfigurationProvider.getConfigurationsProperties(
+				companyId);
+
+		for (int i = 0; i < authServerPriorityStrings.length; i++) {
+			String serverPriorityString = authServerPriorityStrings[i];
+
+			final int priority = i;
+
+			Stream<Dictionary<String, Object>> stream = dictionaries.stream();
+
+			stream.filter(
+				l -> GetterUtil.getLong(
+					l.get(LDAPConstants.LDAP_SERVER_ID)) ==
+						GetterUtil.getLong(serverPriorityString)
+			).findFirst().ifPresent(
+				l -> {
+					l.put(LDAPConstants.AUTH_SERVER_PRIORITY, priority);
+
+					_ldapServerConfigurationProvider.updateProperties(
+						companyId,
+						GetterUtil.getLong(l.get(LDAPConstants.LDAP_SERVER_ID)),
+						l);
+				}
+			);
+		}
 	}
 
 	protected void updateBooleanProperties(
@@ -266,7 +306,7 @@ public class PortalSettingsLDAPFormMVCActionCommand
 		_ldapExportConfigurationProvider;
 	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
-	private ConfigurationProvider<LDAPServerPriorityConfiguration>
-		_ldapServerPriorityConfigurationProvider;
+	private ConfigurationProvider<LDAPServerConfiguration>
+		_ldapServerConfigurationProvider;
 
 }
