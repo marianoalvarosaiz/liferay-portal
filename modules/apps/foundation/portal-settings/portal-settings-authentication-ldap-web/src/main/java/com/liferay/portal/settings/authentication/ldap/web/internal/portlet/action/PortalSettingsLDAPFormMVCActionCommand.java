@@ -34,6 +34,7 @@ import com.liferay.portal.settings.web.constants.PortalSettingsPortletKeys;
 
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
@@ -212,9 +213,9 @@ public class PortalSettingsLDAPFormMVCActionCommand
 			Stream<Dictionary<String, Object>> stream = dictionaries.stream();
 
 			stream.filter(
-				l -> GetterUtil.getLong(
-					l.get(LDAPConstants.LDAP_SERVER_ID)) ==
-						GetterUtil.getLong(serverPriorityString)
+				l -> Objects.equals(
+					GetterUtil.getLong(l.get(LDAPConstants.LDAP_SERVER_ID)),
+					GetterUtil.getLong(serverPriorityString))
 			).findFirst(
 			).ifPresent(
 				l -> {
