@@ -17,9 +17,9 @@ package com.liferay.site.admin.web.internal.portlet;
 import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.asset.kernel.exception.AssetTagException;
 import com.liferay.exportimport.kernel.exception.RemoteExportException;
-import com.liferay.exportimport.kernel.staging.StagingUtil;
+import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.DuplicateGroupException;
 import com.liferay.portal.kernel.exception.GroupFriendlyURLException;
@@ -183,7 +183,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 		long backgroundTaskId = ParamUtil.getLong(
 			actionRequest, BackgroundTaskConstants.BACKGROUND_TASK_ID);
 
-		BackgroundTaskManagerUtil.deleteBackgroundTask(backgroundTaskId);
+		backgroundTaskManager.deleteBackgroundTask(backgroundTaskId);
 	}
 
 	public void deleteGroups(
@@ -913,13 +913,16 @@ public class SiteAdminPortlet extends MVCPortlet {
 		if (!privateLayoutSet.isLayoutSetPrototypeLinkActive() &&
 			!publicLayoutSet.isLayoutSetPrototypeLinkActive()) {
 
-			StagingUtil.updateStaging(actionRequest, liveGroup);
+			staging.updateStaging(actionRequest, liveGroup);
 		}
 
 		themeDisplay.setSiteGroupId(liveGroup.getGroupId());
 
 		return liveGroup;
 	}
+
+	@Reference
+	protected BackgroundTaskManager backgroundTaskManager;
 
 	protected GroupLocalService groupLocalService;
 	protected GroupSearchProvider groupSearchProvider;
@@ -940,6 +943,10 @@ public class SiteAdminPortlet extends MVCPortlet {
 	protected Portal portal;
 
 	protected RoleLocalService roleLocalService;
+
+	@Reference
+	protected Staging staging;
+
 	protected TeamLocalService teamLocalService;
 	protected UserLocalService userLocalService;
 	protected UserService userService;

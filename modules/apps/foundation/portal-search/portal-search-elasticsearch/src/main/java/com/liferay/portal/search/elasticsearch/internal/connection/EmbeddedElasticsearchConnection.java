@@ -18,6 +18,7 @@ import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.SecureRandomUtil;
+import com.liferay.portal.kernel.util.File;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -55,6 +56,7 @@ import org.elasticsearch.transport.TransportService;
 
 import org.jboss.netty.util.internal.ByteBufferUtil;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -99,6 +101,8 @@ public class EmbeddedElasticsearchConnection
 		_node.close();
 
 		_node = null;
+
+		_file.deltree(_jnaTmpDirName);
 	}
 
 	public Node getNode() {
@@ -118,9 +122,15 @@ public class EmbeddedElasticsearchConnection
 
 	@Activate
 	@Modified
-	protected void activate(Map<String, Object> properties) {
+	protected void activate(
+		BundleContext bundleContext, Map<String, Object> properties) {
+
 		elasticsearchConfiguration = ConfigurableUtil.createConfigurable(
 			ElasticsearchConfiguration.class, properties);
+
+		java.io.File tempDir = bundleContext.getDataFile(JNA_TMP_DIR);
+
+		_jnaTmpDirName = tempDir.getAbsolutePath();
 	}
 
 	@Override
@@ -310,6 +320,10 @@ public class EmbeddedElasticsearchConnection
 
 		thread.setContextClassLoader(clazz.getClassLoader());
 
+		String jnaTmpDir = System.getProperty("jna.tmpdir");
+
+		System.setProperty("jna.tmpdir", _jnaTmpDirName);
+
 		try {
 			NodeBuilder nodeBuilder = new NodeBuilder();
 
@@ -331,6 +345,13 @@ public class EmbeddedElasticsearchConnection
 		}
 		finally {
 			thread.setContextClassLoader(contextClassLoader);
+
+			if (jnaTmpDir == null) {
+				System.clearProperty("jna.tmpdir");
+			}
+			else {
+				System.setProperty("jna.tmpdir", jnaTmpDir);
+			}
 		}
 	}
 
@@ -379,6 +400,8 @@ public class EmbeddedElasticsearchConnection
 		super.removeSettingsContributor(settingsContributor);
 	}
 
+	protected static final String JNA_TMP_DIR = "elasticSearch-tmpDir";
+
 	@Reference
 	protected ClusterSettingsContext clusterSettingsContext;
 
@@ -412,6 +435,11 @@ public class EmbeddedElasticsearchConnection
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		EmbeddedElasticsearchConnection.class);
+
+	private static String _jnaTmpDirName;
+
+	@Reference
+	private File _file;
 
 	private Node _node;
 

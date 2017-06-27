@@ -44,9 +44,8 @@ import com.liferay.exportimport.kernel.service.StagingLocalService;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.exportimport.kernel.staging.StagingConstants;
-import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManagerUtil;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.exception.LayoutPrototypeException;
 import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
@@ -163,6 +162,24 @@ import org.osgi.service.component.annotations.Reference;
 @DoPrivileged
 @ProviderType
 public class StagingImpl implements Staging {
+
+	@Override
+	public String buildRemoteURL(
+		ExportImportConfiguration exportImportConfiguration) {
+
+		Map<String, Serializable> settingsMap =
+			exportImportConfiguration.getSettingsMap();
+
+		String remoteAddress = MapUtil.getString(settingsMap, "remoteAddress");
+		int remotePort = MapUtil.getInteger(settingsMap, "remotePort");
+		String remotePathContext = MapUtil.getString(
+			settingsMap, "remotePathContext");
+		boolean secureConnection = MapUtil.getBoolean(
+			settingsMap, "secureConnection");
+
+		return buildRemoteURL(
+			remoteAddress, remotePort, remotePathContext, secureConnection);
+	}
 
 	@Override
 	public String buildRemoteURL(
@@ -1221,7 +1238,7 @@ public class StagingImpl implements Staging {
 			stagingGroup.getTypeSettingsProperties();
 
 		HttpPrincipal httpPrincipal = new HttpPrincipal(
-			StagingUtil.buildRemoteURL(typeSettingsProperties), user.getLogin(),
+			buildRemoteURL(typeSettingsProperties), user.getLogin(),
 			user.getPassword(), user.getPasswordEncrypted());
 
 		long remoteGroupId = GetterUtil.getLong(
@@ -1449,21 +1466,21 @@ public class StagingImpl implements Staging {
 			layout);
 
 		if (layoutRevision == null) {
-			try {
-				layoutRevision = _layoutRevisionLocalService.getLayoutRevision(
+			List<LayoutRevision> layoutRevisions =
+				_layoutRevisionLocalService.getLayoutRevisions(
 					layoutSetBranchId, layout.getPlid(), true);
 
+			if (!layoutRevisions.isEmpty()) {
 				return false;
-			}
-			catch (Exception e) {
 			}
 		}
 
-		try {
-			layoutRevision = _layoutRevisionLocalService.getLayoutRevision(
+		List<LayoutRevision> layoutRevisions =
+			_layoutRevisionLocalService.getLayoutRevisions(
 				layoutSetBranchId, layout.getPlid(), false);
-		}
-		catch (Exception e) {
+
+		if (!layoutRevisions.isEmpty()) {
+			layoutRevision = layoutRevisions.get(0);
 		}
 
 		if ((layoutRevision == null) ||
@@ -1556,7 +1573,7 @@ public class StagingImpl implements Staging {
 		taskContextMap.put("privateLayout", privateLayout);
 
 		BackgroundTask backgroundTask =
-			BackgroundTaskManagerUtil.addBackgroundTask(
+			_backgroundTaskManager.addBackgroundTask(
 				userId, exportImportConfiguration.getGroupId(),
 				backgroundTaskName,
 				BackgroundTaskExecutorNames.
@@ -1710,7 +1727,7 @@ public class StagingImpl implements Staging {
 			exportImportConfiguration.getExportImportConfigurationId());
 
 		BackgroundTask backgroundTask =
-			BackgroundTaskManagerUtil.addBackgroundTask(
+			_backgroundTaskManager.addBackgroundTask(
 				userId, exportImportConfiguration.getGroupId(),
 				exportImportConfiguration.getName(),
 				BackgroundTaskExecutorNames.
@@ -2580,7 +2597,7 @@ public class StagingImpl implements Staging {
 		taskContextMap.put("httpPrincipal", httpPrincipal);
 
 		BackgroundTask backgroundTask =
-			BackgroundTaskManagerUtil.addBackgroundTask(
+			_backgroundTaskManager.addBackgroundTask(
 				user.getUserId(), exportImportConfiguration.getGroupId(),
 				backgroundTaskName,
 				BackgroundTaskExecutorNames.
@@ -3249,6 +3266,9 @@ public class StagingImpl implements Staging {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(StagingImpl.class);
+
+	@Reference
+	private BackgroundTaskManager _backgroundTaskManager;
 
 	@Reference
 	private DLValidator _dlValidator;

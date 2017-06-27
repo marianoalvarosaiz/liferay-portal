@@ -224,12 +224,26 @@ public class ProjectTemplateFilesTest {
 			matcher.matches());
 	}
 
-	private void _testBuildGradle(Path archetypeResourcesDirPath) {
+	private void _testBuildGradle(
+			String projectTemplateDirName, Path archetypeResourcesDirPath)
+		throws IOException {
+
 		Path buildGradlePath = archetypeResourcesDirPath.resolve(
 			"build.gradle");
 
 		Assert.assertTrue(
 			"Missing " + buildGradlePath, Files.exists(buildGradlePath));
+
+		if (!projectTemplateDirName.equals("project-templates-workspace")) {
+			String buildGradle = FileUtil.read(buildGradlePath);
+
+			Matcher matcher = _buildGradleWorkspaceVariantPattern.matcher(
+				buildGradle);
+
+			Assert.assertTrue(
+				buildGradlePath + " is missing non-workspace specific variant",
+				matcher.matches());
+		}
 	}
 
 	private void _testGitIgnore(
@@ -306,8 +320,8 @@ public class ProjectTemplateFilesTest {
 				Assert.assertTrue(
 					path + " contains duplicate lines or is not sorted",
 					(previousKey == null) ||
-						(_languagePropertiesKeyComparator.compare(
-							key, previousKey) > 0));
+					(_languagePropertiesKeyComparator.compare(
+						key, previousKey) > 0));
 
 				if (key.startsWith("javax.portlet.")) {
 					portlet = true;
@@ -582,7 +596,8 @@ public class ProjectTemplateFilesTest {
 			projectTemplateDirPath.getFileName());
 
 		_testBndBnd(projectTemplateDirPath);
-		_testBuildGradle(archetypeResourcesDirPath);
+		_testBuildGradle(projectTemplateDirName, archetypeResourcesDirPath);
+
 		_testGitIgnore(projectTemplateDirName, archetypeResourcesDirPath);
 		_testGradleWrapper(archetypeResourcesDirPath);
 		_testMavenWrapper(archetypeResourcesDirPath);
@@ -686,7 +701,7 @@ public class ProjectTemplateFilesTest {
 				Assert.assertFalse(
 					"Forbidden whitespace trailing character in " + path,
 					!line.isEmpty() &&
-						Character.isWhitespace(line.charAt(line.length() - 1)));
+					Character.isWhitespace(line.charAt(line.length() - 1)));
 			}
 		}
 
@@ -719,14 +734,17 @@ public class ProjectTemplateFilesTest {
 		}
 	}
 
-	private static final String[] _SOURCESET_NAMES = {
-		"main", "test", "testIntegration"
-	};
+	private static final String[] _SOURCESET_NAMES =
+		{"main", "test", "testIntegration"};
 
 	private static final Pattern _buildGradleDependencyPattern =
 		Pattern.compile(
 			"(compile(?:Only)?) group: \"(.+)\", name: \"(.+)\", " +
 				"(?:transitive: (?:true|false), )?version: \"(.+)\"");
+	private static final Pattern _buildGradleWorkspaceVariantPattern =
+		Pattern.compile(
+			".*^#if \\(\\$\\{projectType\\} != \"workspace\"\\).*",
+			Pattern.DOTALL | Pattern.MULTILINE);
 	private static final Pattern _bundleDescriptionPattern = Pattern.compile(
 		"Creates a .+\\.");
 	private static final List<String> _gitIgnoreLines = Arrays.asList(
