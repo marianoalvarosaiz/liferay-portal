@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.BaseTestRule;
 import com.liferay.portal.kernel.test.rule.BaseTestRule.StatementWrapper;
 import com.liferay.portal.kernel.test.rule.TimeoutTestRule;
+import com.liferay.portal.kernel.test.rule.callback.CheckIndexerTestCallback;
 import com.liferay.portal.kernel.test.rule.callback.CompanyProviderTestCallback;
 import com.liferay.portal.kernel.test.rule.callback.DeleteAfterTestRunTestCallback;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -73,10 +74,13 @@ public class LiferayIntegrationTestRule extends AggregateTestRule {
 		testRules.add(_destinationAwaitTestRule);
 		testRules.add(_companyProviderTestRule);
 		testRules.add(_deleteAfterTestRunTestRule);
+		testRules.add(_checkIndexerTestRule);
 
 		return testRules.toArray(new TestRule[testRules.size()]);
 	}
 
+	private static final TestRule _checkIndexerTestRule = new BaseTestRule<>(
+		CheckIndexerTestCallback.INSTANCE);
 	private static final TestRule _clearThreadLocalTestRule =
 		new BaseTestRule<>(ClearThreadLocalTestCallback.INSTANCE);
 	private static final TestRule _companyProviderTestRule = new BaseTestRule<>(
