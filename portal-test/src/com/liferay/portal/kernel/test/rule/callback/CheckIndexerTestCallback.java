@@ -17,6 +17,8 @@ package com.liferay.portal.kernel.test.rule.callback;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
@@ -32,24 +34,13 @@ import org.junit.runner.Description;
 /**
  * @author Mariano Alvaro Saiz
  */
-public class CheckIndexerTestCallback
-	extends BaseTestCallback<Object, Object> {
+public class CheckIndexerTestCallback extends BaseTestCallback<Object, Object> {
 
 	public static final CheckIndexerTestCallback INSTANCE =
 		new CheckIndexerTestCallback();
-	
+
 	@Override
-	public void afterClass(Description description, Object c) 
-		throws Throwable {
-		
-		StringBundler sb = new StringBundler();
-		sb.append("Checking index for: ");
-		sb.append(description.getTestClass());
-		sb.append(".");
-		sb.append(description.getMethodName());
-		
-		_log.debug(sb.toString());
-		
+	public void afterClass(Description description, Object c) throws Throwable {
 		Registry registry = RegistryUtil.getRegistry();
 
 		IndexerRegistry indexerRegistry = registry.getService(
@@ -62,15 +53,23 @@ public class CheckIndexerTestCallback
 		searchContext.setKeywords(StringPool.BLANK);
 
 		Hits hits = search(indexer, searchContext);
-		
+
 		int length = hits.getDocs().length;
-		
+
 		if (length > 0) {
 			_log.error("Found too much users, " + length);
+
+			StringBundler errorMsg = new StringBundler();
+
+			for (Document document : hits.getDocs()) {
+				errorMsg.append(document.get(Field.USER_ID));
+				errorMsg.append(", ");
+			}
+
 			throw new IllegalStateException("Found too much users, " + length);
 		}
 	}
-	
+
 	protected SearchContext getSearchContext() throws Exception {
 		SearchContext searchContext = new SearchContext();
 
@@ -79,27 +78,27 @@ public class CheckIndexerTestCallback
 
 		return searchContext;
 	}
-	
-	protected Hits search(Indexer<User> indexer, String keywords) throws Exception {
+
+	protected Hits search(Indexer<User> indexer, SearchContext searchContext)
+		throws Exception {
+
+		return indexer.search(searchContext);
+	}
+
+	protected Hits search(Indexer<User> indexer, String keywords)
+		throws Exception {
+
 		SearchContext searchContext = getSearchContext();
 
 		searchContext.setKeywords(keywords);
 
 		return search(indexer, searchContext);
 	}
-	
-	protected Hits search(Indexer<User> indexer, SearchContext searchContext) 
-		throws Exception {
-		
-		return indexer.search(searchContext);
-	}
-	
 
 	private CheckIndexerTestCallback() {
 	}
-	
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		CheckIndexerTestCallback.class);
-
 
 }
