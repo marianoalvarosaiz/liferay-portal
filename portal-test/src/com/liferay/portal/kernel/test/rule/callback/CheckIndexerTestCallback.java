@@ -59,14 +59,14 @@ public class CheckIndexerTestCallback extends BaseTestCallback<Object, Object> {
 		if (length > 0) {
 			_log.error("Found too much users, " + length);
 
-			StringBundler errorMsg = new StringBundler();
+			StringBundler sb = new StringBundler();
 
 			for (Document document : hits.getDocs()) {
-				errorMsg.append(document.get(Field.USER_ID));
-				errorMsg.append(", ");
+				sb.append(document.get(Field.USER_ID));
+				sb.append(", ");
 			}
 
-			throw new IllegalStateException("Found too much users, " + length);
+			throw new IllegalStateException("Found too much users, " + sb);
 		}
 	}
 
