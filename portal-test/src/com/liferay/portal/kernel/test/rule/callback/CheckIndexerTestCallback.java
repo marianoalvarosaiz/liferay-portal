@@ -23,7 +23,9 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.registry.Registry;
@@ -56,13 +58,16 @@ public class CheckIndexerTestCallback extends BaseTestCallback<Object, Object> {
 
 		int length = hits.getDocs().length;
 
-		if (length > 0) {
+		if (length > 1) {
 			_log.error("Found too much users, " + length);
+
+			UserLocalService userLocalService = registry.getService(
+				UserLocalService.class);
 
 			StringBundler sb = new StringBundler();
 
 			for (Document document : hits.getDocs()) {
-				sb.append(document.get(Field.USER_ID));
+				sb.append(getUser(userLocalService, document).getScreenName());
 				sb.append(", ");
 			}
 
@@ -77,6 +82,14 @@ public class CheckIndexerTestCallback extends BaseTestCallback<Object, Object> {
 		searchContext.setGroupIds(new long[] {TestPropsValues.getGroupId()});
 
 		return searchContext;
+	}
+
+	protected User getUser(UserLocalService userLocalService, Document document)
+		throws Exception {
+
+		long userId = GetterUtil.getLong(document.get(Field.USER_ID));
+
+		return userLocalService.getUser(userId);
 	}
 
 	protected Hits search(Indexer<User> indexer, SearchContext searchContext)
