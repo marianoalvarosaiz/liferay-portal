@@ -218,10 +218,12 @@ LayoutsTreeDisplayContext layoutsTreeDisplayContext = new LayoutsTreeDisplayCont
 
 							<%
 							for (LayoutSetBranch curLayoutSetBranch : layoutsTreeDisplayContext.getLayoutSetBranches()) {
+								boolean translateBranchName = LayoutSetBranchConstants.MASTER_BRANCH_NAME.equals(curLayoutSetBranch.getName());
 							%>
 
 								<liferay-ui:icon
 									cssClass="<%= layoutsTreeDisplayContext.getLayoutSetBranchCssClass(curLayoutSetBranch) %>"
+									localizeMessage="<% translateBranchName %>"
 									message="<%= HtmlUtil.escape(curLayoutSetBranch.getName()) %>"
 									url="<%= layoutsTreeDisplayContext.getLayoutSetBranchURL(curLayoutSetBranch) %>"
 								/>
