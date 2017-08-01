@@ -465,7 +465,8 @@ public class ClusterSchedulerEngineTest {
 		Assert.assertEquals(
 			schedulerResponses.toString(), 4, schedulerResponses.size());
 
-		Assert.assertTrue(_memoryClusteredJobs.isEmpty());
+		Assert.assertEquals(
+			_memoryClusteredJobs.toString(), 4, _memoryClusteredJobs.size());
 	}
 
 	@AdviseWith(adviceClasses = {ClusterableContextThreadLocalAdvice.class})
@@ -1057,7 +1058,9 @@ public class ClusterSchedulerEngineTest {
 
 			assertTriggerState(schedulerResponse, TriggerState.PAUSED);
 
-			Assert.assertTrue(_memoryClusteredJobs.isEmpty());
+			Assert.assertEquals(
+				_memoryClusteredJobs.toString(), 4,
+				_memoryClusteredJobs.size());
 
 			// Test 2, with log enabled
 
@@ -1104,7 +1107,9 @@ public class ClusterSchedulerEngineTest {
 			Assert.assertEquals(
 				schedulerResponses.toString(), 4, schedulerResponses.size());
 
-			Assert.assertTrue(_memoryClusteredJobs.isEmpty());
+			Assert.assertEquals(
+				_memoryClusteredJobs.toString(), 4,
+				_memoryClusteredJobs.size());
 		}
 	}
 
