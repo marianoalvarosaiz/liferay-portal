@@ -939,6 +939,117 @@ public class ClusterSchedulerEngineTest {
 	}
 
 	@Test
+	public void testSlaveRemainsSoButMasterChanges() throws SchedulerException {
+
+		// Test 1, with log disabled
+
+		_mockClusterMasterExecutor.reset(false, 4, 0);
+
+		_mockSchedulerEngine.resetJobs(0, 0);
+
+		_clusterSchedulerEngine.start();
+
+		Assert.assertFalse(_mockClusterMasterExecutor.isMaster());
+
+		List<SchedulerResponse> schedulerResponses =
+			_clusterSchedulerEngine.getScheduledJobs(
+				StorageType.MEMORY_CLUSTERED);
+
+		Assert.assertTrue(schedulerResponses.isEmpty());
+
+		Assert.assertEquals(
+			_memoryClusteredJobs.toString(), 4, _memoryClusteredJobs.size());
+
+		_clusterSchedulerEngine.pause(
+			_TEST_JOB_NAME_0, _MEMORY_CLUSTER_TEST_GROUP_NAME,
+			StorageType.MEMORY_CLUSTERED);
+
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					ClusterSchedulerEngine.class.getName(), Level.OFF)) {
+
+			_mockSchedulerEngine.resetJobs(5, 2);
+
+			ClusterMasterTokenTransitionListener
+				clusterMasterTokenTransitionListener =
+					_mockClusterMasterExecutor.
+						getClusterMasterTokenTransitionListener();
+
+			clusterMasterTokenTransitionListener.masterTokenRotated();
+
+			List<LogRecord> logRecords = captureHandler.getLogRecords();
+
+			Assert.assertTrue(logRecords.isEmpty());
+
+			Assert.assertTrue(_mockClusterMasterExecutor.isMaster());
+
+			schedulerResponses = _clusterSchedulerEngine.getScheduledJobs(
+				StorageType.MEMORY_CLUSTERED);
+
+			Assert.assertTrue(schedulerResponses.isEmpty());
+
+			SchedulerResponse schedulerResponse =
+				_clusterSchedulerEngine.getScheduledJob(
+					_TEST_JOB_NAME_0, _MEMORY_CLUSTER_TEST_GROUP_NAME,
+					StorageType.MEMORY_CLUSTERED);
+
+			assertTriggerState(schedulerResponse, TriggerState.PAUSED);
+
+			Assert.assertEquals(
+				_memoryClusteredJobs.toString(), 5,
+				_memoryClusteredJobs.size());
+
+			// Test 2, with log enabled
+
+			_mockClusterMasterExecutor.reset(false, 4, 0);
+
+			_mockSchedulerEngine.resetJobs(0, 0);
+
+			_clusterSchedulerEngine.start();
+
+			Assert.assertFalse(_mockClusterMasterExecutor.isMaster());
+
+			schedulerResponses = _clusterSchedulerEngine.getScheduledJobs(
+				StorageType.MEMORY_CLUSTERED);
+
+			Assert.assertTrue(schedulerResponses.isEmpty());
+
+			Assert.assertEquals(
+				_memoryClusteredJobs.toString(), 4,
+				_memoryClusteredJobs.size());
+
+			logRecords = captureHandler.resetLogLevel(Level.ALL);
+
+			_mockSchedulerEngine.resetJobs(5, 2);
+
+			clusterMasterTokenTransitionListener =
+				_mockClusterMasterExecutor.
+					getClusterMasterTokenTransitionListener();
+
+			clusterMasterTokenTransitionListener.masterTokenRotated();
+
+			Assert.assertEquals(logRecords.toString(), 1, logRecords.size());
+
+			LogRecord logRecord = logRecords.get(0);
+
+			Assert.assertEquals(
+				"5 MEMORY_CLUSTERED jobs synchronized on this node",
+				logRecord.getMessage());
+
+			Assert.assertFalse(_mockClusterMasterExecutor.isMaster());
+
+			schedulerResponses = _clusterSchedulerEngine.getScheduledJobs(
+				StorageType.MEMORY_CLUSTERED);
+
+			Assert.assertTrue(schedulerResponses.isEmpty());
+
+			Assert.assertEquals(
+				_memoryClusteredJobs.toString(), 5,
+				_memoryClusteredJobs.size());
+		}
+	}
+
+	@Test
 	public void testSlaveToMaster() throws SchedulerException {
 
 		// Test 1, with log disabled

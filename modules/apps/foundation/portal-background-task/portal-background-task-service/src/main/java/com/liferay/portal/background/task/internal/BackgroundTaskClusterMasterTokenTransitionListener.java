@@ -46,6 +46,10 @@ public class BackgroundTaskClusterMasterTokenTransitionListener
 	protected void doMasterTokenReleased() throws Exception {
 	}
 
+	@Override
+	protected void doMasterTokenRotated() throws Exception {
+	}
+
 	private BackgroundTaskManager _backgroundTaskManager;
 
 }

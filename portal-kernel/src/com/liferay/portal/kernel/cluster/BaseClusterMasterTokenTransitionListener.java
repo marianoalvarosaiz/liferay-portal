@@ -47,9 +47,23 @@ public abstract class BaseClusterMasterTokenTransitionListener
 		}
 	}
 
+	@Override
+	public void masterTokenRotated() {
+		try {
+			doMasterTokenRotated();
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to process the token rotated event", e);
+			}
+		}
+	}
+
 	protected abstract void doMasterTokenAcquired() throws Exception;
 
 	protected abstract void doMasterTokenReleased() throws Exception;
+
+	protected abstract void doMasterTokenRotated() throws Exception;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseClusterMasterTokenTransitionListener.class);

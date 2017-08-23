@@ -820,6 +820,24 @@ public class ClusterSchedulerEngine
 			}
 		}
 
+		@Override
+		protected void doMasterTokenRotated() throws Exception {
+			_writeLock.lock();
+
+			try {
+				initMemoryClusteredJobs();
+
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						_memoryClusteredJobs.size() + " MEMORY_CLUSTERED " +
+							"jobs synchronized on this node");
+				}
+			}
+			finally {
+				_writeLock.unlock();
+			}
+		}
+
 	}
 
 }
