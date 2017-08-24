@@ -819,8 +819,6 @@ public class ClusterSchedulerEngine
 		protected void doMasterTokenReleased() throws Exception {
 			_writeLock.lock();
 
-			int count = 0;
-
 			try {
 				initMemoryClusteredJobs();
 
@@ -842,19 +840,18 @@ public class ClusterSchedulerEngine
 					return;
 				}
 
+				int count = 0;
+
 				for (SchedulerResponse schedulerResponse :
-						_schedulerEngine.getScheduledJobs()) {
+						_schedulerEngine.getScheduledJobs(
+							StorageType.MEMORY_CLUSTERED)) {
 
-					if (StorageType.MEMORY_CLUSTERED ==
-							schedulerResponse.getStorageType()) {
+					_schedulerEngine.delete(
+						schedulerResponse.getJobName(),
+						schedulerResponse.getGroupName(),
+						schedulerResponse.getStorageType());
 
-						_schedulerEngine.delete(
-							schedulerResponse.getJobName(),
-							schedulerResponse.getGroupName(),
-							schedulerResponse.getStorageType());
-
-						count++;
-					}
+					count++;
 				}
 
 				if (_log.isInfoEnabled()) {
