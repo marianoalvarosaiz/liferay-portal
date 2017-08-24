@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.scheduler.SchedulerClusterInvokingThreadLocal;
 
@@ -512,16 +513,45 @@ public class ClusterSchedulerEngine
 		MethodHandler methodHandler = new MethodHandler(
 			_getScheduledJobsMethodKey, StorageType.MEMORY_CLUSTERED);
 
-		Future<List<SchedulerResponse>> future =
-			_clusterMasterExecutor.executeOnMaster(methodHandler);
+		long callMasterTimeout = GetterUtil.getLong(
+			_props.get(PropsKeys.CLUSTERABLE_ADVICE_CALL_MASTER_TIMEOUT));
 
-		List<SchedulerResponse> schedulerResponses = future.get(
-			GetterUtil.getLong(
-				_props.get(PropsKeys.CLUSTERABLE_ADVICE_CALL_MASTER_TIMEOUT)),
-			TimeUnit.SECONDS);
+		while (!_clusterMasterExecutor.isMaster()) {
+			try {
+				Future<List<SchedulerResponse>> future =
+					_clusterMasterExecutor.executeOnMaster(methodHandler);
 
-		for (SchedulerResponse schedulerResponse : schedulerResponses) {
-			addMemoryClusteredJob(schedulerResponse);
+				List<SchedulerResponse> schedulerResponses = future.get(
+					callMasterTimeout, TimeUnit.SECONDS);
+
+				_memoryClusteredJobs.clear();
+
+				for (SchedulerResponse schedulerResponse : schedulerResponses) {
+					addMemoryClusteredJob(schedulerResponse);
+				}
+
+				break;
+			}
+			catch (Exception e) {
+				StringBundler sb = new StringBundler(7);
+
+				sb.append(
+					"Unable to load memory clustered jobs from master in ");
+				sb.append(callMasterTimeout);
+				sb.append(" seconds, you might need to increase value set to ");
+				sb.append("\"clusterable.advice.call.master.timeout\", ");
+				sb.append("will retry in ");
+				sb.append(callMasterTimeout);
+				sb.append(" seconds");
+
+				_log.error(sb.toString(), e);
+			}
+
+			try {
+				Thread.sleep(callMasterTimeout);
+			}
+			catch (Exception e) {
+			}
 		}
 	}
 
@@ -792,6 +822,26 @@ public class ClusterSchedulerEngine
 			int count = 0;
 
 			try {
+				initMemoryClusteredJobs();
+
+				if (_clusterMasterExecutor.isMaster()) {
+					for (SchedulerResponse schedulerResponse :
+							_schedulerEngine.getScheduledJobs(
+								StorageType.MEMORY_CLUSTERED)) {
+
+						if (_portalReady) {
+							_notifySlave(
+								schedulerResponse.getTrigger(),
+								schedulerResponse.getDescription(),
+								schedulerResponse.getDestinationName(),
+								schedulerResponse.getMessage(),
+								schedulerResponse.getStorageType());
+						}
+					}
+
+					return;
+				}
+
 				for (SchedulerResponse schedulerResponse :
 						_schedulerEngine.getScheduledJobs()) {
 
@@ -806,8 +856,6 @@ public class ClusterSchedulerEngine
 						count++;
 					}
 				}
-
-				initMemoryClusteredJobs();
 
 				if (_log.isInfoEnabled()) {
 					_log.info(
