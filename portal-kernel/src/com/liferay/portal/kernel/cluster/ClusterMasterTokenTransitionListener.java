@@ -23,4 +23,7 @@ public interface ClusterMasterTokenTransitionListener {
 
 	public void masterTokenReleased();
 
+	public default void masterTokenRotated() {
+	}
+
 }

@@ -174,6 +174,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 
 	protected String getMasterClusterNodeId(boolean notify) {
 		boolean master = false;
+		boolean masterTokenRotated = false;
 		String masterClusterNodeId = null;
 
 		while (true) {
@@ -212,6 +213,12 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 			}
 		}
 
+		if (_masterClusterNodeId != masterClusterNodeId) {
+			masterTokenRotated = true;
+		}
+
+		_masterClusterNodeId = masterClusterNodeId;
+
 		if (master == _master) {
 			return masterClusterNodeId;
 		}
@@ -219,14 +226,14 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 		_master = master;
 
 		if (notify) {
-			notifyMasterTokenTransitionListeners(master);
+			notifyMasterTokenTransitionListeners(master, masterTokenRotated);
 		}
 
 		return masterClusterNodeId;
 	}
 
 	protected void notifyMasterTokenTransitionListeners(
-		boolean masterTokenAcquired) {
+		boolean masterTokenAcquired, boolean masterTokenRotated) {
 
 		for (ClusterMasterTokenTransitionListener
 				clusterMasterTokenTransitionListener :
@@ -234,6 +241,9 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 
 			if (masterTokenAcquired) {
 				clusterMasterTokenTransitionListener.masterTokenAcquired();
+			}
+			else if (masterTokenRotated) {
+				clusterMasterTokenTransitionListener.masterTokenRotated();
 			}
 			else {
 				clusterMasterTokenTransitionListener.masterTokenReleased();
@@ -267,6 +277,7 @@ public class ClusterMasterExecutorImpl implements ClusterMasterExecutor {
 		_clusterMasterTokenTransitionListeners = new HashSet<>();
 	private boolean _enabled;
 	private volatile String _localClusterNodeId;
+	private volatile String _masterClusterNodeId;
 
 	private class ClusterMasterTokenClusterEventListener
 		implements ClusterEventListener {

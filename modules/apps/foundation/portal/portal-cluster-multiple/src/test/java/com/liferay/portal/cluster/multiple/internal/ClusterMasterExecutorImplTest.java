@@ -596,7 +596,7 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 	@Test
 	public void testNotifyMasterTokenTransitionListeners() {
 
-		// Test 1, notify when master is required
+		// Test 1, notify when master is acquired
 
 		ClusterMasterExecutorImpl clusterMasterExecutorImpl =
 			new ClusterMasterExecutorImpl();
@@ -608,7 +608,8 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
 			mockClusterMasterTokenTransitionListener);
 
-		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(true);
+		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(
+			true, _ANY_BOOLEAN);
 
 		Assert.assertTrue(
 			mockClusterMasterTokenTransitionListener.
@@ -627,7 +628,29 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
 			mockClusterMasterTokenTransitionListener);
 
-		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(false);
+		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(
+			false, _ANY_BOOLEAN);
+
+		Assert.assertFalse(
+			mockClusterMasterTokenTransitionListener.
+				isMasterTokenAcquiredNotified());
+		Assert.assertTrue(
+			mockClusterMasterTokenTransitionListener.
+				isMasterTokenReleasedNotified());
+
+		// Test 3, notify when node remains slave but coordinator address
+		// is modified
+
+		clusterMasterExecutorImpl = new ClusterMasterExecutorImpl();
+
+		mockClusterMasterTokenTransitionListener =
+			new MockClusterMasterTokenTransitionListener();
+
+		clusterMasterExecutorImpl.addClusterMasterTokenTransitionListener(
+			mockClusterMasterTokenTransitionListener);
+
+		clusterMasterExecutorImpl.notifyMasterTokenTransitionListeners(
+			false, true);
 
 		Assert.assertFalse(
 			mockClusterMasterTokenTransitionListener.
@@ -706,6 +729,8 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 		}
 
 	}
+
+	private static final boolean _ANY_BOOLEAN = false;
 
 	private static final MethodHandler _BAD_METHOD_HANDLER = new MethodHandler(
 		new MethodKey());
@@ -887,8 +912,14 @@ public class ClusterMasterExecutorImplTest extends BaseClusterTestCase {
 			_masterTokenReleasedNotified = true;
 		}
 
+		@Override
+		public void masterTokenRotated() {
+			_masterTokenRotated = true;
+		}
+
 		private boolean _masterTokenAcquiredNotified;
 		private boolean _masterTokenReleasedNotified;
+		private boolean _masterTokenRotated;
 
 	}
 
