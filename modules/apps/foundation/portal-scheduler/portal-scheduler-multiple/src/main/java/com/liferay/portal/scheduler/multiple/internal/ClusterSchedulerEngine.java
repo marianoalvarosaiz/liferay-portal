@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.scheduler.SchedulerClusterInvokingThreadLocal;
 
 import java.util.Date;
@@ -575,7 +576,7 @@ public class ClusterSchedulerEngine
 			}
 
 			try {
-				Thread.sleep(_callMasterTimeout);
+				Thread.sleep(_callMasterTimeout * Time.SECOND);
 			}
 			catch (InterruptedException ie) {
 				if (_log.isWarnEnabled()) {
