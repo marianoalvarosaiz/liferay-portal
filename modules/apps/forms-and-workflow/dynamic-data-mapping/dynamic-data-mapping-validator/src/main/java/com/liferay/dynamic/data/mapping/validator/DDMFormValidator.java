@@ -21,6 +21,12 @@ import com.liferay.dynamic.data.mapping.model.DDMForm;
  */
 public interface DDMFormValidator {
 
+	public static final String DDM_FORM_FIELD_NAME_REGEXP =
+		"([^\\p{Punct}|\\p{Space}$])+";
+
+	public static final String DDM_FORM_FIELD_TYPE_REGEXP =
+		"([^\\p{Punct}|\\p{Space}$]|[-_])+";
+
 	public void validate(DDMForm ddmForm) throws DDMFormValidationException;
 
 }

@@ -52,6 +52,7 @@ import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.dynamic.data.mapping.util.DDMFormFieldValueTransformer;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesTransformer;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustNotDuplicateFieldName;
+import com.liferay.dynamic.data.mapping.validator.DDMFormValidator;
 import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoRow;
 import com.liferay.expando.kernel.model.ExpandoValue;
@@ -202,8 +203,7 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 			String fieldName, Set<String> existingFieldNames)
 		throws Exception {
 
-		String newFieldName = fieldName.replaceAll(
-			_INVALID_FIELD_NAME_CHARS_REGEX, StringPool.BLANK);
+		String newFieldName = deleteInvalidCharsDDMFormFieldName(fieldName);
 
 		if (Validator.isNotNull(newFieldName) &&
 			!existingFieldNames.contains(newFieldName)) {
@@ -243,6 +243,18 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 				throw pe;
 			}
 		}
+	}
+
+	protected String deleteInvalidCharsDDMFormFieldName(String fieldName) {
+		Matcher matcher = _validFieldNameCharsPattern.matcher(fieldName);
+
+		StringBundler sb = new StringBundler(matcher.groupCount());
+
+		while (matcher.find()) {
+			sb.append(matcher.group());
+		}
+
+		return sb.toString();
 	}
 
 	@Override
@@ -546,9 +558,9 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 	}
 
 	protected boolean isInvalidFieldName(String fieldName) {
-		Matcher matcher = _invalidFieldNameCharsPattern.matcher(fieldName);
+		Matcher matcher = _validFieldNameCharsPattern.matcher(fieldName);
 
-		return matcher.find();
+		return !matcher.matches();
 	}
 
 	protected void populateStructureInvalidDDMFormFieldNamesMap(
@@ -1591,14 +1603,11 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 		"PERMISSIONS", "SUBSCRIBE", "UPDATE", "VIEW"
 	};
 
-	private static final String _INVALID_FIELD_NAME_CHARS_REGEX =
-		"([\\p{Punct}&&[^_]]|\\p{Space})+";
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradeDynamicDataMapping.class);
 
-	private static final Pattern _invalidFieldNameCharsPattern =
-		Pattern.compile(_INVALID_FIELD_NAME_CHARS_REGEX);
+	private static final Pattern _validFieldNameCharsPattern = Pattern.compile(
+		DDMFormValidator.DDM_FORM_FIELD_NAME_REGEXP);
 
 	private final AssetEntryLocalService _assetEntryLocalService;
 	private final DDM _ddm;

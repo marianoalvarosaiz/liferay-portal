@@ -354,6 +354,17 @@ public class DDMFormValidatorTest {
 		_ddmFormValidatorImpl.validate(ddmForm);
 	}
 
+	@Test(expected = MustSetValidCharactersForFieldName.class)
+	public void testUnderscoreInFieldName() throws Exception {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
+			createAvailableLocales(LocaleUtil.US), LocaleUtil.US);
+
+		ddmForm.addDDMFormField(
+			new DDMFormField("text_underscore", DDMFormFieldType.TEXT));
+
+		_ddmFormValidatorImpl.validate(ddmForm);
+	}
+
 	@Test
 	public void testValidFieldType() throws Exception {
 		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
