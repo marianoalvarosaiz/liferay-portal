@@ -189,3 +189,24 @@
 		</c:otherwise>
 	</c:choose>
 </div>
+
+<aui:script use="aui-base">
+	function <portlet:namespace />isImageLoaded(img) {
+		if (!img.get('complete')) {
+			return false;
+		}
+
+		if (typeof img.get('naturalWidth') != "undefined" && img.get('naturalWidth') == 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	AUI().ready(
+		function() {
+			var allImages = A.all('.lfr-preview-file-image-current');
+
+			allImages.filter(<portlet:namespace />isImageLoaded).setStyle('background-image', 'none');
+	});
+</aui:script>
