@@ -18,13 +18,14 @@ import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.portal.kernel.search.HitsOpenSearchImpl;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.StringPool;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.message.boards.web.internal.search.MBOpenSearchImpl}
  */
-@OSGiBeanProperties
+@Deprecated
 public class MBOpenSearchImpl extends HitsOpenSearchImpl {
 
 	public static final String TITLE = "Liferay Message Boards Search: ";

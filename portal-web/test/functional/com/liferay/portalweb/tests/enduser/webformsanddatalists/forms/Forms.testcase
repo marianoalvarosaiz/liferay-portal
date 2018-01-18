@@ -44,6 +44,8 @@
 		<for list="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" param="number">
 			<execute macro="FormsAdminNavigator#gotoAddForm" />
 
+			<execute function="Refresh" />
+
 			<execute macro="Form#editName">
 				<var name="formName" value="Form${number}" />
 			</execute>
@@ -99,7 +101,7 @@
 	</command>
 
 	<command name="AddFormInGlobal" priority="5">
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="Navigator#openURL" />
@@ -162,7 +164,7 @@
 		</execute>
 
 		<execute macro="Role#definePermissionPG">
-			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_ADD_RECORD_CHECKBOX" />
+			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_ADD_FORM_INSTANCE_RECORD_CHECKBOX" />
 			<var name="roleTitle" value="Power User" />
 		</execute>
 
@@ -258,10 +260,10 @@
 			<var name="roleTitle" value="Forms Site Role Name" />
 		</execute>
 
-		<for list="ADD_RECORD_SET,PERMISSIONS,ADD_TEMPLATE,ADD_STRUCTURE" param="resourceActionIndex">
+		<for list="ADD_DATA_PROVIDER_INSTANCE,ADD_FORM_INSTANCE,ADD_STRUCTURE,PERMISSIONS" param="resourceActionIndex">
 			<execute macro="Permissions#definePermissionViaJSONAPI">
 				<var name="resourceAction" value="${resourceActionIndex}" />
-				<var name="resourceName" value="com.liferay.dynamic.data.lists" />
+				<var name="resourceName" value="com.liferay.dynamic.data.mapping" />
 				<var name="roleTitle" value="Forms Site Role Name" />
 				<var name="roleType" value="site" />
 			</execute>
@@ -276,7 +278,7 @@
 
 		<execute macro="Permissions#definePermissionViaJSONAPI">
 			<var name="resourceAction" value="ACCESS_IN_CONTROL_PANEL" />
-			<var name="resourceName" value="com_liferay_dynamic_data_lists_form_web_portlet_DDLFormAdminPortlet" />
+			<var name="resourceName" value="com_liferay_dynamic_data_mapping_form_web_portlet_DDMFormAdminPortlet" />
 			<var name="roleTitle" value="Forms Site Role Name" />
 			<var name="roleType" value="site" />
 		</execute>
@@ -781,6 +783,116 @@
 		</execute>
 	</command>
 
+	<command name="DeleteSelectFromListOptionAndViewEntries" priority="4">
+		<description message="This is a use case for LPS-74997." />
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute macro="Form#editName">
+			<var name="formName" value="Delete Select Option Test" />
+		</execute>
+
+		<execute macro="Form#gotoAddField">
+			<var name="fieldType" value="Select from List" />
+		</execute>
+
+		<execute macro="Form#editFieldLabel">
+			<var name="fieldValue" value="Select" />
+		</execute>
+
+		<for list="1,2,3" param="number">
+			<execute macro="FormFields#editOptionsRow">
+				<var name="optionName" value="Select${number}" />
+				<var name="optionValue" value="Select ${number}" />
+				<var name="rowNumber" value="${number}" />
+			</execute>
+		</for>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#save" />
+
+		<execute macro="Form#publishForm" />
+
+		<execute macro="FormsAdminNavigator#gotoPublishedForm" />
+
+		<execute macro="FormFields#selectSelectOption">
+			<var name="fieldName" value="Select" />
+			<var name="selectOption" value="Select 2" />
+		</execute>
+
+		<execute macro="FormPortlet#submitSuccessfully" />
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoViewEntries" />
+
+		<execute macro="FormsAdminNavigator#gotoView" />
+
+		<execute macro="FormsAdmin#viewSelectEntry">
+			<var name="fieldLabel" value="Select" />
+			<var name="fieldName" value="Select" />
+			<var name="selectOption" value="Select 2" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEdit">
+			<var name="formName" value="Delete Select Option Test" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoEditField">
+			<var name="fieldName" value="Select" />
+		</execute>
+
+		<execute macro="FormFields#deleteOptionsRow">
+			<var name="rowNumber" value="2" />
+		</execute>
+
+		<execute macro="FormFields#viewDeletedSelectOptionsRowFieldValue">
+			<var name="fieldValue" value="Select 2" />
+			<var name="rowNumber" value="2" />
+		</execute>
+
+		<execute macro="Form#closeSidebar" />
+
+		<execute macro="Form#save" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Forms" />
+		</execute>
+
+		<execute macro="FormsAdminNavigator#gotoViewEntries" />
+
+		<execute macro="FormsAdminNavigator#gotoView" />
+
+		<execute macro="FormsAdmin#viewSelectEntry">
+			<var name="fieldLabel" value="Select" />
+			<var name="fieldName" value="Select" />
+			<var name="selectOption" value="Select 2" />
+		</execute>
+	</command>
+
 	<command name="DeleteSelectFromListOptionValue" priority="3">
 		<description message="This is a use case for LPS-68362." />
 
@@ -1156,7 +1268,7 @@
 
 		<execute macro="FormFields#viewRepeatableTextMultilineField">
 			<var name="fieldHelpText" value="Set the allowed file extensions for template images. A file extension of * will permit all file extensions." />
-			<var name="fieldLabel" value="Small image extensions" />
+			<var name="fieldLabel" value="Small Image Extensions" />
 			<var name="fieldName" value="smallImageExtensions" />
 			<var name="repeatableFieldNumber" value="4" />
 		</execute>
@@ -1168,14 +1280,14 @@
 
 		<execute macro="FormFields#viewRepeatableTextMultilineField">
 			<var name="fieldHelpText" value="Set the allowed file extensions for template images. A file extension of * will permit all file extensions." />
-			<var name="fieldLabel" value="Small image extensions" />
+			<var name="fieldLabel" value="Small Image Extensions" />
 			<var name="fieldName" value="smallImageExtensions" />
 			<var name="repeatableFieldNumber" value="5" />
 		</execute>
 
 		<execute macro="FormFields#viewTextField">
 			<var name="fieldHelpText" value="Set the maximum file size for template images in bytes. A value of 0 can be used to indicate unlimited file size." />
-			<var name="fieldLabel" value="Small image max size" />
+			<var name="fieldLabel" value="Small Image Maximum Size" />
 			<var name="fieldName" value="smallImageMaxSize" />
 		</execute>
 
@@ -1267,11 +1379,20 @@
 		</execute>
 
 		<execute macro="FormFields#viewCheckboxLabel">
+			<var name="fieldLabel" value="Explain Module Resolutions" />
+			<var name="fieldName" value="explainResolutions" />
+		</execute>
+
+		<execute macro="FormFields#viewCheckboxLabel">
 			<var name="fieldLabel" value="Expose Global" />
 			<var name="fieldName" value="exposeGlobal" />
 		</execute>
 
-		<for list="applyVersioning,exposeGlobal" param="fieldName">
+		<for list="applyVersioning,explainResolutions,exposeGlobal" param="fieldName">
+			<execute macro="FormFields#enableCheckbox">
+				<var name="fieldName" value="${fieldName}" />
+			</execute>
+
 			<execute macro="FormFields#viewCheckboxChecked">
 				<var name="fieldName" value="${fieldName}" />
 			</execute>
@@ -1506,6 +1627,8 @@
 		<execute macro="FormsAdminNavigator#gotoBack" />
 
 		<execute macro="FormsAdminNavigator#gotoAddForm" />
+
+		<execute function="Refresh" />
 
 		<execute macro="Form#editName">
 			<var name="formName" value="Checkbox" />
@@ -1964,6 +2087,7 @@
 	</command>
 
 	<command name="SubmitForm3x3Layout" priority="4">
+		<property name="portal.subrepo" value="false" />
 		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -2456,7 +2580,7 @@
 			<var name="fieldName" value="Checkbox" />
 		</execute>
 
-		<execute macro="FormPortlet#submit" />
+		<execute macro="FormPortlet#submitSuccessfully" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -2704,7 +2828,7 @@
 		<description message="This is a use case for LPS-60818." />
 		<property name="osgi.module.configuration.file.names" value="com.liferay.captcha.configuration.CaptchaConfiguration.config" />
 		<property name="osgi.module.configurations" value="maxChallenges=&quot;0&quot;" />
-		<property name="portal.acceptance" value="true" />
+		<property name="portal.acceptance" value="quarantine" />
 
 		<execute macro="Navigator#openURL" />
 

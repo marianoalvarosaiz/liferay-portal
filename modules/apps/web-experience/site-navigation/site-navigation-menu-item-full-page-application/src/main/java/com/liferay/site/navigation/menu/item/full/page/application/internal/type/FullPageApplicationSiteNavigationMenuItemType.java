@@ -15,13 +15,14 @@
 package com.liferay.site.navigation.menu.item.full.page.application.internal.type;
 
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
 import com.liferay.site.navigation.menu.item.full.page.application.internal.constants.SiteNavigationMenuItemTypeFullPageApplicationConstants;
@@ -62,8 +63,7 @@ public class FullPageApplicationSiteNavigationMenuItemType
 	@Override
 	public String getLabel(Locale locale) {
 		ResourceBundle resourceBundle =
-			_resourceBundleLoader.loadResourceBundle(
-				LocaleUtil.toLanguageId(locale));
+			_resourceBundleLoader.loadResourceBundle(locale);
 
 		return LanguageUtil.get(resourceBundle, "application");
 	}
@@ -93,6 +93,15 @@ public class FullPageApplicationSiteNavigationMenuItemType
 	}
 
 	@Override
+	public String getURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException {
+
+		return StringPool.BLANK;
+	}
+
+	@Override
 	public void renderAddPage(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
@@ -104,7 +113,7 @@ public class FullPageApplicationSiteNavigationMenuItemType
 
 		_jspRenderer.renderJSP(
 			_servletContext, request, response,
-			"/add_full_page_application.jsp");
+			"/edit_full_page_application.jsp");
 	}
 
 	@Override

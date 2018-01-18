@@ -21,6 +21,7 @@
 	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetEntryFinderImpl" id="com.liferay.asset.kernel.service.persistence.AssetEntryFinder" parent="basePersistence" />
 	<bean class="com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl" id="com.liferay.asset.kernel.service.AssetLinkLocalService" />
 	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl" id="com.liferay.asset.kernel.service.persistence.AssetLinkPersistence" parent="basePersistence" />
+	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetLinkFinderImpl" id="com.liferay.asset.kernel.service.persistence.AssetLinkFinder" parent="basePersistence" />
 	<bean class="com.liferay.portlet.asset.service.impl.AssetTagLocalServiceImpl" id="com.liferay.asset.kernel.service.AssetTagLocalService" />
 	<bean class="com.liferay.portlet.asset.service.impl.AssetTagServiceImpl" id="com.liferay.asset.kernel.service.AssetTagService" />
 	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetTagPersistenceImpl" id="com.liferay.asset.kernel.service.persistence.AssetTagPersistence" parent="basePersistence" />
@@ -77,8 +78,6 @@
 	<bean class="com.liferay.portlet.messageboards.service.impl.MBCategoryServiceImpl" id="com.liferay.message.boards.kernel.service.MBCategoryService" />
 	<bean class="com.liferay.portlet.messageboards.service.persistence.impl.MBCategoryPersistenceImpl" id="com.liferay.message.boards.kernel.service.persistence.MBCategoryPersistence" parent="basePersistence" />
 	<bean class="com.liferay.portlet.messageboards.service.persistence.impl.MBCategoryFinderImpl" id="com.liferay.message.boards.kernel.service.persistence.MBCategoryFinder" parent="basePersistence" />
-	<bean class="com.liferay.portlet.messageboards.service.impl.MBDiscussionLocalServiceImpl" id="com.liferay.message.boards.kernel.service.MBDiscussionLocalService" />
-	<bean class="com.liferay.portlet.messageboards.service.persistence.impl.MBDiscussionPersistenceImpl" id="com.liferay.message.boards.kernel.service.persistence.MBDiscussionPersistence" parent="basePersistence" />
 	<bean class="com.liferay.portlet.messageboards.service.impl.MBMessageLocalServiceImpl" id="com.liferay.message.boards.kernel.service.MBMessageLocalService" />
 	<bean class="com.liferay.portlet.messageboards.service.impl.MBMessageServiceImpl" id="com.liferay.message.boards.kernel.service.MBMessageService" />
 	<bean class="com.liferay.portlet.messageboards.service.persistence.impl.MBMessagePersistenceImpl" id="com.liferay.message.boards.kernel.service.persistence.MBMessagePersistence" parent="basePersistence" />

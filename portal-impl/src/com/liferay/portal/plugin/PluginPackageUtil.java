@@ -397,9 +397,7 @@ public class PluginPackageUtil {
 
 		String[] repositoryURLs = _getRepositoryURLs();
 
-		for (int i = 0; i < repositoryURLs.length; i++) {
-			String repositoryURL = repositoryURLs[i];
-
+		for (String repositoryURL : repositoryURLs) {
 			try {
 				RemotePluginPackageRepository repository = _getRepository(
 					repositoryURL);
@@ -505,9 +503,7 @@ public class PluginPackageUtil {
 		String[] pluginPackagesIgnored =
 			PropsValues.PLUGIN_NOTIFICATIONS_PACKAGES_IGNORED;
 
-		for (int i = 0; i < pluginPackagesIgnored.length; i++) {
-			String curPluginPackagesIgnored = pluginPackagesIgnored[i];
-
+		for (String curPluginPackagesIgnored : pluginPackagesIgnored) {
 			if (curPluginPackagesIgnored.endsWith(StringPool.STAR)) {
 				String prefix = curPluginPackagesIgnored.substring(
 					0, curPluginPackagesIgnored.length() - 2);
@@ -822,7 +818,8 @@ public class PluginPackageUtil {
 		}
 
 		for (Element element : parentElement.elements(name)) {
-			String text = StringUtil.toLowerCase(element.getText().trim());
+			String text = StringUtil.toLowerCase(
+				StringUtil.trim(element.getText()));
 
 			list.add(text);
 		}
@@ -1273,9 +1270,7 @@ public class PluginPackageUtil {
 
 		String[] repositoryURLs = _getRepositoryURLs();
 
-		for (int i = 0; i < repositoryURLs.length; i++) {
-			String repositoryURL = repositoryURLs[i];
-
+		for (String repositoryURL : repositoryURLs) {
 			try {
 				_loadRepository(repositoryURL);
 

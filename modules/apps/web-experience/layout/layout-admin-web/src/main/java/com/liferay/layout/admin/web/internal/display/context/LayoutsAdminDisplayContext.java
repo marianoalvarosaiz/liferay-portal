@@ -16,9 +16,9 @@ package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.configuration.LayoutAdminWebConfiguration;
 import com.liferay.layout.admin.web.constants.LayoutAdminDisplayStyleKeys;
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.util.comparator.LayoutCreateDateComparator;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -246,31 +246,11 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public JSONArray getLayoutColumnsJSONArray() throws Exception {
-		JSONArray layoutColumnsJSONArray = JSONFactoryUtil.createJSONArray();
+		JSONArray layoutColumnsJSONArray = _getLayoutColumnsJSONArray();
 
-		layoutColumnsJSONArray.put(_getLayoutsJSONArray(0));
-
-		if (getSelPlid() == LayoutConstants.DEFAULT_PLID) {
-			return layoutColumnsJSONArray;
+		while (layoutColumnsJSONArray.length() < 3) {
+			layoutColumnsJSONArray.put(JSONFactoryUtil.createJSONArray());
 		}
-
-		Layout selLayout = getSelLayout();
-
-		if (selLayout == null) {
-			return layoutColumnsJSONArray;
-		}
-
-		List<Layout> layouts = selLayout.getAncestors();
-
-		Collections.reverse(layouts);
-
-		for (Layout layout : layouts) {
-			layoutColumnsJSONArray.put(
-				_getLayoutsJSONArray(layout.getLayoutId()));
-		}
-
-		layoutColumnsJSONArray.put(
-			_getLayoutsJSONArray(selLayout.getLayoutId()));
 
 		return layoutColumnsJSONArray;
 	}
@@ -536,6 +516,38 @@ public class LayoutsAdminDisplayContext {
 			privateLayout, _themeDisplay.getLocale());
 	}
 
+	public String getSelectLayoutPageTemplateEntryURL() {
+		return getSelectLayoutPageTemplateEntryURL(0);
+	}
+
+	public String getSelectLayoutPageTemplateEntryURL(
+		long layoutPageTemplateCollectionId) {
+
+		PortletURL selectLayoutPageTemplateEntryURL =
+			_liferayPortletResponse.createRenderURL();
+
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"mvcPath", "/select_layout_page_template_entry.jsp");
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"redirect", _themeDisplay.getURLCurrent());
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"backURL", _themeDisplay.getURLCurrent());
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"groupId", String.valueOf(getSelGroupId()));
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"selPlid", String.valueOf(getSelPlid()));
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"privateLayout", String.valueOf(isPrivatePages()));
+
+		if (layoutPageTemplateCollectionId > 0) {
+			selectLayoutPageTemplateEntryURL.setParameter(
+				"layoutPageTemplateCollectionId",
+				String.valueOf(layoutPageTemplateCollectionId));
+		}
+
+		return selectLayoutPageTemplateEntryURL.toString();
+	}
+
 	public Group getSelGroup() {
 		return _groupDisplayContextHelper.getSelGroup();
 	}
@@ -627,6 +639,14 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		return _millerColumnsEnabled;
+	}
+
+	public boolean isPageTemplates() {
+		if (Objects.equals(getTabs1(), "page-templates")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isPrivateLayout() {
@@ -858,6 +878,36 @@ public class LayoutsAdminDisplayContext {
 		breadcrumbEntryJSONObject.put("url", portletURL.toString());
 
 		return breadcrumbEntryJSONObject;
+	}
+
+	private JSONArray _getLayoutColumnsJSONArray() throws Exception {
+		JSONArray layoutColumnsJSONArray = JSONFactoryUtil.createJSONArray();
+
+		layoutColumnsJSONArray.put(_getLayoutsJSONArray(0));
+
+		if (getSelPlid() == LayoutConstants.DEFAULT_PLID) {
+			return layoutColumnsJSONArray;
+		}
+
+		Layout selLayout = getSelLayout();
+
+		if (selLayout == null) {
+			return layoutColumnsJSONArray;
+		}
+
+		List<Layout> layouts = selLayout.getAncestors();
+
+		Collections.reverse(layouts);
+
+		for (Layout layout : layouts) {
+			layoutColumnsJSONArray.put(
+				_getLayoutsJSONArray(layout.getLayoutId()));
+		}
+
+		layoutColumnsJSONArray.put(
+			_getLayoutsJSONArray(selLayout.getLayoutId()));
+
+		return layoutColumnsJSONArray;
 	}
 
 	private JSONArray _getLayoutsJSONArray(long parentLayoutId)

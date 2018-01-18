@@ -918,8 +918,10 @@ public class ServicePreAction extends Action {
 
 		if (layout != null) {
 			if (layout.isTypePortlet()) {
-				boolean freeformLayout =
-					layoutTypePortlet.getLayoutTemplateId().equals("freeform");
+				String layoutTemplateId =
+					layoutTypePortlet.getLayoutTemplateId();
+
+				boolean freeformLayout = layoutTemplateId.equals("freeform");
 
 				themeDisplay.setFreeformLayout(freeformLayout);
 
@@ -1534,9 +1536,7 @@ public class ServicePreAction extends Action {
 
 		List<Layout> accessibleLayouts = new ArrayList<>();
 
-		for (int i = 0; i < layouts.size(); i++) {
-			Layout curLayout = layouts.get(i);
-
+		for (Layout curLayout : layouts) {
 			if (!curLayout.isHidden() &&
 				hasAccessPermission(
 					permissionChecker, curLayout, doAsGroupId, false)) {

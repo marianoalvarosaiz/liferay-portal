@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionManager;
+import com.liferay.portal.kernel.workflow.WorkflowException;
 
 import java.util.List;
 
@@ -35,9 +36,23 @@ import java.util.List;
 public class WorkflowDefinitionManagerProxyBean
 	extends BaseProxyBean implements WorkflowDefinitionManager {
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #deployWorkflowDefinition(long, long, String, String,
+	 *             byte[])}
+	 * @review
+	 */
+	@Deprecated
 	@Override
 	public WorkflowDefinition deployWorkflowDefinition(
 		long companyId, long userId, String title, byte[] bytes) {
+
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public WorkflowDefinition deployWorkflowDefinition(
+		long companyId, long userId, String title, String name, byte[] bytes) {
 
 		throw new UnsupportedOperationException();
 	}
@@ -68,8 +83,21 @@ public class WorkflowDefinitionManagerProxyBean
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #getLatestWorkflowDefinition(long, String)}
+	 * @review
+	 */
+	@Deprecated
 	@Override
 	public WorkflowDefinition getLatestKaleoDefinition(
+		long companyId, String name) {
+
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public WorkflowDefinition getLatestWorkflowDefinition(
 		long companyId, String name) {
 
 		throw new UnsupportedOperationException();
@@ -112,6 +140,28 @@ public class WorkflowDefinitionManagerProxyBean
 	public List<WorkflowDefinition> getWorkflowDefinitions(
 		long companyId, String name, int start, int end,
 		OrderByComparator<WorkflowDefinition> orderByComparator) {
+
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Saves a workflow definition without validate and deploy it.
+	 *
+	 * @param  companyId the company ID of this workflow definition
+	 * @param  userId the user ID of this workflow definition
+	 * @param  title the title ID of this workflow definition
+	 * @param  name the name of this workflow definition
+	 * @param  bytes The data to be created as a workflow definition content.
+	 * @return the workflow definition
+	 * @throws WorkflowException if there was an issue when save the workflow
+	 *         definition
+	 * @review
+	 */
+	@Override
+	public WorkflowDefinition saveWorkflowDefinition(
+			long companyId, long userId, String title, String name,
+			byte[] bytes)
+		throws WorkflowException {
 
 		throw new UnsupportedOperationException();
 	}

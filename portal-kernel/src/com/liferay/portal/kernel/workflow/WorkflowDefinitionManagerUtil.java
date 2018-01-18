@@ -29,12 +29,28 @@ import java.util.List;
  */
 public class WorkflowDefinitionManagerUtil {
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #deployWorkflowDefinition(long, long, String, String,
+	 *             byte[])}
+	 * @review
+	 */
+	@Deprecated
 	public static WorkflowDefinition deployWorkflowDefinition(
 			long companyId, long userId, String title, byte[] bytes)
 		throws WorkflowException {
 
 		return getWorkflowDefinitionManager().deployWorkflowDefinition(
 			companyId, userId, title, bytes);
+	}
+
+	public static WorkflowDefinition deployWorkflowDefinition(
+			long companyId, long userId, String title, String name,
+			byte[] bytes)
+		throws WorkflowException {
+
+		return getWorkflowDefinitionManager().deployWorkflowDefinition(
+			companyId, userId, title, name, bytes);
 	}
 
 	public static int getActiveWorkflowDefinitionCount(long companyId)
@@ -70,11 +86,25 @@ public class WorkflowDefinitionManagerUtil {
 			companyId, name, start, end, orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #getLatestWorkflowDefinition(long, String)}
+	 * @review
+	 */
+	@Deprecated
 	public static WorkflowDefinition getLatestKaleoDefinition(
 			long companyId, String name)
 		throws WorkflowException {
 
 		return getWorkflowDefinitionManager().getLatestKaleoDefinition(
+			companyId, name);
+	}
+
+	public static WorkflowDefinition getLatestWorkflowDefinition(
+			long companyId, String name)
+		throws WorkflowException {
+
+		return getWorkflowDefinitionManager().getLatestWorkflowDefinition(
 			companyId, name);
 	}
 
@@ -132,6 +162,28 @@ public class WorkflowDefinitionManagerUtil {
 
 		return getWorkflowDefinitionManager().getWorkflowDefinitions(
 			companyId, name, start, end, orderByComparator);
+	}
+
+	/**
+	 * Saves a workflow definition without validate and deploy it.
+	 *
+	 * @param  companyId the company ID of this workflow definition
+	 * @param  userId the user ID of this workflow definition
+	 * @param  title the title ID of this workflow definition
+	 * @param  name the name of this workflow definition
+	 * @param  bytes The data to be created as a workflow definition content.
+	 * @return the workflow definition
+	 * @throws WorkflowException if there was an issue when save the workflow
+	 *         definition
+	 * @review
+	 */
+	public static WorkflowDefinition saveWorkflowDefinition(
+			long companyId, long userId, String title, String name,
+			byte[] bytes)
+		throws WorkflowException {
+
+		return getWorkflowDefinitionManager().saveWorkflowDefinition(
+			companyId, userId, title, name, bytes);
 	}
 
 	public static void undeployWorkflowDefinition(

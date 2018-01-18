@@ -38,6 +38,8 @@
 	</command>
 
 	<command name="inputDescription">
+		<execute function="Click" locator1="TextArea#DESCRIPTION" />
+
 		<execute function="Type" locator1="TextArea#DESCRIPTION" value1="${description}" />
 	</command>
 
@@ -52,10 +54,14 @@
 	</command>
 
 	<command name="inputName">
+		<execute function="Click" locator1="TextInput#NAME" />
+
 		<execute function="Type" locator1="TextInput#NAME" value1="${name}" />
 	</command>
 
 	<command name="inputTitle">
+		<execute function="Click" locator1="TextInput#TITLE" />
+
 		<execute function="Type" locator1="TextInput#TITLE" value1="${title}" />
 	</command>
 
@@ -77,5 +83,17 @@
 		<execute macro="Button#clickSave" />
 
 		<execute macro="Alert#viewSuccessMessage" />
+	</command>
+
+	<command name="saveAsDraft">
+		<execute macro="Button#clickSaveAsDraft" />
+
+		<execute macro="Alert#viewSuccessMessage" />
+	</command>
+
+	<command name="viewWorkflowStatus">
+		<execute function="AssertTextEquals" locator1="ContentRow#ENTRY_CONTENT_ENTRY_WORKFLOW_STATUS" value1="${workflowStatus}">
+			<var name="key_rowEntry" value="${rowEntry}" />
+		</execute>
 	</command>
 </definition>

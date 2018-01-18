@@ -83,8 +83,7 @@ public class ReadingTimeTag extends AttributesTagSupport {
 
 			sb.append("<time class=\"reading-time\" datetime=\"");
 			sb.append(String.valueOf(readingTimeDuration.getSeconds()));
-			sb.append("s");
-			sb.append("\"");
+			sb.append("s\"");
 
 			if (Validator.isNotNull(_id)) {
 				sb.append(" id=\"");

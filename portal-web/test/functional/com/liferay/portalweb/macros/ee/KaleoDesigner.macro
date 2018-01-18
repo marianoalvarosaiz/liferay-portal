@@ -58,7 +58,7 @@
 	</command>
 
 	<command name="addNewDefinitionViaKDCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputTitle">
 			<var name="title" value="${workflowDefinitionTitle}" />
@@ -66,7 +66,7 @@
 	</command>
 
 	<command name="addNewDefinitionViaWorkflowCP">
-		<execute function="Click" locator1="Button#PLUS" />
+		<execute macro="LexiconEntry#gotoAdd" />
 
 		<execute macro="PortletEntry#inputTitle">
 			<var name="title" value="${workflowDefinitionTitle}" />
@@ -547,7 +547,7 @@
 	</command>
 
 	<command name="saveAsDraftWorkflowDefinitionViaKDCP">
-		<execute function="AssertClick" locator1="Button#SAVE_AS_DRAFT" value1="Save as Draft" />
+		<execute function="AssertClick" locator1="KaleoDesigner#SAVE_BUTTON" value1="Save" />
 		<execute macro="Alert#viewSuccessMessage" />
 	</command>
 
@@ -576,7 +576,7 @@
 	<command name="viewButtons">
 		<execute function="AssertTextEquals" locator1="Button#PUBLISH" value1="Publish" />
 
-		<execute function="AssertTextEquals" locator1="Button#SAVE_AS_DRAFT" value1="Save as Draft" />
+		<execute function="AssertTextEquals" locator1="KaleoDesigner#SAVE_BUTTON" value1="Save" />
 
 		<if>
 			<equals arg1="${cancelButton}" arg2="true" />

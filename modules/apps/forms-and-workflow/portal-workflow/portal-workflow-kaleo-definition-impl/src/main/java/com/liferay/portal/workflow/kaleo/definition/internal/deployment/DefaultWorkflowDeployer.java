@@ -51,25 +51,39 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = WorkflowDeployer.class)
 public class DefaultWorkflowDeployer implements WorkflowDeployer {
 
+	/**
+	 * @deprecated As of 1.0.0, replaced by {@link #deploy(String, String,
+	 *             Definition, ServiceContext)}
+	 * @review
+	 */
+	@Deprecated
 	@Override
 	public WorkflowDefinition deploy(
 			String title, Definition definition, ServiceContext serviceContext)
 		throws PortalException {
 
+		return deploy(title, definition.getName(), definition, serviceContext);
+	}
+
+	@Override
+	public WorkflowDefinition deploy(
+			String title, String name, Definition definition,
+			ServiceContext serviceContext)
+		throws PortalException {
+
 		KaleoDefinition kaleoDefinition =
 			_kaleoDefinitionLocalService.fetchKaleoDefinition(
-				definition.getName(), serviceContext);
+				name, serviceContext);
 
 		if (kaleoDefinition == null) {
 			kaleoDefinition = _kaleoDefinitionLocalService.addKaleoDefinition(
-				definition.getName(), title, definition.getDescription(),
-				definition.getContent(), definition.getVersion(),
-				serviceContext);
+				name, title, definition.getDescription(),
+				definition.getContent(), 1, serviceContext);
 		}
 		else {
 			kaleoDefinition =
 				_kaleoDefinitionLocalService.incrementKaleoDefinition(
-					definition, title, serviceContext);
+					definition, name, title, serviceContext);
 		}
 
 		KaleoDefinitionVersion kaleoDefinitionVersion =
@@ -112,20 +126,24 @@ public class DefaultWorkflowDeployer implements WorkflowDeployer {
 			KaleoNode kaleoNode = kaleoNodesMap.get(node.getName());
 
 			for (Transition transition : node.getOutgoingTransitionsList()) {
+				Node sourceNode = transition.getSourceNode();
+
 				KaleoNode sourceKaleoNode = kaleoNodesMap.get(
-					transition.getSourceNode().getName());
+					sourceNode.getName());
 
 				if (sourceKaleoNode == null) {
 					throw new KaleoDefinitionValidationException.
-						MustSetSourceNode(transition.getSourceNode().getName());
+						MustSetSourceNode(sourceNode.getName());
 				}
 
+				Node targetNode = transition.getTargetNode();
+
 				KaleoNode targetKaleoNode = kaleoNodesMap.get(
-					transition.getTargetNode().getName());
+					targetNode.getName());
 
 				if (targetKaleoNode == null) {
 					throw new KaleoDefinitionValidationException.
-						MustSetTargetNode(transition.getTargetNode().getName());
+						MustSetTargetNode(targetNode.getName());
 				}
 
 				_kaleoTransitionLocalService.addKaleoTransition(

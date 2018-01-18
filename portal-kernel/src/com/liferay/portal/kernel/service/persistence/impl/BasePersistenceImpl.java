@@ -119,7 +119,9 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 			return 0;
 		}
 		else {
-			return (results.get(0)).longValue();
+			Long firstResult = results.get(0);
+
+			return firstResult.longValue();
 		}
 	}
 
@@ -386,17 +388,17 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 	}
 
 	protected void appendOrderByComparator(
-		StringBundler query, String entityAlias,
+		StringBundler sb, String entityAlias,
 		OrderByComparator<T> orderByComparator) {
 
-		appendOrderByComparator(query, entityAlias, orderByComparator, false);
+		appendOrderByComparator(sb, entityAlias, orderByComparator, false);
 	}
 
 	protected void appendOrderByComparator(
-		StringBundler query, String entityAlias,
+		StringBundler sb, String entityAlias,
 		OrderByComparator<T> orderByComparator, boolean sqlQuery) {
 
-		query.append(ORDER_BY_CLAUSE);
+		sb.append(ORDER_BY_CLAUSE);
 
 		String[] orderByFields = orderByComparator.getOrderByFields();
 
@@ -409,23 +411,22 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 		}
 
 		for (int i = 0; i < length; i++) {
-			query.append(
-				getColumnName(entityAlias, orderByFields[i], sqlQuery));
+			sb.append(getColumnName(entityAlias, orderByFields[i], sqlQuery));
 
 			if ((i + 1) < length) {
 				if (orderByComparator.isAscending(orderByFields[i])) {
-					query.append(ORDER_BY_ASC_HAS_NEXT);
+					sb.append(ORDER_BY_ASC_HAS_NEXT);
 				}
 				else {
-					query.append(ORDER_BY_DESC_HAS_NEXT);
+					sb.append(ORDER_BY_DESC_HAS_NEXT);
 				}
 			}
 			else {
 				if (orderByComparator.isAscending(orderByFields[i])) {
-					query.append(ORDER_BY_ASC);
+					sb.append(ORDER_BY_ASC);
 				}
 				else {
-					query.append(ORDER_BY_DESC);
+					sb.append(ORDER_BY_DESC);
 				}
 			}
 		}

@@ -45,7 +45,10 @@ import java.util.List;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.portal.search.suggest.BaseSpellCheckIndexWriter}
  */
+@Deprecated
 public abstract class BaseSpellCheckIndexWriter
 	implements SpellCheckIndexWriter {
 
@@ -166,8 +169,9 @@ public abstract class BaseSpellCheckIndexWriter
 	}
 
 	protected URL getResource(String name) {
-		ClassLoader contextClassLoader =
-			Thread.currentThread().getContextClassLoader();
+		Thread thread = Thread.currentThread();
+
+		ClassLoader contextClassLoader = thread.getContextClassLoader();
 
 		URL url = contextClassLoader.getResource(name);
 

@@ -69,6 +69,7 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
@@ -107,7 +108,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.security-role-ref=administrator",
 		"javax.portlet.supports.mime-type=text/html"
 	},
-	service = javax.portlet.Portlet.class
+	service = Portlet.class
 )
 public class RolesAdminPortlet extends MVCPortlet {
 
@@ -246,8 +247,10 @@ public class RolesAdminPortlet extends MVCPortlet {
 
 		Role role = _roleLocalService.getRole(roleId);
 
-		if (role.getName().equals(RoleConstants.OWNER)) {
-			throw new RoleAssignmentException(role.getName());
+		String roleName = role.getName();
+
+		if (roleName.equals(RoleConstants.OWNER)) {
+			throw new RoleAssignmentException(roleName);
 		}
 
 		long[] addUserIds = StringUtil.split(

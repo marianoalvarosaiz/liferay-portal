@@ -32,6 +32,7 @@ import com.liferay.journal.transformer.JournalTransformer;
 import com.liferay.journal.transformer.JournalTransformerListenerRegistryUtil;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.petra.xml.XMLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.diff.CompareVersionsException;
@@ -81,7 +82,6 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
@@ -1108,7 +1108,9 @@ public class JournalUtil {
 		while (itr.hasNext()) {
 			JournalArticle journalArticle = itr.next();
 
-			if (journalArticle.getArticleId().equals(articleId) &&
+			String journalArticleId = journalArticle.getArticleId();
+
+			if (journalArticleId.equals(articleId) &&
 				((journalArticle.getVersion() == version) || (version == 0))) {
 
 				itr.remove();
@@ -1252,9 +1254,7 @@ public class JournalUtil {
 		List<Element> curElements = curParentElement.elements(
 			"dynamic-element");
 
-		for (int i = 0; i < curElements.size(); i++) {
-			Element curElement = curElements.get(i);
-
+		for (Element curElement : curElements) {
 			_mergeArticleContentDelete(curElement, newDocument);
 
 			String instanceId = curElement.attributeValue("instance-id");

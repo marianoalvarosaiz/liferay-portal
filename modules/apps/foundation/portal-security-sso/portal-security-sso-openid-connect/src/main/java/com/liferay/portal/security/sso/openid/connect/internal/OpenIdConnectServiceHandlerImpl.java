@@ -14,21 +14,19 @@
 
 package com.liferay.portal.security.sso.openid.connect.internal;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.security.sso.openid.connect.OpenIdConnectFlowState;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProvider;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectProviderRegistry;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceException;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectServiceHandler;
-import com.liferay.portal.security.sso.openid.connect.OpenIdConnectSession;
 import com.liferay.portal.security.sso.openid.connect.OpenIdConnectUserInfoProcessor;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectConstants;
 import com.liferay.portal.security.sso.openid.connect.constants.OpenIdConnectWebKeys;
@@ -279,12 +277,12 @@ public class OpenIdConnectServiceHandlerImpl
 
 	protected URI getLoginRedirectURI(HttpServletRequest httpServletRequest) {
 		try {
-			StringBundler loginURL = new StringBundler(2);
+			StringBundler sb = new StringBundler(2);
 
-			loginURL.append(_portal.getPortalURL(httpServletRequest));
-			loginURL.append(OpenIdConnectConstants.REDIRECT_URL_PATTERN);
+			sb.append(_portal.getPortalURL(httpServletRequest));
+			sb.append(OpenIdConnectConstants.REDIRECT_URL_PATTERN);
 
-			return new URI(loginURL.toString());
+			return new URI(sb.toString());
 		}
 		catch (URISyntaxException urise) {
 			throw new SystemException(

@@ -33,7 +33,10 @@ import javax.mail.internet.MimeUtility;
 
 /**
  * @author Jorge Ferrer
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.message.boards.internal.util.MBMailMessage}
  */
+@Deprecated
 public class MBMailMessage {
 
 	public void addBytes(String fileName, byte[] bytes) {
