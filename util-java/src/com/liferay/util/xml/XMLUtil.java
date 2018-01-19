@@ -23,10 +23,14 @@ import com.liferay.portal.kernel.xml.Document;
 
 import java.io.IOException;
 
+import org.dom4j.DocumentException;
+
 /**
  * @author Leonardo Barros
  * @see    com.liferay.petra.xml.XMLUtil
+ * @deprecated As of 7.0.0
  */
+@Deprecated
 public class XMLUtil {
 
 	public static String fixProlog(String xml) {
@@ -69,7 +73,7 @@ public class XMLUtil {
 		catch (IOException ioe) {
 			throw new SystemException(ioe);
 		}
-		catch (org.dom4j.DocumentException de) {
+		catch (DocumentException de) {
 			throw new SystemException(de);
 		}
 	}

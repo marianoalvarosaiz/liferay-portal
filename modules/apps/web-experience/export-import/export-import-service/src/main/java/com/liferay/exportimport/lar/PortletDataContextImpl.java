@@ -30,6 +30,7 @@ import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.kernel.lar.ManifestSummary;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.PortletDataContextListener;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerControl;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
@@ -236,8 +237,12 @@ public class PortletDataContextImpl implements PortletDataContext {
 				Serializable classPK =
 					ExportImportClassedModelUtil.getPrimaryKeyObj(classedModel);
 
-				addAssetLinks(clazz, classPK);
-				addAssetPriority(element, clazz, classPK);
+				long classNameId = ExportImportClassedModelUtil.getClassNameId(
+					classedModel);
+
+				_addAssetLinks(classNameId, GetterUtil.getLong(classPK));
+				_addAssetPriority(
+					element, classNameId, GetterUtil.getLong(classPK));
 
 				addExpando(element, path, classedModel, clazz);
 				addLocks(clazz, String.valueOf(classPK));
@@ -1993,8 +1998,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 	@Deprecated
 	@Override
 	public void setPortetDataContextListener(
-		com.liferay.exportimport.kernel.lar.PortletDataContextListener
-			portletDataContextListener) {
+		PortletDataContextListener portletDataContextListener) {
 	}
 
 	@Override
@@ -2086,6 +2090,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return _xStream.toXML(object);
 	}
 
+	/**
+	 * @deprecated As of 4.0.0
+	 */
+	@Deprecated
 	protected void addAssetLinks(Class<?> clazz, Serializable classPK) {
 		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
 			clazz.getName(), GetterUtil.getLong(classPK));
@@ -2112,6 +2120,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		addAssetPriority(element, clazz, (Serializable)classPK);
 	}
 
+	/**
+	 * @deprecated As of 4.0.0
+	 */
+	@Deprecated
 	protected void addAssetPriority(
 		Element element, Class<?> clazz, Serializable classPK) {
 
@@ -2211,7 +2223,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		if (element != null) {
 			Attribute assetPriorityAttribute = element.attribute(
-				"asset-priority");
+				"asset-entry-priority");
 
 			if (assetPriorityAttribute != null) {
 				double assetPriority = GetterUtil.getDouble(
@@ -2800,6 +2812,25 @@ public class PortletDataContextImpl implements PortletDataContext {
 		if (Validator.isNotNull(attachedClassName)) {
 			element.addAttribute("attached-class-name", attachedClassName);
 		}
+	}
+
+	private void _addAssetLinks(long classNameId, long classPK) {
+		List<AssetLink> assetLinks = AssetLinkLocalServiceUtil.getLinks(
+			classNameId, classPK);
+
+		for (AssetLink assetLink : assetLinks) {
+			_assetLinkIds.add(assetLink.getLinkId());
+		}
+	}
+
+	private void _addAssetPriority(
+		Element element, long classNameId, long classPK) {
+
+		double assetEntryPriority = AssetEntryLocalServiceUtil.getEntryPriority(
+			classNameId, classPK);
+
+		element.addAttribute(
+			"asset-entry-priority", String.valueOf(assetEntryPriority));
 	}
 
 	private static final Class<?>[] _XSTREAM_DEFAULT_ALLOWED_TYPES = {

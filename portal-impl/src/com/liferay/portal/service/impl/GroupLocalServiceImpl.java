@@ -251,6 +251,29 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		if (nameMap != null) {
 			groupKey = nameMap.get(LocaleUtil.getDefault());
 			friendlyName = nameMap.get(LocaleUtil.getDefault());
+
+			if (Validator.isNull(groupKey)) {
+				Locale userLocale = user.getLocale();
+
+				if (userLocale != null) {
+					groupKey = nameMap.get(userLocale);
+					friendlyName = nameMap.get(userLocale);
+				}
+			}
+
+			if (Validator.isNull(groupKey)) {
+				Locale mostRelevantLocale = LocaleUtil.getMostRelevantLocale();
+
+				if (mostRelevantLocale != null) {
+					groupKey = nameMap.get(mostRelevantLocale);
+					friendlyName = nameMap.get(mostRelevantLocale);
+				}
+			}
+
+			if (Validator.isNull(groupKey)) {
+				groupKey = nameMap.get(LocaleUtil.US);
+				friendlyName = nameMap.get(LocaleUtil.US);
+			}
 		}
 
 		long groupId = 0;
@@ -1610,9 +1633,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		List<Group> organizationGroups = new ArrayList<>();
 
-		for (int i = 0; i < organizations.size(); i++) {
-			Organization organization = organizations.get(i);
-
+		for (Organization organization : organizations) {
 			Group group = organization.getGroup();
 
 			organizationGroups.add(group);
@@ -1633,9 +1654,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		List<Group> organizationGroups = new ArrayList<>();
 
-		for (int i = 0; i < organizations.size(); i++) {
-			Organization organization = organizations.get(i);
-
+		for (Organization organization : organizations) {
 			List<Group> groups = organizationPersistence.getGroups(
 				organization.getOrganizationId());
 
@@ -1796,9 +1815,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		List<Group> userGroupGroups = new ArrayList<>();
 
-		for (int i = 0; i < userGroups.size(); i++) {
-			UserGroup userGroup = userGroups.get(i);
-
+		for (UserGroup userGroup : userGroups) {
 			Group group = userGroup.getGroup();
 
 			userGroupGroups.add(group);
@@ -1817,9 +1834,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	public List<Group> getUserGroupsRelatedGroups(List<UserGroup> userGroups) {
 		List<Group> userGroupGroups = new ArrayList<>();
 
-		for (int i = 0; i < userGroups.size(); i++) {
-			UserGroup userGroup = userGroups.get(i);
-
+		for (UserGroup userGroup : userGroups) {
 			List<Group> groups = userGroupPersistence.getGroups(
 				userGroup.getUserGroupId());
 
@@ -3212,7 +3227,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			friendlyURL = StringPool.SLASH + user.getScreenName();
 
-			if (group.getFriendlyURL().equals(friendlyURL)) {
+			if (friendlyURL.equals(group.getFriendlyURL())) {
 				return group;
 			}
 		}
@@ -4319,7 +4334,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			else if (group.hasStagingGroup()) {
 				liveGroupId = group.getGroupId();
 
-				stagingGroupId = group.getStagingGroup().getGroupId();
+				Group staginGroup = group.getStagingGroup();
+
+				stagingGroupId = staginGroup.getGroupId();
 			}
 
 			if ((liveGroupId != 0) && (stagingGroupId != 0)) {
@@ -4551,7 +4568,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		Group parentGroup = groupPersistence.findByPrimaryKey(parentGroupId);
 
 		if (group.isStagingGroup()) {
-			long stagingGroupId = parentGroup.getStagingGroup().getGroupId();
+			Group staginGroup = parentGroup.getStagingGroup();
+
+			long stagingGroupId = staginGroup.getGroupId();
 
 			if (groupId == stagingGroupId) {
 				throw new GroupParentException.MustNotHaveStagingParent(

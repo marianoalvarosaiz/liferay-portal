@@ -212,7 +212,9 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 				qPos.add(userId);
 			}
 
-			return q.list().size();
+			List<Role> roles = q.list();
+
+			return roles.size();
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
@@ -1252,7 +1254,7 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 			int pos = join.indexOf("WHERE");
 
 			if (pos != -1) {
-				join = join.substring(pos + 5, join.length()).concat(" AND ");
+				join = join.substring(pos + 5).concat(" AND ");
 			}
 			else {
 				join = StringPool.BLANK;

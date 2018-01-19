@@ -668,6 +668,12 @@ public class InvokerPortletImpl
 		}
 
 		if (e instanceof PortletException) {
+			if ((portletResponse instanceof StateAwareResponseImpl) &&
+				!(e instanceof UnavailableException)) {
+
+				return;
+			}
+
 			if (!(portletRequest instanceof RenderRequest)) {
 				portletRequest.setAttribute(
 					_portletId + PortletException.class.getName(), e);
@@ -698,9 +704,12 @@ public class InvokerPortletImpl
 		_expCache = portletModel.getExpCache();
 
 		if (_log.isDebugEnabled()) {
+			com.liferay.portal.kernel.model.Portlet portletContextPortet =
+				_liferayPortletContext.getPortlet();
+
 			_log.debug(
 				"Create instance cache wrapper for " +
-					_liferayPortletContext.getPortlet().getPortletId());
+					portletContextPortet.getPortletId());
 		}
 	}
 

@@ -318,15 +318,15 @@
 		</if>
 	</target>
 
-	<target depends="check-stale-release,jar,jar-javadoc,jar-sources" name="publish-portal-release">
-		<publish-portal-artifact>
+	<target name="publish-portal-release">
+		<publish-portal-artifact targets="jar,jar-javadoc,jar-sources">
 			<attach classifier="javadoc" file="${artifact.name}-javadoc.jar" />
 			<attach classifier="sources" file="${artifact.name}-sources.jar" />
 		</publish-portal-artifact>
 	</target>
 
-	<target depends="jar,jar-javadoc,jar-sources" name="publish-portal-snapshot">
-		<publish-portal-artifact snapshot="true">
+	<target name="publish-portal-snapshot">
+		<publish-portal-artifact snapshot="true" targets="jar,jar-javadoc,jar-sources">
 			<attach classifier="javadoc" file="${artifact.name}-javadoc.jar" />
 			<attach classifier="sources" file="${artifact.name}-sources.jar" />
 		</publish-portal-artifact>
@@ -343,6 +343,64 @@
 				<release-to-repo
 					bndRootFile="${project.dir}/common.bnd"
 					file="${jar.file}.jar"
+				/>
+			</then>
+		</if>
+	</target>
+
+	<target name="restore-latest-artifact-version">
+		<fail message="Please run this target from a release branch instead.">
+			<condition>
+				<not>
+					<available file="${project.dir}/modules/.releng" type="dir" />
+				</not>
+			</condition>
+		</fail>
+
+		<if>
+			<available file="${project.dir}/modules/.releng/${ant.project.name}.properties" />
+			<then>
+				<loadproperties prefix="latest" srcFile="${project.dir}/modules/.releng/${ant.project.name}.properties">
+					<filterchain>
+						<linecontains>
+							<contains value="artifact.url" />
+						</linecontains>
+					</filterchain>
+				</loadproperties>
+
+				<antelope:stringutil property="latest.artifact.version.beginindex" string="${latest.artifact.url}">
+					<antelope:lastindexof string="-" />
+				</antelope:stringutil>
+
+				<antelope:math
+					datatype="int"
+					operand1="${latest.artifact.version.beginindex}"
+					operand2="1"
+					operation="+"
+					result="latest.artifact.version.beginindex"
+				/>
+
+				<antelope:stringutil property="latest.artifact.version.endindex" string="${latest.artifact.url}">
+					<antelope:lastindexof string="." />
+				</antelope:stringutil>
+
+				<antelope:stringutil property="latest.artifact.version" string="${latest.artifact.url}">
+					<antelope:substring beginindex="${latest.artifact.version.beginindex}" endindex="${latest.artifact.version.endindex}" />
+				</antelope:stringutil>
+
+				<loadproperties srcFile="${basedir}/bnd.bnd">
+					<filterchain>
+						<linecontains>
+							<contains value="Bundle-Version" />
+						</linecontains>
+					</filterchain>
+				</loadproperties>
+
+				<replace
+					failOnNoReplacements="true"
+					file="bnd.bnd"
+					token="Bundle-Version: ${Bundle-Version}"
+					value="Bundle-Version: ${latest.artifact.version}"
 				/>
 			</then>
 		</if>

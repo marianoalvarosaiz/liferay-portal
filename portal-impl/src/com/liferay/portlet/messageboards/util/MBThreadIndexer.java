@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.Date;
 import java.util.Locale;
 
 import javax.portlet.PortletRequest;
@@ -50,7 +51,10 @@ import javax.portlet.PortletResponse;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.message.boards.internal.search.MBThreadIndexer}
  */
+@Deprecated
 @OSGiBeanProperties
 public class MBThreadIndexer extends BaseIndexer<MBThread> {
 
@@ -133,8 +137,10 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 			document.addKeyword("discussion", true);
 		}
 
-		document.addKeyword(
-			"lastPostDate", mbThread.getLastPostDate().getTime());
+		Date lastPostDate = mbThread.getLastPostDate();
+
+		document.addKeyword("lastPostDate", lastPostDate.getTime());
+
 		document.addKeyword(
 			"participantUserIds", mbThread.getParticipantUserIds());
 

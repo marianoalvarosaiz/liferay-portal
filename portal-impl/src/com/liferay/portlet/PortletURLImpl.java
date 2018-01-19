@@ -85,6 +85,7 @@ import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Brian Wing Shun Chan
@@ -996,8 +997,9 @@ public class PortletURLImpl
 		String result = sb.toString();
 
 		if (!CookieKeys.hasSessionId(_request)) {
-			result = PortalUtil.getURLWithSessionId(
-				result, _request.getSession().getId());
+			HttpSession session = _request.getSession();
+
+			result = PortalUtil.getURLWithSessionId(result, session.getId());
 		}
 
 		if (!_escapeXml) {
@@ -1032,10 +1034,7 @@ public class PortletURLImpl
 	}
 
 	protected String generateWSRPToString() {
-		StringBundler sb = new StringBundler("wsrp_rewrite?");
-
-		sb.append("wsrp-urlType");
-		sb.append(StringPool.EQUAL);
+		StringBundler sb = new StringBundler("wsrp_rewrite?wsrp-urlType=");
 
 		if (_lifecycle.equals(PortletRequest.ACTION_PHASE)) {
 			sb.append(URLCodec.encodeURL("blockingAction"));
@@ -1108,7 +1107,7 @@ public class PortletURLImpl
 				continue;
 			}
 
-			if (_lifecycle.equals(PortletRequest.RESOURCE_PHASE)) {
+			if (!_lifecycle.equals(PortletRequest.RESOURCE_PHASE)) {
 				String publicRenderParameterName = getPublicRenderParameterName(
 					name);
 
@@ -1130,8 +1129,7 @@ public class PortletURLImpl
 			sb.setIndex(sb.index() - 1);
 		}
 
-		sb.append("wsrp-navigationalState");
-		sb.append(StringPool.EQUAL);
+		sb.append("wsrp-navigationalState=");
 
 		byte[] parameterBytes = null;
 

@@ -210,7 +210,8 @@ public class WebFormPortlet extends MVCPortlet {
 		}
 		catch (Exception e) {
 			SessionErrors.add(
-				actionRequest, "validationScriptError", e.getMessage().trim());
+				actionRequest, "validationScriptError",
+				StringUtil.trim(e.getMessage()));
 
 			return;
 		}
@@ -315,11 +316,8 @@ public class WebFormPortlet extends MVCPortlet {
 	protected void appendFieldValues(
 		Map<String, String> fieldsMap, String csvSeparator, StringBundler sb) {
 
-		for (String fieldLabel : fieldsMap.keySet()) {
-			String fieldValue = fieldsMap.get(fieldLabel);
-
-			sb.append(getCSVFormattedValue(fieldValue));
-
+		for (Map.Entry<String, String> entry : fieldsMap.entrySet()) {
+			sb.append(getCSVFormattedValue(entry.getValue()));
 			sb.append(csvSeparator);
 		}
 
@@ -402,7 +400,11 @@ public class WebFormPortlet extends MVCPortlet {
 		}
 
 		String fileName = title + ".csv";
-		byte[] bytes = sb.toString().getBytes();
+
+		String s = sb.toString();
+
+		byte[] bytes = s.getBytes();
+
 		String contentType = ContentTypes.APPLICATION_TEXT;
 
 		PortletResponseUtil.sendFile(
@@ -423,12 +425,10 @@ public class WebFormPortlet extends MVCPortlet {
 	protected String getMailBody(Map<String, String> fieldsMap) {
 		StringBundler sb = new StringBundler();
 
-		for (String fieldLabel : fieldsMap.keySet()) {
-			String fieldValue = fieldsMap.get(fieldLabel);
-
-			sb.append(fieldLabel);
+		for (Map.Entry<String, String> entry : fieldsMap.entrySet()) {
+			sb.append(entry.getKey());
 			sb.append(" : ");
-			sb.append(fieldValue);
+			sb.append(entry.getValue());
 			sb.append(CharPool.NEW_LINE);
 		}
 
@@ -454,12 +454,10 @@ public class WebFormPortlet extends MVCPortlet {
 			WebFormUtil.class.getName());
 
 		try {
-			for (String fieldLabel : fieldsMap.keySet()) {
-				String fieldValue = fieldsMap.get(fieldLabel);
-
+			for (Map.Entry<String, String> entry : fieldsMap.entrySet()) {
 				_expandoValueLocalService.addValue(
 					companyId, WebFormUtil.class.getName(), databaseTableName,
-					fieldLabel, classPK, fieldValue);
+					entry.getKey(), classPK, entry.getValue());
 			}
 
 			return true;

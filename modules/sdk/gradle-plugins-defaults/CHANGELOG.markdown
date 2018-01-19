@@ -2562,6 +2562,185 @@ read-only sub-repositories.
 ### Changed
 - [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.61.
 
+## 5.2.15 - 2017-12-10
+
+### Changed
+- [LPS-76326]: Update the [Liferay Gradle Plugins] dependency to version 3.5.62.
+
+## 5.2.16 - 2017-12-12
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.63.
+
+## 5.2.17 - 2017-12-12
+
+### Changed
+- [LPS-76018]: Update the [Liferay Gradle Plugins] dependency to version 3.5.64.
+
+## 5.2.18 - 2017-12-12
+
+### Changed
+- [LPS-76018]: Update the [Liferay Gradle Plugins] dependency to version 3.5.65.
+
+## 5.2.19 - 2017-12-12
+
+### Changed
+- [LPS-76018]: Update the [Liferay Gradle Plugins] dependency to version 3.5.66.
+
+## 5.2.20 - 2017-12-13
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.67.
+
+## 5.2.21 - 2017-12-14
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.68.
+
+## 5.2.22 - 2017-12-15
+
+### Fixed
+- [LPS-61099]: Fix configuration exceptions for OSGi modules in
+sub-repositories.
+
+## 5.2.23 - 2017-12-19
+
+### Changed
+- [LPS-76601]: Update the [Liferay Gradle Plugins] dependency to version 3.5.69.
+
+## 5.2.24 - 2017-12-19
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.70.
+
+## 5.2.25 - 2017-12-20
+
+### Changed
+- [LPS-76221]: Update the [Liferay Gradle Plugins] dependency to version 3.5.71.
+
+### Removed
+- [LPS-76221]: Remove the `translate` property's default configuration for all
+`BuildLangTask` instances.
+
+## 5.2.26 - 2017-12-20
+
+### Changed
+- [LPS-76221]: Update the [Liferay Gradle Plugins] dependency to version 3.5.72.
+
+## 5.2.27 - 2017-12-20
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.73.
+
+## 5.2.28 - 2017-12-21
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.74.
+
+## 5.2.29 - 2017-12-24
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.75.
+
+## 5.2.30 - 2017-12-26
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.76.
+
+## 5.2.31 - 2017-12-29
+
+### Added
+- [LRDOCS-4111]: Apply and preconfigure [Liferay Gradle Plugins JSDoc] for OSGi
+projects.
+- [LRDOCS-4111]: Publish the Javascript API documentation JAR of an OSGi project
+with the `install` and `uploadArchives` tasks.
+
+### Changed
+- [LPS-76747]: Update the [Liferay Gradle Plugins] dependency to version 3.5.77.
+
+## 5.2.32 - 2018-01-02
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.78.
+
+## 5.2.33 - 2018-01-02
+
+### Added
+- [LPS-76644]: Automatically configure the [Plugin Publishing Plugin](https://plugins.gradle.org/docs/publish-plugin)
+when applied.
+
+### Changed
+- [LPS-74904]: Update the [Liferay Gradle Plugins] dependency to version 3.5.79.
+- [LPS-74904]: Update the [Liferay Gradle Plugins JSDoc] dependency to version
+1.0.1.
+
+## 5.2.34 - 2018-01-03
+
+### Fixed
+- [LPS-76623]: Fix Maven coordinates of the [Gradle License Report] dependency.
+
+## 5.2.35 - 2018-01-04
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.80.
+
+## 5.2.36 - 2018-01-04
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.81.
+
+## 5.2.37 - 2018-01-08
+
+### Changed
+- [LPS-76840]: Update the [Liferay Gradle Plugins] dependency to version 3.5.82.
+
+## 5.2.38 - 2018-01-08
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.83.
+
+## 5.2.39 - 2018-01-09
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.84.
+
+## 5.2.40 - 2018-01-10
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.85.
+
+## 5.2.41 - 2018-01-11
+
+### Changed
+- [LPS-76954]: Update the [Liferay Gradle Plugins] dependency to version 3.5.86.
+
+## 5.2.42 - 2018-01-11
+
+### Changed
+- [LPS-76957]: Update the [Liferay Gradle Plugins] dependency to version 3.5.87.
+
+## 5.2.43 - 2018-01-11
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.5.88.
+
+## 5.2.44 - 2018-01-14
+
+### Changed
+- [LPS-77111]: Update the [Liferay Gradle Plugins] dependency to version 3.5.89.
+
+## 5.2.45 - 2018-01-17
+
+### Changed
+- [LPS-76626]: Update the [Liferay Gradle Plugins] dependency to version 3.5.90.
+
+## 5.2.46 - 2018-01-17
+
+### Changed
+- [LPS-76644]: Update the [Liferay Gradle Plugins JSDoc] dependency to version
+1.0.2.
+- [LPS-77250]: Update the [Liferay Gradle Plugins] dependency to version 3.5.91.
+
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
@@ -2569,6 +2748,7 @@ read-only sub-repositories.
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
 [Liferay Gradle Plugins Baseline]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-baseline
 [Liferay Gradle Plugins Dependency Checker]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-dependency-checker
+[Liferay Gradle Plugins JSDoc]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-jsdoc
 [Liferay Gradle Plugins Lang Merger]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-lang-merger
 [Liferay Gradle Plugins Node]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-node
 [Liferay Gradle Plugins Source Formatter]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-source-formatter
@@ -2815,6 +2995,7 @@ read-only sub-repositories.
 [LPS-74867]: https://issues.liferay.com/browse/LPS-74867
 [LPS-74884]: https://issues.liferay.com/browse/LPS-74884
 [LPS-74892]: https://issues.liferay.com/browse/LPS-74892
+[LPS-74904]: https://issues.liferay.com/browse/LPS-74904
 [LPS-74933]: https://issues.liferay.com/browse/LPS-74933
 [LPS-75009]: https://issues.liferay.com/browse/LPS-75009
 [LPS-75010]: https://issues.liferay.com/browse/LPS-75010
@@ -2846,6 +3027,7 @@ read-only sub-repositories.
 [LPS-75952]: https://issues.liferay.com/browse/LPS-75952
 [LPS-75965]: https://issues.liferay.com/browse/LPS-75965
 [LPS-75971]: https://issues.liferay.com/browse/LPS-75971
+[LPS-76018]: https://issues.liferay.com/browse/LPS-76018
 [LPS-76110]: https://issues.liferay.com/browse/LPS-76110
 [LPS-76145]: https://issues.liferay.com/browse/LPS-76145
 [LPS-76181]: https://issues.liferay.com/browse/LPS-76181
@@ -2855,9 +3037,21 @@ read-only sub-repositories.
 [LPS-76224]: https://issues.liferay.com/browse/LPS-76224
 [LPS-76226]: https://issues.liferay.com/browse/LPS-76226
 [LPS-76256]: https://issues.liferay.com/browse/LPS-76256
+[LPS-76326]: https://issues.liferay.com/browse/LPS-76326
+[LPS-76601]: https://issues.liferay.com/browse/LPS-76601
+[LPS-76623]: https://issues.liferay.com/browse/LPS-76623
+[LPS-76626]: https://issues.liferay.com/browse/LPS-76626
+[LPS-76644]: https://issues.liferay.com/browse/LPS-76644
+[LPS-76747]: https://issues.liferay.com/browse/LPS-76747
+[LPS-76840]: https://issues.liferay.com/browse/LPS-76840
+[LPS-76954]: https://issues.liferay.com/browse/LPS-76954
+[LPS-76957]: https://issues.liferay.com/browse/LPS-76957
+[LPS-77111]: https://issues.liferay.com/browse/LPS-77111
+[LPS-77250]: https://issues.liferay.com/browse/LPS-77250
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
 [LRDOCS-3023]: https://issues.liferay.com/browse/LRDOCS-3023
 [LRDOCS-3038]: https://issues.liferay.com/browse/LRDOCS-3038
 [LRDOCS-3643]: https://issues.liferay.com/browse/LRDOCS-3643
+[LRDOCS-4111]: https://issues.liferay.com/browse/LRDOCS-4111

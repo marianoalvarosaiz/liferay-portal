@@ -53,6 +53,8 @@ if (workflowEnabled) {
 	workflowDefinitions = WorkflowDefinitionManagerUtil.getActiveWorkflowDefinitions(company.getCompanyId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 }
 
+String languageId = LanguageUtil.getLanguageId(request);
+
 String headerTitle = (folder == null) ? (rootFolder ? LanguageUtil.get(request, "home") : LanguageUtil.get(request, "new-folder")) : folder.getName();
 
 boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getInitParameter("portlet-title-based-navigation"));
@@ -202,7 +204,7 @@ if (portletTitleBasedNavigation) {
 													}
 												%>
 
-													<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+													<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 												<%
 												}
@@ -276,7 +278,7 @@ if (portletTitleBasedNavigation) {
 									}
 								%>
 
-									<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+									<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 								<%
 								}
@@ -311,9 +313,9 @@ if (portletTitleBasedNavigation) {
 		</aui:fieldset-group>
 
 		<aui:button-row>
-			<aui:button cssClass="btn-lg" type="submit" />
+			<aui:button type="submit" />
 
-			<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= redirect %>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
 </div>
@@ -327,7 +329,7 @@ if (portletTitleBasedNavigation) {
 			for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
 			%>
 
-				<aui:option label='<%= workflowDefinition.getName() + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+				<aui:option label='<%= HtmlUtil.escapeAttribute(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(locale, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 			<%
 			}

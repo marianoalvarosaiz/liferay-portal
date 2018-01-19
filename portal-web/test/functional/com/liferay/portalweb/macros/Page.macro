@@ -122,9 +122,12 @@
 	</command>
 
 	<command name="assertCannotDeleteOnlyPage">
-		<execute macro="LexiconEntry#delete">
-			<var name="failure" value="You must have at least one page." />
-			<var name="rowEntry" value="${pageName}" />
+		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS">
+			<var name="key_rowEntry" value="${pageName}" />
+		</execute>
+
+		<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM" value1="Delete">
+			<var name="key_menuItem" value="Delete" />
 		</execute>
 	</command>
 
@@ -154,6 +157,27 @@
 		<execute macro="PortletEntry#save" />
 	</command>
 
+	<command name="changeLayoutLogo">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavTab">
+			<var name="navTab" value="Advanced" />
+		</execute>
+
+		<execute macro="Page#uploadFileForLogo">
+			<var name="logoFile" value="${logoFile}" />
+		</execute>
+	</command>
+
 	<command name="changeLogoViaPageCP">
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
@@ -169,23 +193,9 @@
 			<var name="panelHeading" value="Logo" />
 		</execute>
 
-		<execute function="AssertClick" locator1="Button#CHANGE_LOGO" value1="Change" />
-
-		<execute function="SelectFrame" locator1="SitePages#LOGO_UPLOAD_IMAGE_IFRAME" />
-
-		<execute function="AssertClick" locator1="SitePages#LOGO_UPLOAD_IMAGE_BUTTON" value1="Select" />
-
-		<execute function="SikuliUploadCommonFile" locator1="OS#FILE_DIALOG_BOX_FILE_NAME_FIELD_PNG" value1="${logoFile}" />
-
-		<execute function="Pause" locator1="5000" />
-
-		<execute macro="Button#clickDone" />
-
-		<execute function="Pause" locator1="5000" />
-
-		<execute function="SelectFrameTop" />
-
-		<execute macro="PortletEntry#save" />
+		<execute macro="Page#uploadFileForLogo">
+			<var name="logoFile" value="${logoFile}" />
+		</execute>
 	</command>
 
 	<command name="copyApplicationsFromPageToPage">
@@ -411,18 +421,6 @@
 		</execute>
 	</command>
 
-	<command name="gotoMyAccount">
-		<description message="Navigate to My Account > ${portletName}." />
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="My Account" />
-			<var name="panel" value="User" />
-			<var name="portlet" value="${portletName}" />
-		</execute>
-	</command>
-
 	<command name="gotoPagePanelPortlet">
 		<var name="key_portletName" value="${portletName}" />
 
@@ -600,6 +598,26 @@
 				</then>
 			</elseif>
 		</if>
+	</command>
+
+	<command name="uploadFileForLogo">
+		<execute function="AssertClick" locator1="Button#CHANGE_LOGO" value1="Change" />
+
+		<execute function="SelectFrame" locator1="SitePages#LOGO_UPLOAD_IMAGE_IFRAME" />
+
+		<execute function="AssertClick" locator1="SitePages#LOGO_UPLOAD_IMAGE_BUTTON" value1="Select" />
+
+		<execute function="SikuliUploadCommonFile" locator1="OS#FILE_DIALOG_BOX_FILE_NAME_FIELD_PNG" value1="${logoFile}" />
+
+		<execute function="Pause" locator1="5000" />
+
+		<execute macro="Button#clickDone" />
+
+		<execute function="Pause" locator1="5000" />
+
+		<execute function="SelectFrameTop" />
+
+		<execute macro="PortletEntry#save" />
 	</command>
 
 	<command name="view">

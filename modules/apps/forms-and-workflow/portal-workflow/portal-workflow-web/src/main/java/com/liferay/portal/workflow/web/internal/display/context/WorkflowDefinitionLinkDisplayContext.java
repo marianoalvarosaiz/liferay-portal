@@ -14,6 +14,7 @@
 
 package com.liferay.portal.workflow.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchWorkflowDefinitionLinkException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
@@ -72,8 +72,7 @@ public class WorkflowDefinitionLinkDisplayContext {
 
 	public WorkflowDefinitionLinkDisplayContext(
 		RenderRequest renderRequest, RenderResponse renderResponse,
-		WorkflowDefinitionLinkLocalService
-			workflowDefinitionLinkLocalService) {
+		WorkflowDefinitionLinkLocalService workflowDefinitionLinkLocalService) {
 
 		_workflowDefinitionLinkLocalService =
 			workflowDefinitionLinkLocalService;
@@ -261,7 +260,9 @@ public class WorkflowDefinitionLinkDisplayContext {
 		WorkflowDefinition workflowDefinition) {
 
 		String workflowDefinitionName = HtmlUtil.escape(
-			workflowDefinition.getName());
+			workflowDefinition.getTitle(
+				LanguageUtil.getLanguageId(
+					_workflowDefinitionLinkRequestHelper.getRequest())));
 
 		String workflowDefinitionVersion = LanguageUtil.format(
 			_workflowDefinitionLinkRequestHelper.getLocale(), "version-x",
@@ -298,8 +299,10 @@ public class WorkflowDefinitionLinkDisplayContext {
 			return false;
 		}
 
-		if (workflowDefinitionLink.getWorkflowDefinitionName().equals(
-				workflowDefinition.getName()) &&
+		String workflowDefinitionName =
+			workflowDefinitionLink.getWorkflowDefinitionName();
+
+		if (workflowDefinitionName.equals(workflowDefinition.getName()) &&
 			(workflowDefinitionLink.getWorkflowDefinitionVersion() ==
 				workflowDefinition.getVersion())) {
 

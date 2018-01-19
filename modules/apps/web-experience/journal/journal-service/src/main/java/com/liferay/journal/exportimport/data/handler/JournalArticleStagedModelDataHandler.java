@@ -38,6 +38,7 @@ import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -62,7 +63,6 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -910,18 +910,18 @@ public class JournalArticleStagedModelDataHandler
 
 		JournalArticle existingArticle = null;
 
-		if (!preloaded) {
-			JournalArticleResource journalArticleResource =
-				_journalArticleResourceLocalService.
-					fetchJournalArticleResourceByUuidAndGroupId(
-						articleResourceUuid, groupId);
+		JournalArticleResource journalArticleResource =
+			_journalArticleResourceLocalService.
+				fetchJournalArticleResourceByUuidAndGroupId(
+					articleResourceUuid, groupId);
 
-			if (journalArticleResource == null) {
-				return null;
-			}
-
+		if (journalArticleResource != null) {
 			return _journalArticleLocalService.fetchLatestArticle(
 				journalArticleResource.getResourcePrimKey());
+		}
+
+		if (!preloaded) {
+			return null;
 		}
 
 		if (Validator.isNotNull(newArticleId)) {

@@ -2,16 +2,19 @@
 	@import url($font-import-url);
 }
 
+@import "components/_grid";
+
 @import "components/_alerts";
 @import "components/_aspect-ratio";
 @import "components/_badges";
 @import "components/_breadcrumbs";
 @import "components/_button-groups";
 @import "components/_buttons";
+
 @import "components/_cards";
 @import "components/_dropdowns";
 @import "components/_forms";
-@import "components/_grid";
+@import "components/_links";
 
 @import "components/_custom-forms";
 @import "components/_form-validation";
@@ -42,11 +45,11 @@
 @import "components/_stickers";
 @import "components/_subnav";
 @import "components/_tables";
+@import "components/_tbar";
 @import "components/_timelines";
 @import "components/_toggle-switch";
 @import "components/_tooltip";
 @import "components/_type";
-@import "components/_widget";
 
 @import "components/_utilities";
 

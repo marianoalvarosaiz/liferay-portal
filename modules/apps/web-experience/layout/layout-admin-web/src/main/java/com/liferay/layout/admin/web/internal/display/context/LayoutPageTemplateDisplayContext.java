@@ -16,18 +16,18 @@ package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.model.FragmentEntryInstanceLink;
 import com.liferay.fragment.service.FragmentCollectionServiceUtil;
+import com.liferay.fragment.service.FragmentEntryInstanceLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.web.internal.security.permission.resource.LayoutPageTemplatePermission;
 import com.liferay.layout.admin.web.internal.util.LayoutPageTemplatePortletUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.model.LayoutPageTemplateFragment;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateFragmentLocalServiceUtil;
-import com.liferay.layout.page.template.service.permission.LayoutPageTemplatePermission;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.List;
 
@@ -113,8 +114,9 @@ public class LayoutPageTemplateDisplayContext {
 
 		for (FragmentCollection fragmentCollection : fragmentCollections) {
 			List<FragmentEntry> fragmentEntries =
-				FragmentEntryServiceUtil.fetchFragmentEntries(
-					fragmentCollection.getFragmentCollectionId());
+				FragmentEntryServiceUtil.getFragmentEntries(
+					fragmentCollection.getFragmentCollectionId(),
+					WorkflowConstants.STATUS_APPROVED);
 
 			if (ListUtil.isEmpty(fragmentEntries)) {
 				continue;
@@ -136,6 +138,9 @@ public class LayoutPageTemplateDisplayContext {
 
 				fragmentEntryJSONObject.put(
 					"fragmentEntryId", fragmentEntry.getFragmentEntryId());
+				fragmentEntryJSONObject.put(
+					"imagePreviewURL",
+					fragmentEntry.getImagePreviewURL(themeDisplay));
 				fragmentEntryJSONObject.put("name", fragmentEntry.getName());
 
 				fragmentEntriesJSONArray.put(fragmentEntryJSONObject);
@@ -151,6 +156,45 @@ public class LayoutPageTemplateDisplayContext {
 		}
 
 		return fragmentCollectionsJSONArray;
+	}
+
+	public JSONArray getFragmentEntryInstanceLinksJSONArray()
+		throws PortalException {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			getLayoutPageTemplateEntry();
+
+		List<FragmentEntryInstanceLink> fragmentEntryInstanceLinks =
+			FragmentEntryInstanceLinkLocalServiceUtil.
+				getFragmentEntryInstanceLinks(
+					themeDisplay.getScopeGroupId(),
+					layoutPageTemplateEntry.getLayoutPageTemplateEntryId());
+
+		for (FragmentEntryInstanceLink fragmentEntryInstanceLink :
+				fragmentEntryInstanceLinks) {
+
+			FragmentEntry fragmentEntry =
+				FragmentEntryServiceUtil.fetchFragmentEntry(
+					fragmentEntryInstanceLink.getFragmentEntryId());
+
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put(
+				"fragmentEntryId", fragmentEntry.getFragmentEntryId());
+			jsonObject.put(
+				"imagePreviewURL",
+				fragmentEntry.getImagePreviewURL(themeDisplay));
+			jsonObject.put("name", fragmentEntry.getName());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 	public String getKeywords() {
@@ -437,42 +481,6 @@ public class LayoutPageTemplateDisplayContext {
 		return layoutPageTemplateEntry.getName();
 	}
 
-	public JSONArray getLayoutPageTemplateFragmentsJSONArray()
-		throws PortalException {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			getLayoutPageTemplateEntry();
-
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-		List<LayoutPageTemplateFragment> layoutPageTemplateFragments =
-			LayoutPageTemplateFragmentLocalServiceUtil.
-				getLayoutPageTemplateFragmentsByPageTemplate(
-					themeDisplay.getScopeGroupId(),
-					layoutPageTemplateEntry.getLayoutPageTemplateEntryId());
-
-		for (LayoutPageTemplateFragment layoutPageTemplateFragment :
-				layoutPageTemplateFragments) {
-
-			FragmentEntry fragmentEntry =
-				FragmentEntryServiceUtil.fetchFragmentEntry(
-					layoutPageTemplateFragment.getFragmentEntryId());
-
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put(
-				"fragmentEntryId", fragmentEntry.getFragmentEntryId());
-			jsonObject.put("name", fragmentEntry.getName());
-
-			jsonArray.put(jsonObject);
-		}
-
-		return jsonArray;
-	}
-
 	public String getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -536,8 +544,6 @@ public class LayoutPageTemplateDisplayContext {
 
 		if (LayoutPageTemplatePermission.contains(
 				themeDisplay.getPermissionChecker(),
-				LayoutPageTemplatePermission.RESOURCE_NAME,
-				LayoutAdminPortletKeys.GROUP_PAGES,
 				themeDisplay.getSiteGroupId(), actionId)) {
 
 			return true;

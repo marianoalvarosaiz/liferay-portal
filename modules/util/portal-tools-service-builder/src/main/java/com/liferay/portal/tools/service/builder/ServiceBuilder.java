@@ -15,6 +15,7 @@
 package com.liferay.portal.tools.service.builder;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.xml.Dom4jUtil;
 import com.liferay.portal.freemarker.FreeMarkerUtil;
 import com.liferay.portal.kernel.dao.db.IndexMetadata;
 import com.liferay.portal.kernel.dao.db.IndexMetadataFactoryUtil;
@@ -43,7 +44,6 @@ import com.liferay.portal.kernel.util.Validator_IW;
 import com.liferay.portal.tools.ArgumentsUtil;
 import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.portal.xml.SAXReaderFactory;
-import com.liferay.util.xml.Dom4jUtil;
 import com.liferay.util.xml.XMLSafeReader;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -149,8 +149,8 @@ public class ServiceBuilder {
 			return false;
 		}
 
-		for (int i = 0; i < javaAnnotations.size(); i++) {
-			JavaClass javaClass = javaAnnotations.get(i).getType();
+		for (JavaAnnotation javaAnnotation : javaAnnotations) {
+			JavaClass javaClass = javaAnnotation.getType();
 
 			if (annotationName.equals(javaClass.getName())) {
 				return true;
@@ -173,6 +173,8 @@ public class ServiceBuilder {
 			arguments.get("service.build.number"), 1);
 		boolean buildNumberIncrement = GetterUtil.getBoolean(
 			arguments.get("service.build.number.increment"), true);
+		int databaseNameMaxLength = GetterUtil.getInteger(
+			arguments.get("service.database.name.max.length"), 30);
 		String hbmFileName = arguments.get("service.hbm.file");
 		String implDirName = arguments.get("service.impl.dir");
 		String inputFileName = arguments.get("service.input.file");
@@ -221,12 +223,13 @@ public class ServiceBuilder {
 		try {
 			ServiceBuilder serviceBuilder = new ServiceBuilder(
 				apiDirName, autoImportDefaultReferences, autoNamespaceTables,
-				beanLocatorUtil, buildNumber, buildNumberIncrement, hbmFileName,
-				implDirName, inputFileName, modelHintsFileName, osgiModule,
-				pluginName, propsUtil, readOnlyPrefixes, resourceActionModels,
-				resourcesDirName, springFileName, springNamespaces, sqlDirName,
-				sqlFileName, sqlIndexesFileName, sqlSequencesFileName,
-				targetEntityName, testDirName, true);
+				beanLocatorUtil, buildNumber, buildNumberIncrement,
+				databaseNameMaxLength, hbmFileName, implDirName, inputFileName,
+				modelHintsFileName, osgiModule, pluginName, propsUtil,
+				readOnlyPrefixes, resourceActionModels, resourcesDirName,
+				springFileName, springNamespaces, sqlDirName, sqlFileName,
+				sqlIndexesFileName, sqlSequencesFileName, targetEntityName,
+				testDirName, true);
 
 			String modifiedFileNames = StringUtil.merge(
 				serviceBuilder.getModifiedFileNames());
@@ -517,16 +520,40 @@ public class ServiceBuilder {
 	}
 
 	public ServiceBuilder(
+			String apiDir, boolean autoImportDefaultReferences,
+			boolean autoNamespaceTables, String beanLocatorUtil,
+			int databaseNameMaxLength, String hbmFileName, String implDir,
+			String inputFileName, String modelHintsFileName, boolean osgiModule,
+			String pluginName, String propsUtil, String[] readOnlyPrefixes,
+			Set<String> resourceActionModels, String resourcesDir,
+			String springFileName, String[] springNamespaces, String sqlDir,
+			String sqlFileName, String sqlIndexesFileName,
+			String sqlSequencesFileName, String targetEntityName,
+			String testDir)
+		throws Exception {
+
+		this(
+			apiDir, autoImportDefaultReferences, autoNamespaceTables,
+			beanLocatorUtil, 1, true, databaseNameMaxLength, hbmFileName,
+			implDir, inputFileName, modelHintsFileName, osgiModule, pluginName,
+			propsUtil, readOnlyPrefixes, resourceActionModels, resourcesDir,
+			springFileName, springNamespaces, sqlDir, sqlFileName,
+			sqlIndexesFileName, sqlSequencesFileName, targetEntityName, testDir,
+			true);
+	}
+
+	public ServiceBuilder(
 			String apiDirName, boolean autoImportDefaultReferences,
 			boolean autoNamespaceTables, String beanLocatorUtil,
-			long buildNumber, boolean buildNumberIncrement, String hbmFileName,
-			String implDirName, String inputFileName, String modelHintsFileName,
-			boolean osgiModule, String pluginName, String propsUtil,
-			String[] readOnlyPrefixes, Set<String> resourceActionModels,
-			String resourcesDirName, String springFileName,
-			String[] springNamespaces, String sqlDirName, String sqlFileName,
-			String sqlIndexesFileName, String sqlSequencesFileName,
-			String targetEntityName, String testDirName, boolean build)
+			long buildNumber, boolean buildNumberIncrement,
+			int databaseNameMaxLength, String hbmFileName, String implDirName,
+			String inputFileName, String modelHintsFileName, boolean osgiModule,
+			String pluginName, String propsUtil, String[] readOnlyPrefixes,
+			Set<String> resourceActionModels, String resourcesDirName,
+			String springFileName, String[] springNamespaces, String sqlDirName,
+			String sqlFileName, String sqlIndexesFileName,
+			String sqlSequencesFileName, String targetEntityName,
+			String testDirName, boolean build)
 		throws Exception {
 
 		_tplBadAliasNames = _getTplProperty(
@@ -636,6 +663,9 @@ public class ServiceBuilder {
 
 			_apiPackagePath = GetterUtil.getString(
 				rootElement.attributeValue("api-package-path"), packagePath);
+			_databaseNameMaxLength = GetterUtil.getInteger(
+				rootElement.attributeValue("database-name-max-length"),
+				databaseNameMaxLength);
 			_oldServiceOutputPath =
 				_apiDirName + "/" + StringUtil.replace(packagePath, '.', '/');
 			_outputPath =
@@ -726,9 +756,7 @@ public class ServiceBuilder {
 			if (build) {
 				Collections.sort(_ejbList);
 
-				for (int x = 0; x < _ejbList.size(); x++) {
-					Entity entity = _ejbList.get(x);
-
+				for (Entity entity : _ejbList) {
 					if (_isTargetEntity(entity)) {
 						System.out.println("Building " + entity.getName());
 
@@ -869,29 +897,6 @@ public class ServiceBuilder {
 		catch (FileNotFoundException fnfe) {
 			System.out.println(fnfe.getMessage());
 		}
-	}
-
-	public ServiceBuilder(
-			String apiDir, boolean autoImportDefaultReferences,
-			boolean autoNamespaceTables, String beanLocatorUtil,
-			String hbmFileName, String implDir, String inputFileName,
-			String modelHintsFileName, boolean osgiModule, String pluginName,
-			String propsUtil, String[] readOnlyPrefixes,
-			Set<String> resourceActionModels, String resourcesDir,
-			String springFileName, String[] springNamespaces, String sqlDir,
-			String sqlFileName, String sqlIndexesFileName,
-			String sqlSequencesFileName, String targetEntityName,
-			String testDir)
-		throws Exception {
-
-		this(
-			apiDir, autoImportDefaultReferences, autoNamespaceTables,
-			beanLocatorUtil, 1, true, hbmFileName, implDir, inputFileName,
-			modelHintsFileName, osgiModule, pluginName, propsUtil,
-			readOnlyPrefixes, resourceActionModels, resourcesDir,
-			springFileName, springNamespaces, sqlDir, sqlFileName,
-			sqlIndexesFileName, sqlSequencesFileName, targetEntityName, testDir,
-			true);
 	}
 
 	public String getCacheFieldMethodName(JavaField javaField) {
@@ -1111,12 +1116,13 @@ public class ServiceBuilder {
 
 		ServiceBuilder serviceBuilder = new ServiceBuilder(
 			_apiDirName, _autoImportDefaultReferences, _autoNamespaceTables,
-			_beanLocatorUtil, _buildNumber, _buildNumberIncrement, _hbmFileName,
-			_implDirName, refFile.getAbsolutePath(), _modelHintsFileName,
-			_osgiModule, _pluginName, _propsUtil, _readOnlyPrefixes,
-			_resourceActionModels, _resourcesDirName, _springFileName,
-			_springNamespaces, _sqlDirName, _sqlFileName, _sqlIndexesFileName,
-			_sqlSequencesFileName, _targetEntityName, _testDirName, false);
+			_beanLocatorUtil, _buildNumber, _buildNumberIncrement,
+			_databaseNameMaxLength, _hbmFileName, _implDirName,
+			refFile.getAbsolutePath(), _modelHintsFileName, _osgiModule,
+			_pluginName, _propsUtil, _readOnlyPrefixes, _resourceActionModels,
+			_resourcesDirName, _springFileName, _springNamespaces, _sqlDirName,
+			_sqlFileName, _sqlIndexesFileName, _sqlSequencesFileName,
+			_targetEntityName, _testDirName, false);
 
 		entity = serviceBuilder.getEntity(refEntity);
 
@@ -1259,12 +1265,14 @@ public class ServiceBuilder {
 	public String getNoSuchEntityException(Entity entity) {
 		String noSuchEntityException = entity.getName();
 
-		if (Validator.isNull(entity.getPortletShortName()) ||
-			(noSuchEntityException.startsWith(entity.getPortletShortName()) &&
-			 !noSuchEntityException.equals(entity.getPortletShortName()))) {
+		String portletShortName = entity.getPortletShortName();
+
+		if (Validator.isNull(portletShortName) ||
+			(noSuchEntityException.startsWith(portletShortName) &&
+			 !noSuchEntityException.equals(portletShortName))) {
 
 			noSuchEntityException = noSuchEntityException.substring(
-				entity.getPortletShortName().length());
+				portletShortName.length());
 		}
 
 		noSuchEntityException = "NoSuch" + noSuchEntityException;
@@ -1364,7 +1372,9 @@ public class ServiceBuilder {
 		for (JavaMethod method : methods) {
 			List<JavaParameter> parameters = method.getParameters();
 
-			if (method.getName().equals(methodName) &&
+			String curMethodName = method.getName();
+
+			if (curMethodName.equals(methodName) &&
 				(parameters.size() == args.size())) {
 
 				for (int i = 0; i < parameters.size(); i++) {
@@ -1589,7 +1599,9 @@ public class ServiceBuilder {
 			if (parameters.size() == 1) {
 				JavaParameter parameter = parameters.get(0);
 
-				if (parameter.getName().equals("primaryKey")) {
+				String parameterName = parameter.getName();
+
+				if (parameterName.equals("primaryKey")) {
 					return true;
 				}
 			}
@@ -1955,7 +1967,7 @@ public class ServiceBuilder {
 		List<Element> elements = xPath.selectNodes(rootElement);
 
 		for (Element element : elements) {
-			resourceActionModels.add(element.getText().trim());
+			resourceActionModels.add(StringUtil.trim(element.getText()));
 		}
 	}
 
@@ -3433,9 +3445,7 @@ public class ServiceBuilder {
 
 		// indexes.sql appending
 
-		for (int i = 0; i < _ejbList.size(); i++) {
-			Entity entity = _ejbList.get(i);
-
+		for (Entity entity : _ejbList) {
 			if (!_isTargetEntity(entity)) {
 				continue;
 			}
@@ -3450,17 +3460,13 @@ public class ServiceBuilder {
 
 			List<EntityFinder> finderList = entity.getFinderList();
 
-			for (int j = 0; j < finderList.size(); j++) {
-				EntityFinder finder = finderList.get(j);
-
+			for (EntityFinder finder : finderList) {
 				if (finder.isDBIndex()) {
 					List<String> finderColsNames = new ArrayList<>();
 
 					List<EntityColumn> finderColsList = finder.getColumns();
 
-					for (int k = 0; k < finderColsList.size(); k++) {
-						EntityColumn col = finderColsList.get(k);
-
+					for (EntityColumn col : finderColsList) {
 						finderColsNames.add(col.getDBName());
 					}
 
@@ -3618,9 +3624,7 @@ public class ServiceBuilder {
 			}
 		}
 
-		for (int i = 0; i < _ejbList.size(); i++) {
-			Entity entity = _ejbList.get(i);
-
+		for (Entity entity : _ejbList) {
 			if (!_isTargetEntity(entity)) {
 				continue;
 			}
@@ -3631,11 +3635,9 @@ public class ServiceBuilder {
 
 			List<EntityColumn> columnList = entity.getColumnList();
 
-			for (int j = 0; j < columnList.size(); j++) {
-				EntityColumn column = columnList.get(j);
-
+			for (EntityColumn column : columnList) {
 				if ("sequence".equals(column.getIdType())) {
-					StringBundler sb = new StringBundler();
+					StringBundler sb = new StringBundler(3);
 
 					String sequenceName = column.getIdParam();
 
@@ -3683,9 +3685,7 @@ public class ServiceBuilder {
 			_touch(sqlFile);
 		}
 
-		for (int i = 0; i < _ejbList.size(); i++) {
-			Entity entity = _ejbList.get(i);
-
+		for (Entity entity : _ejbList) {
 			if (!_isTargetEntity(entity)) {
 				continue;
 			}
@@ -3861,7 +3861,7 @@ public class ServiceBuilder {
 				sb.append('\n');
 			}
 
-			return sb.toString().trim();
+			return StringUtil.trim(sb.toString());
 		}
 	}
 
@@ -4083,14 +4083,10 @@ public class ServiceBuilder {
 		for (Entity entity : entities) {
 			List<EntityColumn> pkList = entity.getPKList();
 
-			for (int j = 0; j < pkList.size(); j++) {
-				EntityColumn col = pkList.get(j);
-
-				String colDBName = col.getDBName();
-
+			for (EntityColumn col : pkList) {
 				IndexMetadata indexMetadata =
 					IndexMetadataFactoryUtil.createIndexMetadata(
-						false, tableName, colDBName);
+						false, tableName, col.getDBName());
 
 				_addIndexMetadata(indexMetadataMap, tableName, indexMetadata);
 			}
@@ -4141,20 +4137,54 @@ public class ServiceBuilder {
 		StringBundler sb = new StringBundler();
 
 		sb.append(_SQL_CREATE_TABLE);
-		sb.append(entityMapping.getTable());
+
+		String tableName = entityMapping.getTable();
+
+		if ((_databaseNameMaxLength > 0) &&
+			(tableName.length() > _databaseNameMaxLength)) {
+
+			throw new ServiceBuilderException(
+				StringBundler.concat(
+					"Unable to create entity mapping \"", tableName,
+					"\" because table name exceeds ",
+					String.valueOf(_databaseNameMaxLength), " characters. ",
+					"Some databases do not allow table names longer than 30 ",
+					"characters. To disable this warning set the ",
+					"\"service-builder\" attribute ",
+					"\"database-name-max-length\" to the max length that your ",
+					"database supports."));
+		}
+
+		sb.append(tableName);
+
 		sb.append(" (\n");
 
 		for (Entity entity : entities) {
 			List<EntityColumn> pkList = entity.getPKList();
 
-			for (int i = 0; i < pkList.size(); i++) {
-				EntityColumn col = pkList.get(i);
+			for (EntityColumn col : pkList) {
+				String colDBName = col.getDBName();
 
-				String colName = col.getName();
+				if ((_databaseNameMaxLength > 0) &&
+					(colDBName.length() > _databaseNameMaxLength)) {
+
+					throw new ServiceBuilderException(
+						StringBundler.concat(
+							"Unable to create entity mapping \"", tableName,
+							"\" because column name \"", colDBName,
+							"\" exceeds ",
+							String.valueOf(_databaseNameMaxLength),
+							" characters. Some databases do not allow column ",
+							"names longer than 30 characters. To disable this ",
+							"warning set the \"service-builder\" attribute ",
+							"\"database-name-max-length\" to the max length ",
+							"that your database supports."));
+				}
+
 				String colType = col.getType();
 
 				sb.append("\t");
-				sb.append(col.getDBName());
+				sb.append(colDBName);
 				sb.append(" ");
 
 				if (StringUtil.equalsIgnoreCase(colType, "boolean")) {
@@ -4177,7 +4207,8 @@ public class ServiceBuilder {
 					sb.append("TEXT");
 				}
 				else if (colType.equals("String")) {
-					int maxLength = getMaxLength(entity.getName(), colName);
+					int maxLength = getMaxLength(
+						entity.getName(), col.getName());
 
 					if (col.isLocalized()) {
 						maxLength = 4000;
@@ -4225,13 +4256,11 @@ public class ServiceBuilder {
 			for (int j = 0; j < pkList.size(); j++) {
 				EntityColumn col = pkList.get(j);
 
-				String colDBName = col.getDBName();
-
 				if ((i != 1) || (j != 0)) {
 					sb.append(", ");
 				}
 
-				sb.append(colDBName);
+				sb.append(col.getDBName());
 			}
 		}
 
@@ -4252,18 +4281,53 @@ public class ServiceBuilder {
 		StringBundler sb = new StringBundler();
 
 		sb.append(_SQL_CREATE_TABLE);
-		sb.append(entity.getTable());
+
+		String tableName = entity.getTable();
+
+		if ((_databaseNameMaxLength > 0) &&
+			(tableName.length() > _databaseNameMaxLength)) {
+
+			throw new ServiceBuilderException(
+				StringBundler.concat(
+					"Unable to create entity \"", tableName,
+					"\" because table name exceeds ",
+					String.valueOf(_databaseNameMaxLength), " characters. ",
+					"Some databases do not allow table names longer than 30 ",
+					"characters. To disable this warning set the ",
+					"\"service-builder\" attribute ",
+					"\"database-name-max-length\" to the max length that your ",
+					"database supports."));
+		}
+
+		sb.append(tableName);
+
 		sb.append(" (\n");
 
 		for (int i = 0; i < regularColList.size(); i++) {
 			EntityColumn col = regularColList.get(i);
 
-			String colName = col.getName();
+			String colDBName = col.getDBName();
+
+			if ((_databaseNameMaxLength > 0) &&
+				(colDBName.length() > _databaseNameMaxLength)) {
+
+				throw new ServiceBuilderException(
+					StringBundler.concat(
+						"Unable to create entity \"", tableName,
+						"\" because column name \"", colDBName, "\" exceeds ",
+						String.valueOf(_databaseNameMaxLength), " characters. ",
+						"Some databases do not allow column names longer than ",
+						"30 characters. To disable this warning set the ",
+						"\"service-builder\" attribute ",
+						"\"database-name-max-length\" to the max length that ",
+						"your database supports"));
+			}
+
 			String colType = col.getType();
 			String colIdType = col.getIdType();
 
 			sb.append("\t");
-			sb.append(col.getDBName());
+			sb.append(colDBName);
 			sb.append(" ");
 
 			if (StringUtil.equalsIgnoreCase(colType, "boolean")) {
@@ -4292,7 +4356,7 @@ public class ServiceBuilder {
 				sb.append("TEXT");
 			}
 			else if (colType.equals("String")) {
-				int maxLength = getMaxLength(entity.getName(), colName);
+				int maxLength = getMaxLength(entity.getName(), col.getName());
 
 				if (col.isLocalized() && (maxLength < 4000)) {
 					maxLength = 4000;
@@ -4333,7 +4397,7 @@ public class ServiceBuilder {
 				sb.append(" IDENTITY");
 			}
 
-			if (colName.equals("mvccVersion")) {
+			if (Objects.equals(col.getName(), "mvccVersion")) {
 				sb.append(" default 0 not null");
 			}
 
@@ -4461,7 +4525,9 @@ public class ServiceBuilder {
 		List<JavaParameter> javaParameters = javaMethod.getParameters();
 
 		for (JavaParameter javaParameter : javaParameters) {
-			sb.append(javaParameter.getType().getGenericValue());
+			JavaType type = javaParameter.getType();
+
+			sb.append(type.getGenericValue());
 
 			sb.append(StringPool.COMMA);
 		}
@@ -4978,7 +5044,7 @@ public class ServiceBuilder {
 
 			String content = _read(newFinderImplFile);
 
-			StringBundler sb = new StringBundler();
+			StringBundler sb = new StringBundler(13);
 
 			sb.append("package ");
 			sb.append(_packagePath);
@@ -5178,7 +5244,7 @@ public class ServiceBuilder {
 			boolean asc = true;
 
 			if ((orderElement.attribute("by") != null) &&
-				orderElement.attributeValue("by").equals("desc")) {
+				Objects.equals(orderElement.attributeValue("by"), "desc")) {
 
 				asc = false;
 			}
@@ -6082,6 +6148,7 @@ public class ServiceBuilder {
 	private long _buildNumber;
 	private boolean _buildNumberIncrement;
 	private String _currentTplName;
+	private int _databaseNameMaxLength = 30;
 	private List<Entity> _ejbList;
 	private Map<String, EntityMapping> _entityMappings;
 	private Map<String, Entity> _entityPool = new HashMap<>();

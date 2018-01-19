@@ -69,9 +69,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
@@ -439,9 +445,7 @@ public class HttpImpl implements Http {
 	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
 	@Deprecated
-	public org.apache.commons.httpclient.HttpClient getClient(
-		org.apache.commons.httpclient.HostConfiguration hostConfiguration) {
-
+	public HttpClient getClient(HostConfiguration hostConfiguration) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -516,8 +520,7 @@ public class HttpImpl implements Http {
 	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
 	@Deprecated
-	public org.apache.commons.httpclient.HostConfiguration getHostConfiguration(
-			String location)
+	public HostConfiguration getHostConfiguration(String location)
 		throws IOException {
 
 		throw new UnsupportedOperationException();
@@ -961,8 +964,7 @@ public class HttpImpl implements Http {
 	 */
 	@Deprecated
 	public void proxifyState(
-		org.apache.commons.httpclient.HttpState httpState,
-		org.apache.commons.httpclient.HostConfiguration hostConfiguration) {
+		HttpState httpState, HostConfiguration hostConfiguration) {
 	}
 
 	@Override
@@ -1005,7 +1007,7 @@ public class HttpImpl implements Http {
 		sb.append(url.substring(0, pos + 1));
 
 		String[] parameters = StringUtil.split(
-			url.substring(pos + 1, url.length()), CharPool.AMPERSAND);
+			url.substring(pos + 1), CharPool.AMPERSAND);
 
 		for (String parameter : parameters) {
 			if (parameter.length() > 0) {
@@ -1453,9 +1455,7 @@ public class HttpImpl implements Http {
 	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
 	@Deprecated
-	protected boolean hasRequestHeader(
-		org.apache.commons.httpclient.HttpMethod httpMethod, String name) {
-
+	protected boolean hasRequestHeader(HttpMethod httpMethod, String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1476,8 +1476,8 @@ public class HttpImpl implements Http {
 	 */
 	@Deprecated
 	protected void processPostMethod(
-		org.apache.commons.httpclient.methods.PostMethod postMethod,
-		List<Http.FilePart> fileParts, Map<String, String> parts) {
+		PostMethod postMethod, List<Http.FilePart> fileParts,
+		Map<String, String> parts) {
 
 		throw new UnsupportedOperationException();
 	}
@@ -1888,8 +1888,9 @@ public class HttpImpl implements Http {
 
 			httpEntity = closeableHttpResponse.getEntity();
 
-			response.setResponseCode(
-				closeableHttpResponse.getStatusLine().getStatusCode());
+			StatusLine statusLine = closeableHttpResponse.getStatusLine();
+
+			response.setResponseCode(statusLine.getStatusCode());
 
 			Header locationHeader = closeableHttpResponse.getFirstHeader(
 				"location");
@@ -2040,6 +2041,8 @@ public class HttpImpl implements Http {
 		String queryString = url.substring(index + 1);
 
 		String[] params = StringUtil.split(queryString, CharPool.AMPERSAND);
+
+		params = ArrayUtil.unique(params);
 
 		List<String> redirectParams = new ArrayList<>();
 
