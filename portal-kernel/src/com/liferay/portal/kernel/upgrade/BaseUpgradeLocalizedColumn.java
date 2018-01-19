@@ -14,6 +14,7 @@
 
 package com.liferay.portal.kernel.upgrade;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
@@ -22,7 +23,8 @@ import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 
-import java.sql.PreparedStatement;
+import java.io.IOException;
+
 import java.sql.SQLException;
 
 import java.util.Locale;
@@ -91,15 +93,15 @@ public abstract class BaseUpgradeLocalizedColumn extends UpgradeProcess {
 			resourceBundleLoader);
 
 		String sql = StringBundler.concat(
-			"update ", tableName, " set ", columnName, " = ? where ",
-			columnName, " = ? and companyId = ?");
+			"update ", tableName, " set ", columnName, " = '", localizationXML,
+			" where ", columnName, "' = CAST_CLOB_TEXT('", originalContent,
+			"') and companyId = ", Long.toString(companyId));
 
-		try (PreparedStatement ps = connection.prepareStatement(sql)) {
-			ps.setString(1, localizationXML);
-			ps.setString(2, originalContent);
-			ps.setLong(3, companyId);
-
-			ps.executeUpdate();
+		try {
+			runSQL(sql);
+		}
+		catch (IOException ioe) {
+			throw new SystemException(ioe);
 		}
 	}
 
