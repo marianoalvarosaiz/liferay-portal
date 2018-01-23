@@ -15,6 +15,8 @@
 package com.liferay.portal.kernel.upgrade;
 
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
@@ -105,6 +107,8 @@ public abstract class BaseUpgradeLocalizedColumn extends UpgradeProcess {
 			"' = CAST_CLOB_TEXT('", escapedOriginalContent,
 			"') and companyId = ", Long.toString(companyId));
 
+		_log.error("Just to debug: " + sql);
+
 		try {
 			runSQL(sql);
 		}
@@ -112,5 +116,8 @@ public abstract class BaseUpgradeLocalizedColumn extends UpgradeProcess {
 			throw new SystemException(ioe);
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseUpgradeLocalizedColumn.class);
 
 }
