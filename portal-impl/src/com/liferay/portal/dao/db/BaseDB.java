@@ -928,7 +928,6 @@ public abstract class BaseDB implements DB {
 	protected void handleSQLException(String sql, SQLException sqle)
 		throws SQLException {
 
-		if (_log.isDebugEnabled()) {
 			StringBundler sb = new StringBundler(10);
 
 			sb.append("SQL: ");
@@ -943,7 +942,6 @@ public abstract class BaseDB implements DB {
 			sb.append(sqle.getMessage());
 
 			_log.debug(sb.toString());
-		}
 
 		throw sqle;
 	}
