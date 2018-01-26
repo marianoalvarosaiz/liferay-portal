@@ -228,7 +228,8 @@ public class LayoutPrototypePersistenceTest {
 		return OrderByComparatorFactoryUtil.create("LayoutPrototype",
 			"mvccVersion", true, "uuid", true, "layoutPrototypeId", true,
 			"companyId", true, "userId", true, "userName", true, "createDate",
-			true, "modifiedDate", true, "settings", true, "active", true);
+			true, "modifiedDate", true, "name", true, "description", true,
+			"settings", true, "active", true);
 	}
 
 	@Test

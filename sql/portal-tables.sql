@@ -614,8 +614,8 @@ create table LayoutPrototype (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	name TEXT null,
-	description TEXT null,
+	name STRING null,
+	description STRING null,
 	settings_ STRING null,
 	active_ BOOLEAN
 );
