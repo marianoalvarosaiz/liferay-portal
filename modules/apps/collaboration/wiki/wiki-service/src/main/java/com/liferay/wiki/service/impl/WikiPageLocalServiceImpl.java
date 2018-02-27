@@ -98,6 +98,7 @@ import com.liferay.wiki.exception.NoSuchPageException;
 import com.liferay.wiki.exception.PageContentException;
 import com.liferay.wiki.exception.PageTitleException;
 import com.liferay.wiki.exception.PageVersionException;
+import com.liferay.wiki.internal.util.WikiCacheThreadLocal;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.model.WikiPageConstants;
@@ -109,7 +110,6 @@ import com.liferay.wiki.processor.WikiPageRenameContentProcessor;
 import com.liferay.wiki.service.base.WikiPageLocalServiceBaseImpl;
 import com.liferay.wiki.social.WikiActivityKeys;
 import com.liferay.wiki.util.WikiCacheHelper;
-import com.liferay.wiki.util.WikiCacheThreadLocal;
 import com.liferay.wiki.util.WikiUtil;
 import com.liferay.wiki.util.comparator.PageCreateDateComparator;
 import com.liferay.wiki.util.comparator.PageVersionComparator;
@@ -471,11 +471,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		BundleContext bundleContext = bundle.getBundleContext();
 
-		_serviceTrackerMap = ServiceTrackerMapFactory.singleValueMap(
+		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
 			bundleContext, WikiPageRenameContentProcessor.class,
 			"wiki.format.name");
-
-		_serviceTrackerMap.open();
 	}
 
 	@Override
@@ -1774,6 +1772,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			summary = StringPool.BLANK;
 		}
 
+		populateServiceContext(serviceContext, page);
+
 		serviceContext.setCommand(Constants.RENAME);
 
 		WikiPageRenameContentProcessor wikiPageRenameContentProcessor =
@@ -1927,7 +1927,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			assetEntry = assetEntryLocalService.updateEntry(
 				userId, page.getGroupId(), page.getCreateDate(),
 				page.getModifiedDate(), WikiPage.class.getName(),
-				page.getResourcePrimKey(), page.getUuid(), 0, assetCategoryIds,
+				page.getPrimaryKey(), page.getUuid(), 0, assetCategoryIds,
 				assetTagNames, true, false, null, null, publishDate, null,
 				ContentTypes.TEXT_HTML, page.getTitle(), null, null, null, null,
 				0, 0, priority);
@@ -2217,7 +2217,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			return;
 		}
 
-		wikiCacheHelper.clearCache(page.getNodeId());
+		wikiCacheHelper.clearCache();
 	}
 
 	protected void deletePageAttachment(long fileEntryId)
@@ -2767,7 +2767,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		// Cache
 
 		if (WikiCacheThreadLocal.isClearCache()) {
-			wikiCacheHelper.clearCache(page.getNodeId());
+			wikiCacheHelper.clearCache();
 		}
 
 		// Workflow
