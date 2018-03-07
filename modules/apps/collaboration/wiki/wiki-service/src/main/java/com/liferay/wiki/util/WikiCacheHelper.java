@@ -17,7 +17,6 @@ package com.liferay.wiki.util;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
-import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -50,12 +49,24 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = WikiCacheHelper.class)
 public class WikiCacheHelper {
 
+	public void clearCache() {
+		_portalCache.removeAll();
+	}
+
+	/**
+	 * @deprecated As of 1.7.0, replaced by {@link #clearCache()}
+	 */
+	@Deprecated
 	public void clearCache(long nodeId) {
 		_portalCache.removeAll();
 	}
 
+	/**
+	 * @deprecated As of 1.7.0, replaced by {@link #clearCache()}
+	 */
+	@Deprecated
 	public void clearCache(long nodeId, String title) {
-		clearCache(nodeId);
+		_portalCache.removeAll();
 	}
 
 	public WikiPageDisplay getDisplay(
@@ -84,8 +95,7 @@ public class WikiCacheHelper {
 				attachmentURLPrefix);
 
 			if (pageDisplay != null) {
-				PortalCacheHelperUtil.putWithoutReplicator(
-					_portalCache, key, pageDisplay);
+				_portalCache.put(key, pageDisplay);
 			}
 		}
 
@@ -122,8 +132,7 @@ public class WikiCacheHelper {
 				links = Collections.emptyMap();
 			}
 
-			PortalCacheHelperUtil.putWithoutReplicator(
-				_portalCache, key, (Serializable)links);
+			_portalCache.put(key, (Serializable)links);
 		}
 
 		return links;
@@ -151,11 +160,10 @@ public class WikiCacheHelper {
 	}
 
 	private String _encodeKey(long nodeId, String title, String postfix) {
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(5);
 
-		sb.append(_CACHE_NAME);
-		sb.append(StringPool.POUND);
 		sb.append(StringUtil.toHexString(nodeId));
+		sb.append(StringPool.POUND);
 		sb.append(title);
 
 		if (postfix != null) {
@@ -196,7 +204,7 @@ public class WikiCacheHelper {
 		}
 	}
 
-	private static final String _CACHE_NAME = WikiCacheHelper.class.getName();
+	private static final String _CACHE_NAME = WikiPageDisplay.class.getName();
 
 	private static final String _OUTGOING_LINKS = "OUTGOING_LINKS";
 

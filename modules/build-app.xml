@@ -15,8 +15,6 @@
 
 	<property file="../build.properties" />
 
-	<property name="build.modules.excludes" value="**/adaptive-media/**" />
-
 	<property name="portal.lib.dir" value="${app.server.tomcat.lib.portal.dir}" />
 
 	<property name="osgi.dir" value="${liferay.home}/osgi" />
@@ -32,7 +30,7 @@
 	<target depends="dist-module-artifacts,update-app-marketplace-verson,write-app-change-log" name="build-app">
 		<delete file="${dist.dir}/ticket.list.tmp" />
 
-		<antcall target="git-clean-up" />
+		<antcall target="git-finalize" />
 	</target>
 
 	<target name="build-app-all">
@@ -286,27 +284,29 @@
 		</pathconvert>
 	</target>
 
-	<target if="git.clean.up" name="git-clean-up">
-		<exec dir="${modules.dir}" executable="git" failonerror="true">
-			<arg value="reset" />
-		</exec>
-
-		<exec dir="${modules.dir}" executable="git" failonerror="true">
-			<arg value="clean" />
-			<arg value="-dfx" />
-			<arg value=".releng" />
-		</exec>
-
+	<target if="${git.finalize}" name="git-finalize">
 		<exec dir="${modules.dir}" executable="git" failonerror="true">
 			<arg value="add" />
-			<arg value=".releng" />
+			<arg value="${releng.app.dir}/app.changelog" />
+			<arg value="${releng.app.dir}/app.properties" />
 			<arg value="-f" />
 		</exec>
 
 		<exec dir="${modules.dir}" executable="git" failonerror="true">
 			<arg value="commit" />
 			<arg value="-m" />
-			<arg value="${Liferay-Releng-App-Title} ${app.version}" />
+			<arg value="${git.commit.app.ticket} ${Liferay-Releng-App-Title} ${app.version}" />
+		</exec>
+
+		<exec dir="${modules.dir}" executable="git" failonerror="false">
+			<arg value="tag" />
+			<arg value="-d" />
+			<arg value="marketplace-${app.name}-${app.version}" />
+		</exec>
+
+		<exec dir="${modules.dir}" executable="git" failonerror="true">
+			<arg value="tag" />
+			<arg value="marketplace-${app.name}-${app.version}" />
 		</exec>
 	</target>
 
@@ -315,7 +315,7 @@
 
 			<!-- Order is important -->
 
-			<fileset dir="${liferay.home}/tools/portal-tools-target-platform-indexer-client" includes="com.liferay.portal.target.platform.indexer.jar,com.liferay.portal.tools.target.platform.indexer.client.jar" />
+			<fileset dir="${liferay.home}/tools/portal-tools-target-platform-indexer-client" includes="com.liferay.portal.target.platform.indexer.api.jar,com.liferay.portal.target.platform.indexer.impl.jar,com.liferay.portal.tools.target.platform.indexer.client.jar" />
 			<fileset dir="${osgi.dir}/core" includes="com.liferay.portal.bootstrap.jar,org.eclipse.osgi.jar" />
 		</path>
 
@@ -340,6 +340,17 @@
 						<istrue value="${build.all}" />
 					</or>
 				</not>
+			</condition>
+		</fail>
+
+		<fail message="Please specify a value for &quot;git.commit.app.ticket&quot; when &quot;git.finalize&quot; is set to true.">
+			<condition>
+				<and>
+					<istrue value="${git.finalize}" />
+					<not>
+						<isset property="git.commit.app.ticket" />
+					</not>
+				</and>
 			</condition>
 		</fail>
 

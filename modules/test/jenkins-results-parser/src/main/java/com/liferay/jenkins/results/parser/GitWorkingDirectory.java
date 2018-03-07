@@ -1156,7 +1156,7 @@ public class GitWorkingDirectory {
 		private final Remote _remote;
 		private final String _sha;
 
-	};
+	}
 
 	public static class Remote implements Comparable<Remote> {
 
@@ -1455,8 +1455,7 @@ public class GitWorkingDirectory {
 
 		if ((repositoryName.equals("liferay-plugins-ee") ||
 			 repositoryName.equals("liferay-portal-ee")) &&
-			!_upstreamBranchName.contains("ee-") &&
-			!_upstreamBranchName.contains("-private")) {
+			_upstreamBranchName.equals("master")) {
 
 			repositoryName = repositoryName.replace("-ee", "");
 		}
@@ -1602,7 +1601,7 @@ public class GitWorkingDirectory {
 		private final String _standardError;
 		private final String _standardOut;
 
-	};
+	}
 
 	private static List<String> _getBuildPropertyAsList(String key) {
 		try {
