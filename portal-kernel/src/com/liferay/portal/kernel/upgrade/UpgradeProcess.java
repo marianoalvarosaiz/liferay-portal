@@ -147,6 +147,12 @@ public abstract class UpgradeProcess
 			return false;
 		}
 
+		public static String getName(Class<?> tableClass) throws Exception {
+			Field tableNameField = tableClass.getField("TABLE_NAME");
+
+			return (String)tableNameField.get(null);
+		}
+
 		/**
 		 * @deprecated As of 7.0.0, with no direct replacement
 		 */
@@ -154,6 +160,10 @@ public abstract class UpgradeProcess
 		public String getIndexedColumnName();
 
 		public String getSQL(String tableName);
+
+		public default boolean isNeeded(Class<?> tableClass) throws Exception {
+			return true;
+		}
 
 		public boolean shouldAddIndex(Collection<String> columnNames);
 
@@ -199,6 +209,15 @@ public abstract class UpgradeProcess
 			sb.append(_newColumn);
 
 			return sb.toString();
+		}
+
+		@Override
+		public boolean isNeeded(Class<?> tableClass) throws Exception {
+			if (hasColumn(Alterable.getName(tableClass), _newColumnName)) {
+				return false;
+			}
+
+			return true;
 		}
 
 		@Override
@@ -248,6 +267,15 @@ public abstract class UpgradeProcess
 		}
 
 		@Override
+		public boolean isNeeded(Class<?> tableClass) throws Exception {
+			if (hasColumnType(tableClass, _columnName, _newType)) {
+				return false;
+			}
+
+			return true;
+		}
+
+		@Override
 		public boolean shouldAddIndex(Collection<String> columnNames) {
 			return Alterable.containsIgnoreCase(columnNames, _columnName);
 		}
@@ -290,6 +318,15 @@ public abstract class UpgradeProcess
 		}
 
 		@Override
+		public boolean isNeeded(Class<?> tableClass) throws Exception {
+			if (hasColumn(Alterable.getName(tableClass), _columnName)) {
+				return false;
+			}
+
+			return true;
+		}
+
+		@Override
 		public boolean shouldAddIndex(Collection<String> columnNames) {
 			return Alterable.containsIgnoreCase(columnNames, _columnName);
 		}
@@ -328,6 +365,15 @@ public abstract class UpgradeProcess
 			sb.append(_columnName);
 
 			return sb.toString();
+		}
+
+		@Override
+		public boolean isNeeded(Class<?> tableClass) throws Exception {
+			if (hasColumn(Alterable.getName(tableClass), _columnName)) {
+				return true;
+			}
+
+			return false;
 		}
 
 		@Override
@@ -396,6 +442,10 @@ public abstract class UpgradeProcess
 				}
 
 				for (Alterable alterable : alterables) {
+					if (!alterable.isNeeded(tableClass)) {
+						continue;
+					}
+
 					for (Map.Entry<String, Set<String>> entry :
 							columnNamesMap.entrySet()) {
 
