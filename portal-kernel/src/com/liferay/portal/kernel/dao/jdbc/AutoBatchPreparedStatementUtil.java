@@ -63,6 +63,10 @@ public class AutoBatchPreparedStatementUtil {
 			new NoBatchInvocationHandler(preparedStatement));
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #concurrentAutoBatch(String)}
+	 */
+	@Deprecated
 	public static PreparedStatement concurrentAutoBatch(
 			Connection connection, String sql)
 		throws SQLException {
@@ -196,6 +200,10 @@ public class AutoBatchPreparedStatementUtil {
 			preparedStatement.executeBatch();
 		}
 
+		/**
+		 * @deprecated As of 7.0.0, replaced by {@link #AutoBatchPreparedStatementUtil(String)}
+		 */
+		@Deprecated
 		private ConcurrentBatchInvocationHandler(
 				Connection connection, String sql)
 			throws SQLException {
@@ -309,6 +317,10 @@ public class AutoBatchPreparedStatementUtil {
 		protected void restartBatch() {
 		}
 
+		/**
+		 * @deprecated As of 7.0.0, replaced by {@link #AutoBatchPreparedStatementUtil(String)}
+		 */
+		@Deprecated
 		private ConcurrentInvocationHandler(Connection connection, String sql)
 			throws SQLException {
 
@@ -373,6 +385,10 @@ public class AutoBatchPreparedStatementUtil {
 			preparedStatement.executeUpdate();
 		}
 
+		/**
+		 * @deprecated As of 7.0.0, replaced by {@link #AutoBatchPreparedStatementUtil(String)}
+		 */
+		@Deprecated
 		private ConcurrentNoBatchInvocationHandler(
 				Connection connection, String sql)
 			throws SQLException {
