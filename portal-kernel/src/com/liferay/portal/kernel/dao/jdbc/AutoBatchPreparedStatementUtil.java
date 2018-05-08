@@ -80,6 +80,24 @@ public class AutoBatchPreparedStatementUtil {
 			new ConcurrentNoBatchInvocationHandler(connection, sql));
 	}
 
+	public static PreparedStatement concurrentAutoBatch(String sql)
+		throws SQLException {
+
+		Connection connection = DataAccess.getConnection();
+
+		DatabaseMetaData databaseMetaData = connection.getMetaData();
+
+		if (databaseMetaData.supportsBatchUpdates()) {
+			return (PreparedStatement)ProxyUtil.newProxyInstance(
+				ClassLoader.getSystemClassLoader(), _INTERFACES,
+				new ConcurrentBatchInvocationHandler(sql));
+		}
+
+		return (PreparedStatement)ProxyUtil.newProxyInstance(
+			ClassLoader.getSystemClassLoader(), _INTERFACES,
+			new ConcurrentNoBatchInvocationHandler(sql));
+	}
+
 	private static final int _HIBERNATE_JDBC_BATCH_SIZE = GetterUtil.getInteger(
 		PropsUtil.get(PropsKeys.HIBERNATE_JDBC_BATCH_SIZE));
 
@@ -183,6 +201,12 @@ public class AutoBatchPreparedStatementUtil {
 			throws SQLException {
 
 			super(connection, sql);
+		}
+
+		private ConcurrentBatchInvocationHandler(String sql)
+			throws SQLException {
+
+			super(sql);
 		}
 
 		private int _count;
@@ -295,6 +319,13 @@ public class AutoBatchPreparedStatementUtil {
 			_resetPreparedStatement();
 		}
 
+		private ConcurrentInvocationHandler(String sql) throws SQLException {
+			_databaseConcurrent = true;
+			_sql = sql;
+
+			_resetPreparedStatement();
+		}
+
 		private synchronized void _resetPreparedStatement()
 			throws SQLException {
 
@@ -347,6 +378,12 @@ public class AutoBatchPreparedStatementUtil {
 			throws SQLException {
 
 			super(connection, sql);
+		}
+
+		private ConcurrentNoBatchInvocationHandler(String sql)
+			throws SQLException {
+
+			super(sql);
 		}
 
 	}
