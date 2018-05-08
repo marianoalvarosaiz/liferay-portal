@@ -146,6 +146,50 @@ public class AutoBatchPreparedStatementUtil {
 	}
 
 	private static class ConcurrentBatchInvocationHandler
+		extends ConcurrentInvocationHandler {
+
+		@Override
+		protected Object addBatchInvocation(PreparedStatement preparedStatement)
+			throws SQLException {
+
+			preparedStatement.addBatch();
+
+			if (++_count >= _HIBERNATE_JDBC_BATCH_SIZE) {
+				executeConcurrent();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected Object executeBatchInvocation() throws SQLException {
+			if (_count > 0) {
+				executeConcurrent();
+			}
+
+			return new int[0];
+		}
+
+		@Override
+		protected void executePreparedStatement(
+				PreparedStatement preparedStatement)
+			throws SQLException {
+
+			preparedStatement.executeBatch();
+		}
+
+		private ConcurrentBatchInvocationHandler(
+				Connection connection, String sql)
+			throws SQLException {
+
+			super(connection, sql);
+		}
+
+		private int _count;
+
+	}
+
+	private abstract static class ConcurrentInvocationHandler
 		implements InvocationHandler {
 
 		@Override
@@ -153,21 +197,11 @@ public class AutoBatchPreparedStatementUtil {
 			throws Throwable {
 
 			if (method.equals(_addBatchMethod)) {
-				_preparedStatement.addBatch();
-
-				if (++_count >= _HIBERNATE_JDBC_BATCH_SIZE) {
-					_executeBatch();
-				}
-
-				return null;
+				addBatchInvocation(_preparedStatement);
 			}
 
 			if (method.equals(_executeBatch)) {
-				if (_count > 0) {
-					_executeBatch();
-				}
-
-				return new int[0];
+				executeBatchInvocation();
 			}
 
 			if (method.equals(_closeMethod)) {
@@ -199,18 +233,14 @@ public class AutoBatchPreparedStatementUtil {
 			return method.invoke(_preparedStatement, args);
 		}
 
-		private ConcurrentBatchInvocationHandler(
-				Connection connection, String sql)
-			throws SQLException {
+		protected abstract Object addBatchInvocation(
+				PreparedStatement preparedStatement)
+			throws SQLException;
 
-			_connection = connection;
-			_sql = sql;
+		protected abstract Object executeBatchInvocation() throws SQLException;
 
-			_preparedStatement = _connection.prepareStatement(_sql);
-		}
-
-		private void _executeBatch() throws SQLException {
-			_count = 0;
+		protected void executeConcurrent() throws SQLException {
+			restartBatch();
 
 			final PreparedStatement preparedStatement = _preparedStatement;
 
@@ -218,7 +248,7 @@ public class AutoBatchPreparedStatementUtil {
 				_noticeableExecutorService.submit(
 					() -> {
 						try {
-							preparedStatement.executeBatch();
+							executePreparedStatement(preparedStatement);
 						}
 						finally {
 							preparedStatement.close();
@@ -248,8 +278,23 @@ public class AutoBatchPreparedStatementUtil {
 			_preparedStatement = _connection.prepareStatement(_sql);
 		}
 
+		protected abstract void executePreparedStatement(
+				PreparedStatement preparedStatement)
+			throws SQLException;
+
+		protected void restartBatch() {
+		}
+
+		private ConcurrentInvocationHandler(Connection connection, String sql)
+			throws SQLException {
+
+			_connection = connection;
+			_sql = sql;
+
+			_preparedStatement = _connection.prepareStatement(_sql);
+		}
+
 		private final Connection _connection;
-		private int _count;
 		private final Set<Future<Void>> _futures = Collections.newSetFromMap(
 			new ConcurrentHashMap<>());
 		private final NoticeableExecutorService _noticeableExecutorService =
@@ -261,106 +306,36 @@ public class AutoBatchPreparedStatementUtil {
 	}
 
 	private static class ConcurrentNoBatchInvocationHandler
-		implements InvocationHandler {
+		extends ConcurrentInvocationHandler {
 
 		@Override
-		public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
+		protected Object addBatchInvocation(PreparedStatement preparedStatement)
+			throws SQLException {
 
-			if (method.equals(_addBatchMethod)) {
-				_executeUpdate();
+			executeConcurrent();
 
-				return null;
-			}
+			return null;
+		}
 
-			if (method.equals(_executeBatch)) {
-				return new int[0];
-			}
+		@Override
+		protected Object executeBatchInvocation() throws SQLException {
+			return new int[0];
+		}
 
-			if (method.equals(_closeMethod)) {
-				Throwable throwable = null;
+		@Override
+		protected void executePreparedStatement(
+				PreparedStatement preparedStatement)
+			throws SQLException {
 
-				for (Future<Void> future : _futures) {
-					try {
-						future.get();
-					}
-					catch (Throwable t) {
-						if (t instanceof ExecutionException) {
-							t = t.getCause();
-						}
-
-						if (throwable == null) {
-							throwable = t;
-						}
-						else {
-							throwable.addSuppressed(t);
-						}
-					}
-				}
-
-				if (throwable != null) {
-					throw throwable;
-				}
-			}
-
-			return method.invoke(_preparedStatement, args);
+			preparedStatement.executeUpdate();
 		}
 
 		private ConcurrentNoBatchInvocationHandler(
 				Connection connection, String sql)
 			throws SQLException {
 
-			_connection = connection;
-			_sql = sql;
-
-			_preparedStatement = _connection.prepareStatement(_sql);
+			super(connection, sql);
 		}
-
-		private void _executeUpdate() throws SQLException {
-			final PreparedStatement preparedStatement = _preparedStatement;
-
-			NoticeableFuture<Void> noticeableFuture =
-				_noticeableExecutorService.submit(
-					() -> {
-						try {
-							preparedStatement.executeUpdate();
-						}
-						finally {
-							preparedStatement.close();
-						}
-
-						return null;
-					});
-
-			_futures.add(noticeableFuture);
-
-			noticeableFuture.addFutureListener(
-				new FutureListener<Void>() {
-
-					@Override
-					public void complete(Future<Void> future) {
-						try {
-							future.get();
-
-							_futures.remove(future);
-						}
-						catch (Throwable t) {
-						}
-					}
-
-				});
-
-			_preparedStatement = _connection.prepareStatement(_sql);
-		}
-
-		private final Connection _connection;
-		private final Set<Future<Void>> _futures = Collections.newSetFromMap(
-			new ConcurrentHashMap<>());
-		private final NoticeableExecutorService _noticeableExecutorService =
-			_portalExecutorManager.getPortalExecutor(
-				ConcurrentNoBatchInvocationHandler.class.getName());
-		private PreparedStatement _preparedStatement;
-		private final String _sql;
 
 	}
 
