@@ -275,7 +275,7 @@ public class AutoBatchPreparedStatementUtil {
 
 				});
 
-			_preparedStatement = _connection.prepareStatement(_sql);
+			_resetPreparedStatement();
 		}
 
 		protected abstract void executePreparedStatement(
@@ -288,13 +288,25 @@ public class AutoBatchPreparedStatementUtil {
 		private ConcurrentInvocationHandler(Connection connection, String sql)
 			throws SQLException {
 
+			_databaseConcurrent = false;
 			_connection = connection;
 			_sql = sql;
+
+			_resetPreparedStatement();
+		}
+
+		private synchronized void _resetPreparedStatement()
+			throws SQLException {
+
+			if (_databaseConcurrent) {
+				_connection = DataAccess.getConnection();
+			}
 
 			_preparedStatement = _connection.prepareStatement(_sql);
 		}
 
-		private final Connection _connection;
+		private Connection _connection;
+		private final boolean _databaseConcurrent;
 		private final Set<Future<Void>> _futures = Collections.newSetFromMap(
 			new ConcurrentHashMap<>());
 		private final NoticeableExecutorService _noticeableExecutorService =
