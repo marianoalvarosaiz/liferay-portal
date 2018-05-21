@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.powwow.model.PowwowParticipant;
 import com.liferay.powwow.model.PowwowParticipantModel;
@@ -379,12 +380,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -446,12 +442,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -501,12 +492,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return StringUtil.nullToEmpty(_emailAddress);
 	}
 
 	@Override

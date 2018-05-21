@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -285,12 +286,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -388,12 +384,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -478,12 +469,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 
 	@Override
 	public String getFriendlyURL() {
-		if (_friendlyURL == null) {
-			return "";
-		}
-		else {
-			return _friendlyURL;
-		}
+		return StringUtil.nullToEmpty(_friendlyURL);
 	}
 
 	@Override
@@ -503,12 +489,7 @@ public class LayoutFriendlyURLModelImpl extends BaseModelImpl<LayoutFriendlyURL>
 
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return StringUtil.nullToEmpty(_languageId);
 	}
 
 	@Override

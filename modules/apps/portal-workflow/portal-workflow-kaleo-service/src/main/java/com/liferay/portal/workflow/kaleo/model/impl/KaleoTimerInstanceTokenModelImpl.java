@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimerInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimerInstanceTokenModel;
 
@@ -386,12 +387,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -427,12 +423,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return StringUtil.nullToEmpty(_kaleoClassName);
 	}
 
 	@Override
@@ -538,12 +529,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getKaleoTimerName() {
-		if (_kaleoTimerName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTimerName;
-		}
+		return StringUtil.nullToEmpty(_kaleoTimerName);
 	}
 
 	@Override
@@ -643,12 +629,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getWorkflowContext() {
-		if (_workflowContext == null) {
-			return "";
-		}
-		else {
-			return _workflowContext;
-		}
+		return StringUtil.nullToEmpty(_workflowContext);
 	}
 
 	@Override

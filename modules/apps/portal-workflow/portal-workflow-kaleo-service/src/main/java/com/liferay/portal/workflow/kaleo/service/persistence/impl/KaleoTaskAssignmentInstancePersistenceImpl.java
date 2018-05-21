@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.exception.NoSuchTaskAssignmentInstanceException;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance;
@@ -2299,17 +2300,18 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String assigneeClassNameNullSafe = StringUtil.nullToEmpty(assigneeClassName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ASSIGNEECLASSNAME;
-			finderArgs = new Object[] { assigneeClassName };
+			finderArgs = new Object[] { assigneeClassNameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_ASSIGNEECLASSNAME;
 			finderArgs = new Object[] {
-					assigneeClassName,
-					
+					assigneeClassNameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -2322,7 +2324,7 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance : list) {
-					if (!Objects.equals(assigneeClassName,
+					if (!Objects.equals(assigneeClassNameNullSafe,
 								kaleoTaskAssignmentInstance.getAssigneeClassName())) {
 						list = null;
 
@@ -2714,7 +2716,9 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 	public int countByassigneeClassName(String assigneeClassName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_ASSIGNEECLASSNAME;
 
-		Object[] finderArgs = new Object[] { assigneeClassName };
+		String assigneeClassNameNullSafe = StringUtil.nullToEmpty(assigneeClassName);
+
+		Object[] finderArgs = new Object[] { assigneeClassNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3438,16 +3442,18 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String assigneeClassNameNullSafe = StringUtil.nullToEmpty(assigneeClassName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACN_ACPK;
-			finderArgs = new Object[] { assigneeClassName, assigneeClassPK };
+			finderArgs = new Object[] { assigneeClassNameNullSafe, assigneeClassPK };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_ACN_ACPK;
 			finderArgs = new Object[] {
-					assigneeClassName, assigneeClassPK,
+					assigneeClassNameNullSafe, assigneeClassPK,
 					
 					start, end, orderByComparator
 				};
@@ -3461,7 +3467,7 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance : list) {
-					if (!Objects.equals(assigneeClassName,
+					if (!Objects.equals(assigneeClassNameNullSafe,
 								kaleoTaskAssignmentInstance.getAssigneeClassName()) ||
 							(assigneeClassPK != kaleoTaskAssignmentInstance.getAssigneeClassPK())) {
 						list = null;
@@ -3877,7 +3883,11 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 	public int countByACN_ACPK(String assigneeClassName, long assigneeClassPK) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_ACN_ACPK;
 
-		Object[] finderArgs = new Object[] { assigneeClassName, assigneeClassPK };
+		String assigneeClassNameNullSafe = StringUtil.nullToEmpty(assigneeClassName);
+
+		Object[] finderArgs = new Object[] {
+				assigneeClassNameNullSafe, assigneeClassPK
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

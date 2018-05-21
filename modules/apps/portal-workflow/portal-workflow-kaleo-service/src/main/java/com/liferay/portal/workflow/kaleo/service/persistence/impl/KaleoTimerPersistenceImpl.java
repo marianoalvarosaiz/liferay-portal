@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.exception.NoSuchTimerException;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
@@ -188,16 +189,18 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String kaleoClassNameNullSafe = StringUtil.nullToEmpty(kaleoClassName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK;
-			finderArgs = new Object[] { kaleoClassName, kaleoClassPK };
+			finderArgs = new Object[] { kaleoClassNameNullSafe, kaleoClassPK };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_KCN_KCPK;
 			finderArgs = new Object[] {
-					kaleoClassName, kaleoClassPK,
+					kaleoClassNameNullSafe, kaleoClassPK,
 					
 					start, end, orderByComparator
 				};
@@ -211,7 +214,7 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoTimer kaleoTimer : list) {
-					if (!Objects.equals(kaleoClassName,
+					if (!Objects.equals(kaleoClassNameNullSafe,
 								kaleoTimer.getKaleoClassName()) ||
 							(kaleoClassPK != kaleoTimer.getKaleoClassPK())) {
 						list = null;
@@ -616,7 +619,9 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 	public int countByKCN_KCPK(String kaleoClassName, long kaleoClassPK) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK;
 
-		Object[] finderArgs = new Object[] { kaleoClassName, kaleoClassPK };
+		String kaleoClassNameNullSafe = StringUtil.nullToEmpty(kaleoClassName);
+
+		Object[] finderArgs = new Object[] { kaleoClassNameNullSafe, kaleoClassPK };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -795,16 +800,20 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String kaleoClassNameNullSafe = StringUtil.nullToEmpty(kaleoClassName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING;
-			finderArgs = new Object[] { kaleoClassName, kaleoClassPK, blocking };
+			finderArgs = new Object[] {
+					kaleoClassNameNullSafe, kaleoClassPK, blocking
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING;
 			finderArgs = new Object[] {
-					kaleoClassName, kaleoClassPK, blocking,
+					kaleoClassNameNullSafe, kaleoClassPK, blocking,
 					
 					start, end, orderByComparator
 				};
@@ -818,7 +827,7 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoTimer kaleoTimer : list) {
-					if (!Objects.equals(kaleoClassName,
+					if (!Objects.equals(kaleoClassNameNullSafe,
 								kaleoTimer.getKaleoClassName()) ||
 							(kaleoClassPK != kaleoTimer.getKaleoClassPK()) ||
 							(blocking != kaleoTimer.isBlocking())) {
@@ -1256,8 +1265,10 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 		long kaleoClassPK, boolean blocking) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK_BLOCKING;
 
+		String kaleoClassNameNullSafe = StringUtil.nullToEmpty(kaleoClassName);
+
 		Object[] finderArgs = new Object[] {
-				kaleoClassName, kaleoClassPK, blocking
+				kaleoClassNameNullSafe, kaleoClassPK, blocking
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

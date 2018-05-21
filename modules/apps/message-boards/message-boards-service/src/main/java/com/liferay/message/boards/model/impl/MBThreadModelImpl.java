@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -430,12 +431,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -538,12 +534,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -655,12 +646,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -842,12 +828,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

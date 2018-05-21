@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -321,12 +322,7 @@ public class MemberRequestModelImpl extends BaseModelImpl<MemberRequest>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -364,12 +360,7 @@ public class MemberRequestModelImpl extends BaseModelImpl<MemberRequest>
 
 	@Override
 	public String getKey() {
-		if (_key == null) {
-			return "";
-		}
-		else {
-			return _key;
-		}
+		return StringUtil.nullToEmpty(_key);
 	}
 
 	@Override

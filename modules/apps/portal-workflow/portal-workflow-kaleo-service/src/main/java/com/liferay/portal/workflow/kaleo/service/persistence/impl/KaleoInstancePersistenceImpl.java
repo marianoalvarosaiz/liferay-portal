@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.exception.NoSuchInstanceException;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
@@ -2323,16 +2324,18 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String classNameNullSafe = StringUtil.nullToEmpty(className);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CN_CPK;
-			finderArgs = new Object[] { className, classPK };
+			finderArgs = new Object[] { classNameNullSafe, classPK };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_CN_CPK;
 			finderArgs = new Object[] {
-					className, classPK,
+					classNameNullSafe, classPK,
 					
 					start, end, orderByComparator
 				};
@@ -2346,7 +2349,8 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoInstance kaleoInstance : list) {
-					if (!Objects.equals(className, kaleoInstance.getClassName()) ||
+					if (!Objects.equals(classNameNullSafe,
+								kaleoInstance.getClassName()) ||
 							(classPK != kaleoInstance.getClassPK())) {
 						list = null;
 
@@ -2750,7 +2754,9 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	public int countByCN_CPK(String className, long classPK) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CN_CPK;
 
-		Object[] finderArgs = new Object[] { className, classPK };
+		String classNameNullSafe = StringUtil.nullToEmpty(className);
+
+		Object[] finderArgs = new Object[] { classNameNullSafe, classPK };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2940,20 +2946,22 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String kaleoDefinitionNameNullSafe = StringUtil.nullToEmpty(kaleoDefinitionName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_KDN_KDV_CD;
 			finderArgs = new Object[] {
-					companyId, kaleoDefinitionName, kaleoDefinitionVersion,
-					_getTime(completionDate)
+					companyId, kaleoDefinitionNameNullSafe,
+					kaleoDefinitionVersion, _getTime(completionDate)
 				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_KDN_KDV_CD;
 			finderArgs = new Object[] {
-					companyId, kaleoDefinitionName, kaleoDefinitionVersion,
-					_getTime(completionDate),
+					companyId, kaleoDefinitionNameNullSafe,
+					kaleoDefinitionVersion, _getTime(completionDate),
 					
 					start, end, orderByComparator
 				};
@@ -2968,7 +2976,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoInstance kaleoInstance : list) {
 					if ((companyId != kaleoInstance.getCompanyId()) ||
-							!Objects.equals(kaleoDefinitionName,
+							!Objects.equals(kaleoDefinitionNameNullSafe,
 								kaleoInstance.getKaleoDefinitionName()) ||
 							(kaleoDefinitionVersion != kaleoInstance.getKaleoDefinitionVersion()) ||
 							!Objects.equals(completionDate,
@@ -3457,8 +3465,10 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 		int kaleoDefinitionVersion, Date completionDate) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_KDN_KDV_CD;
 
+		String kaleoDefinitionNameNullSafe = StringUtil.nullToEmpty(kaleoDefinitionName);
+
 		Object[] finderArgs = new Object[] {
-				companyId, kaleoDefinitionName, kaleoDefinitionVersion,
+				companyId, kaleoDefinitionNameNullSafe, kaleoDefinitionVersion,
 				_getTime(completionDate)
 			};
 

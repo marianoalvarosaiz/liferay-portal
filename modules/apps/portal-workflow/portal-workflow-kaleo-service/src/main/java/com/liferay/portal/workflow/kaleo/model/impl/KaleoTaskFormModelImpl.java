@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskForm;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskFormModel;
 
@@ -393,12 +394,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -500,12 +496,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getKaleoTaskName() {
-		if (_kaleoTaskName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTaskName;
-		}
+		return StringUtil.nullToEmpty(_kaleoTaskName);
 	}
 
 	@Override
@@ -515,12 +506,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -530,12 +516,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -555,12 +536,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getFormDefinition() {
-		if (_formDefinition == null) {
-			return "";
-		}
-		else {
-			return _formDefinition;
-		}
+		return StringUtil.nullToEmpty(_formDefinition);
 	}
 
 	@Override
@@ -590,12 +566,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getFormUuid() {
-		if (_formUuid == null) {
-			return "";
-		}
-		else {
-			return _formUuid;
-		}
+		return StringUtil.nullToEmpty(_formUuid);
 	}
 
 	@Override
@@ -615,12 +586,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getMetadata() {
-		if (_metadata == null) {
-			return "";
-		}
-		else {
-			return _metadata;
-		}
+		return StringUtil.nullToEmpty(_metadata);
 	}
 
 	@Override

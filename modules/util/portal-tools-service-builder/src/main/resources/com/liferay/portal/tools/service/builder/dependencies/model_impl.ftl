@@ -74,6 +74,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -638,12 +639,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		@Override
 		public ${entityColumn.genericizedType} get${entityColumn.methodName}() {
 			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
-				if (_${entityColumn.name} == null) {
-					return "";
-				}
-				else {
-					return _${entityColumn.name};
-				}
+				return StringUtil.nullToEmpty(_${entityColumn.name});
 			<#else>
 				<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
 					if (_${entityColumn.name}BlobModel == null) {

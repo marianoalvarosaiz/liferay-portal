@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.trash.model.TrashEntry;
@@ -385,12 +386,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -499,12 +495,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return StringUtil.nullToEmpty(_typeSettings);
 	}
 
 	@Override

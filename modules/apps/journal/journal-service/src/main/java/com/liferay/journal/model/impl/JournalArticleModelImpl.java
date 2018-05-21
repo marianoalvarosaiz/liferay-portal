@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -540,12 +541,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -688,12 +684,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -821,12 +812,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return StringUtil.nullToEmpty(_treePath);
 	}
 
 	@Override
@@ -837,12 +823,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getArticleId() {
-		if (_articleId == null) {
-			return "";
-		}
-		else {
-			return _articleId;
-		}
+		return StringUtil.nullToEmpty(_articleId);
 	}
 
 	@Override
@@ -886,12 +867,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return StringUtil.nullToEmpty(_urlTitle);
 	}
 
 	@Override
@@ -912,12 +888,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return StringUtil.nullToEmpty(_content);
 	}
 
 	@Override
@@ -928,12 +899,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getDDMStructureKey() {
-		if (_DDMStructureKey == null) {
-			return "";
-		}
-		else {
-			return _DDMStructureKey;
-		}
+		return StringUtil.nullToEmpty(_DDMStructureKey);
 	}
 
 	@Override
@@ -954,12 +920,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getDDMTemplateKey() {
-		if (_DDMTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMTemplateKey;
-		}
+		return StringUtil.nullToEmpty(_DDMTemplateKey);
 	}
 
 	@Override
@@ -980,12 +941,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getDefaultLanguageId() {
-		if (_defaultLanguageId == null) {
-			return "";
-		}
-		else {
-			return _defaultLanguageId;
-		}
+		return StringUtil.nullToEmpty(_defaultLanguageId);
 	}
 
 	@Override
@@ -996,12 +952,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getLayoutUuid() {
-		if (_layoutUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutUuid;
-		}
+		return StringUtil.nullToEmpty(_layoutUuid);
 	}
 
 	@Override
@@ -1144,12 +1095,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getSmallImageURL() {
-		if (_smallImageURL == null) {
-			return "";
-		}
-		else {
-			return _smallImageURL;
-		}
+		return StringUtil.nullToEmpty(_smallImageURL);
 	}
 
 	@Override
@@ -1221,12 +1167,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

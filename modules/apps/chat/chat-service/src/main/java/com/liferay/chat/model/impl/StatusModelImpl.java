@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -326,12 +327,7 @@ public class StatusModelImpl extends BaseModelImpl<Status>
 
 	@Override
 	public String getActivePanelIds() {
-		if (_activePanelIds == null) {
-			return "";
-		}
-		else {
-			return _activePanelIds;
-		}
+		return StringUtil.nullToEmpty(_activePanelIds);
 	}
 
 	@Override
@@ -341,12 +337,7 @@ public class StatusModelImpl extends BaseModelImpl<Status>
 
 	@Override
 	public String getMessage() {
-		if (_message == null) {
-			return "";
-		}
-		else {
-			return _message;
-		}
+		return StringUtil.nullToEmpty(_message);
 	}
 
 	@Override

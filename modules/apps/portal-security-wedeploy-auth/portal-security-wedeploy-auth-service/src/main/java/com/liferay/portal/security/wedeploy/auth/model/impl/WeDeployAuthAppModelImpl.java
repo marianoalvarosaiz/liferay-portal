@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthAppModel;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthAppSoap;
@@ -336,12 +337,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -380,12 +376,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -396,12 +387,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getRedirectURI() {
-		if (_redirectURI == null) {
-			return "";
-		}
-		else {
-			return _redirectURI;
-		}
+		return StringUtil.nullToEmpty(_redirectURI);
 	}
 
 	@Override
@@ -422,12 +408,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getClientId() {
-		if (_clientId == null) {
-			return "";
-		}
-		else {
-			return _clientId;
-		}
+		return StringUtil.nullToEmpty(_clientId);
 	}
 
 	@Override
@@ -448,12 +429,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getClientSecret() {
-		if (_clientSecret == null) {
-			return "";
-		}
-		else {
-			return _clientSecret;
-		}
+		return StringUtil.nullToEmpty(_clientSecret);
 	}
 
 	@Override

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.service.access.policy.model.SAPEntry;
 import com.liferay.portal.security.service.access.policy.model.SAPEntryModel;
@@ -318,12 +319,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -403,12 +399,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -447,12 +438,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getAllowedServiceSignatures() {
-		if (_allowedServiceSignatures == null) {
-			return "";
-		}
-		else {
-			return _allowedServiceSignatures;
-		}
+		return StringUtil.nullToEmpty(_allowedServiceSignatures);
 	}
 
 	@Override
@@ -509,12 +495,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -535,12 +516,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override

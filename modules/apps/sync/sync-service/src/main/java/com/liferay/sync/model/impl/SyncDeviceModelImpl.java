@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.sync.model.SyncDevice;
 import com.liferay.sync.model.SyncDeviceModel;
@@ -311,12 +312,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -408,12 +404,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -462,12 +453,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return StringUtil.nullToEmpty(_type);
 	}
 
 	@Override
@@ -500,12 +486,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getHostname() {
-		if (_hostname == null) {
-			return "";
-		}
-		else {
-			return _hostname;
-		}
+		return StringUtil.nullToEmpty(_hostname);
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -382,12 +383,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -455,12 +451,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getSender() {
-		if (_sender == null) {
-			return "";
-		}
-		else {
-			return _sender;
-		}
+		return StringUtil.nullToEmpty(_sender);
 	}
 
 	@Override
@@ -470,12 +461,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getTo() {
-		if (_to == null) {
-			return "";
-		}
-		else {
-			return _to;
-		}
+		return StringUtil.nullToEmpty(_to);
 	}
 
 	@Override
@@ -485,12 +471,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getCc() {
-		if (_cc == null) {
-			return "";
-		}
-		else {
-			return _cc;
-		}
+		return StringUtil.nullToEmpty(_cc);
 	}
 
 	@Override
@@ -500,12 +481,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getBcc() {
-		if (_bcc == null) {
-			return "";
-		}
-		else {
-			return _bcc;
-		}
+		return StringUtil.nullToEmpty(_bcc);
 	}
 
 	@Override
@@ -527,12 +503,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return StringUtil.nullToEmpty(_subject);
 	}
 
 	@Override
@@ -542,12 +513,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getPreview() {
-		if (_preview == null) {
-			return "";
-		}
-		else {
-			return _preview;
-		}
+		return StringUtil.nullToEmpty(_preview);
 	}
 
 	@Override
@@ -557,12 +523,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return StringUtil.nullToEmpty(_body);
 	}
 
 	@Override
@@ -572,12 +533,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getFlags() {
-		if (_flags == null) {
-			return "";
-		}
-		else {
-			return _flags;
-		}
+		return StringUtil.nullToEmpty(_flags);
 	}
 
 	@Override
@@ -619,12 +575,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getContentType() {
-		if (_contentType == null) {
-			return "";
-		}
-		else {
-			return _contentType;
-		}
+		return StringUtil.nullToEmpty(_contentType);
 	}
 
 	@Override

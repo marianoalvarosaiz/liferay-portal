@@ -662,7 +662,9 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 	@Override
 	public Account fetchByU_A(long userId, String address,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { userId, address };
+		String addressNullSafe = StringUtil.nullToEmpty(address);
+
+		Object[] finderArgs = new Object[] { userId, addressNullSafe };
 
 		Object result = null;
 
@@ -675,7 +677,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 			Account account = (Account)result;
 
 			if ((userId != account.getUserId()) ||
-					!Objects.equals(address, account.getAddress())) {
+					!Objects.equals(addressNullSafe, account.getAddress())) {
 				result = null;
 			}
 		}
@@ -743,8 +745,7 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 					cacheResult(account);
 
 					if ((account.getUserId() != userId) ||
-							(account.getAddress() == null) ||
-							!account.getAddress().equals(address)) {
+							!account.getAddress().equals(addressNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_U_A,
 							finderArgs, account);
 					}
@@ -794,7 +795,9 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 	public int countByU_A(long userId, String address) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_A;
 
-		Object[] finderArgs = new Object[] { userId, address };
+		String addressNullSafe = StringUtil.nullToEmpty(address);
+
+		Object[] finderArgs = new Object[] { userId, addressNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

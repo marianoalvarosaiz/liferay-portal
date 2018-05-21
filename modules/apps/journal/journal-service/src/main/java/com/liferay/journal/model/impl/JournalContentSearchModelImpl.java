@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -295,12 +296,7 @@ public class JournalContentSearchModelImpl extends BaseModelImpl<JournalContentS
 
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return StringUtil.nullToEmpty(_portletId);
 	}
 
 	@Override
@@ -320,12 +316,7 @@ public class JournalContentSearchModelImpl extends BaseModelImpl<JournalContentS
 
 	@Override
 	public String getArticleId() {
-		if (_articleId == null) {
-			return "";
-		}
-		else {
-			return _articleId;
-		}
+		return StringUtil.nullToEmpty(_articleId);
 	}
 
 	@Override

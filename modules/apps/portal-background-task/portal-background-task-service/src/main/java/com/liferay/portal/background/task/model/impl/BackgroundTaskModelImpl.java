@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -448,12 +449,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -494,12 +490,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -520,12 +511,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getServletContextNames() {
-		if (_servletContextNames == null) {
-			return "";
-		}
-		else {
-			return _servletContextNames;
-		}
+		return StringUtil.nullToEmpty(_servletContextNames);
 	}
 
 	@Override
@@ -536,12 +522,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getTaskExecutorClassName() {
-		if (_taskExecutorClassName == null) {
-			return "";
-		}
-		else {
-			return _taskExecutorClassName;
-		}
+		return StringUtil.nullToEmpty(_taskExecutorClassName);
 	}
 
 	@Override
@@ -636,12 +617,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getStatusMessage() {
-		if (_statusMessage == null) {
-			return "";
-		}
-		else {
-			return _statusMessage;
-		}
+		return StringUtil.nullToEmpty(_statusMessage);
 	}
 
 	@Override

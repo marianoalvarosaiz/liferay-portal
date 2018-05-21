@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -287,12 +288,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 	@JSON
 	@Override
 	public String getRegionCode() {
-		if (_regionCode == null) {
-			return "";
-		}
-		else {
-			return _regionCode;
-		}
+		return StringUtil.nullToEmpty(_regionCode);
 	}
 
 	@Override
@@ -313,12 +309,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override

@@ -1209,7 +1209,11 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 	@Override
 	public OAuth2ApplicationScopeAliases fetchByO_S(long oAuth2ApplicationId,
 		String scopeAliases, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { oAuth2ApplicationId, scopeAliases };
+		String scopeAliasesNullSafe = StringUtil.nullToEmpty(scopeAliases);
+
+		Object[] finderArgs = new Object[] {
+				oAuth2ApplicationId, scopeAliasesNullSafe
+			};
 
 		Object result = null;
 
@@ -1222,7 +1226,7 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 			OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases = (OAuth2ApplicationScopeAliases)result;
 
 			if ((oAuth2ApplicationId != oAuth2ApplicationScopeAliases.getOAuth2ApplicationId()) ||
-					!Objects.equals(scopeAliases,
+					!Objects.equals(scopeAliasesNullSafe,
 						oAuth2ApplicationScopeAliases.getScopeAliases())) {
 				result = null;
 			}
@@ -1291,9 +1295,8 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 					cacheResult(oAuth2ApplicationScopeAliases);
 
 					if ((oAuth2ApplicationScopeAliases.getOAuth2ApplicationId() != oAuth2ApplicationId) ||
-							(oAuth2ApplicationScopeAliases.getScopeAliases() == null) ||
 							!oAuth2ApplicationScopeAliases.getScopeAliases()
-															  .equals(scopeAliases)) {
+															  .equals(scopeAliasesNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_O_S,
 							finderArgs, oAuth2ApplicationScopeAliases);
 					}
@@ -1345,7 +1348,11 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 	public int countByO_S(long oAuth2ApplicationId, String scopeAliases) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_S;
 
-		Object[] finderArgs = new Object[] { oAuth2ApplicationId, scopeAliases };
+		String scopeAliasesNullSafe = StringUtil.nullToEmpty(scopeAliases);
+
+		Object[] finderArgs = new Object[] {
+				oAuth2ApplicationId, scopeAliasesNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

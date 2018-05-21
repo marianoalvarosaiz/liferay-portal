@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.social.networking.model.MeetupsRegistration;
 import com.liferay.social.networking.model.MeetupsRegistrationModel;
@@ -284,12 +285,7 @@ public class MeetupsRegistrationModelImpl extends BaseModelImpl<MeetupsRegistrat
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -371,12 +367,7 @@ public class MeetupsRegistrationModelImpl extends BaseModelImpl<MeetupsRegistrat
 
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return StringUtil.nullToEmpty(_comments);
 	}
 
 	@Override

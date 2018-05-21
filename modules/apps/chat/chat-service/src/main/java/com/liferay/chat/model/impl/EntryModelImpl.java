@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -303,12 +304,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return StringUtil.nullToEmpty(_content);
 	}
 
 	@Override

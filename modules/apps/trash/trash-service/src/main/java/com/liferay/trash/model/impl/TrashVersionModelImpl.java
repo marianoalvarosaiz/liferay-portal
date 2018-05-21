@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.trash.model.TrashVersion;
@@ -310,12 +311,7 @@ public class TrashVersionModelImpl extends BaseModelImpl<TrashVersion>
 
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return StringUtil.nullToEmpty(_typeSettings);
 	}
 
 	@Override

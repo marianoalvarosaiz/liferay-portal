@@ -1057,8 +1057,13 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N;
-		finderArgs = new Object[] { groupId, name, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				groupId, nameNullSafe,
+				start, end, orderByComparator
+			};
 
 		List<SiteNavigationMenu> list = null;
 
@@ -1070,8 +1075,8 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 				for (SiteNavigationMenu siteNavigationMenu : list) {
 					if ((groupId != siteNavigationMenu.getGroupId()) ||
 							!StringUtil.wildcardMatches(
-								siteNavigationMenu.getName(), name, '_', '%',
-								'\\', true)) {
+								siteNavigationMenu.getName(), nameNullSafe,
+								'_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -1829,7 +1834,9 @@ public class SiteNavigationMenuPersistenceImpl extends BasePersistenceImpl<SiteN
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.ResourceTypePermissionImpl;
 import com.liferay.portal.model.impl.ResourceTypePermissionModelImpl;
 
@@ -712,16 +713,18 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_R;
-			finderArgs = new Object[] { companyId, name, roleId };
+			finderArgs = new Object[] { companyId, nameNullSafe, roleId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_N_R;
 			finderArgs = new Object[] {
-					companyId, name, roleId,
+					companyId, nameNullSafe, roleId,
 					
 					start, end, orderByComparator
 				};
@@ -736,7 +739,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			if ((list != null) && !list.isEmpty()) {
 				for (ResourceTypePermission resourceTypePermission : list) {
 					if ((companyId != resourceTypePermission.getCompanyId()) ||
-							!Objects.equals(name,
+							!Objects.equals(nameNullSafe,
 								resourceTypePermission.getName()) ||
 							(roleId != resourceTypePermission.getRoleId())) {
 						list = null;
@@ -1168,7 +1171,9 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	public int countByC_N_R(long companyId, String name, long roleId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_R;
 
-		Object[] finderArgs = new Object[] { companyId, name, roleId };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe, roleId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1329,7 +1334,11 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	@Override
 	public ResourceTypePermission fetchByC_G_N_R(long companyId, long groupId,
 		String name, long roleId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, groupId, name, roleId };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] {
+				companyId, groupId, nameNullSafe, roleId
+			};
 
 		Object result = null;
 
@@ -1343,7 +1352,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 			if ((companyId != resourceTypePermission.getCompanyId()) ||
 					(groupId != resourceTypePermission.getGroupId()) ||
-					!Objects.equals(name, resourceTypePermission.getName()) ||
+					!Objects.equals(nameNullSafe,
+						resourceTypePermission.getName()) ||
 					(roleId != resourceTypePermission.getRoleId())) {
 				result = null;
 			}
@@ -1410,8 +1420,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 					if ((resourceTypePermission.getCompanyId() != companyId) ||
 							(resourceTypePermission.getGroupId() != groupId) ||
-							(resourceTypePermission.getName() == null) ||
-							!resourceTypePermission.getName().equals(name) ||
+							!resourceTypePermission.getName()
+													   .equals(nameNullSafe) ||
 							(resourceTypePermission.getRoleId() != roleId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R,
 							finderArgs, resourceTypePermission);
@@ -1469,7 +1479,11 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		long roleId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_G_N_R;
 
-		Object[] finderArgs = new Object[] { companyId, groupId, name, roleId };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] {
+				companyId, groupId, nameNullSafe, roleId
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

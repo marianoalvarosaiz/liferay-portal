@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -294,12 +295,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -320,12 +316,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getA2() {
-		if (_a2 == null) {
-			return "";
-		}
-		else {
-			return _a2;
-		}
+		return StringUtil.nullToEmpty(_a2);
 	}
 
 	@Override
@@ -346,12 +337,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getA3() {
-		if (_a3 == null) {
-			return "";
-		}
-		else {
-			return _a3;
-		}
+		return StringUtil.nullToEmpty(_a3);
 	}
 
 	@Override
@@ -372,12 +358,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getNumber() {
-		if (_number == null) {
-			return "";
-		}
-		else {
-			return _number;
-		}
+		return StringUtil.nullToEmpty(_number);
 	}
 
 	@Override
@@ -388,12 +369,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getIdd() {
-		if (_idd == null) {
-			return "";
-		}
-		else {
-			return _idd;
-		}
+		return StringUtil.nullToEmpty(_idd);
 	}
 
 	@Override

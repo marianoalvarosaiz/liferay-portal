@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -349,12 +350,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -458,12 +454,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -525,12 +516,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationType() {
-		if (_notificationType == null) {
-			return "";
-		}
-		else {
-			return _notificationType;
-		}
+		return StringUtil.nullToEmpty(_notificationType);
 	}
 
 	@Override
@@ -551,12 +537,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationTypeSettings() {
-		if (_notificationTypeSettings == null) {
-			return "";
-		}
-		else {
-			return _notificationTypeSettings;
-		}
+		return StringUtil.nullToEmpty(_notificationTypeSettings);
 	}
 
 	@Override
@@ -567,12 +548,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationTemplateType() {
-		if (_notificationTemplateType == null) {
-			return "";
-		}
-		else {
-			return _notificationTemplateType;
-		}
+		return StringUtil.nullToEmpty(_notificationTemplateType);
 	}
 
 	@Override
@@ -593,12 +569,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return StringUtil.nullToEmpty(_subject);
 	}
 
 	@Override
@@ -609,12 +580,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return StringUtil.nullToEmpty(_body);
 	}
 
 	@Override

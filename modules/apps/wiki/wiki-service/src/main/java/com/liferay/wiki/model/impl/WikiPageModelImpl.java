@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -444,12 +445,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -592,12 +588,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -659,12 +650,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -725,12 +711,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return StringUtil.nullToEmpty(_content);
 	}
 
 	@Override
@@ -741,12 +722,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getSummary() {
-		if (_summary == null) {
-			return "";
-		}
-		else {
-			return _summary;
-		}
+		return StringUtil.nullToEmpty(_summary);
 	}
 
 	@Override
@@ -757,12 +733,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getFormat() {
-		if (_format == null) {
-			return "";
-		}
-		else {
-			return _format;
-		}
+		return StringUtil.nullToEmpty(_format);
 	}
 
 	@Override
@@ -812,12 +783,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getParentTitle() {
-		if (_parentTitle == null) {
-			return "";
-		}
-		else {
-			return _parentTitle;
-		}
+		return StringUtil.nullToEmpty(_parentTitle);
 	}
 
 	@Override
@@ -838,12 +804,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getRedirectTitle() {
-		if (_redirectTitle == null) {
-			return "";
-		}
-		else {
-			return _redirectTitle;
-		}
+		return StringUtil.nullToEmpty(_redirectTitle);
 	}
 
 	@Override
@@ -925,12 +886,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

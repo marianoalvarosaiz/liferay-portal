@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.io.Serializable;
@@ -494,12 +495,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -630,12 +626,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -767,12 +758,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -783,12 +769,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return StringUtil.nullToEmpty(_urlTitle);
 	}
 
 	@Override
@@ -809,12 +790,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return StringUtil.nullToEmpty(_content);
 	}
 
 	@Override
@@ -825,12 +801,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -852,12 +823,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getSections() {
-		if (_sections == null) {
-			return "";
-		}
-		else {
-			return _sections;
-		}
+		return StringUtil.nullToEmpty(_sections);
 	}
 
 	@Override
@@ -947,12 +913,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getSourceURL() {
-		if (_sourceURL == null) {
-			return "";
-		}
-		else {
-			return _sourceURL;
-		}
+		return StringUtil.nullToEmpty(_sourceURL);
 	}
 
 	@Override
@@ -1024,12 +985,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override
