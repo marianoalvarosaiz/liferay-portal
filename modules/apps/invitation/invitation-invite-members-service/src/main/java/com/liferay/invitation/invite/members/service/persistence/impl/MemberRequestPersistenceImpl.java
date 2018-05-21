@@ -156,7 +156,9 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 	 */
 	@Override
 	public MemberRequest fetchByKey(String key, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { key };
+		String keyNullSafe = StringUtil.nullToEmpty(key);
+
+		Object[] finderArgs = new Object[] { keyNullSafe };
 
 		Object result = null;
 
@@ -168,7 +170,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 		if (result instanceof MemberRequest) {
 			MemberRequest memberRequest = (MemberRequest)result;
 
-			if (!Objects.equals(key, memberRequest.getKey())) {
+			if (!Objects.equals(keyNullSafe, memberRequest.getKey())) {
 				result = null;
 			}
 		}
@@ -231,8 +233,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 
 					cacheResult(memberRequest);
 
-					if ((memberRequest.getKey() == null) ||
-							!memberRequest.getKey().equals(key)) {
+					if (!memberRequest.getKey().equals(keyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_KEY,
 							finderArgs, memberRequest);
 					}
@@ -280,7 +281,9 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 	public int countByKey(String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KEY;
 
-		Object[] finderArgs = new Object[] { key };
+		String keyNullSafe = StringUtil.nullToEmpty(key);
+
+		Object[] finderArgs = new Object[] { keyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

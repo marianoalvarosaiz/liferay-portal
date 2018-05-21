@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceTokenModel;
 
@@ -362,12 +363,7 @@ public class KaleoInstanceTokenModelImpl extends BaseModelImpl<KaleoInstanceToke
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -479,12 +475,7 @@ public class KaleoInstanceTokenModelImpl extends BaseModelImpl<KaleoInstanceToke
 
 	@Override
 	public String getCurrentKaleoNodeName() {
-		if (_currentKaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _currentKaleoNodeName;
-		}
+		return StringUtil.nullToEmpty(_currentKaleoNodeName);
 	}
 
 	@Override
@@ -494,12 +485,7 @@ public class KaleoInstanceTokenModelImpl extends BaseModelImpl<KaleoInstanceToke
 
 	@Override
 	public String getClassName() {
-		if (_className == null) {
-			return "";
-		}
-		else {
-			return _className;
-		}
+		return StringUtil.nullToEmpty(_className);
 	}
 
 	@Override

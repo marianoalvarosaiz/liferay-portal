@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -405,12 +406,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -463,12 +459,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getAccessTokenContent() {
-		if (_accessTokenContent == null) {
-			return "";
-		}
-		else {
-			return _accessTokenContent;
-		}
+		return StringUtil.nullToEmpty(_accessTokenContent);
 	}
 
 	@Override
@@ -508,12 +499,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getRemoteIPInfo() {
-		if (_remoteIPInfo == null) {
-			return "";
-		}
-		else {
-			return _remoteIPInfo;
-		}
+		return StringUtil.nullToEmpty(_remoteIPInfo);
 	}
 
 	@Override
@@ -523,12 +509,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getRefreshTokenContent() {
-		if (_refreshTokenContent == null) {
-			return "";
-		}
-		else {
-			return _refreshTokenContent;
-		}
+		return StringUtil.nullToEmpty(_refreshTokenContent);
 	}
 
 	@Override

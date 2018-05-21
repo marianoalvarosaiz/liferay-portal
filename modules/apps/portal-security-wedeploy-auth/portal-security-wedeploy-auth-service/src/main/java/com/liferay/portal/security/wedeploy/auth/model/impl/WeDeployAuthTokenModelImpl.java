@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthTokenModel;
 
@@ -269,12 +270,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -310,12 +306,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public String getClientId() {
-		if (_clientId == null) {
-			return "";
-		}
-		else {
-			return _clientId;
-		}
+		return StringUtil.nullToEmpty(_clientId);
 	}
 
 	@Override
@@ -335,12 +326,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public String getToken() {
-		if (_token == null) {
-			return "";
-		}
-		else {
-			return _token;
-		}
+		return StringUtil.nullToEmpty(_token);
 	}
 
 	@Override

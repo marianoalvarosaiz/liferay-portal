@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -299,12 +300,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -340,12 +336,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getFullName() {
-		if (_fullName == null) {
-			return "";
-		}
-		else {
-			return _fullName;
-		}
+		return StringUtil.nullToEmpty(_fullName);
 	}
 
 	@Override
@@ -357,12 +348,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return StringUtil.nullToEmpty(_emailAddress);
 	}
 
 	@Override
@@ -382,12 +368,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return StringUtil.nullToEmpty(_comments);
 	}
 
 	@Override

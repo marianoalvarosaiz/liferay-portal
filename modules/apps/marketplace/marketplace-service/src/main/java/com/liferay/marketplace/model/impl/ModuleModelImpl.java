@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -205,12 +206,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -282,12 +278,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getBundleSymbolicName() {
-		if (_bundleSymbolicName == null) {
-			return "";
-		}
-		else {
-			return _bundleSymbolicName;
-		}
+		return StringUtil.nullToEmpty(_bundleSymbolicName);
 	}
 
 	@Override
@@ -307,12 +298,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getBundleVersion() {
-		if (_bundleVersion == null) {
-			return "";
-		}
-		else {
-			return _bundleVersion;
-		}
+		return StringUtil.nullToEmpty(_bundleVersion);
 	}
 
 	@Override
@@ -332,12 +318,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getContextName() {
-		if (_contextName == null) {
-			return "";
-		}
-		else {
-			return _contextName;
-		}
+		return StringUtil.nullToEmpty(_contextName);
 	}
 
 	@Override

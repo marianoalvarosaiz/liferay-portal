@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -265,12 +266,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getGadgetKey() {
-		if (_gadgetKey == null) {
-			return "";
-		}
-		else {
-			return _gadgetKey;
-		}
+		return StringUtil.nullToEmpty(_gadgetKey);
 	}
 
 	@Override
@@ -290,12 +286,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getServiceName() {
-		if (_serviceName == null) {
-			return "";
-		}
-		else {
-			return _serviceName;
-		}
+		return StringUtil.nullToEmpty(_serviceName);
 	}
 
 	@Override
@@ -315,12 +306,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getConsumerKey() {
-		if (_consumerKey == null) {
-			return "";
-		}
-		else {
-			return _consumerKey;
-		}
+		return StringUtil.nullToEmpty(_consumerKey);
 	}
 
 	@Override
@@ -330,12 +316,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getConsumerSecret() {
-		if (_consumerSecret == null) {
-			return "";
-		}
-		else {
-			return _consumerSecret;
-		}
+		return StringUtil.nullToEmpty(_consumerSecret);
 	}
 
 	@Override
@@ -345,12 +326,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getKeyType() {
-		if (_keyType == null) {
-			return "";
-		}
-		else {
-			return _keyType;
-		}
+		return StringUtil.nullToEmpty(_keyType);
 	}
 
 	@Override

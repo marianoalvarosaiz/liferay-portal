@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimer;
 import com.liferay.portal.workflow.kaleo.model.KaleoTimerModel;
 
@@ -354,12 +355,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -395,12 +391,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return StringUtil.nullToEmpty(_kaleoClassName);
 	}
 
 	@Override
@@ -452,12 +443,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -494,12 +480,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -519,12 +500,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getScale() {
-		if (_scale == null) {
-			return "";
-		}
-		else {
-			return _scale;
-		}
+		return StringUtil.nullToEmpty(_scale);
 	}
 
 	@Override
@@ -544,12 +520,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getRecurrenceScale() {
-		if (_recurrenceScale == null) {
-			return "";
-		}
-		else {
-			return _recurrenceScale;
-		}
+		return StringUtil.nullToEmpty(_recurrenceScale);
 	}
 
 	@Override

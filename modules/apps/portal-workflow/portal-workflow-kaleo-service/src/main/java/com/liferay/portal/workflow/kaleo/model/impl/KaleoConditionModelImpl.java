@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.model.KaleoConditionModel;
 
@@ -322,12 +323,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -407,12 +403,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public String getScript() {
-		if (_script == null) {
-			return "";
-		}
-		else {
-			return _script;
-		}
+		return StringUtil.nullToEmpty(_script);
 	}
 
 	@Override
@@ -422,12 +413,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public String getScriptLanguage() {
-		if (_scriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _scriptLanguage;
-		}
+		return StringUtil.nullToEmpty(_scriptLanguage);
 	}
 
 	@Override
@@ -437,12 +423,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public String getScriptRequiredContexts() {
-		if (_scriptRequiredContexts == null) {
-			return "";
-		}
-		else {
-			return _scriptRequiredContexts;
-		}
+		return StringUtil.nullToEmpty(_scriptRequiredContexts);
 	}
 
 	@Override

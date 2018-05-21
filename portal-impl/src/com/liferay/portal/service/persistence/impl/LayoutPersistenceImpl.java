@@ -188,15 +188,20 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Layout> list = null;
@@ -207,7 +212,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Layout layout : list) {
-					if (!Objects.equals(uuid, layout.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, layout.getUuid())) {
 						list = null;
 
 						break;
@@ -584,7 +589,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -726,7 +733,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	@Override
 	public Layout fetchByUUID_G_P(String uuid, long groupId,
 		boolean privateLayout, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId, privateLayout };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId, privateLayout };
 
 		Object result = null;
 
@@ -738,7 +747,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		if (result instanceof Layout) {
 			Layout layout = (Layout)result;
 
-			if (!Objects.equals(uuid, layout.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, layout.getUuid()) ||
 					(groupId != layout.getGroupId()) ||
 					(privateLayout != layout.isPrivateLayout())) {
 				result = null;
@@ -800,8 +809,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 					cacheResult(layout);
 
-					if ((layout.getUuid() == null) ||
-							!layout.getUuid().equals(uuid) ||
+					if (!layout.getUuid().equals(uuidNullSafe) ||
 							(layout.getGroupId() != groupId) ||
 							(layout.isPrivateLayout() != privateLayout)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G_P,
@@ -856,7 +864,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByUUID_G_P(String uuid, long groupId, boolean privateLayout) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G_P;
 
-		Object[] finderArgs = new Object[] { uuid, groupId, privateLayout };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId, privateLayout };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1022,16 +1032,18 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1045,7 +1057,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Layout layout : list) {
-					if (!Objects.equals(uuid, layout.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, layout.getUuid()) ||
 							(companyId != layout.getCompanyId())) {
 						list = null;
 
@@ -1446,7 +1458,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3181,17 +3195,18 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutPrototypeUuidNullSafe = StringUtil.nullToEmpty(layoutPrototypeUuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LAYOUTPROTOTYPEUUID;
-			finderArgs = new Object[] { layoutPrototypeUuid };
+			finderArgs = new Object[] { layoutPrototypeUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_LAYOUTPROTOTYPEUUID;
 			finderArgs = new Object[] {
-					layoutPrototypeUuid,
-					
+					layoutPrototypeUuidNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -3204,7 +3219,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Layout layout : list) {
-					if (!Objects.equals(layoutPrototypeUuid,
+					if (!Objects.equals(layoutPrototypeUuidNullSafe,
 								layout.getLayoutPrototypeUuid())) {
 						list = null;
 
@@ -3586,7 +3601,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByLayoutPrototypeUuid(String layoutPrototypeUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LAYOUTPROTOTYPEUUID;
 
-		Object[] finderArgs = new Object[] { layoutPrototypeUuid };
+		String layoutPrototypeUuidNullSafe = StringUtil.nullToEmpty(layoutPrototypeUuid);
+
+		Object[] finderArgs = new Object[] { layoutPrototypeUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3749,17 +3766,18 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String sourcePrototypeLayoutUuidNullSafe = StringUtil.nullToEmpty(sourcePrototypeLayoutUuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SOURCEPROTOTYPELAYOUTUUID;
-			finderArgs = new Object[] { sourcePrototypeLayoutUuid };
+			finderArgs = new Object[] { sourcePrototypeLayoutUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_SOURCEPROTOTYPELAYOUTUUID;
 			finderArgs = new Object[] {
-					sourcePrototypeLayoutUuid,
-					
+					sourcePrototypeLayoutUuidNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -3772,7 +3790,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Layout layout : list) {
-					if (!Objects.equals(sourcePrototypeLayoutUuid,
+					if (!Objects.equals(sourcePrototypeLayoutUuidNullSafe,
 								layout.getSourcePrototypeLayoutUuid())) {
 						list = null;
 
@@ -4162,7 +4180,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		String sourcePrototypeLayoutUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_SOURCEPROTOTYPELAYOUTUUID;
 
-		Object[] finderArgs = new Object[] { sourcePrototypeLayoutUuid };
+		String sourcePrototypeLayoutUuidNullSafe = StringUtil.nullToEmpty(sourcePrototypeLayoutUuid);
+
+		Object[] finderArgs = new Object[] { sourcePrototypeLayoutUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5238,17 +5258,18 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T;
-			finderArgs = new Object[] { groupId, type };
+			finderArgs = new Object[] { groupId, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T;
 			finderArgs = new Object[] {
-					groupId, type,
-					
+					groupId, typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -5262,7 +5283,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			if ((list != null) && !list.isEmpty()) {
 				for (Layout layout : list) {
 					if ((groupId != layout.getGroupId()) ||
-							!Objects.equals(type, layout.getType())) {
+							!Objects.equals(typeNullSafe, layout.getType())) {
 						list = null;
 
 						break;
@@ -6010,7 +6031,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByG_T(long groupId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T;
 
-		Object[] finderArgs = new Object[] { groupId, type };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { groupId, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -6241,17 +6264,18 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutPrototypeUuidNullSafe = StringUtil.nullToEmpty(layoutPrototypeUuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_L;
-			finderArgs = new Object[] { companyId, layoutPrototypeUuid };
+			finderArgs = new Object[] { companyId, layoutPrototypeUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_L;
 			finderArgs = new Object[] {
-					companyId, layoutPrototypeUuid,
-					
+					companyId, layoutPrototypeUuidNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -6265,7 +6289,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 			if ((list != null) && !list.isEmpty()) {
 				for (Layout layout : list) {
 					if ((companyId != layout.getCompanyId()) ||
-							!Objects.equals(layoutPrototypeUuid,
+							!Objects.equals(layoutPrototypeUuidNullSafe,
 								layout.getLayoutPrototypeUuid())) {
 						list = null;
 
@@ -6668,7 +6692,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByC_L(long companyId, String layoutPrototypeUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_L;
 
-		Object[] finderArgs = new Object[] { companyId, layoutPrototypeUuid };
+		String layoutPrototypeUuidNullSafe = StringUtil.nullToEmpty(layoutPrototypeUuid);
+
+		Object[] finderArgs = new Object[] {
+				companyId, layoutPrototypeUuidNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -8856,17 +8884,18 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_T;
-			finderArgs = new Object[] { groupId, privateLayout, type };
+			finderArgs = new Object[] { groupId, privateLayout, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_P_T;
 			finderArgs = new Object[] {
-					groupId, privateLayout, type,
-					
+					groupId, privateLayout, typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -8881,7 +8910,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 				for (Layout layout : list) {
 					if ((groupId != layout.getGroupId()) ||
 							(privateLayout != layout.isPrivateLayout()) ||
-							!Objects.equals(type, layout.getType())) {
+							!Objects.equals(typeNullSafe, layout.getType())) {
 						list = null;
 
 						break;
@@ -9671,7 +9700,9 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	public int countByG_P_T(long groupId, boolean privateLayout, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_T;
 
-		Object[] finderArgs = new Object[] { groupId, privateLayout, type };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { groupId, privateLayout, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -9899,7 +9930,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	@Override
 	public Layout fetchByG_P_F(long groupId, boolean privateLayout,
 		String friendlyURL, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, privateLayout, friendlyURL };
+		String friendlyURLNullSafe = StringUtil.nullToEmpty(friendlyURL);
+
+		Object[] finderArgs = new Object[] {
+				groupId, privateLayout, friendlyURLNullSafe
+			};
 
 		Object result = null;
 
@@ -9913,7 +9948,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 			if ((groupId != layout.getGroupId()) ||
 					(privateLayout != layout.isPrivateLayout()) ||
-					!Objects.equals(friendlyURL, layout.getFriendlyURL())) {
+					!Objects.equals(friendlyURLNullSafe, layout.getFriendlyURL())) {
 				result = null;
 			}
 		}
@@ -9975,8 +10010,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 					if ((layout.getGroupId() != groupId) ||
 							(layout.isPrivateLayout() != privateLayout) ||
-							(layout.getFriendlyURL() == null) ||
-							!layout.getFriendlyURL().equals(friendlyURL)) {
+							!layout.getFriendlyURL().equals(friendlyURLNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_F,
 							finderArgs, layout);
 					}
@@ -10029,7 +10063,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		String friendlyURL) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_F;
 
-		Object[] finderArgs = new Object[] { groupId, privateLayout, friendlyURL };
+		String friendlyURLNullSafe = StringUtil.nullToEmpty(friendlyURL);
+
+		Object[] finderArgs = new Object[] {
+				groupId, privateLayout, friendlyURLNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -10183,8 +10221,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 	@Override
 	public Layout fetchByG_P_SPLU(long groupId, boolean privateLayout,
 		String sourcePrototypeLayoutUuid, boolean retrieveFromCache) {
+		String sourcePrototypeLayoutUuidNullSafe = StringUtil.nullToEmpty(sourcePrototypeLayoutUuid);
+
 		Object[] finderArgs = new Object[] {
-				groupId, privateLayout, sourcePrototypeLayoutUuid
+				groupId, privateLayout, sourcePrototypeLayoutUuidNullSafe
 			};
 
 		Object result = null;
@@ -10199,7 +10239,7 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 			if ((groupId != layout.getGroupId()) ||
 					(privateLayout != layout.isPrivateLayout()) ||
-					!Objects.equals(sourcePrototypeLayoutUuid,
+					!Objects.equals(sourcePrototypeLayoutUuidNullSafe,
 						layout.getSourcePrototypeLayoutUuid())) {
 				result = null;
 			}
@@ -10273,9 +10313,8 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 					if ((layout.getGroupId() != groupId) ||
 							(layout.isPrivateLayout() != privateLayout) ||
-							(layout.getSourcePrototypeLayoutUuid() == null) ||
 							!layout.getSourcePrototypeLayoutUuid()
-									   .equals(sourcePrototypeLayoutUuid)) {
+									   .equals(sourcePrototypeLayoutUuidNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_SPLU,
 							finderArgs, layout);
 					}
@@ -10330,8 +10369,10 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 		String sourcePrototypeLayoutUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_SPLU;
 
+		String sourcePrototypeLayoutUuidNullSafe = StringUtil.nullToEmpty(sourcePrototypeLayoutUuid);
+
 		Object[] finderArgs = new Object[] {
-				groupId, privateLayout, sourcePrototypeLayoutUuid
+				groupId, privateLayout, sourcePrototypeLayoutUuidNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

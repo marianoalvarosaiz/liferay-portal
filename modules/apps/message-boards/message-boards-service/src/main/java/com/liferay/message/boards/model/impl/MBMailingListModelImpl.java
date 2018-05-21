@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -382,12 +383,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -485,12 +481,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -548,12 +539,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return StringUtil.nullToEmpty(_emailAddress);
 	}
 
 	@Override
@@ -563,12 +549,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInProtocol() {
-		if (_inProtocol == null) {
-			return "";
-		}
-		else {
-			return _inProtocol;
-		}
+		return StringUtil.nullToEmpty(_inProtocol);
 	}
 
 	@Override
@@ -578,12 +559,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInServerName() {
-		if (_inServerName == null) {
-			return "";
-		}
-		else {
-			return _inServerName;
-		}
+		return StringUtil.nullToEmpty(_inServerName);
 	}
 
 	@Override
@@ -618,12 +594,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInUserName() {
-		if (_inUserName == null) {
-			return "";
-		}
-		else {
-			return _inUserName;
-		}
+		return StringUtil.nullToEmpty(_inUserName);
 	}
 
 	@Override
@@ -633,12 +604,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInPassword() {
-		if (_inPassword == null) {
-			return "";
-		}
-		else {
-			return _inPassword;
-		}
+		return StringUtil.nullToEmpty(_inPassword);
 	}
 
 	@Override
@@ -658,12 +624,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutEmailAddress() {
-		if (_outEmailAddress == null) {
-			return "";
-		}
-		else {
-			return _outEmailAddress;
-		}
+		return StringUtil.nullToEmpty(_outEmailAddress);
 	}
 
 	@Override
@@ -688,12 +649,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutServerName() {
-		if (_outServerName == null) {
-			return "";
-		}
-		else {
-			return _outServerName;
-		}
+		return StringUtil.nullToEmpty(_outServerName);
 	}
 
 	@Override
@@ -728,12 +684,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutUserName() {
-		if (_outUserName == null) {
-			return "";
-		}
-		else {
-			return _outUserName;
-		}
+		return StringUtil.nullToEmpty(_outUserName);
 	}
 
 	@Override
@@ -743,12 +694,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutPassword() {
-		if (_outPassword == null) {
-			return "";
-		}
-		else {
-			return _outPassword;
-		}
+		return StringUtil.nullToEmpty(_outPassword);
 	}
 
 	@Override

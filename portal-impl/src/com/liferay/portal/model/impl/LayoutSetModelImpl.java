@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -473,12 +474,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return StringUtil.nullToEmpty(_themeId);
 	}
 
 	@Override
@@ -489,12 +485,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return StringUtil.nullToEmpty(_colorSchemeId);
 	}
 
 	@Override
@@ -505,12 +496,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return StringUtil.nullToEmpty(_css);
 	}
 
 	@Override
@@ -532,12 +518,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getSettings() {
-		if (_settings == null) {
-			return "";
-		}
-		else {
-			return _settings;
-		}
+		return StringUtil.nullToEmpty(_settings);
 	}
 
 	@Override
@@ -548,12 +529,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getLayoutSetPrototypeUuid() {
-		if (_layoutSetPrototypeUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutSetPrototypeUuid;
-		}
+		return StringUtil.nullToEmpty(_layoutSetPrototypeUuid);
 	}
 
 	@Override

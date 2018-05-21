@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.social.kernel.model.SocialActivity;
@@ -610,12 +611,7 @@ public class SocialActivityModelImpl extends BaseModelImpl<SocialActivity>
 	@JSON
 	@Override
 	public String getExtraData() {
-		if (_extraData == null) {
-			return "";
-		}
-		else {
-			return _extraData;
-		}
+		return StringUtil.nullToEmpty(_extraData);
 	}
 
 	@Override

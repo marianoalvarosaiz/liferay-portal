@@ -191,15 +191,20 @@ public class CalendarNotificationTemplatePersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<CalendarNotificationTemplate> list = null;
@@ -210,7 +215,7 @@ public class CalendarNotificationTemplatePersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (CalendarNotificationTemplate calendarNotificationTemplate : list) {
-					if (!Objects.equals(uuid,
+					if (!Objects.equals(uuidNullSafe,
 								calendarNotificationTemplate.getUuid())) {
 						list = null;
 
@@ -595,7 +600,9 @@ public class CalendarNotificationTemplatePersistenceImpl
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -726,7 +733,9 @@ public class CalendarNotificationTemplatePersistenceImpl
 	@Override
 	public CalendarNotificationTemplate fetchByUUID_G(String uuid,
 		long groupId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -738,7 +747,8 @@ public class CalendarNotificationTemplatePersistenceImpl
 		if (result instanceof CalendarNotificationTemplate) {
 			CalendarNotificationTemplate calendarNotificationTemplate = (CalendarNotificationTemplate)result;
 
-			if (!Objects.equals(uuid, calendarNotificationTemplate.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe,
+						calendarNotificationTemplate.getUuid()) ||
 					(groupId != calendarNotificationTemplate.getGroupId())) {
 				result = null;
 			}
@@ -795,8 +805,8 @@ public class CalendarNotificationTemplatePersistenceImpl
 
 					cacheResult(calendarNotificationTemplate);
 
-					if ((calendarNotificationTemplate.getUuid() == null) ||
-							!calendarNotificationTemplate.getUuid().equals(uuid) ||
+					if (!calendarNotificationTemplate.getUuid()
+														 .equals(uuidNullSafe) ||
 							(calendarNotificationTemplate.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, calendarNotificationTemplate);
@@ -848,7 +858,9 @@ public class CalendarNotificationTemplatePersistenceImpl
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1013,16 +1025,18 @@ public class CalendarNotificationTemplatePersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1036,7 +1050,7 @@ public class CalendarNotificationTemplatePersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (CalendarNotificationTemplate calendarNotificationTemplate : list) {
-					if (!Objects.equals(uuid,
+					if (!Objects.equals(uuidNullSafe,
 								calendarNotificationTemplate.getUuid()) ||
 							(companyId != calendarNotificationTemplate.getCompanyId())) {
 						list = null;
@@ -1450,7 +1464,9 @@ public class CalendarNotificationTemplatePersistenceImpl
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2122,8 +2138,12 @@ public class CalendarNotificationTemplatePersistenceImpl
 	public CalendarNotificationTemplate fetchByC_NT_NTT(long calendarId,
 		String notificationType, String notificationTemplateType,
 		boolean retrieveFromCache) {
+		String notificationTypeNullSafe = StringUtil.nullToEmpty(notificationType);
+		String notificationTemplateTypeNullSafe = StringUtil.nullToEmpty(notificationTemplateType);
+
 		Object[] finderArgs = new Object[] {
-				calendarId, notificationType, notificationTemplateType
+				calendarId, notificationTypeNullSafe,
+				notificationTemplateTypeNullSafe
 			};
 
 		Object result = null;
@@ -2137,9 +2157,9 @@ public class CalendarNotificationTemplatePersistenceImpl
 			CalendarNotificationTemplate calendarNotificationTemplate = (CalendarNotificationTemplate)result;
 
 			if ((calendarId != calendarNotificationTemplate.getCalendarId()) ||
-					!Objects.equals(notificationType,
+					!Objects.equals(notificationTypeNullSafe,
 						calendarNotificationTemplate.getNotificationType()) ||
-					!Objects.equals(notificationTemplateType,
+					!Objects.equals(notificationTemplateTypeNullSafe,
 						calendarNotificationTemplate.getNotificationTemplateType())) {
 				result = null;
 			}
@@ -2226,12 +2246,10 @@ public class CalendarNotificationTemplatePersistenceImpl
 					cacheResult(calendarNotificationTemplate);
 
 					if ((calendarNotificationTemplate.getCalendarId() != calendarId) ||
-							(calendarNotificationTemplate.getNotificationType() == null) ||
 							!calendarNotificationTemplate.getNotificationType()
-															 .equals(notificationType) ||
-							(calendarNotificationTemplate.getNotificationTemplateType() == null) ||
+															 .equals(notificationTypeNullSafe) ||
 							!calendarNotificationTemplate.getNotificationTemplateType()
-															 .equals(notificationTemplateType)) {
+															 .equals(notificationTemplateTypeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_NT_NTT,
 							finderArgs, calendarNotificationTemplate);
 					}
@@ -2287,8 +2305,12 @@ public class CalendarNotificationTemplatePersistenceImpl
 		String notificationTemplateType) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_NT_NTT;
 
+		String notificationTypeNullSafe = StringUtil.nullToEmpty(notificationType);
+		String notificationTemplateTypeNullSafe = StringUtil.nullToEmpty(notificationTemplateType);
+
 		Object[] finderArgs = new Object[] {
-				calendarId, notificationType, notificationTemplateType
+				calendarId, notificationTypeNullSafe,
+				notificationTemplateTypeNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

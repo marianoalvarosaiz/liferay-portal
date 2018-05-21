@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceTokenModel;
 
@@ -388,12 +389,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -505,12 +501,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getKaleoTaskName() {
-		if (_kaleoTaskName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTaskName;
-		}
+		return StringUtil.nullToEmpty(_kaleoTaskName);
 	}
 
 	@Override
@@ -520,12 +511,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getClassName() {
-		if (_className == null) {
-			return "";
-		}
-		else {
-			return _className;
-		}
+		return StringUtil.nullToEmpty(_className);
 	}
 
 	@Override
@@ -628,12 +614,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getWorkflowContext() {
-		if (_workflowContext == null) {
-			return "";
-		}
-		else {
-			return _workflowContext;
-		}
+		return StringUtil.nullToEmpty(_workflowContext);
 	}
 
 	@Override

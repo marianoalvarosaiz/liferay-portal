@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.PortletImpl;
 import com.liferay.portal.model.impl.PortletModelImpl;
 
@@ -660,7 +661,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	@Override
 	public Portlet fetchByC_P(long companyId, String portletId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, portletId };
+		String portletIdNullSafe = StringUtil.nullToEmpty(portletId);
+
+		Object[] finderArgs = new Object[] { companyId, portletIdNullSafe };
 
 		Object result = null;
 
@@ -673,7 +676,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			Portlet portlet = (Portlet)result;
 
 			if ((companyId != portlet.getCompanyId()) ||
-					!Objects.equals(portletId, portlet.getPortletId())) {
+					!Objects.equals(portletIdNullSafe, portlet.getPortletId())) {
 				result = null;
 			}
 		}
@@ -730,8 +733,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 					cacheResult(portlet);
 
 					if ((portlet.getCompanyId() != companyId) ||
-							(portlet.getPortletId() == null) ||
-							!portlet.getPortletId().equals(portletId)) {
+							!portlet.getPortletId().equals(portletIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_P,
 							finderArgs, portlet);
 					}
@@ -781,7 +783,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	public int countByC_P(long companyId, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_P;
 
-		Object[] finderArgs = new Object[] { companyId, portletId };
+		String portletIdNullSafe = StringUtil.nullToEmpty(portletId);
+
+		Object[] finderArgs = new Object[] { companyId, portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

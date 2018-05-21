@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -241,12 +242,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -328,12 +324,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getConfigurationUuid() {
-		if (_configurationUuid == null) {
-			return "";
-		}
-		else {
-			return _configurationUuid;
-		}
+		return StringUtil.nullToEmpty(_configurationUuid);
 	}
 
 	@Override
@@ -375,12 +366,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return StringUtil.nullToEmpty(_mimeType);
 	}
 
 	@Override

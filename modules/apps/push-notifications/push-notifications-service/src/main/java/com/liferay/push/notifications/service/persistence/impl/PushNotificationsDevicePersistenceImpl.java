@@ -154,7 +154,9 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	@Override
 	public PushNotificationsDevice fetchByToken(String token,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { token };
+		String tokenNullSafe = StringUtil.nullToEmpty(token);
+
+		Object[] finderArgs = new Object[] { tokenNullSafe };
 
 		Object result = null;
 
@@ -166,7 +168,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		if (result instanceof PushNotificationsDevice) {
 			PushNotificationsDevice pushNotificationsDevice = (PushNotificationsDevice)result;
 
-			if (!Objects.equals(token, pushNotificationsDevice.getToken())) {
+			if (!Objects.equals(tokenNullSafe,
+						pushNotificationsDevice.getToken())) {
 				result = null;
 			}
 		}
@@ -218,8 +221,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 					cacheResult(pushNotificationsDevice);
 
-					if ((pushNotificationsDevice.getToken() == null) ||
-							!pushNotificationsDevice.getToken().equals(token)) {
+					if (!pushNotificationsDevice.getToken().equals(tokenNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_TOKEN,
 							finderArgs, pushNotificationsDevice);
 					}
@@ -267,7 +269,9 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	public int countByToken(String token) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_TOKEN;
 
-		Object[] finderArgs = new Object[] { token };
+		String tokenNullSafe = StringUtil.nullToEmpty(token);
+
+		Object[] finderArgs = new Object[] { tokenNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -428,17 +432,18 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String platformNullSafe = StringUtil.nullToEmpty(platform);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P;
-			finderArgs = new Object[] { userId, platform };
+			finderArgs = new Object[] { userId, platformNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_U_P;
 			finderArgs = new Object[] {
-					userId, platform,
-					
+					userId, platformNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -452,7 +457,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 			if ((list != null) && !list.isEmpty()) {
 				for (PushNotificationsDevice pushNotificationsDevice : list) {
 					if ((userId != pushNotificationsDevice.getUserId()) ||
-							!Objects.equals(platform,
+							!Objects.equals(platformNullSafe,
 								pushNotificationsDevice.getPlatform())) {
 						list = null;
 
@@ -930,15 +935,18 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String platformNullSafe = StringUtil.nullToEmpty(platform);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
-			finderArgs = new Object[] { StringUtil.merge(userIds), platform };
+			finderArgs = new Object[] {
+					StringUtil.merge(userIds), platformNullSafe
+				};
 		}
 		else {
 			finderArgs = new Object[] {
-					StringUtil.merge(userIds), platform,
-					
+					StringUtil.merge(userIds), platformNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -953,7 +961,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 				for (PushNotificationsDevice pushNotificationsDevice : list) {
 					if (!ArrayUtil.contains(userIds,
 								pushNotificationsDevice.getUserId()) ||
-							!Objects.equals(platform,
+							!Objects.equals(platformNullSafe,
 								pushNotificationsDevice.getPlatform())) {
 						list = null;
 
@@ -1080,7 +1088,9 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	public int countByU_P(long userId, String platform) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_P;
 
-		Object[] finderArgs = new Object[] { userId, platform };
+		String platformNullSafe = StringUtil.nullToEmpty(platform);
+
+		Object[] finderArgs = new Object[] { userId, platformNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1157,7 +1167,11 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 			Arrays.sort(userIds);
 		}
 
-		Object[] finderArgs = new Object[] { StringUtil.merge(userIds), platform };
+		String platformNullSafe = StringUtil.nullToEmpty(platform);
+
+		Object[] finderArgs = new Object[] {
+				StringUtil.merge(userIds), platformNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,
 				finderArgs, this);

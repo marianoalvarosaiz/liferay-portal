@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -278,12 +279,7 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -341,12 +337,7 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 
 	@Override
 	public String getFullName() {
-		if (_fullName == null) {
-			return "";
-		}
-		else {
-			return _fullName;
-		}
+		return StringUtil.nullToEmpty(_fullName);
 	}
 
 	@Override
@@ -366,12 +357,7 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 
 	@Override
 	public String getDisplayName() {
-		if (_displayName == null) {
-			return "";
-		}
-		else {
-			return _displayName;
-		}
+		return StringUtil.nullToEmpty(_displayName);
 	}
 
 	@Override

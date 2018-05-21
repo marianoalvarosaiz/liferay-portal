@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.workflow.kaleo.exception.NoSuchLogException;
 import com.liferay.portal.workflow.kaleo.model.KaleoLog;
@@ -2250,17 +2251,18 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KITI_T;
-			finderArgs = new Object[] { kaleoInstanceTokenId, type };
+			finderArgs = new Object[] { kaleoInstanceTokenId, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_KITI_T;
 			finderArgs = new Object[] {
-					kaleoInstanceTokenId, type,
-					
+					kaleoInstanceTokenId, typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -2274,7 +2276,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoLog kaleoLog : list) {
 					if ((kaleoInstanceTokenId != kaleoLog.getKaleoInstanceTokenId()) ||
-							!Objects.equals(type, kaleoLog.getType())) {
+							!Objects.equals(typeNullSafe, kaleoLog.getType())) {
 						list = null;
 
 						break;
@@ -2677,7 +2679,9 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 	public int countByKITI_T(long kaleoInstanceTokenId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KITI_T;
 
-		Object[] finderArgs = new Object[] { kaleoInstanceTokenId, type };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { kaleoInstanceTokenId, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2862,19 +2866,23 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String kaleoClassNameNullSafe = StringUtil.nullToEmpty(kaleoClassName);
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_KITI_T;
 			finderArgs = new Object[] {
-					kaleoClassName, kaleoClassPK, kaleoInstanceTokenId, type
+					kaleoClassNameNullSafe, kaleoClassPK, kaleoInstanceTokenId,
+					typeNullSafe
 				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_KCN_KCPK_KITI_T;
 			finderArgs = new Object[] {
-					kaleoClassName, kaleoClassPK, kaleoInstanceTokenId, type,
-					
+					kaleoClassNameNullSafe, kaleoClassPK, kaleoInstanceTokenId,
+					typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -2887,11 +2895,11 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoLog kaleoLog : list) {
-					if (!Objects.equals(kaleoClassName,
+					if (!Objects.equals(kaleoClassNameNullSafe,
 								kaleoLog.getKaleoClassName()) ||
 							(kaleoClassPK != kaleoLog.getKaleoClassPK()) ||
 							(kaleoInstanceTokenId != kaleoLog.getKaleoInstanceTokenId()) ||
-							!Objects.equals(type, kaleoLog.getType())) {
+							!Objects.equals(typeNullSafe, kaleoLog.getType())) {
 						list = null;
 
 						break;
@@ -3377,8 +3385,12 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		long kaleoInstanceTokenId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK_KITI_T;
 
+		String kaleoClassNameNullSafe = StringUtil.nullToEmpty(kaleoClassName);
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		Object[] finderArgs = new Object[] {
-				kaleoClassName, kaleoClassPK, kaleoInstanceTokenId, type
+				kaleoClassNameNullSafe, kaleoClassPK, kaleoInstanceTokenId,
+				typeNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

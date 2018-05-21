@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -267,12 +268,7 @@ public class OAuth2ApplicationScopeAliasesModelImpl extends BaseModelImpl<OAuth2
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -314,12 +310,7 @@ public class OAuth2ApplicationScopeAliasesModelImpl extends BaseModelImpl<OAuth2
 
 	@Override
 	public String getScopeAliases() {
-		if (_scopeAliases == null) {
-			return "";
-		}
-		else {
-			return _scopeAliases;
-		}
+		return StringUtil.nullToEmpty(_scopeAliases);
 	}
 
 	@Override

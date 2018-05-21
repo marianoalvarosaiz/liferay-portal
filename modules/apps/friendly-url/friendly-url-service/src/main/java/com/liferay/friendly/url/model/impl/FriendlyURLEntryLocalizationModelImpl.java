@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -279,12 +280,7 @@ public class FriendlyURLEntryLocalizationModelImpl extends BaseModelImpl<Friendl
 
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return StringUtil.nullToEmpty(_languageId);
 	}
 
 	@Override
@@ -304,12 +300,7 @@ public class FriendlyURLEntryLocalizationModelImpl extends BaseModelImpl<Friendl
 
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return StringUtil.nullToEmpty(_urlTitle);
 	}
 
 	@Override

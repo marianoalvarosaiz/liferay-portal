@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -520,12 +521,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -628,12 +624,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -747,12 +738,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -846,12 +832,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -945,12 +926,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -1048,12 +1024,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getKeywords() {
-		if (_keywords == null) {
-			return "";
-		}
-		else {
-			return _keywords;
-		}
+		return StringUtil.nullToEmpty(_keywords);
 	}
 
 	@Override
@@ -1149,12 +1120,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getRobots() {
-		if (_robots == null) {
-			return "";
-		}
-		else {
-			return _robots;
-		}
+		return StringUtil.nullToEmpty(_robots);
 	}
 
 	@Override
@@ -1248,12 +1214,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return StringUtil.nullToEmpty(_type);
 	}
 
 	@Override
@@ -1274,12 +1235,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return StringUtil.nullToEmpty(_typeSettings);
 	}
 
 	@Override
@@ -1307,12 +1263,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getFriendlyURL() {
-		if (_friendlyURL == null) {
-			return "";
-		}
-		else {
-			return _friendlyURL;
-		}
+		return StringUtil.nullToEmpty(_friendlyURL);
 	}
 
 	@Override
@@ -1356,12 +1307,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return StringUtil.nullToEmpty(_themeId);
 	}
 
 	@Override
@@ -1372,12 +1318,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return StringUtil.nullToEmpty(_colorSchemeId);
 	}
 
 	@Override
@@ -1388,12 +1329,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return StringUtil.nullToEmpty(_css);
 	}
 
 	@Override
@@ -1427,12 +1363,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getLayoutPrototypeUuid() {
-		if (_layoutPrototypeUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutPrototypeUuid;
-		}
+		return StringUtil.nullToEmpty(_layoutPrototypeUuid);
 	}
 
 	@Override
@@ -1471,12 +1402,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getSourcePrototypeLayoutUuid() {
-		if (_sourcePrototypeLayoutUuid == null) {
-			return "";
-		}
-		else {
-			return _sourcePrototypeLayoutUuid;
-		}
+		return StringUtil.nullToEmpty(_sourcePrototypeLayoutUuid);
 	}
 
 	@Override

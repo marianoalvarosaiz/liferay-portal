@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -183,15 +184,20 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<JournalArticleResource> list = null;
@@ -202,7 +208,8 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticleResource journalArticleResource : list) {
-					if (!Objects.equals(uuid, journalArticleResource.getUuid())) {
+					if (!Objects.equals(uuidNullSafe,
+								journalArticleResource.getUuid())) {
 						list = null;
 
 						break;
@@ -585,7 +592,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -715,7 +724,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	@Override
 	public JournalArticleResource fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -727,7 +738,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		if (result instanceof JournalArticleResource) {
 			JournalArticleResource journalArticleResource = (JournalArticleResource)result;
 
-			if (!Objects.equals(uuid, journalArticleResource.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, journalArticleResource.getUuid()) ||
 					(groupId != journalArticleResource.getGroupId())) {
 				result = null;
 			}
@@ -784,8 +795,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 					cacheResult(journalArticleResource);
 
-					if ((journalArticleResource.getUuid() == null) ||
-							!journalArticleResource.getUuid().equals(uuid) ||
+					if (!journalArticleResource.getUuid().equals(uuidNullSafe) ||
 							(journalArticleResource.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, journalArticleResource);
@@ -837,7 +847,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1000,16 +1012,18 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1023,7 +1037,8 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticleResource journalArticleResource : list) {
-					if (!Objects.equals(uuid, journalArticleResource.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe,
+								journalArticleResource.getUuid()) ||
 							(companyId != journalArticleResource.getCompanyId())) {
 						list = null;
 
@@ -1433,7 +1448,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2076,7 +2093,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	@Override
 	public JournalArticleResource fetchByG_A(long groupId, String articleId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, articleId };
+		String articleIdNullSafe = StringUtil.nullToEmpty(articleId);
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe };
 
 		Object result = null;
 
@@ -2089,7 +2108,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			JournalArticleResource journalArticleResource = (JournalArticleResource)result;
 
 			if ((groupId != journalArticleResource.getGroupId()) ||
-					!Objects.equals(articleId,
+					!Objects.equals(articleIdNullSafe,
 						journalArticleResource.getArticleId())) {
 				result = null;
 			}
@@ -2147,9 +2166,8 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 					cacheResult(journalArticleResource);
 
 					if ((journalArticleResource.getGroupId() != groupId) ||
-							(journalArticleResource.getArticleId() == null) ||
 							!journalArticleResource.getArticleId()
-													   .equals(articleId)) {
+													   .equals(articleIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_A,
 							finderArgs, journalArticleResource);
 					}
@@ -2200,7 +2218,9 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	public int countByG_A(long groupId, String articleId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_A;
 
-		Object[] finderArgs = new Object[] { groupId, articleId };
+		String articleIdNullSafe = StringUtil.nullToEmpty(articleId);
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

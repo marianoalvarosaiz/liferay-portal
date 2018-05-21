@@ -186,15 +186,20 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDMStructure> list = null;
@@ -205,7 +210,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMStructure ddmStructure : list) {
-					if (!Objects.equals(uuid, ddmStructure.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, ddmStructure.getUuid())) {
 						list = null;
 
 						break;
@@ -583,7 +588,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -711,7 +718,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	@Override
 	public DDMStructure fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -723,7 +732,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		if (result instanceof DDMStructure) {
 			DDMStructure ddmStructure = (DDMStructure)result;
 
-			if (!Objects.equals(uuid, ddmStructure.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, ddmStructure.getUuid()) ||
 					(groupId != ddmStructure.getGroupId())) {
 				result = null;
 			}
@@ -780,8 +789,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 					cacheResult(ddmStructure);
 
-					if ((ddmStructure.getUuid() == null) ||
-							!ddmStructure.getUuid().equals(uuid) ||
+					if (!ddmStructure.getUuid().equals(uuidNullSafe) ||
 							(ddmStructure.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, ddmStructure);
@@ -832,7 +840,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -991,16 +1001,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1014,7 +1026,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMStructure ddmStructure : list) {
-					if (!Objects.equals(uuid, ddmStructure.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, ddmStructure.getUuid()) ||
 							(companyId != ddmStructure.getCompanyId())) {
 						list = null;
 
@@ -1418,7 +1430,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3917,17 +3931,18 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String structureKeyNullSafe = StringUtil.nullToEmpty(structureKey);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_STRUCTUREKEY;
-			finderArgs = new Object[] { structureKey };
+			finderArgs = new Object[] { structureKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_STRUCTUREKEY;
 			finderArgs = new Object[] {
-					structureKey,
-					
+					structureKeyNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -3940,7 +3955,7 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMStructure ddmStructure : list) {
-					if (!Objects.equals(structureKey,
+					if (!Objects.equals(structureKeyNullSafe,
 								ddmStructure.getStructureKey())) {
 						list = null;
 
@@ -4322,7 +4337,9 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	public int countByStructureKey(String structureKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_STRUCTUREKEY;
 
-		Object[] finderArgs = new Object[] { structureKey };
+		String structureKeyNullSafe = StringUtil.nullToEmpty(structureKey);
+
+		Object[] finderArgs = new Object[] { structureKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -7358,7 +7375,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	@Override
 	public DDMStructure fetchByG_C_S(long groupId, long classNameId,
 		String structureKey, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, classNameId, structureKey };
+		String structureKeyNullSafe = StringUtil.nullToEmpty(structureKey);
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, structureKeyNullSafe
+			};
 
 		Object result = null;
 
@@ -7372,7 +7393,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 			if ((groupId != ddmStructure.getGroupId()) ||
 					(classNameId != ddmStructure.getClassNameId()) ||
-					!Objects.equals(structureKey, ddmStructure.getStructureKey())) {
+					!Objects.equals(structureKeyNullSafe,
+						ddmStructure.getStructureKey())) {
 				result = null;
 			}
 		}
@@ -7434,8 +7456,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 					if ((ddmStructure.getGroupId() != groupId) ||
 							(ddmStructure.getClassNameId() != classNameId) ||
-							(ddmStructure.getStructureKey() == null) ||
-							!ddmStructure.getStructureKey().equals(structureKey)) {
+							!ddmStructure.getStructureKey()
+											 .equals(structureKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_S,
 							finderArgs, ddmStructure);
 					}
@@ -7488,7 +7510,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	public int countByG_C_S(long groupId, long classNameId, String structureKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_S;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, structureKey };
+		String structureKeyNullSafe = StringUtil.nullToEmpty(structureKey);
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, structureKeyNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -7667,17 +7693,19 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String descriptionNullSafe = StringUtil.nullToEmpty(description);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_D;
-			finderArgs = new Object[] { groupId, name, description };
+			finderArgs = new Object[] { groupId, nameNullSafe, descriptionNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_D;
 			finderArgs = new Object[] {
-					groupId, name, description,
-					
+					groupId, nameNullSafe, descriptionNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -7691,8 +7719,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMStructure ddmStructure : list) {
 					if ((groupId != ddmStructure.getGroupId()) ||
-							!Objects.equals(name, ddmStructure.getName()) ||
-							!Objects.equals(description,
+							!Objects.equals(nameNullSafe, ddmStructure.getName()) ||
+							!Objects.equals(descriptionNullSafe,
 								ddmStructure.getDescription())) {
 						list = null;
 
@@ -8542,7 +8570,12 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 	public int countByG_N_D(long groupId, String name, String description) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_D;
 
-		Object[] finderArgs = new Object[] { groupId, name, description };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String descriptionNullSafe = StringUtil.nullToEmpty(description);
+
+		Object[] finderArgs = new Object[] {
+				groupId, nameNullSafe, descriptionNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -8837,17 +8870,21 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String descriptionNullSafe = StringUtil.nullToEmpty(description);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_N_D;
-			finderArgs = new Object[] { groupId, classNameId, name, description };
+			finderArgs = new Object[] {
+					groupId, classNameId, nameNullSafe, descriptionNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_N_D;
 			finderArgs = new Object[] {
-					groupId, classNameId, name, description,
-					
+					groupId, classNameId, nameNullSafe, descriptionNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -8862,8 +8899,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				for (DDMStructure ddmStructure : list) {
 					if ((groupId != ddmStructure.getGroupId()) ||
 							(classNameId != ddmStructure.getClassNameId()) ||
-							!Objects.equals(name, ddmStructure.getName()) ||
-							!Objects.equals(description,
+							!Objects.equals(nameNullSafe, ddmStructure.getName()) ||
+							!Objects.equals(descriptionNullSafe,
 								ddmStructure.getDescription())) {
 						list = null;
 
@@ -10021,17 +10058,21 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String descriptionNullSafe = StringUtil.nullToEmpty(description);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), classNameId, name, description
+					StringUtil.merge(groupIds), classNameId, nameNullSafe,
+					descriptionNullSafe
 				};
 		}
 		else {
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), classNameId, name, description,
-					
+					StringUtil.merge(groupIds), classNameId, nameNullSafe,
+					descriptionNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -10046,8 +10087,8 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 				for (DDMStructure ddmStructure : list) {
 					if (!ArrayUtil.contains(groupIds, ddmStructure.getGroupId()) ||
 							(classNameId != ddmStructure.getClassNameId()) ||
-							!Objects.equals(name, ddmStructure.getName()) ||
-							!Objects.equals(description,
+							!Objects.equals(nameNullSafe, ddmStructure.getName()) ||
+							!Objects.equals(descriptionNullSafe,
 								ddmStructure.getDescription())) {
 						list = null;
 
@@ -10202,8 +10243,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 		String description) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_N_D;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String descriptionNullSafe = StringUtil.nullToEmpty(description);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, name, description
+				groupId, classNameId, nameNullSafe, descriptionNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -10306,8 +10350,12 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 			Arrays.sort(groupIds);
 		}
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String descriptionNullSafe = StringUtil.nullToEmpty(description);
+
 		Object[] finderArgs = new Object[] {
-				StringUtil.merge(groupIds), classNameId, name, description
+				StringUtil.merge(groupIds), classNameId, nameNullSafe,
+				descriptionNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_C_N_D,

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.io.Serializable;
@@ -679,7 +680,9 @@ public class JournalArticleLocalizationPersistenceImpl
 	@Override
 	public JournalArticleLocalization fetchByA_L(long articlePK,
 		String languageId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { articlePK, languageId };
+		String languageIdNullSafe = StringUtil.nullToEmpty(languageId);
+
+		Object[] finderArgs = new Object[] { articlePK, languageIdNullSafe };
 
 		Object result = null;
 
@@ -692,7 +695,7 @@ public class JournalArticleLocalizationPersistenceImpl
 			JournalArticleLocalization journalArticleLocalization = (JournalArticleLocalization)result;
 
 			if ((articlePK != journalArticleLocalization.getArticlePK()) ||
-					!Objects.equals(languageId,
+					!Objects.equals(languageIdNullSafe,
 						journalArticleLocalization.getLanguageId())) {
 				result = null;
 			}
@@ -750,9 +753,8 @@ public class JournalArticleLocalizationPersistenceImpl
 					cacheResult(journalArticleLocalization);
 
 					if ((journalArticleLocalization.getArticlePK() != articlePK) ||
-							(journalArticleLocalization.getLanguageId() == null) ||
 							!journalArticleLocalization.getLanguageId()
-														   .equals(languageId)) {
+														   .equals(languageIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_A_L,
 							finderArgs, journalArticleLocalization);
 					}
@@ -803,7 +805,9 @@ public class JournalArticleLocalizationPersistenceImpl
 	public int countByA_L(long articlePK, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_L;
 
-		Object[] finderArgs = new Object[] { articlePK, languageId };
+		String languageIdNullSafe = StringUtil.nullToEmpty(languageId);
+
+		Object[] finderArgs = new Object[] { articlePK, languageIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

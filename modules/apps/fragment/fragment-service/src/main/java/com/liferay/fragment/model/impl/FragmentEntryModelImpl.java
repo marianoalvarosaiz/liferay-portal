@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.io.Serializable;
@@ -441,12 +442,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -508,12 +504,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getFragmentEntryKey() {
-		if (_fragmentEntryKey == null) {
-			return "";
-		}
-		else {
-			return _fragmentEntryKey;
-		}
+		return StringUtil.nullToEmpty(_fragmentEntryKey);
 	}
 
 	@Override
@@ -534,12 +525,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -560,12 +546,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return StringUtil.nullToEmpty(_css);
 	}
 
 	@Override
@@ -576,12 +557,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getHtml() {
-		if (_html == null) {
-			return "";
-		}
-		else {
-			return _html;
-		}
+		return StringUtil.nullToEmpty(_html);
 	}
 
 	@Override
@@ -592,12 +568,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getJs() {
-		if (_js == null) {
-			return "";
-		}
-		else {
-			return _js;
-		}
+		return StringUtil.nullToEmpty(_js);
 	}
 
 	@Override
@@ -669,12 +640,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

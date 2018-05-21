@@ -193,15 +193,20 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<DLFolder> list = null;
@@ -212,7 +217,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DLFolder dlFolder : list) {
-					if (!Objects.equals(uuid, dlFolder.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, dlFolder.getUuid())) {
 						list = null;
 
 						break;
@@ -590,7 +595,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -718,7 +725,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	@Override
 	public DLFolder fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -730,7 +739,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		if (result instanceof DLFolder) {
 			DLFolder dlFolder = (DLFolder)result;
 
-			if (!Objects.equals(uuid, dlFolder.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, dlFolder.getUuid()) ||
 					(groupId != dlFolder.getGroupId())) {
 				result = null;
 			}
@@ -787,8 +796,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 					cacheResult(dlFolder);
 
-					if ((dlFolder.getUuid() == null) ||
-							!dlFolder.getUuid().equals(uuid) ||
+					if (!dlFolder.getUuid().equals(uuidNullSafe) ||
 							(dlFolder.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, dlFolder);
@@ -839,7 +847,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1000,16 +1010,18 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1023,7 +1035,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DLFolder dlFolder : list) {
-					if (!Objects.equals(uuid, dlFolder.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, dlFolder.getUuid()) ||
 							(companyId != dlFolder.getCompanyId())) {
 						list = null;
 
@@ -1426,7 +1438,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5680,17 +5694,18 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_N;
-			finderArgs = new Object[] { parentFolderId, name };
+			finderArgs = new Object[] { parentFolderId, nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_P_N;
 			finderArgs = new Object[] {
-					parentFolderId, name,
-					
+					parentFolderId, nameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -5704,7 +5719,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 			if ((list != null) && !list.isEmpty()) {
 				for (DLFolder dlFolder : list) {
 					if ((parentFolderId != dlFolder.getParentFolderId()) ||
-							!Objects.equals(name, dlFolder.getName())) {
+							!Objects.equals(nameNullSafe, dlFolder.getName())) {
 						list = null;
 
 						break;
@@ -6106,7 +6121,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	public int countByP_N(long parentFolderId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_P_N;
 
-		Object[] finderArgs = new Object[] { parentFolderId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { parentFolderId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -7238,7 +7255,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	@Override
 	public DLFolder fetchByG_P_N(long groupId, long parentFolderId,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, parentFolderId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, parentFolderId, nameNullSafe };
 
 		Object result = null;
 
@@ -7252,7 +7271,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 			if ((groupId != dlFolder.getGroupId()) ||
 					(parentFolderId != dlFolder.getParentFolderId()) ||
-					!Objects.equals(name, dlFolder.getName())) {
+					!Objects.equals(nameNullSafe, dlFolder.getName())) {
 				result = null;
 			}
 		}
@@ -7314,8 +7333,7 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 					if ((dlFolder.getGroupId() != groupId) ||
 							(dlFolder.getParentFolderId() != parentFolderId) ||
-							(dlFolder.getName() == null) ||
-							!dlFolder.getName().equals(name)) {
+							!dlFolder.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N,
 							finderArgs, dlFolder);
 					}
@@ -7367,7 +7385,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 	public int countByG_P_N(long groupId, long parentFolderId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_N;
 
-		Object[] finderArgs = new Object[] { groupId, parentFolderId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, parentFolderId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -9036,9 +9056,11 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_M_T_H;
 		finderArgs = new Object[] {
-				groupId, mountPoint, treePath, hidden,
+				groupId, mountPoint, treePathNullSafe, hidden,
 				
 				start, end, orderByComparator
 			};
@@ -9054,8 +9076,9 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 					if ((groupId != dlFolder.getGroupId()) ||
 							(mountPoint != dlFolder.isMountPoint()) ||
 							!StringUtil.wildcardMatches(
-								dlFolder.getTreePath(), treePath, '_', '%',
-								'\\', true) || (hidden != dlFolder.isHidden())) {
+								dlFolder.getTreePath(), treePathNullSafe, '_',
+								'%', '\\', true) ||
+							(hidden != dlFolder.isHidden())) {
 						list = null;
 
 						break;
@@ -9889,7 +9912,11 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 		String treePath, boolean hidden) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_M_T_H;
 
-		Object[] finderArgs = new Object[] { groupId, mountPoint, treePath, hidden };
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+
+		Object[] finderArgs = new Object[] {
+				groupId, mountPoint, treePathNullSafe, hidden
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

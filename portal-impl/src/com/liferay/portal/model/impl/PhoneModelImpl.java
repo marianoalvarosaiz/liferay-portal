@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -344,12 +345,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -441,12 +437,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -553,12 +544,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getNumber() {
-		if (_number == null) {
-			return "";
-		}
-		else {
-			return _number;
-		}
+		return StringUtil.nullToEmpty(_number);
 	}
 
 	@Override
@@ -569,12 +555,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return StringUtil.nullToEmpty(_extension);
 	}
 
 	@Override

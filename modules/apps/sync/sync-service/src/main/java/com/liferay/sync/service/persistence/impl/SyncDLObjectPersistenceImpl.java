@@ -176,8 +176,13 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_TREEPATH;
-		finderArgs = new Object[] { treePath, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				treePathNullSafe,
+				start, end, orderByComparator
+			};
 
 		List<SyncDLObject> list = null;
 
@@ -188,8 +193,8 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDLObject syncDLObject : list) {
 					if (!StringUtil.wildcardMatches(
-								syncDLObject.getTreePath(), treePath, '_', '%',
-								'\\', true)) {
+								syncDLObject.getTreePath(), treePathNullSafe,
+								'_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -570,7 +575,9 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByTreePath(String treePath) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_TREEPATH;
 
-		Object[] finderArgs = new Object[] { treePath };
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+
+		Object[] finderArgs = new Object[] { treePathNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1789,9 +1796,11 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String eventNullSafe = StringUtil.nullToEmpty(event);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_R_NOTE;
 		finderArgs = new Object[] {
-				repositoryId, event,
+				repositoryId, eventNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -1805,7 +1814,8 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDLObject syncDLObject : list) {
 					if ((repositoryId != syncDLObject.getRepositoryId()) ||
-							Objects.equals(event, syncDLObject.getEvent())) {
+							Objects.equals(eventNullSafe,
+								syncDLObject.getEvent())) {
 						list = null;
 
 						break;
@@ -2208,7 +2218,9 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByR_NotE(long repositoryId, String event) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_R_NOTE;
 
-		Object[] finderArgs = new Object[] { repositoryId, event };
+		String eventNullSafe = StringUtil.nullToEmpty(event);
+
+		Object[] finderArgs = new Object[] { repositoryId, eventNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2367,17 +2379,18 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_T;
-			finderArgs = new Object[] { repositoryId, type };
+			finderArgs = new Object[] { repositoryId, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_R_T;
 			finderArgs = new Object[] {
-					repositoryId, type,
-					
+					repositoryId, typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -2391,7 +2404,7 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDLObject syncDLObject : list) {
 					if ((repositoryId != syncDLObject.getRepositoryId()) ||
-							!Objects.equals(type, syncDLObject.getType())) {
+							!Objects.equals(typeNullSafe, syncDLObject.getType())) {
 						list = null;
 
 						break;
@@ -2794,7 +2807,9 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByR_T(long repositoryId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_R_T;
 
-		Object[] finderArgs = new Object[] { repositoryId, type };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { repositoryId, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2946,8 +2961,15 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+		String eventNullSafe = StringUtil.nullToEmpty(event);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_T_NOTE;
-		finderArgs = new Object[] { treePath, event, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				treePathNullSafe, eventNullSafe,
+				
+				start, end, orderByComparator
+			};
 
 		List<SyncDLObject> list = null;
 
@@ -2958,9 +2980,10 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDLObject syncDLObject : list) {
 					if (!StringUtil.wildcardMatches(
-								syncDLObject.getTreePath(), treePath, '_', '%',
-								'\\', true) ||
-							Objects.equals(event, syncDLObject.getEvent())) {
+								syncDLObject.getTreePath(), treePathNullSafe,
+								'_', '%', '\\', true) ||
+							Objects.equals(eventNullSafe,
+								syncDLObject.getEvent())) {
 						list = null;
 
 						break;
@@ -3391,7 +3414,10 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByT_NotE(String treePath, String event) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_T_NOTE;
 
-		Object[] finderArgs = new Object[] { treePath, event };
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+		String eventNullSafe = StringUtil.nullToEmpty(event);
+
+		Object[] finderArgs = new Object[] { treePathNullSafe, eventNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3567,17 +3593,19 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_V_T;
-			finderArgs = new Object[] { version, type };
+			finderArgs = new Object[] { versionNullSafe, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_V_T;
 			finderArgs = new Object[] {
-					version, type,
-					
+					versionNullSafe, typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -3590,8 +3618,9 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDLObject syncDLObject : list) {
-					if (!Objects.equals(version, syncDLObject.getVersion()) ||
-							!Objects.equals(type, syncDLObject.getType())) {
+					if (!Objects.equals(versionNullSafe,
+								syncDLObject.getVersion()) ||
+							!Objects.equals(typeNullSafe, syncDLObject.getType())) {
 						list = null;
 
 						break;
@@ -4022,7 +4051,10 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByV_T(String version, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_V_T;
 
-		Object[] finderArgs = new Object[] { version, type };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { versionNullSafe, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4171,7 +4203,9 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	@Override
 	public SyncDLObject fetchByT_T(String type, long typePK,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { type, typePK };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { typeNullSafe, typePK };
 
 		Object result = null;
 
@@ -4183,7 +4217,7 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		if (result instanceof SyncDLObject) {
 			SyncDLObject syncDLObject = (SyncDLObject)result;
 
-			if (!Objects.equals(type, syncDLObject.getType()) ||
+			if (!Objects.equals(typeNullSafe, syncDLObject.getType()) ||
 					(typePK != syncDLObject.getTypePK())) {
 				result = null;
 			}
@@ -4240,8 +4274,7 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 
 					cacheResult(syncDLObject);
 
-					if ((syncDLObject.getType() == null) ||
-							!syncDLObject.getType().equals(type) ||
+					if (!syncDLObject.getType().equals(typeNullSafe) ||
 							(syncDLObject.getTypePK() != typePK)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_T_T,
 							finderArgs, syncDLObject);
@@ -4292,7 +4325,9 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByT_T(String type, long typePK) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_T;
 
-		Object[] finderArgs = new Object[] { type, typePK };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { typeNullSafe, typePK };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4458,9 +4493,11 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String eventNullSafe = StringUtil.nullToEmpty(event);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_M_R_NOTE;
 		finderArgs = new Object[] {
-				modifiedTime, repositoryId, event,
+				modifiedTime, repositoryId, eventNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -4475,7 +4512,8 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 				for (SyncDLObject syncDLObject : list) {
 					if ((modifiedTime >= syncDLObject.getModifiedTime()) ||
 							(repositoryId != syncDLObject.getRepositoryId()) ||
-							Objects.equals(event, syncDLObject.getEvent())) {
+							Objects.equals(eventNullSafe,
+								syncDLObject.getEvent())) {
 						list = null;
 
 						break;
@@ -5139,7 +5177,11 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		String event) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE;
 
-		Object[] finderArgs = new Object[] { modifiedTime, repositoryId, event };
+		String eventNullSafe = StringUtil.nullToEmpty(event);
+
+		Object[] finderArgs = new Object[] {
+				modifiedTime, repositoryId, eventNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5429,17 +5471,18 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_P_T;
-			finderArgs = new Object[] { repositoryId, parentFolderId, type };
+			finderArgs = new Object[] { repositoryId, parentFolderId, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_R_P_T;
 			finderArgs = new Object[] {
-					repositoryId, parentFolderId, type,
-					
+					repositoryId, parentFolderId, typeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -5454,7 +5497,7 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 				for (SyncDLObject syncDLObject : list) {
 					if ((repositoryId != syncDLObject.getRepositoryId()) ||
 							(parentFolderId != syncDLObject.getParentFolderId()) ||
-							!Objects.equals(type, syncDLObject.getType())) {
+							!Objects.equals(typeNullSafe, syncDLObject.getType())) {
 						list = null;
 
 						break;
@@ -6116,7 +6159,11 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 	public int countByR_P_T(long repositoryId, long parentFolderId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_R_P_T;
 
-		Object[] finderArgs = new Object[] { repositoryId, parentFolderId, type };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] {
+				repositoryId, parentFolderId, typeNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
