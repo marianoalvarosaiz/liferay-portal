@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.UserNotificationDeliveryImpl;
 import com.liferay.portal.model.impl.UserNotificationDeliveryModelImpl;
 
@@ -704,8 +705,11 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 	public UserNotificationDelivery fetchByU_P_C_N_D(long userId,
 		String portletId, long classNameId, int notificationType,
 		int deliveryType, boolean retrieveFromCache) {
+		String portletIdNullSafe = StringUtil.nullToEmpty(portletId);
+
 		Object[] finderArgs = new Object[] {
-				userId, portletId, classNameId, notificationType, deliveryType
+				userId, portletIdNullSafe, classNameId, notificationType,
+				deliveryType
 			};
 
 		Object result = null;
@@ -719,7 +723,7 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 			UserNotificationDelivery userNotificationDelivery = (UserNotificationDelivery)result;
 
 			if ((userId != userNotificationDelivery.getUserId()) ||
-					!Objects.equals(portletId,
+					!Objects.equals(portletIdNullSafe,
 						userNotificationDelivery.getPortletId()) ||
 					(classNameId != userNotificationDelivery.getClassNameId()) ||
 					(notificationType != userNotificationDelivery.getNotificationType()) ||
@@ -792,9 +796,8 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 					cacheResult(userNotificationDelivery);
 
 					if ((userNotificationDelivery.getUserId() != userId) ||
-							(userNotificationDelivery.getPortletId() == null) ||
 							!userNotificationDelivery.getPortletId()
-														 .equals(portletId) ||
+														 .equals(portletIdNullSafe) ||
 							(userNotificationDelivery.getClassNameId() != classNameId) ||
 							(userNotificationDelivery.getNotificationType() != notificationType) ||
 							(userNotificationDelivery.getDeliveryType() != deliveryType)) {
@@ -857,8 +860,11 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 		long classNameId, int notificationType, int deliveryType) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_P_C_N_D;
 
+		String portletIdNullSafe = StringUtil.nullToEmpty(portletId);
+
 		Object[] finderArgs = new Object[] {
-				userId, portletId, classNameId, notificationType, deliveryType
+				userId, portletIdNullSafe, classNameId, notificationType,
+				deliveryType
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

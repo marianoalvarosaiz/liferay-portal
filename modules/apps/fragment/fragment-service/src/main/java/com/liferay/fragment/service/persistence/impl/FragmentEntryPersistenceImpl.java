@@ -2486,7 +2486,9 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	@Override
 	public FragmentEntry fetchByG_FEK(long groupId, String fragmentEntryKey,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, fragmentEntryKey };
+		String fragmentEntryKeyNullSafe = StringUtil.nullToEmpty(fragmentEntryKey);
+
+		Object[] finderArgs = new Object[] { groupId, fragmentEntryKeyNullSafe };
 
 		Object result = null;
 
@@ -2499,7 +2501,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 			FragmentEntry fragmentEntry = (FragmentEntry)result;
 
 			if ((groupId != fragmentEntry.getGroupId()) ||
-					!Objects.equals(fragmentEntryKey,
+					!Objects.equals(fragmentEntryKeyNullSafe,
 						fragmentEntry.getFragmentEntryKey())) {
 				result = null;
 			}
@@ -2557,9 +2559,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 					cacheResult(fragmentEntry);
 
 					if ((fragmentEntry.getGroupId() != groupId) ||
-							(fragmentEntry.getFragmentEntryKey() == null) ||
 							!fragmentEntry.getFragmentEntryKey()
-											  .equals(fragmentEntryKey)) {
+											  .equals(fragmentEntryKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_FEK,
 							finderArgs, fragmentEntry);
 					}
@@ -2609,7 +2610,9 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	public int countByG_FEK(long groupId, String fragmentEntryKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_FEK;
 
-		Object[] finderArgs = new Object[] { groupId, fragmentEntryKey };
+		String fragmentEntryKeyNullSafe = StringUtil.nullToEmpty(fragmentEntryKey);
+
+		Object[] finderArgs = new Object[] { groupId, fragmentEntryKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2777,9 +2780,11 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FCI_LIKEN;
 		finderArgs = new Object[] {
-				groupId, fragmentCollectionId, name,
+				groupId, fragmentCollectionId, nameNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -2795,8 +2800,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 					if ((groupId != fragmentEntry.getGroupId()) ||
 							(fragmentCollectionId != fragmentEntry.getFragmentCollectionId()) ||
 							!StringUtil.wildcardMatches(
-								fragmentEntry.getName(), name, '_', '%', '\\',
-								false)) {
+								fragmentEntry.getName(), nameNullSafe, '_',
+								'%', '\\', false)) {
 						list = null;
 
 						break;
@@ -3600,7 +3605,11 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_FCI_LIKEN;
 
-		Object[] finderArgs = new Object[] { groupId, fragmentCollectionId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] {
+				groupId, fragmentCollectionId, nameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4852,9 +4861,11 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FCI_LIKEN_S;
 		finderArgs = new Object[] {
-				groupId, fragmentCollectionId, name, status,
+				groupId, fragmentCollectionId, nameNullSafe, status,
 				
 				start, end, orderByComparator
 			};
@@ -4870,8 +4881,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 					if ((groupId != fragmentEntry.getGroupId()) ||
 							(fragmentCollectionId != fragmentEntry.getFragmentCollectionId()) ||
 							!StringUtil.wildcardMatches(
-								fragmentEntry.getName(), name, '_', '%', '\\',
-								false) ||
+								fragmentEntry.getName(), nameNullSafe, '_',
+								'%', '\\', false) ||
 							(status != fragmentEntry.getStatus())) {
 						list = null;
 
@@ -5714,8 +5725,10 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		String name, int status) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_FCI_LIKEN_S;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, fragmentCollectionId, name, status
+				groupId, fragmentCollectionId, nameNullSafe, status
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

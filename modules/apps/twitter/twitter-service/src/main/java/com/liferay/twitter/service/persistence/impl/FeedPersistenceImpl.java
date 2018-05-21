@@ -160,7 +160,9 @@ public class FeedPersistenceImpl extends BasePersistenceImpl<Feed>
 	@Override
 	public Feed fetchByU_TSN(long userId, String twitterScreenName,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { userId, twitterScreenName };
+		String twitterScreenNameNullSafe = StringUtil.nullToEmpty(twitterScreenName);
+
+		Object[] finderArgs = new Object[] { userId, twitterScreenNameNullSafe };
 
 		Object result = null;
 
@@ -173,7 +175,7 @@ public class FeedPersistenceImpl extends BasePersistenceImpl<Feed>
 			Feed feed = (Feed)result;
 
 			if ((userId != feed.getUserId()) ||
-					!Objects.equals(twitterScreenName,
+					!Objects.equals(twitterScreenNameNullSafe,
 						feed.getTwitterScreenName())) {
 				result = null;
 			}
@@ -242,9 +244,8 @@ public class FeedPersistenceImpl extends BasePersistenceImpl<Feed>
 					cacheResult(feed);
 
 					if ((feed.getUserId() != userId) ||
-							(feed.getTwitterScreenName() == null) ||
 							!feed.getTwitterScreenName()
-									 .equals(twitterScreenName)) {
+									 .equals(twitterScreenNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_U_TSN,
 							finderArgs, feed);
 					}
@@ -294,7 +295,9 @@ public class FeedPersistenceImpl extends BasePersistenceImpl<Feed>
 	public int countByU_TSN(long userId, String twitterScreenName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_TSN;
 
-		Object[] finderArgs = new Object[] { userId, twitterScreenName };
+		String twitterScreenNameNullSafe = StringUtil.nullToEmpty(twitterScreenName);
+
+		Object[] finderArgs = new Object[] { userId, twitterScreenNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

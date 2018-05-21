@@ -197,15 +197,20 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<BlogsEntry> list = null;
@@ -216,7 +221,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (BlogsEntry blogsEntry : list) {
-					if (!Objects.equals(uuid, blogsEntry.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, blogsEntry.getUuid())) {
 						list = null;
 
 						break;
@@ -594,7 +599,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -722,7 +729,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	@Override
 	public BlogsEntry fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -734,7 +743,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		if (result instanceof BlogsEntry) {
 			BlogsEntry blogsEntry = (BlogsEntry)result;
 
-			if (!Objects.equals(uuid, blogsEntry.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, blogsEntry.getUuid()) ||
 					(groupId != blogsEntry.getGroupId())) {
 				result = null;
 			}
@@ -791,8 +800,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 
 					cacheResult(blogsEntry);
 
-					if ((blogsEntry.getUuid() == null) ||
-							!blogsEntry.getUuid().equals(uuid) ||
+					if (!blogsEntry.getUuid().equals(uuidNullSafe) ||
 							(blogsEntry.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, blogsEntry);
@@ -843,7 +851,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1004,16 +1014,18 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1027,7 +1039,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (BlogsEntry blogsEntry : list) {
-					if (!Objects.equals(uuid, blogsEntry.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, blogsEntry.getUuid()) ||
 							(companyId != blogsEntry.getCompanyId())) {
 						list = null;
 
@@ -1430,7 +1442,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2928,7 +2942,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	@Override
 	public BlogsEntry fetchByG_UT(long groupId, String urlTitle,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, urlTitle };
+		String urlTitleNullSafe = StringUtil.nullToEmpty(urlTitle);
+
+		Object[] finderArgs = new Object[] { groupId, urlTitleNullSafe };
 
 		Object result = null;
 
@@ -2941,7 +2957,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 			BlogsEntry blogsEntry = (BlogsEntry)result;
 
 			if ((groupId != blogsEntry.getGroupId()) ||
-					!Objects.equals(urlTitle, blogsEntry.getUrlTitle())) {
+					!Objects.equals(urlTitleNullSafe, blogsEntry.getUrlTitle())) {
 				result = null;
 			}
 		}
@@ -2998,8 +3014,7 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 					cacheResult(blogsEntry);
 
 					if ((blogsEntry.getGroupId() != groupId) ||
-							(blogsEntry.getUrlTitle() == null) ||
-							!blogsEntry.getUrlTitle().equals(urlTitle)) {
+							!blogsEntry.getUrlTitle().equals(urlTitleNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_UT,
 							finderArgs, blogsEntry);
 					}
@@ -3049,7 +3064,9 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 	public int countByG_UT(long groupId, String urlTitle) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_UT;
 
-		Object[] finderArgs = new Object[] { groupId, urlTitle };
+		String urlTitleNullSafe = StringUtil.nullToEmpty(urlTitle);
+
+		Object[] finderArgs = new Object[] { groupId, urlTitleNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

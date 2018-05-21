@@ -188,17 +188,19 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String gadgetKeyNullSafe = StringUtil.nullToEmpty(gadgetKey);
+		String serviceNameNullSafe = StringUtil.nullToEmpty(serviceName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_S;
-			finderArgs = new Object[] { gadgetKey, serviceName };
+			finderArgs = new Object[] { gadgetKeyNullSafe, serviceNameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_S;
 			finderArgs = new Object[] {
-					gadgetKey, serviceName,
-					
+					gadgetKeyNullSafe, serviceNameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -211,8 +213,9 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (OAuthToken oAuthToken : list) {
-					if (!Objects.equals(gadgetKey, oAuthToken.getGadgetKey()) ||
-							!Objects.equals(serviceName,
+					if (!Objects.equals(gadgetKeyNullSafe,
+								oAuthToken.getGadgetKey()) ||
+							!Objects.equals(serviceNameNullSafe,
 								oAuthToken.getServiceName())) {
 						list = null;
 
@@ -644,7 +647,12 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 	public int countByG_S(String gadgetKey, String serviceName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_S;
 
-		Object[] finderArgs = new Object[] { gadgetKey, serviceName };
+		String gadgetKeyNullSafe = StringUtil.nullToEmpty(gadgetKey);
+		String serviceNameNullSafe = StringUtil.nullToEmpty(serviceName);
+
+		Object[] finderArgs = new Object[] {
+				gadgetKeyNullSafe, serviceNameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -827,8 +835,13 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 	public OAuthToken fetchByU_G_S_M_T(long userId, String gadgetKey,
 		String serviceName, long moduleId, String tokenName,
 		boolean retrieveFromCache) {
+		String gadgetKeyNullSafe = StringUtil.nullToEmpty(gadgetKey);
+		String serviceNameNullSafe = StringUtil.nullToEmpty(serviceName);
+		String tokenNameNullSafe = StringUtil.nullToEmpty(tokenName);
+
 		Object[] finderArgs = new Object[] {
-				userId, gadgetKey, serviceName, moduleId, tokenName
+				userId, gadgetKeyNullSafe, serviceNameNullSafe, moduleId,
+				tokenNameNullSafe
 			};
 
 		Object result = null;
@@ -842,10 +855,11 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 			OAuthToken oAuthToken = (OAuthToken)result;
 
 			if ((userId != oAuthToken.getUserId()) ||
-					!Objects.equals(gadgetKey, oAuthToken.getGadgetKey()) ||
-					!Objects.equals(serviceName, oAuthToken.getServiceName()) ||
+					!Objects.equals(gadgetKeyNullSafe, oAuthToken.getGadgetKey()) ||
+					!Objects.equals(serviceNameNullSafe,
+						oAuthToken.getServiceName()) ||
 					(moduleId != oAuthToken.getModuleId()) ||
-					!Objects.equals(tokenName, oAuthToken.getTokenName())) {
+					!Objects.equals(tokenNameNullSafe, oAuthToken.getTokenName())) {
 				result = null;
 			}
 		}
@@ -953,13 +967,11 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 					cacheResult(oAuthToken);
 
 					if ((oAuthToken.getUserId() != userId) ||
-							(oAuthToken.getGadgetKey() == null) ||
-							!oAuthToken.getGadgetKey().equals(gadgetKey) ||
-							(oAuthToken.getServiceName() == null) ||
-							!oAuthToken.getServiceName().equals(serviceName) ||
+							!oAuthToken.getGadgetKey().equals(gadgetKeyNullSafe) ||
+							!oAuthToken.getServiceName()
+										   .equals(serviceNameNullSafe) ||
 							(oAuthToken.getModuleId() != moduleId) ||
-							(oAuthToken.getTokenName() == null) ||
-							!oAuthToken.getTokenName().equals(tokenName)) {
+							!oAuthToken.getTokenName().equals(tokenNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,
 							finderArgs, oAuthToken);
 					}
@@ -1019,8 +1031,13 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 		String serviceName, long moduleId, String tokenName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_G_S_M_T;
 
+		String gadgetKeyNullSafe = StringUtil.nullToEmpty(gadgetKey);
+		String serviceNameNullSafe = StringUtil.nullToEmpty(serviceName);
+		String tokenNameNullSafe = StringUtil.nullToEmpty(tokenName);
+
 		Object[] finderArgs = new Object[] {
-				userId, gadgetKey, serviceName, moduleId, tokenName
+				userId, gadgetKeyNullSafe, serviceNameNullSafe, moduleId,
+				tokenNameNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

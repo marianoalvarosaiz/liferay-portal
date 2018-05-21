@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -181,15 +182,20 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<MDRAction> list = null;
@@ -200,7 +206,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MDRAction mdrAction : list) {
-					if (!Objects.equals(uuid, mdrAction.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, mdrAction.getUuid())) {
 						list = null;
 
 						break;
@@ -578,7 +584,9 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -706,7 +714,9 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	@Override
 	public MDRAction fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -718,7 +728,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		if (result instanceof MDRAction) {
 			MDRAction mdrAction = (MDRAction)result;
 
-			if (!Objects.equals(uuid, mdrAction.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, mdrAction.getUuid()) ||
 					(groupId != mdrAction.getGroupId())) {
 				result = null;
 			}
@@ -775,8 +785,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 					cacheResult(mdrAction);
 
-					if ((mdrAction.getUuid() == null) ||
-							!mdrAction.getUuid().equals(uuid) ||
+					if (!mdrAction.getUuid().equals(uuidNullSafe) ||
 							(mdrAction.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, mdrAction);
@@ -827,7 +836,9 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -986,16 +997,18 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1009,7 +1022,7 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MDRAction mdrAction : list) {
-					if (!Objects.equals(uuid, mdrAction.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, mdrAction.getUuid()) ||
 							(companyId != mdrAction.getCompanyId())) {
 						list = null;
 
@@ -1412,7 +1425,9 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

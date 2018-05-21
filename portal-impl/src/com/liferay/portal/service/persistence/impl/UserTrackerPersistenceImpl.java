@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.UserTrackerImpl;
 import com.liferay.portal.model.impl.UserTrackerModelImpl;
 
@@ -1184,15 +1185,20 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String sessionIdNullSafe = StringUtil.nullToEmpty(sessionId);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SESSIONID;
-			finderArgs = new Object[] { sessionId };
+			finderArgs = new Object[] { sessionIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_SESSIONID;
-			finderArgs = new Object[] { sessionId, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					sessionIdNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<UserTracker> list = null;
@@ -1203,7 +1209,8 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserTracker userTracker : list) {
-					if (!Objects.equals(sessionId, userTracker.getSessionId())) {
+					if (!Objects.equals(sessionIdNullSafe,
+								userTracker.getSessionId())) {
 						list = null;
 
 						break;
@@ -1584,7 +1591,9 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	public int countBySessionId(String sessionId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_SESSIONID;
 
-		Object[] finderArgs = new Object[] { sessionId };
+		String sessionIdNullSafe = StringUtil.nullToEmpty(sessionId);
+
+		Object[] finderArgs = new Object[] { sessionIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

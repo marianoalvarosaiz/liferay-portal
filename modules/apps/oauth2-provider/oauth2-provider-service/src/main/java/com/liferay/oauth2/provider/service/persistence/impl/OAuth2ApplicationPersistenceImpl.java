@@ -1031,7 +1031,9 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	@Override
 	public OAuth2Application fetchByC_C(long companyId, String clientId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, clientId };
+		String clientIdNullSafe = StringUtil.nullToEmpty(clientId);
+
+		Object[] finderArgs = new Object[] { companyId, clientIdNullSafe };
 
 		Object result = null;
 
@@ -1044,7 +1046,8 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 			OAuth2Application oAuth2Application = (OAuth2Application)result;
 
 			if ((companyId != oAuth2Application.getCompanyId()) ||
-					!Objects.equals(clientId, oAuth2Application.getClientId())) {
+					!Objects.equals(clientIdNullSafe,
+						oAuth2Application.getClientId())) {
 				result = null;
 			}
 		}
@@ -1112,8 +1115,8 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 					cacheResult(oAuth2Application);
 
 					if ((oAuth2Application.getCompanyId() != companyId) ||
-							(oAuth2Application.getClientId() == null) ||
-							!oAuth2Application.getClientId().equals(clientId)) {
+							!oAuth2Application.getClientId()
+												  .equals(clientIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_C,
 							finderArgs, oAuth2Application);
 					}
@@ -1163,7 +1166,9 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	public int countByC_C(long companyId, String clientId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C;
 
-		Object[] finderArgs = new Object[] { companyId, clientId };
+		String clientIdNullSafe = StringUtil.nullToEmpty(clientId);
+
+		Object[] finderArgs = new Object[] { companyId, clientIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

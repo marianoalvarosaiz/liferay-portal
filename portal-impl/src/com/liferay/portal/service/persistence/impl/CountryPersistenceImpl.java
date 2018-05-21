@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.CountryImpl;
 import com.liferay.portal.model.impl.CountryModelImpl;
 
@@ -147,7 +148,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 */
 	@Override
 	public Country fetchByName(String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { nameNullSafe };
 
 		Object result = null;
 
@@ -159,7 +162,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		if (result instanceof Country) {
 			Country country = (Country)result;
 
-			if (!Objects.equals(name, country.getName())) {
+			if (!Objects.equals(nameNullSafe, country.getName())) {
 				result = null;
 			}
 		}
@@ -211,8 +214,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 					cacheResult(country);
 
-					if ((country.getName() == null) ||
-							!country.getName().equals(name)) {
+					if (!country.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_NAME,
 							finderArgs, country);
 					}
@@ -259,7 +261,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	public int countByName(String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_NAME;
 
-		Object[] finderArgs = new Object[] { name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -378,7 +382,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 */
 	@Override
 	public Country fetchByA2(String a2, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { a2 };
+		String a2NullSafe = StringUtil.nullToEmpty(a2);
+
+		Object[] finderArgs = new Object[] { a2NullSafe };
 
 		Object result = null;
 
@@ -390,7 +396,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		if (result instanceof Country) {
 			Country country = (Country)result;
 
-			if (!Objects.equals(a2, country.getA2())) {
+			if (!Objects.equals(a2NullSafe, country.getA2())) {
 				result = null;
 			}
 		}
@@ -442,8 +448,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 					cacheResult(country);
 
-					if ((country.getA2() == null) ||
-							!country.getA2().equals(a2)) {
+					if (!country.getA2().equals(a2NullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_A2,
 							finderArgs, country);
 					}
@@ -490,7 +495,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	public int countByA2(String a2) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A2;
 
-		Object[] finderArgs = new Object[] { a2 };
+		String a2NullSafe = StringUtil.nullToEmpty(a2);
+
+		Object[] finderArgs = new Object[] { a2NullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -609,7 +616,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 */
 	@Override
 	public Country fetchByA3(String a3, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { a3 };
+		String a3NullSafe = StringUtil.nullToEmpty(a3);
+
+		Object[] finderArgs = new Object[] { a3NullSafe };
 
 		Object result = null;
 
@@ -621,7 +630,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		if (result instanceof Country) {
 			Country country = (Country)result;
 
-			if (!Objects.equals(a3, country.getA3())) {
+			if (!Objects.equals(a3NullSafe, country.getA3())) {
 				result = null;
 			}
 		}
@@ -673,8 +682,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 					cacheResult(country);
 
-					if ((country.getA3() == null) ||
-							!country.getA3().equals(a3)) {
+					if (!country.getA3().equals(a3NullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_A3,
 							finderArgs, country);
 					}
@@ -721,7 +729,9 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	public int countByA3(String a3) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A3;
 
-		Object[] finderArgs = new Object[] { a3 };
+		String a3NullSafe = StringUtil.nullToEmpty(a3);
+
+		Object[] finderArgs = new Object[] { a3NullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

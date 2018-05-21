@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.VirtualHostImpl;
 import com.liferay.portal.model.impl.VirtualHostModelImpl;
 
@@ -150,7 +151,9 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	@Override
 	public VirtualHost fetchByHostname(String hostname,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { hostname };
+		String hostnameNullSafe = StringUtil.nullToEmpty(hostname);
+
+		Object[] finderArgs = new Object[] { hostnameNullSafe };
 
 		Object result = null;
 
@@ -162,7 +165,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		if (result instanceof VirtualHost) {
 			VirtualHost virtualHost = (VirtualHost)result;
 
-			if (!Objects.equals(hostname, virtualHost.getHostname())) {
+			if (!Objects.equals(hostnameNullSafe, virtualHost.getHostname())) {
 				result = null;
 			}
 		}
@@ -214,8 +217,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 					cacheResult(virtualHost);
 
-					if ((virtualHost.getHostname() == null) ||
-							!virtualHost.getHostname().equals(hostname)) {
+					if (!virtualHost.getHostname().equals(hostnameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_HOSTNAME,
 							finderArgs, virtualHost);
 					}
@@ -264,7 +266,9 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	public int countByHostname(String hostname) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_HOSTNAME;
 
-		Object[] finderArgs = new Object[] { hostname };
+		String hostnameNullSafe = StringUtil.nullToEmpty(hostname);
+
+		Object[] finderArgs = new Object[] { hostnameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

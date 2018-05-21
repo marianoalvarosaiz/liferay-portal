@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.io.Serializable;
@@ -687,7 +688,9 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 	@Override
 	public DDMFormInstanceVersion fetchByF_V(long formInstanceId,
 		String version, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { formInstanceId, version };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+
+		Object[] finderArgs = new Object[] { formInstanceId, versionNullSafe };
 
 		Object result = null;
 
@@ -700,7 +703,8 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 			DDMFormInstanceVersion ddmFormInstanceVersion = (DDMFormInstanceVersion)result;
 
 			if ((formInstanceId != ddmFormInstanceVersion.getFormInstanceId()) ||
-					!Objects.equals(version, ddmFormInstanceVersion.getVersion())) {
+					!Objects.equals(versionNullSafe,
+						ddmFormInstanceVersion.getVersion())) {
 				result = null;
 			}
 		}
@@ -757,8 +761,8 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 					cacheResult(ddmFormInstanceVersion);
 
 					if ((ddmFormInstanceVersion.getFormInstanceId() != formInstanceId) ||
-							(ddmFormInstanceVersion.getVersion() == null) ||
-							!ddmFormInstanceVersion.getVersion().equals(version)) {
+							!ddmFormInstanceVersion.getVersion()
+													   .equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_F_V,
 							finderArgs, ddmFormInstanceVersion);
 					}
@@ -809,7 +813,9 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 	public int countByF_V(long formInstanceId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_V;
 
-		Object[] finderArgs = new Object[] { formInstanceId, version };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+
+		Object[] finderArgs = new Object[] { formInstanceId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -175,15 +175,20 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE;
-			finderArgs = new Object[] { type };
+			finderArgs = new Object[] { typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_TYPE;
-			finderArgs = new Object[] { type, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					typeNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<ListType> list = null;
@@ -194,7 +199,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (ListType listType : list) {
-					if (!Objects.equals(type, listType.getType())) {
+					if (!Objects.equals(typeNullSafe, listType.getType())) {
 						list = null;
 
 						break;
@@ -572,7 +577,9 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	public int countByType(String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_TYPE;
 
-		Object[] finderArgs = new Object[] { type };
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -700,7 +707,10 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	@Override
 	public ListType fetchByN_T(String name, String type,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { name, type };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { nameNullSafe, typeNullSafe };
 
 		Object result = null;
 
@@ -712,8 +722,8 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		if (result instanceof ListType) {
 			ListType listType = (ListType)result;
 
-			if (!Objects.equals(name, listType.getName()) ||
-					!Objects.equals(type, listType.getType())) {
+			if (!Objects.equals(nameNullSafe, listType.getName()) ||
+					!Objects.equals(typeNullSafe, listType.getType())) {
 				result = null;
 			}
 		}
@@ -794,10 +804,8 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 					cacheResult(listType);
 
-					if ((listType.getName() == null) ||
-							!listType.getName().equals(name) ||
-							(listType.getType() == null) ||
-							!listType.getType().equals(type)) {
+					if (!listType.getName().equals(nameNullSafe) ||
+							!listType.getType().equals(typeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_N_T,
 							finderArgs, listType);
 					}
@@ -847,7 +855,10 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	public int countByN_T(String name, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_N_T;
 
-		Object[] finderArgs = new Object[] { name, type };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+		String typeNullSafe = StringUtil.nullToEmpty(type);
+
+		Object[] finderArgs = new Object[] { nameNullSafe, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

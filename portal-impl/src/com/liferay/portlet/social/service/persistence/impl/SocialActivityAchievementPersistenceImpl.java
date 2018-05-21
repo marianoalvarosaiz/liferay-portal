@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.portlet.social.model.impl.SocialActivityAchievementImpl;
 import com.liferay.portlet.social.model.impl.SocialActivityAchievementModelImpl;
@@ -1253,17 +1254,18 @@ public class SocialActivityAchievementPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N;
-			finderArgs = new Object[] { groupId, name };
+			finderArgs = new Object[] { groupId, nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N;
 			finderArgs = new Object[] {
-					groupId, name,
-					
+					groupId, nameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -1277,7 +1279,7 @@ public class SocialActivityAchievementPersistenceImpl
 			if ((list != null) && !list.isEmpty()) {
 				for (SocialActivityAchievement socialActivityAchievement : list) {
 					if ((groupId != socialActivityAchievement.getGroupId()) ||
-							!Objects.equals(name,
+							!Objects.equals(nameNullSafe,
 								socialActivityAchievement.getName())) {
 						list = null;
 
@@ -1684,7 +1686,9 @@ public class SocialActivityAchievementPersistenceImpl
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2389,7 +2393,9 @@ public class SocialActivityAchievementPersistenceImpl
 	@Override
 	public SocialActivityAchievement fetchByG_U_N(long groupId, long userId,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, userId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, userId, nameNullSafe };
 
 		Object result = null;
 
@@ -2403,7 +2409,8 @@ public class SocialActivityAchievementPersistenceImpl
 
 			if ((groupId != socialActivityAchievement.getGroupId()) ||
 					(userId != socialActivityAchievement.getUserId()) ||
-					!Objects.equals(name, socialActivityAchievement.getName())) {
+					!Objects.equals(nameNullSafe,
+						socialActivityAchievement.getName())) {
 				result = null;
 			}
 		}
@@ -2465,8 +2472,8 @@ public class SocialActivityAchievementPersistenceImpl
 
 					if ((socialActivityAchievement.getGroupId() != groupId) ||
 							(socialActivityAchievement.getUserId() != userId) ||
-							(socialActivityAchievement.getName() == null) ||
-							!socialActivityAchievement.getName().equals(name)) {
+							!socialActivityAchievement.getName()
+														  .equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_U_N,
 							finderArgs, socialActivityAchievement);
 					}
@@ -2519,7 +2526,9 @@ public class SocialActivityAchievementPersistenceImpl
 	public int countByG_U_N(long groupId, long userId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_U_N;
 
-		Object[] finderArgs = new Object[] { groupId, userId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, userId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

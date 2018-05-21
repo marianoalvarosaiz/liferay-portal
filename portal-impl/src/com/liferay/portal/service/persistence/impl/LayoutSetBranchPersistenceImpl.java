@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.LayoutSetBranchImpl;
 import com.liferay.portal.model.impl.LayoutSetBranchModelImpl;
 
@@ -1975,7 +1976,9 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	@Override
 	public LayoutSetBranch fetchByG_P_N(long groupId, boolean privateLayout,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, privateLayout, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, privateLayout, nameNullSafe };
 
 		Object result = null;
 
@@ -1989,7 +1992,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 			if ((groupId != layoutSetBranch.getGroupId()) ||
 					(privateLayout != layoutSetBranch.isPrivateLayout()) ||
-					!Objects.equals(name, layoutSetBranch.getName())) {
+					!Objects.equals(nameNullSafe, layoutSetBranch.getName())) {
 				result = null;
 			}
 		}
@@ -2051,8 +2054,7 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 
 					if ((layoutSetBranch.getGroupId() != groupId) ||
 							(layoutSetBranch.isPrivateLayout() != privateLayout) ||
-							(layoutSetBranch.getName() == null) ||
-							!layoutSetBranch.getName().equals(name)) {
+							!layoutSetBranch.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N,
 							finderArgs, layoutSetBranch);
 					}
@@ -2105,7 +2107,9 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 	public int countByG_P_N(long groupId, boolean privateLayout, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_N;
 
-		Object[] finderArgs = new Object[] { groupId, privateLayout, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, privateLayout, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

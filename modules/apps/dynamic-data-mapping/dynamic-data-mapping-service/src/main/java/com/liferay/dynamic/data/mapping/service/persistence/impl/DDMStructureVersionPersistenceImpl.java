@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.io.Serializable;
@@ -676,7 +677,9 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 	@Override
 	public DDMStructureVersion fetchByS_V(long structureId, String version,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { structureId, version };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+
+		Object[] finderArgs = new Object[] { structureId, versionNullSafe };
 
 		Object result = null;
 
@@ -689,7 +692,8 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 			DDMStructureVersion ddmStructureVersion = (DDMStructureVersion)result;
 
 			if ((structureId != ddmStructureVersion.getStructureId()) ||
-					!Objects.equals(version, ddmStructureVersion.getVersion())) {
+					!Objects.equals(versionNullSafe,
+						ddmStructureVersion.getVersion())) {
 				result = null;
 			}
 		}
@@ -746,8 +750,8 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 					cacheResult(ddmStructureVersion);
 
 					if ((ddmStructureVersion.getStructureId() != structureId) ||
-							(ddmStructureVersion.getVersion() == null) ||
-							!ddmStructureVersion.getVersion().equals(version)) {
+							!ddmStructureVersion.getVersion()
+													.equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_S_V,
 							finderArgs, ddmStructureVersion);
 					}
@@ -797,7 +801,9 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 	public int countByS_V(long structureId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_S_V;
 
-		Object[] finderArgs = new Object[] { structureId, version };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+
+		Object[] finderArgs = new Object[] { structureId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
