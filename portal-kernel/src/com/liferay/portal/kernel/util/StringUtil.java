@@ -2110,6 +2110,22 @@ public class StringUtil {
 	}
 
 	/**
+	 * Returns the empty string if <code>s</code> is null, or the given string
+	 * otherwise.
+	 *
+	 * @param 		the string to be converted
+	 * @return		itself if it is not empty, "" if it is null
+	 */
+	public static String nullToEmpty(String s) {
+		if (s == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return s;
+		}
+	}
+
+	/**
 	 * Returns the string enclosed by apostrophes.
 	 *
 	 * <p>
