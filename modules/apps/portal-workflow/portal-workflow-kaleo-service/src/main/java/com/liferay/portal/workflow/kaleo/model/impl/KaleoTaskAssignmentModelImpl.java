@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentModel;
 
@@ -372,12 +373,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -413,12 +409,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return StringUtil.nullToEmpty(_kaleoClassName);
 	}
 
 	@Override
@@ -492,12 +483,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeClassName() {
-		if (_assigneeClassName == null) {
-			return "";
-		}
-		else {
-			return _assigneeClassName;
-		}
+		return StringUtil.nullToEmpty(_assigneeClassName);
 	}
 
 	@Override
@@ -527,12 +513,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeActionId() {
-		if (_assigneeActionId == null) {
-			return "";
-		}
-		else {
-			return _assigneeActionId;
-		}
+		return StringUtil.nullToEmpty(_assigneeActionId);
 	}
 
 	@Override
@@ -542,12 +523,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeScript() {
-		if (_assigneeScript == null) {
-			return "";
-		}
-		else {
-			return _assigneeScript;
-		}
+		return StringUtil.nullToEmpty(_assigneeScript);
 	}
 
 	@Override
@@ -557,12 +533,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeScriptLanguage() {
-		if (_assigneeScriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _assigneeScriptLanguage;
-		}
+		return StringUtil.nullToEmpty(_assigneeScriptLanguage);
 	}
 
 	@Override
@@ -572,12 +543,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeScriptRequiredContexts() {
-		if (_assigneeScriptRequiredContexts == null) {
-			return "";
-		}
-		else {
-			return _assigneeScriptRequiredContexts;
-		}
+		return StringUtil.nullToEmpty(_assigneeScriptRequiredContexts);
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.powwow.model.PowwowMeeting;
 import com.liferay.powwow.model.PowwowMeetingModel;
@@ -424,12 +425,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -493,12 +489,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -509,12 +500,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -525,12 +511,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getProviderType() {
-		if (_providerType == null) {
-			return "";
-		}
-		else {
-			return _providerType;
-		}
+		return StringUtil.nullToEmpty(_providerType);
 	}
 
 	@Override
@@ -541,12 +522,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getProviderTypeMetadata() {
-		if (_providerTypeMetadata == null) {
-			return "";
-		}
-		else {
-			return _providerTypeMetadata;
-		}
+		return StringUtil.nullToEmpty(_providerTypeMetadata);
 	}
 
 	@Override
@@ -557,12 +533,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return StringUtil.nullToEmpty(_languageId);
 	}
 
 	@Override

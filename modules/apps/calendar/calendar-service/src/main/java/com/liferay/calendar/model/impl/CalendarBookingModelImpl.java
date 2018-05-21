@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -502,12 +503,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -610,12 +606,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -746,12 +737,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getVEventUid() {
-		if (_vEventUid == null) {
-			return "";
-		}
-		else {
-			return _vEventUid;
-		}
+		return StringUtil.nullToEmpty(_vEventUid);
 	}
 
 	@Override
@@ -772,12 +758,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -873,12 +854,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -976,12 +952,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getLocation() {
-		if (_location == null) {
-			return "";
-		}
-		else {
-			return _location;
-		}
+		return StringUtil.nullToEmpty(_location);
 	}
 
 	@Override
@@ -1033,12 +1004,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getRecurrence() {
-		if (_recurrence == null) {
-			return "";
-		}
-		else {
-			return _recurrence;
-		}
+		return StringUtil.nullToEmpty(_recurrence);
 	}
 
 	@Override
@@ -1060,12 +1026,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getFirstReminderType() {
-		if (_firstReminderType == null) {
-			return "";
-		}
-		else {
-			return _firstReminderType;
-		}
+		return StringUtil.nullToEmpty(_firstReminderType);
 	}
 
 	@Override
@@ -1087,12 +1048,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getSecondReminderType() {
-		if (_secondReminderType == null) {
-			return "";
-		}
-		else {
-			return _secondReminderType;
-		}
+		return StringUtil.nullToEmpty(_secondReminderType);
 	}
 
 	@Override
@@ -1164,12 +1120,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

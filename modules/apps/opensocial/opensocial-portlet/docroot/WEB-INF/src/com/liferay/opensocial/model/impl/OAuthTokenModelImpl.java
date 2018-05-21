@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -329,12 +330,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -370,12 +366,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getGadgetKey() {
-		if (_gadgetKey == null) {
-			return "";
-		}
-		else {
-			return _gadgetKey;
-		}
+		return StringUtil.nullToEmpty(_gadgetKey);
 	}
 
 	@Override
@@ -395,12 +386,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getServiceName() {
-		if (_serviceName == null) {
-			return "";
-		}
-		else {
-			return _serviceName;
-		}
+		return StringUtil.nullToEmpty(_serviceName);
 	}
 
 	@Override
@@ -442,12 +428,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getAccessToken() {
-		if (_accessToken == null) {
-			return "";
-		}
-		else {
-			return _accessToken;
-		}
+		return StringUtil.nullToEmpty(_accessToken);
 	}
 
 	@Override
@@ -457,12 +438,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getTokenName() {
-		if (_tokenName == null) {
-			return "";
-		}
-		else {
-			return _tokenName;
-		}
+		return StringUtil.nullToEmpty(_tokenName);
 	}
 
 	@Override
@@ -482,12 +458,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getTokenSecret() {
-		if (_tokenSecret == null) {
-			return "";
-		}
-		else {
-			return _tokenSecret;
-		}
+		return StringUtil.nullToEmpty(_tokenSecret);
 	}
 
 	@Override
@@ -497,12 +468,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getSessionHandle() {
-		if (_sessionHandle == null) {
-			return "";
-		}
-		else {
-			return _sessionHandle;
-		}
+		return StringUtil.nullToEmpty(_sessionHandle);
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -379,12 +380,7 @@ public class PortletPreferencesModelImpl extends BaseModelImpl<PortletPreference
 	@JSON
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return StringUtil.nullToEmpty(_portletId);
 	}
 
 	@Override
@@ -405,12 +401,7 @@ public class PortletPreferencesModelImpl extends BaseModelImpl<PortletPreference
 	@JSON
 	@Override
 	public String getPreferences() {
-		if (_preferences == null) {
-			return "";
-		}
-		else {
-			return _preferences;
-		}
+		return StringUtil.nullToEmpty(_preferences);
 	}
 
 	@Override

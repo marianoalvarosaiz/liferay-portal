@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipient;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationRecipientModel;
 
@@ -373,12 +374,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -458,12 +454,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientClassName() {
-		if (_recipientClassName == null) {
-			return "";
-		}
-		else {
-			return _recipientClassName;
-		}
+		return StringUtil.nullToEmpty(_recipientClassName);
 	}
 
 	@Override
@@ -493,12 +484,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScript() {
-		if (_recipientScript == null) {
-			return "";
-		}
-		else {
-			return _recipientScript;
-		}
+		return StringUtil.nullToEmpty(_recipientScript);
 	}
 
 	@Override
@@ -508,12 +494,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScriptLanguage() {
-		if (_recipientScriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _recipientScriptLanguage;
-		}
+		return StringUtil.nullToEmpty(_recipientScriptLanguage);
 	}
 
 	@Override
@@ -523,12 +504,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScriptContexts() {
-		if (_recipientScriptContexts == null) {
-			return "";
-		}
-		else {
-			return _recipientScriptContexts;
-		}
+		return StringUtil.nullToEmpty(_recipientScriptContexts);
 	}
 
 	@Override
@@ -538,12 +514,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+		return StringUtil.nullToEmpty(_address);
 	}
 
 	@Override
@@ -553,12 +524,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getNotificationReceptionType() {
-		if (_notificationReceptionType == null) {
-			return "";
-		}
-		else {
-			return _notificationReceptionType;
-		}
+		return StringUtil.nullToEmpty(_notificationReceptionType);
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -326,12 +327,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getWebId() {
-		if (_webId == null) {
-			return "";
-		}
-		else {
-			return _webId;
-		}
+		return StringUtil.nullToEmpty(_webId);
 	}
 
 	@Override
@@ -352,12 +348,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getKey() {
-		if (_key == null) {
-			return "";
-		}
-		else {
-			return _key;
-		}
+		return StringUtil.nullToEmpty(_key);
 	}
 
 	@Override
@@ -368,12 +359,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getMx() {
-		if (_mx == null) {
-			return "";
-		}
-		else {
-			return _mx;
-		}
+		return StringUtil.nullToEmpty(_mx);
 	}
 
 	@Override
@@ -394,12 +380,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getHomeURL() {
-		if (_homeURL == null) {
-			return "";
-		}
-		else {
-			return _homeURL;
-		}
+		return StringUtil.nullToEmpty(_homeURL);
 	}
 
 	@Override

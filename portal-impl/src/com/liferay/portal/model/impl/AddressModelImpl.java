@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -406,12 +407,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -503,12 +499,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -615,12 +606,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getStreet1() {
-		if (_street1 == null) {
-			return "";
-		}
-		else {
-			return _street1;
-		}
+		return StringUtil.nullToEmpty(_street1);
 	}
 
 	@Override
@@ -631,12 +617,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getStreet2() {
-		if (_street2 == null) {
-			return "";
-		}
-		else {
-			return _street2;
-		}
+		return StringUtil.nullToEmpty(_street2);
 	}
 
 	@Override
@@ -647,12 +628,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getStreet3() {
-		if (_street3 == null) {
-			return "";
-		}
-		else {
-			return _street3;
-		}
+		return StringUtil.nullToEmpty(_street3);
 	}
 
 	@Override
@@ -663,12 +639,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getCity() {
-		if (_city == null) {
-			return "";
-		}
-		else {
-			return _city;
-		}
+		return StringUtil.nullToEmpty(_city);
 	}
 
 	@Override
@@ -679,12 +650,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getZip() {
-		if (_zip == null) {
-			return "";
-		}
-		else {
-			return _zip;
-		}
+		return StringUtil.nullToEmpty(_zip);
 	}
 
 	@Override

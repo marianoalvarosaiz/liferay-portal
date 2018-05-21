@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -342,12 +343,7 @@ public class ResourcePermissionModelImpl extends BaseModelImpl<ResourcePermissio
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -391,12 +387,7 @@ public class ResourcePermissionModelImpl extends BaseModelImpl<ResourcePermissio
 	@JSON
 	@Override
 	public String getPrimKey() {
-		if (_primKey == null) {
-			return "";
-		}
-		else {
-			return _primKey;
-		}
+		return StringUtil.nullToEmpty(_primKey);
 	}
 
 	@Override
