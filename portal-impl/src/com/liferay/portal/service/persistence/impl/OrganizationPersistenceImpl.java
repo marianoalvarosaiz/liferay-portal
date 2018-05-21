@@ -192,15 +192,20 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Organization> list = null;
@@ -211,7 +216,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Organization organization : list) {
-					if (!Objects.equals(uuid, organization.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, organization.getUuid())) {
 						list = null;
 
 						break;
@@ -926,7 +931,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1146,16 +1153,18 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1169,7 +1178,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Organization organization : list) {
-					if (!Objects.equals(uuid, organization.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, organization.getUuid()) ||
 							(companyId != organization.getCompanyId())) {
 						list = null;
 
@@ -1925,7 +1934,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4810,9 +4821,11 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_T;
 		finderArgs = new Object[] {
-				companyId, treePath,
+				companyId, treePathNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -4827,8 +4840,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				for (Organization organization : list) {
 					if ((companyId != organization.getCompanyId()) ||
 							!StringUtil.wildcardMatches(
-								organization.getTreePath(), treePath, '_', '%',
-								'\\', true)) {
+								organization.getTreePath(), treePathNullSafe,
+								'_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -5583,7 +5596,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByC_T(long companyId, String treePath) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_T;
 
-		Object[] finderArgs = new Object[] { companyId, treePath };
+		String treePathNullSafe = StringUtil.nullToEmpty(treePath);
+
+		Object[] finderArgs = new Object[] { companyId, treePathNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5783,7 +5798,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public Organization fetchByC_N(long companyId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Object result = null;
 
@@ -5796,7 +5813,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			Organization organization = (Organization)result;
 
 			if ((companyId != organization.getCompanyId()) ||
-					!Objects.equals(name, organization.getName())) {
+					!Objects.equals(nameNullSafe, organization.getName())) {
 				result = null;
 			}
 		}
@@ -5853,8 +5870,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 					cacheResult(organization);
 
 					if ((organization.getCompanyId() != companyId) ||
-							(organization.getName() == null) ||
-							!organization.getName().equals(name)) {
+							!organization.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_N,
 							finderArgs, organization);
 					}
@@ -5904,7 +5920,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

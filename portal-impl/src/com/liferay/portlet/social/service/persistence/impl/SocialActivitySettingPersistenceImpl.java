@@ -2389,8 +2389,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 	@Override
 	public SocialActivitySetting fetchByG_C_A_N(long groupId, long classNameId,
 		int activityType, String name, boolean retrieveFromCache) {
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, activityType, name
+				groupId, classNameId, activityType, nameNullSafe
 			};
 
 		Object result = null;
@@ -2406,7 +2408,8 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			if ((groupId != socialActivitySetting.getGroupId()) ||
 					(classNameId != socialActivitySetting.getClassNameId()) ||
 					(activityType != socialActivitySetting.getActivityType()) ||
-					!Objects.equals(name, socialActivitySetting.getName())) {
+					!Objects.equals(nameNullSafe,
+						socialActivitySetting.getName())) {
 				result = null;
 			}
 		}
@@ -2484,8 +2487,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 					if ((socialActivitySetting.getGroupId() != groupId) ||
 							(socialActivitySetting.getClassNameId() != classNameId) ||
 							(socialActivitySetting.getActivityType() != activityType) ||
-							(socialActivitySetting.getName() == null) ||
-							!socialActivitySetting.getName().equals(name)) {
+							!socialActivitySetting.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_A_N,
 							finderArgs, socialActivitySetting);
 					}
@@ -2543,8 +2545,10 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 		String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_A_N;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, activityType, name
+				groupId, classNameId, activityType, nameNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

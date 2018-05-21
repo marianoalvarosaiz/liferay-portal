@@ -153,7 +153,9 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	@Override
 	public Release fetchByServletContextName(String servletContextName,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { servletContextName };
+		String servletContextNameNullSafe = StringUtil.nullToEmpty(servletContextName);
+
+		Object[] finderArgs = new Object[] { servletContextNameNullSafe };
 
 		Object result = null;
 
@@ -165,7 +167,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		if (result instanceof Release) {
 			Release release = (Release)result;
 
-			if (!Objects.equals(servletContextName,
+			if (!Objects.equals(servletContextNameNullSafe,
 						release.getServletContextName())) {
 				result = null;
 			}
@@ -218,9 +220,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 					cacheResult(release);
 
-					if ((release.getServletContextName() == null) ||
-							!release.getServletContextName()
-										.equals(servletContextName)) {
+					if (!release.getServletContextName()
+									.equals(servletContextNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_SERVLETCONTEXTNAME,
 							finderArgs, release);
 					}
@@ -269,7 +270,9 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	public int countByServletContextName(String servletContextName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME;
 
-		Object[] finderArgs = new Object[] { servletContextName };
+		String servletContextNameNullSafe = StringUtil.nullToEmpty(servletContextName);
+
+		Object[] finderArgs = new Object[] { servletContextNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

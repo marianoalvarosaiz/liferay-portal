@@ -193,15 +193,20 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<AssetTag> list = null;
@@ -212,7 +217,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AssetTag assetTag : list) {
-					if (!Objects.equals(uuid, assetTag.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, assetTag.getUuid())) {
 						list = null;
 
 						break;
@@ -590,7 +595,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -718,7 +725,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	@Override
 	public AssetTag fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -730,7 +739,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		if (result instanceof AssetTag) {
 			AssetTag assetTag = (AssetTag)result;
 
-			if (!Objects.equals(uuid, assetTag.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, assetTag.getUuid()) ||
 					(groupId != assetTag.getGroupId())) {
 				result = null;
 			}
@@ -787,8 +796,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 					cacheResult(assetTag);
 
-					if ((assetTag.getUuid() == null) ||
-							!assetTag.getUuid().equals(uuid) ||
+					if (!assetTag.getUuid().equals(uuidNullSafe) ||
 							(assetTag.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, assetTag);
@@ -839,7 +847,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -999,16 +1009,18 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1022,7 +1034,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AssetTag assetTag : list) {
-					if (!Objects.equals(uuid, assetTag.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, assetTag.getUuid()) ||
 							(companyId != assetTag.getCompanyId())) {
 						list = null;
 
@@ -1425,7 +1437,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2895,15 +2909,20 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NAME;
-			finderArgs = new Object[] { name };
+			finderArgs = new Object[] { nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_NAME;
-			finderArgs = new Object[] { name, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					nameNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<AssetTag> list = null;
@@ -2914,7 +2933,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AssetTag assetTag : list) {
-					if (!Objects.equals(name, assetTag.getName())) {
+					if (!Objects.equals(nameNullSafe, assetTag.getName())) {
 						list = null;
 
 						break;
@@ -3496,7 +3515,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByName(String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_NAME;
 
-		Object[] finderArgs = new Object[] { name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3714,7 +3735,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	@Override
 	public AssetTag fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Object result = null;
 
@@ -3727,7 +3750,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			AssetTag assetTag = (AssetTag)result;
 
 			if ((groupId != assetTag.getGroupId()) ||
-					!Objects.equals(name, assetTag.getName())) {
+					!Objects.equals(nameNullSafe, assetTag.getName())) {
 				result = null;
 			}
 		}
@@ -3784,8 +3807,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 					cacheResult(assetTag);
 
 					if ((assetTag.getGroupId() != groupId) ||
-							(assetTag.getName() == null) ||
-							!assetTag.getName().equals(name)) {
+							!assetTag.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 							finderArgs, assetTag);
 					}
@@ -3835,7 +3857,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3987,8 +4011,14 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN;
-		finderArgs = new Object[] { groupId, name, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				groupId, nameNullSafe,
+				
+				start, end, orderByComparator
+			};
 
 		List<AssetTag> list = null;
 
@@ -4000,7 +4030,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 				for (AssetTag assetTag : list) {
 					if ((groupId != assetTag.getGroupId()) ||
 							!StringUtil.wildcardMatches(assetTag.getName(),
-								name, '_', '%', '\\', true)) {
+								nameNullSafe, '_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -4977,15 +5007,16 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
-			finderArgs = new Object[] { StringUtil.merge(groupIds), name };
+			finderArgs = new Object[] { StringUtil.merge(groupIds), nameNullSafe };
 		}
 		else {
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), name,
-					
+					StringUtil.merge(groupIds), nameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -5000,7 +5031,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 				for (AssetTag assetTag : list) {
 					if (!ArrayUtil.contains(groupIds, assetTag.getGroupId()) ||
 							!StringUtil.wildcardMatches(assetTag.getName(),
-								name, '_', '%', '\\', true)) {
+								nameNullSafe, '_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -5126,7 +5157,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByG_LikeN(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5203,7 +5236,11 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			Arrays.sort(groupIds);
 		}
 
-		Object[] finderArgs = new Object[] { StringUtil.merge(groupIds), name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] {
+				StringUtil.merge(groupIds), nameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN,
 				finderArgs, this);

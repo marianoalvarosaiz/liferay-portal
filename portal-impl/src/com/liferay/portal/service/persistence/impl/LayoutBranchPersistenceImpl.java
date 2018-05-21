@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.LayoutBranchImpl;
 import com.liferay.portal.model.impl.LayoutBranchModelImpl;
 
@@ -1226,7 +1227,9 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	@Override
 	public LayoutBranch fetchByL_P_N(long layoutSetBranchId, long plid,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { layoutSetBranchId, plid, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { layoutSetBranchId, plid, nameNullSafe };
 
 		Object result = null;
 
@@ -1240,7 +1243,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 			if ((layoutSetBranchId != layoutBranch.getLayoutSetBranchId()) ||
 					(plid != layoutBranch.getPlid()) ||
-					!Objects.equals(name, layoutBranch.getName())) {
+					!Objects.equals(nameNullSafe, layoutBranch.getName())) {
 				result = null;
 			}
 		}
@@ -1302,8 +1305,7 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 
 					if ((layoutBranch.getLayoutSetBranchId() != layoutSetBranchId) ||
 							(layoutBranch.getPlid() != plid) ||
-							(layoutBranch.getName() == null) ||
-							!layoutBranch.getName().equals(name)) {
+							!layoutBranch.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_L_P_N,
 							finderArgs, layoutBranch);
 					}
@@ -1355,7 +1357,9 @@ public class LayoutBranchPersistenceImpl extends BasePersistenceImpl<LayoutBranc
 	public int countByL_P_N(long layoutSetBranchId, long plid, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_L_P_N;
 
-		Object[] finderArgs = new Object[] { layoutSetBranchId, plid, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { layoutSetBranchId, plid, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

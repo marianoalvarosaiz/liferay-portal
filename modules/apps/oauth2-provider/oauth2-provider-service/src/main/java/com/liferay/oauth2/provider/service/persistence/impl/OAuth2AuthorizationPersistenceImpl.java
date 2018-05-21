@@ -1197,7 +1197,9 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 	@Override
 	public OAuth2Authorization fetchByAccessTokenContent(
 		String accessTokenContent, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { accessTokenContent };
+		String accessTokenContentNullSafe = StringUtil.nullToEmpty(accessTokenContent);
+
+		Object[] finderArgs = new Object[] { accessTokenContentNullSafe };
 
 		Object result = null;
 
@@ -1209,7 +1211,7 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 		if (result instanceof OAuth2Authorization) {
 			OAuth2Authorization oAuth2Authorization = (OAuth2Authorization)result;
 
-			if (!Objects.equals(accessTokenContent,
+			if (!Objects.equals(accessTokenContentNullSafe,
 						oAuth2Authorization.getAccessTokenContent())) {
 				result = null;
 			}
@@ -1273,9 +1275,8 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 
 					cacheResult(oAuth2Authorization);
 
-					if ((oAuth2Authorization.getAccessTokenContent() == null) ||
-							!oAuth2Authorization.getAccessTokenContent()
-													.equals(accessTokenContent)) {
+					if (!oAuth2Authorization.getAccessTokenContent()
+												.equals(accessTokenContentNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_ACCESSTOKENCONTENT,
 							finderArgs, oAuth2Authorization);
 					}
@@ -1324,7 +1325,9 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 	public int countByAccessTokenContent(String accessTokenContent) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_ACCESSTOKENCONTENT;
 
-		Object[] finderArgs = new Object[] { accessTokenContent };
+		String accessTokenContentNullSafe = StringUtil.nullToEmpty(accessTokenContent);
+
+		Object[] finderArgs = new Object[] { accessTokenContentNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1451,7 +1454,9 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 	@Override
 	public OAuth2Authorization fetchByRefreshTokenContent(
 		String refreshTokenContent, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { refreshTokenContent };
+		String refreshTokenContentNullSafe = StringUtil.nullToEmpty(refreshTokenContent);
+
+		Object[] finderArgs = new Object[] { refreshTokenContentNullSafe };
 
 		Object result = null;
 
@@ -1463,7 +1468,7 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 		if (result instanceof OAuth2Authorization) {
 			OAuth2Authorization oAuth2Authorization = (OAuth2Authorization)result;
 
-			if (!Objects.equals(refreshTokenContent,
+			if (!Objects.equals(refreshTokenContentNullSafe,
 						oAuth2Authorization.getRefreshTokenContent())) {
 				result = null;
 			}
@@ -1527,9 +1532,8 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 
 					cacheResult(oAuth2Authorization);
 
-					if ((oAuth2Authorization.getRefreshTokenContent() == null) ||
-							!oAuth2Authorization.getRefreshTokenContent()
-													.equals(refreshTokenContent)) {
+					if (!oAuth2Authorization.getRefreshTokenContent()
+												.equals(refreshTokenContentNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_REFRESHTOKENCONTENT,
 							finderArgs, oAuth2Authorization);
 					}
@@ -1578,7 +1582,9 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 	public int countByRefreshTokenContent(String refreshTokenContent) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_REFRESHTOKENCONTENT;
 
-		Object[] finderArgs = new Object[] { refreshTokenContent };
+		String refreshTokenContentNullSafe = StringUtil.nullToEmpty(refreshTokenContent);
+
+		Object[] finderArgs = new Object[] { refreshTokenContentNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

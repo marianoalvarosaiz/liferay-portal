@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -186,15 +187,20 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDMFormInstanceRecord> list = null;
@@ -205,7 +211,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMFormInstanceRecord ddmFormInstanceRecord : list) {
-					if (!Objects.equals(uuid, ddmFormInstanceRecord.getUuid())) {
+					if (!Objects.equals(uuidNullSafe,
+								ddmFormInstanceRecord.getUuid())) {
 						list = null;
 
 						break;
@@ -588,7 +595,9 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -718,7 +727,9 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	@Override
 	public DDMFormInstanceRecord fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -730,7 +741,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		if (result instanceof DDMFormInstanceRecord) {
 			DDMFormInstanceRecord ddmFormInstanceRecord = (DDMFormInstanceRecord)result;
 
-			if (!Objects.equals(uuid, ddmFormInstanceRecord.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, ddmFormInstanceRecord.getUuid()) ||
 					(groupId != ddmFormInstanceRecord.getGroupId())) {
 				result = null;
 			}
@@ -787,8 +798,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 					cacheResult(ddmFormInstanceRecord);
 
-					if ((ddmFormInstanceRecord.getUuid() == null) ||
-							!ddmFormInstanceRecord.getUuid().equals(uuid) ||
+					if (!ddmFormInstanceRecord.getUuid().equals(uuidNullSafe) ||
 							(ddmFormInstanceRecord.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, ddmFormInstanceRecord);
@@ -839,7 +849,9 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1002,16 +1014,18 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1025,7 +1039,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMFormInstanceRecord ddmFormInstanceRecord : list) {
-					if (!Objects.equals(uuid, ddmFormInstanceRecord.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe,
+								ddmFormInstanceRecord.getUuid()) ||
 							(companyId != ddmFormInstanceRecord.getCompanyId())) {
 						list = null;
 
@@ -1434,7 +1449,9 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3188,17 +3205,20 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String formInstanceVersionNullSafe = StringUtil.nullToEmpty(formInstanceVersion);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_F_F;
-			finderArgs = new Object[] { formInstanceId, formInstanceVersion };
+			finderArgs = new Object[] {
+					formInstanceId, formInstanceVersionNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_F_F;
 			finderArgs = new Object[] {
-					formInstanceId, formInstanceVersion,
-					
+					formInstanceId, formInstanceVersionNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -3212,7 +3232,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMFormInstanceRecord ddmFormInstanceRecord : list) {
 					if ((formInstanceId != ddmFormInstanceRecord.getFormInstanceId()) ||
-							!Objects.equals(formInstanceVersion,
+							!Objects.equals(formInstanceVersionNullSafe,
 								ddmFormInstanceRecord.getFormInstanceVersion())) {
 						list = null;
 
@@ -3625,7 +3645,11 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByF_F(long formInstanceId, String formInstanceVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_F;
 
-		Object[] finderArgs = new Object[] { formInstanceId, formInstanceVersion };
+		String formInstanceVersionNullSafe = StringUtil.nullToEmpty(formInstanceVersion);
+
+		Object[] finderArgs = new Object[] {
+				formInstanceId, formInstanceVersionNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.portlet.social.model.impl.SocialActivityCounterImpl;
 import com.liferay.portlet.social.model.impl.SocialActivityCounterModelImpl;
@@ -1896,8 +1897,11 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	public SocialActivityCounter fetchByG_C_C_N_O_S(long groupId,
 		long classNameId, long classPK, String name, int ownerType,
 		int startPeriod, boolean retrieveFromCache) {
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, classPK, name, ownerType, startPeriod
+				groupId, classNameId, classPK, nameNullSafe, ownerType,
+				startPeriod
 			};
 
 		Object result = null;
@@ -1913,7 +1917,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			if ((groupId != socialActivityCounter.getGroupId()) ||
 					(classNameId != socialActivityCounter.getClassNameId()) ||
 					(classPK != socialActivityCounter.getClassPK()) ||
-					!Objects.equals(name, socialActivityCounter.getName()) ||
+					!Objects.equals(nameNullSafe,
+						socialActivityCounter.getName()) ||
 					(ownerType != socialActivityCounter.getOwnerType()) ||
 					(startPeriod != socialActivityCounter.getStartPeriod())) {
 				result = null;
@@ -1990,8 +1995,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 					if ((socialActivityCounter.getGroupId() != groupId) ||
 							(socialActivityCounter.getClassNameId() != classNameId) ||
 							(socialActivityCounter.getClassPK() != classPK) ||
-							(socialActivityCounter.getName() == null) ||
-							!socialActivityCounter.getName().equals(name) ||
+							!socialActivityCounter.getName().equals(nameNullSafe) ||
 							(socialActivityCounter.getOwnerType() != ownerType) ||
 							(socialActivityCounter.getStartPeriod() != startPeriod)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_S,
@@ -2055,8 +2059,11 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		String name, int ownerType, int startPeriod) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_C_N_O_S;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, classPK, name, ownerType, startPeriod
+				groupId, classNameId, classPK, nameNullSafe, ownerType,
+				startPeriod
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2253,8 +2260,11 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	public SocialActivityCounter fetchByG_C_C_N_O_E(long groupId,
 		long classNameId, long classPK, String name, int ownerType,
 		int endPeriod, boolean retrieveFromCache) {
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, classPK, name, ownerType, endPeriod
+				groupId, classNameId, classPK, nameNullSafe, ownerType,
+				endPeriod
 			};
 
 		Object result = null;
@@ -2270,7 +2280,8 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 			if ((groupId != socialActivityCounter.getGroupId()) ||
 					(classNameId != socialActivityCounter.getClassNameId()) ||
 					(classPK != socialActivityCounter.getClassPK()) ||
-					!Objects.equals(name, socialActivityCounter.getName()) ||
+					!Objects.equals(nameNullSafe,
+						socialActivityCounter.getName()) ||
 					(ownerType != socialActivityCounter.getOwnerType()) ||
 					(endPeriod != socialActivityCounter.getEndPeriod())) {
 				result = null;
@@ -2347,8 +2358,7 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 					if ((socialActivityCounter.getGroupId() != groupId) ||
 							(socialActivityCounter.getClassNameId() != classNameId) ||
 							(socialActivityCounter.getClassPK() != classPK) ||
-							(socialActivityCounter.getName() == null) ||
-							!socialActivityCounter.getName().equals(name) ||
+							!socialActivityCounter.getName().equals(nameNullSafe) ||
 							(socialActivityCounter.getOwnerType() != ownerType) ||
 							(socialActivityCounter.getEndPeriod() != endPeriod)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_C_N_O_E,
@@ -2412,8 +2422,11 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 		String name, int ownerType, int endPeriod) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_C_N_O_E;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, classPK, name, ownerType, endPeriod
+				groupId, classNameId, classPK, nameNullSafe, ownerType,
+				endPeriod
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

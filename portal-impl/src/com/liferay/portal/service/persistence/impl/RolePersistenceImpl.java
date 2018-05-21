@@ -193,15 +193,20 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Role> list = null;
@@ -212,7 +217,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Role role : list) {
-					if (!Objects.equals(uuid, role.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, role.getUuid())) {
 						list = null;
 
 						break;
@@ -916,7 +921,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1135,16 +1142,18 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1158,7 +1167,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Role role : list) {
-					if (!Objects.equals(uuid, role.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, role.getUuid()) ||
 							(companyId != role.getCompanyId())) {
 						list = null;
 
@@ -1904,7 +1913,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2976,15 +2987,20 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NAME;
-			finderArgs = new Object[] { name };
+			finderArgs = new Object[] { nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_NAME;
-			finderArgs = new Object[] { name, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					nameNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Role> list = null;
@@ -2995,7 +3011,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Role role : list) {
-					if (!Objects.equals(name, role.getName())) {
+					if (!Objects.equals(nameNullSafe, role.getName())) {
 						list = null;
 
 						break;
@@ -3699,7 +3715,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	public int countByName(String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_NAME;
 
-		Object[] finderArgs = new Object[] { name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4752,15 +4770,20 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String subtypeNullSafe = StringUtil.nullToEmpty(subtype);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SUBTYPE;
-			finderArgs = new Object[] { subtype };
+			finderArgs = new Object[] { subtypeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_SUBTYPE;
-			finderArgs = new Object[] { subtype, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					subtypeNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Role> list = null;
@@ -4771,7 +4794,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Role role : list) {
-					if (!Objects.equals(subtype, role.getSubtype())) {
+					if (!Objects.equals(subtypeNullSafe, role.getSubtype())) {
 						list = null;
 
 						break;
@@ -5479,7 +5502,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	public int countBySubtype(String subtype) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_SUBTYPE;
 
-		Object[] finderArgs = new Object[] { subtype };
+		String subtypeNullSafe = StringUtil.nullToEmpty(subtype);
+
+		Object[] finderArgs = new Object[] { subtypeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5668,7 +5693,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	@Override
 	public Role fetchByC_N(long companyId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Object result = null;
 
@@ -5681,7 +5708,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			Role role = (Role)result;
 
 			if ((companyId != role.getCompanyId()) ||
-					!Objects.equals(name, role.getName())) {
+					!Objects.equals(nameNullSafe, role.getName())) {
 				result = null;
 			}
 		}
@@ -5738,8 +5765,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 					cacheResult(role);
 
 					if ((role.getCompanyId() != companyId) ||
-							(role.getName() == null) ||
-							!role.getName().equals(name)) {
+							!role.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_N,
 							finderArgs, role);
 					}
@@ -5789,7 +5815,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -7346,17 +7374,18 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String subtypeNullSafe = StringUtil.nullToEmpty(subtype);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_T_S;
-			finderArgs = new Object[] { type, subtype };
+			finderArgs = new Object[] { type, subtypeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_T_S;
 			finderArgs = new Object[] {
-					type, subtype,
-					
+					type, subtypeNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -7370,7 +7399,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			if ((list != null) && !list.isEmpty()) {
 				for (Role role : list) {
 					if ((type != role.getType()) ||
-							!Objects.equals(subtype, role.getSubtype())) {
+							!Objects.equals(subtypeNullSafe, role.getSubtype())) {
 						list = null;
 
 						break;
@@ -8114,7 +8143,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	public int countByT_S(int type, String subtype) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_S;
 
-		Object[] finderArgs = new Object[] { type, subtype };
+		String subtypeNullSafe = StringUtil.nullToEmpty(subtype);
+
+		Object[] finderArgs = new Object[] { type, subtypeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

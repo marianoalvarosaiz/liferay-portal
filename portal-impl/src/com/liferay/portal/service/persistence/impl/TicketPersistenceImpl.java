@@ -151,7 +151,9 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	 */
 	@Override
 	public Ticket fetchByKey(String key, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { key };
+		String keyNullSafe = StringUtil.nullToEmpty(key);
+
+		Object[] finderArgs = new Object[] { keyNullSafe };
 
 		Object result = null;
 
@@ -163,7 +165,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		if (result instanceof Ticket) {
 			Ticket ticket = (Ticket)result;
 
-			if (!Objects.equals(key, ticket.getKey())) {
+			if (!Objects.equals(keyNullSafe, ticket.getKey())) {
 				result = null;
 			}
 		}
@@ -226,8 +228,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 					cacheResult(ticket);
 
-					if ((ticket.getKey() == null) ||
-							!ticket.getKey().equals(key)) {
+					if (!ticket.getKey().equals(keyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_KEY,
 							finderArgs, ticket);
 					}
@@ -274,7 +275,9 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	public int countByKey(String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KEY;
 
-		Object[] finderArgs = new Object[] { key };
+		String keyNullSafe = StringUtil.nullToEmpty(key);
+
+		Object[] finderArgs = new Object[] { keyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -178,15 +178,20 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Module> list = null;
@@ -197,7 +202,7 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Module module : list) {
-					if (!Objects.equals(uuid, module.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, module.getUuid())) {
 						list = null;
 
 						break;
@@ -574,7 +579,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -728,16 +735,18 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -751,7 +760,7 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Module module : list) {
-					if (!Objects.equals(uuid, module.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, module.getUuid()) ||
 							(companyId != module.getCompanyId())) {
 						list = null;
 
@@ -1152,7 +1161,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = StringUtil.nullToEmpty(uuid);
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1807,17 +1818,18 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String bundleSymbolicNameNullSafe = StringUtil.nullToEmpty(bundleSymbolicName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_BUNDLESYMBOLICNAME;
-			finderArgs = new Object[] { bundleSymbolicName };
+			finderArgs = new Object[] { bundleSymbolicNameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_BUNDLESYMBOLICNAME;
 			finderArgs = new Object[] {
-					bundleSymbolicName,
-					
+					bundleSymbolicNameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -1830,7 +1842,7 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Module module : list) {
-					if (!Objects.equals(bundleSymbolicName,
+					if (!Objects.equals(bundleSymbolicNameNullSafe,
 								module.getBundleSymbolicName())) {
 						list = null;
 
@@ -2212,7 +2224,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	public int countByBundleSymbolicName(String bundleSymbolicName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_BUNDLESYMBOLICNAME;
 
-		Object[] finderArgs = new Object[] { bundleSymbolicName };
+		String bundleSymbolicNameNullSafe = StringUtil.nullToEmpty(bundleSymbolicName);
+
+		Object[] finderArgs = new Object[] { bundleSymbolicNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2365,15 +2379,20 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String contextNameNullSafe = StringUtil.nullToEmpty(contextName);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CONTEXTNAME;
-			finderArgs = new Object[] { contextName };
+			finderArgs = new Object[] { contextNameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_CONTEXTNAME;
-			finderArgs = new Object[] { contextName, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					contextNameNullSafe,
+					start, end, orderByComparator
+				};
 		}
 
 		List<Module> list = null;
@@ -2384,7 +2403,8 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Module module : list) {
-					if (!Objects.equals(contextName, module.getContextName())) {
+					if (!Objects.equals(contextNameNullSafe,
+								module.getContextName())) {
 						list = null;
 
 						break;
@@ -2763,7 +2783,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	public int countByContextName(String contextName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CONTEXTNAME;
 
-		Object[] finderArgs = new Object[] { contextName };
+		String contextNameNullSafe = StringUtil.nullToEmpty(contextName);
+
+		Object[] finderArgs = new Object[] { contextNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2891,7 +2913,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	@Override
 	public Module fetchByA_CN(long appId, String contextName,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { appId, contextName };
+		String contextNameNullSafe = StringUtil.nullToEmpty(contextName);
+
+		Object[] finderArgs = new Object[] { appId, contextNameNullSafe };
 
 		Object result = null;
 
@@ -2904,7 +2928,7 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 			Module module = (Module)result;
 
 			if ((appId != module.getAppId()) ||
-					!Objects.equals(contextName, module.getContextName())) {
+					!Objects.equals(contextNameNullSafe, module.getContextName())) {
 				result = null;
 			}
 		}
@@ -2972,8 +2996,7 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 					cacheResult(module);
 
 					if ((module.getAppId() != appId) ||
-							(module.getContextName() == null) ||
-							!module.getContextName().equals(contextName)) {
+							!module.getContextName().equals(contextNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_A_CN,
 							finderArgs, module);
 					}
@@ -3023,7 +3046,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	public int countByA_CN(long appId, String contextName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_CN;
 
-		Object[] finderArgs = new Object[] { appId, contextName };
+		String contextNameNullSafe = StringUtil.nullToEmpty(contextName);
+
+		Object[] finderArgs = new Object[] { appId, contextNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3170,8 +3195,11 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 	@Override
 	public Module fetchByA_BSN_BV(long appId, String bundleSymbolicName,
 		String bundleVersion, boolean retrieveFromCache) {
+		String bundleSymbolicNameNullSafe = StringUtil.nullToEmpty(bundleSymbolicName);
+		String bundleVersionNullSafe = StringUtil.nullToEmpty(bundleVersion);
+
 		Object[] finderArgs = new Object[] {
-				appId, bundleSymbolicName, bundleVersion
+				appId, bundleSymbolicNameNullSafe, bundleVersionNullSafe
 			};
 
 		Object result = null;
@@ -3185,9 +3213,10 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 			Module module = (Module)result;
 
 			if ((appId != module.getAppId()) ||
-					!Objects.equals(bundleSymbolicName,
+					!Objects.equals(bundleSymbolicNameNullSafe,
 						module.getBundleSymbolicName()) ||
-					!Objects.equals(bundleVersion, module.getBundleVersion())) {
+					!Objects.equals(bundleVersionNullSafe,
+						module.getBundleVersion())) {
 				result = null;
 			}
 		}
@@ -3273,11 +3302,10 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 					cacheResult(module);
 
 					if ((module.getAppId() != appId) ||
-							(module.getBundleSymbolicName() == null) ||
 							!module.getBundleSymbolicName()
-									   .equals(bundleSymbolicName) ||
-							(module.getBundleVersion() == null) ||
-							!module.getBundleVersion().equals(bundleVersion)) {
+									   .equals(bundleSymbolicNameNullSafe) ||
+							!module.getBundleVersion()
+									   .equals(bundleVersionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_A_BSN_BV,
 							finderArgs, module);
 					}
@@ -3331,8 +3359,11 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 		String bundleVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_BSN_BV;
 
+		String bundleSymbolicNameNullSafe = StringUtil.nullToEmpty(bundleSymbolicName);
+		String bundleVersionNullSafe = StringUtil.nullToEmpty(bundleVersion);
+
 		Object[] finderArgs = new Object[] {
-				appId, bundleSymbolicName, bundleVersion
+				appId, bundleSymbolicNameNullSafe, bundleVersionNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

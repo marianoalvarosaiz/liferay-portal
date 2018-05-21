@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.RegionImpl;
 import com.liferay.portal.model.impl.RegionModelImpl;
 
@@ -1158,7 +1159,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	@Override
 	public Region fetchByC_R(long countryId, String regionCode,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { countryId, regionCode };
+		String regionCodeNullSafe = StringUtil.nullToEmpty(regionCode);
+
+		Object[] finderArgs = new Object[] { countryId, regionCodeNullSafe };
 
 		Object result = null;
 
@@ -1171,7 +1174,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			Region region = (Region)result;
 
 			if ((countryId != region.getCountryId()) ||
-					!Objects.equals(regionCode, region.getRegionCode())) {
+					!Objects.equals(regionCodeNullSafe, region.getRegionCode())) {
 				result = null;
 			}
 		}
@@ -1228,8 +1231,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 					cacheResult(region);
 
 					if ((region.getCountryId() != countryId) ||
-							(region.getRegionCode() == null) ||
-							!region.getRegionCode().equals(regionCode)) {
+							!region.getRegionCode().equals(regionCodeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_R,
 							finderArgs, region);
 					}
@@ -1279,7 +1281,9 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	public int countByC_R(long countryId, String regionCode) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_R;
 
-		Object[] finderArgs = new Object[] { countryId, regionCode };
+		String regionCodeNullSafe = StringUtil.nullToEmpty(regionCode);
+
+		Object[] finderArgs = new Object[] { countryId, regionCodeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

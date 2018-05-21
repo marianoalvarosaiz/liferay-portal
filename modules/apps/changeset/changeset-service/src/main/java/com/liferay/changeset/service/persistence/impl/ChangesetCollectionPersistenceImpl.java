@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.io.Serializable;
@@ -1726,7 +1727,9 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 	@Override
 	public ChangesetCollection fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Object result = null;
 
@@ -1739,7 +1742,7 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 			ChangesetCollection changesetCollection = (ChangesetCollection)result;
 
 			if ((groupId != changesetCollection.getGroupId()) ||
-					!Objects.equals(name, changesetCollection.getName())) {
+					!Objects.equals(nameNullSafe, changesetCollection.getName())) {
 				result = null;
 			}
 		}
@@ -1796,8 +1799,7 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 					cacheResult(changesetCollection);
 
 					if ((changesetCollection.getGroupId() != groupId) ||
-							(changesetCollection.getName() == null) ||
-							!changesetCollection.getName().equals(name)) {
+							!changesetCollection.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 							finderArgs, changesetCollection);
 					}
@@ -1847,7 +1849,9 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2009,17 +2013,18 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N;
-			finderArgs = new Object[] { companyId, name };
+			finderArgs = new Object[] { companyId, nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_N;
 			finderArgs = new Object[] {
-					companyId, name,
-					
+					companyId, nameNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -2033,7 +2038,8 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 			if ((list != null) && !list.isEmpty()) {
 				for (ChangesetCollection changesetCollection : list) {
 					if ((companyId != changesetCollection.getCompanyId()) ||
-							!Objects.equals(name, changesetCollection.getName())) {
+							!Objects.equals(nameNullSafe,
+								changesetCollection.getName())) {
 						list = null;
 
 						break;
@@ -2437,7 +2443,9 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = StringUtil.nullToEmpty(name);
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

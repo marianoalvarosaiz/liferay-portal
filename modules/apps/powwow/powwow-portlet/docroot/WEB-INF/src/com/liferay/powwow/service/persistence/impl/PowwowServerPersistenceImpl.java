@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.powwow.exception.NoSuchServerException;
 import com.liferay.powwow.model.PowwowServer;
@@ -190,16 +191,18 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String providerTypeNullSafe = StringUtil.nullToEmpty(providerType);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PT_A;
-			finderArgs = new Object[] { providerType, active };
+			finderArgs = new Object[] { providerTypeNullSafe, active };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_PT_A;
 			finderArgs = new Object[] {
-					providerType, active,
+					providerTypeNullSafe, active,
 					
 					start, end, orderByComparator
 				};
@@ -213,7 +216,7 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 
 			if ((list != null) && !list.isEmpty()) {
 				for (PowwowServer powwowServer : list) {
-					if (!Objects.equals(providerType,
+					if (!Objects.equals(providerTypeNullSafe,
 								powwowServer.getProviderType()) ||
 							(active != powwowServer.isActive())) {
 						list = null;
@@ -618,7 +621,9 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 	public int countByPT_A(String providerType, boolean active) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_PT_A;
 
-		Object[] finderArgs = new Object[] { providerType, active };
+		String providerTypeNullSafe = StringUtil.nullToEmpty(providerType);
+
+		Object[] finderArgs = new Object[] { providerTypeNullSafe, active };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

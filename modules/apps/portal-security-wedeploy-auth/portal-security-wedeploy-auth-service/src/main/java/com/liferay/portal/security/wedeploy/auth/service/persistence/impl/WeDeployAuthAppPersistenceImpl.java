@@ -162,7 +162,10 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	@Override
 	public WeDeployAuthApp fetchByRU_CI(String redirectURI, String clientId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { redirectURI, clientId };
+		String redirectURINullSafe = StringUtil.nullToEmpty(redirectURI);
+		String clientIdNullSafe = StringUtil.nullToEmpty(clientId);
+
+		Object[] finderArgs = new Object[] { redirectURINullSafe, clientIdNullSafe };
 
 		Object result = null;
 
@@ -174,8 +177,10 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 		if (result instanceof WeDeployAuthApp) {
 			WeDeployAuthApp weDeployAuthApp = (WeDeployAuthApp)result;
 
-			if (!Objects.equals(redirectURI, weDeployAuthApp.getRedirectURI()) ||
-					!Objects.equals(clientId, weDeployAuthApp.getClientId())) {
+			if (!Objects.equals(redirectURINullSafe,
+						weDeployAuthApp.getRedirectURI()) ||
+					!Objects.equals(clientIdNullSafe,
+						weDeployAuthApp.getClientId())) {
 				result = null;
 			}
 		}
@@ -256,10 +261,10 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 					cacheResult(weDeployAuthApp);
 
-					if ((weDeployAuthApp.getRedirectURI() == null) ||
-							!weDeployAuthApp.getRedirectURI().equals(redirectURI) ||
-							(weDeployAuthApp.getClientId() == null) ||
-							!weDeployAuthApp.getClientId().equals(clientId)) {
+					if (!weDeployAuthApp.getRedirectURI()
+											.equals(redirectURINullSafe) ||
+							!weDeployAuthApp.getClientId()
+												.equals(clientIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_RU_CI,
 							finderArgs, weDeployAuthApp);
 					}
@@ -309,7 +314,10 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	public int countByRU_CI(String redirectURI, String clientId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_RU_CI;
 
-		Object[] finderArgs = new Object[] { redirectURI, clientId };
+		String redirectURINullSafe = StringUtil.nullToEmpty(redirectURI);
+		String clientIdNullSafe = StringUtil.nullToEmpty(clientId);
+
+		Object[] finderArgs = new Object[] { redirectURINullSafe, clientIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -459,7 +467,12 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	@Override
 	public WeDeployAuthApp fetchByCI_CS(String clientId, String clientSecret,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { clientId, clientSecret };
+		String clientIdNullSafe = StringUtil.nullToEmpty(clientId);
+		String clientSecretNullSafe = StringUtil.nullToEmpty(clientSecret);
+
+		Object[] finderArgs = new Object[] {
+				clientIdNullSafe, clientSecretNullSafe
+			};
 
 		Object result = null;
 
@@ -471,8 +484,8 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 		if (result instanceof WeDeployAuthApp) {
 			WeDeployAuthApp weDeployAuthApp = (WeDeployAuthApp)result;
 
-			if (!Objects.equals(clientId, weDeployAuthApp.getClientId()) ||
-					!Objects.equals(clientSecret,
+			if (!Objects.equals(clientIdNullSafe, weDeployAuthApp.getClientId()) ||
+					!Objects.equals(clientSecretNullSafe,
 						weDeployAuthApp.getClientSecret())) {
 				result = null;
 			}
@@ -554,11 +567,9 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 					cacheResult(weDeployAuthApp);
 
-					if ((weDeployAuthApp.getClientId() == null) ||
-							!weDeployAuthApp.getClientId().equals(clientId) ||
-							(weDeployAuthApp.getClientSecret() == null) ||
+					if (!weDeployAuthApp.getClientId().equals(clientIdNullSafe) ||
 							!weDeployAuthApp.getClientSecret()
-												.equals(clientSecret)) {
+												.equals(clientSecretNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_CI_CS,
 							finderArgs, weDeployAuthApp);
 					}
@@ -608,7 +619,12 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	public int countByCI_CS(String clientId, String clientSecret) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CI_CS;
 
-		Object[] finderArgs = new Object[] { clientId, clientSecret };
+		String clientIdNullSafe = StringUtil.nullToEmpty(clientId);
+		String clientSecretNullSafe = StringUtil.nullToEmpty(clientSecret);
+
+		Object[] finderArgs = new Object[] {
+				clientIdNullSafe, clientSecretNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

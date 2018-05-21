@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.io.Serializable;
@@ -721,17 +722,20 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String formInstanceVersionNullSafe = StringUtil.nullToEmpty(formInstanceVersion);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_F_F;
-			finderArgs = new Object[] { formInstanceId, formInstanceVersion };
+			finderArgs = new Object[] {
+					formInstanceId, formInstanceVersionNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_F_F;
 			finderArgs = new Object[] {
-					formInstanceId, formInstanceVersion,
-					
+					formInstanceId, formInstanceVersionNullSafe,
 					start, end, orderByComparator
 				};
 		}
@@ -745,7 +749,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMFormInstanceRecordVersion ddmFormInstanceRecordVersion : list) {
 					if ((formInstanceId != ddmFormInstanceRecordVersion.getFormInstanceId()) ||
-							!Objects.equals(formInstanceVersion,
+							!Objects.equals(formInstanceVersionNullSafe,
 								ddmFormInstanceRecordVersion.getFormInstanceVersion())) {
 						list = null;
 
@@ -1160,7 +1164,11 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	public int countByF_F(long formInstanceId, String formInstanceVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_F;
 
-		Object[] finderArgs = new Object[] { formInstanceId, formInstanceVersion };
+		String formInstanceVersionNullSafe = StringUtil.nullToEmpty(formInstanceVersion);
+
+		Object[] finderArgs = new Object[] {
+				formInstanceId, formInstanceVersionNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1297,7 +1305,9 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	@Override
 	public DDMFormInstanceRecordVersion fetchByF_V(long formInstanceRecordId,
 		String version, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { formInstanceRecordId, version };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+
+		Object[] finderArgs = new Object[] { formInstanceRecordId, versionNullSafe };
 
 		Object result = null;
 
@@ -1310,7 +1320,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 			DDMFormInstanceRecordVersion ddmFormInstanceRecordVersion = (DDMFormInstanceRecordVersion)result;
 
 			if ((formInstanceRecordId != ddmFormInstanceRecordVersion.getFormInstanceRecordId()) ||
-					!Objects.equals(version,
+					!Objects.equals(versionNullSafe,
 						ddmFormInstanceRecordVersion.getVersion())) {
 				result = null;
 			}
@@ -1368,9 +1378,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 					cacheResult(ddmFormInstanceRecordVersion);
 
 					if ((ddmFormInstanceRecordVersion.getFormInstanceRecordId() != formInstanceRecordId) ||
-							(ddmFormInstanceRecordVersion.getVersion() == null) ||
 							!ddmFormInstanceRecordVersion.getVersion()
-															 .equals(version)) {
+															 .equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_F_V,
 							finderArgs, ddmFormInstanceRecordVersion);
 					}
@@ -1421,7 +1430,9 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	public int countByF_V(long formInstanceRecordId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_V;
 
-		Object[] finderArgs = new Object[] { formInstanceRecordId, version };
+		String versionNullSafe = StringUtil.nullToEmpty(version);
+
+		Object[] finderArgs = new Object[] { formInstanceRecordId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2167,18 +2178,20 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String formInstanceVersionNullSafe = StringUtil.nullToEmpty(formInstanceVersion);
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_F_F_S;
 			finderArgs = new Object[] {
-					userId, formInstanceId, formInstanceVersion, status
+					userId, formInstanceId, formInstanceVersionNullSafe, status
 				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_U_F_F_S;
 			finderArgs = new Object[] {
-					userId, formInstanceId, formInstanceVersion, status,
+					userId, formInstanceId, formInstanceVersionNullSafe, status,
 					
 					start, end, orderByComparator
 				};
@@ -2194,7 +2207,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 				for (DDMFormInstanceRecordVersion ddmFormInstanceRecordVersion : list) {
 					if ((userId != ddmFormInstanceRecordVersion.getUserId()) ||
 							(formInstanceId != ddmFormInstanceRecordVersion.getFormInstanceId()) ||
-							!Objects.equals(formInstanceVersion,
+							!Objects.equals(formInstanceVersionNullSafe,
 								ddmFormInstanceRecordVersion.getFormInstanceVersion()) ||
 							(status != ddmFormInstanceRecordVersion.getStatus())) {
 						list = null;
@@ -2657,8 +2670,10 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		String formInstanceVersion, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_F_F_S;
 
+		String formInstanceVersionNullSafe = StringUtil.nullToEmpty(formInstanceVersion);
+
 		Object[] finderArgs = new Object[] {
-				userId, formInstanceId, formInstanceVersion, status
+				userId, formInstanceId, formInstanceVersionNullSafe, status
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
