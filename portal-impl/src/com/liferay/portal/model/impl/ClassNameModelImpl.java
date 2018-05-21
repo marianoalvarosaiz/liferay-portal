@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -254,12 +255,7 @@ public class ClassNameModelImpl extends BaseModelImpl<ClassName>
 	@JSON
 	@Override
 	public String getValue() {
-		if (_value == null) {
-			return "";
-		}
-		else {
-			return _value;
-		}
+		return StringUtil.nullToEmpty(_value);
 	}
 
 	@Override

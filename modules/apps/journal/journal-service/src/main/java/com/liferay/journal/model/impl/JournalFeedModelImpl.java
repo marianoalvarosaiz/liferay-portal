@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -422,12 +423,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -530,12 +526,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -574,12 +565,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getFeedId() {
-		if (_feedId == null) {
-			return "";
-		}
-		else {
-			return _feedId;
-		}
+		return StringUtil.nullToEmpty(_feedId);
 	}
 
 	@Override
@@ -600,12 +586,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -616,12 +597,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -632,12 +608,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDDMStructureKey() {
-		if (_DDMStructureKey == null) {
-			return "";
-		}
-		else {
-			return _DDMStructureKey;
-		}
+		return StringUtil.nullToEmpty(_DDMStructureKey);
 	}
 
 	@Override
@@ -648,12 +619,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDDMTemplateKey() {
-		if (_DDMTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMTemplateKey;
-		}
+		return StringUtil.nullToEmpty(_DDMTemplateKey);
 	}
 
 	@Override
@@ -664,12 +630,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDDMRendererTemplateKey() {
-		if (_DDMRendererTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMRendererTemplateKey;
-		}
+		return StringUtil.nullToEmpty(_DDMRendererTemplateKey);
 	}
 
 	@Override
@@ -691,12 +652,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getOrderByCol() {
-		if (_orderByCol == null) {
-			return "";
-		}
-		else {
-			return _orderByCol;
-		}
+		return StringUtil.nullToEmpty(_orderByCol);
 	}
 
 	@Override
@@ -707,12 +663,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getOrderByType() {
-		if (_orderByType == null) {
-			return "";
-		}
-		else {
-			return _orderByType;
-		}
+		return StringUtil.nullToEmpty(_orderByType);
 	}
 
 	@Override
@@ -723,12 +674,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getTargetLayoutFriendlyUrl() {
-		if (_targetLayoutFriendlyUrl == null) {
-			return "";
-		}
-		else {
-			return _targetLayoutFriendlyUrl;
-		}
+		return StringUtil.nullToEmpty(_targetLayoutFriendlyUrl);
 	}
 
 	@Override
@@ -739,12 +685,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getTargetPortletId() {
-		if (_targetPortletId == null) {
-			return "";
-		}
-		else {
-			return _targetPortletId;
-		}
+		return StringUtil.nullToEmpty(_targetPortletId);
 	}
 
 	@Override
@@ -755,12 +696,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getContentField() {
-		if (_contentField == null) {
-			return "";
-		}
-		else {
-			return _contentField;
-		}
+		return StringUtil.nullToEmpty(_contentField);
 	}
 
 	@Override
@@ -771,12 +707,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getFeedFormat() {
-		if (_feedFormat == null) {
-			return "";
-		}
-		else {
-			return _feedFormat;
-		}
+		return StringUtil.nullToEmpty(_feedFormat);
 	}
 
 	@Override

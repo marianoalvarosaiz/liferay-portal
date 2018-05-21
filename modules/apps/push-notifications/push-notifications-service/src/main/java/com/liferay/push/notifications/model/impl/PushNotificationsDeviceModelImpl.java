@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.push.notifications.model.PushNotificationsDevice;
 import com.liferay.push.notifications.model.PushNotificationsDeviceModel;
@@ -323,12 +324,7 @@ public class PushNotificationsDeviceModelImpl extends BaseModelImpl<PushNotifica
 	@JSON
 	@Override
 	public String getPlatform() {
-		if (_platform == null) {
-			return "";
-		}
-		else {
-			return _platform;
-		}
+		return StringUtil.nullToEmpty(_platform);
 	}
 
 	@Override
@@ -349,12 +345,7 @@ public class PushNotificationsDeviceModelImpl extends BaseModelImpl<PushNotifica
 	@JSON
 	@Override
 	public String getToken() {
-		if (_token == null) {
-			return "";
-		}
-		else {
-			return _token;
-		}
+		return StringUtil.nullToEmpty(_token);
 	}
 
 	@Override

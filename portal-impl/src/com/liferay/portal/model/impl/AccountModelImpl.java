@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -410,12 +411,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -465,12 +461,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -481,12 +472,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getLegalName() {
-		if (_legalName == null) {
-			return "";
-		}
-		else {
-			return _legalName;
-		}
+		return StringUtil.nullToEmpty(_legalName);
 	}
 
 	@Override
@@ -497,12 +483,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getLegalId() {
-		if (_legalId == null) {
-			return "";
-		}
-		else {
-			return _legalId;
-		}
+		return StringUtil.nullToEmpty(_legalId);
 	}
 
 	@Override
@@ -513,12 +494,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getLegalType() {
-		if (_legalType == null) {
-			return "";
-		}
-		else {
-			return _legalType;
-		}
+		return StringUtil.nullToEmpty(_legalType);
 	}
 
 	@Override
@@ -529,12 +505,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getSicCode() {
-		if (_sicCode == null) {
-			return "";
-		}
-		else {
-			return _sicCode;
-		}
+		return StringUtil.nullToEmpty(_sicCode);
 	}
 
 	@Override
@@ -545,12 +516,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getTickerSymbol() {
-		if (_tickerSymbol == null) {
-			return "";
-		}
-		else {
-			return _tickerSymbol;
-		}
+		return StringUtil.nullToEmpty(_tickerSymbol);
 	}
 
 	@Override
@@ -561,12 +527,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getIndustry() {
-		if (_industry == null) {
-			return "";
-		}
-		else {
-			return _industry;
-		}
+		return StringUtil.nullToEmpty(_industry);
 	}
 
 	@Override
@@ -577,12 +538,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return StringUtil.nullToEmpty(_type);
 	}
 
 	@Override
@@ -593,12 +549,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getSize() {
-		if (_size == null) {
-			return "";
-		}
-		else {
-			return _size;
-		}
+		return StringUtil.nullToEmpty(_size);
 	}
 
 	@Override

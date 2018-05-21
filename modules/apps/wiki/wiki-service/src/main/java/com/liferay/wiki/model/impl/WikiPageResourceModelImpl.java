@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.wiki.model.WikiPageResource;
 import com.liferay.wiki.model.WikiPageResourceModel;
@@ -195,12 +196,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -294,12 +290,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override

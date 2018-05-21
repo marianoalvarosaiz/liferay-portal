@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -278,12 +279,7 @@ public class DLContentModelImpl extends BaseModelImpl<DLContent>
 
 	@Override
 	public String getPath() {
-		if (_path == null) {
-			return "";
-		}
-		else {
-			return _path;
-		}
+		return StringUtil.nullToEmpty(_path);
 	}
 
 	@Override
@@ -303,12 +299,7 @@ public class DLContentModelImpl extends BaseModelImpl<DLContent>
 
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return StringUtil.nullToEmpty(_version);
 	}
 
 	@Override

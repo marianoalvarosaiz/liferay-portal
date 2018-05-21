@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -330,12 +331,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -415,12 +411,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -482,12 +473,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -498,12 +484,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -514,12 +495,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getCategory() {
-		if (_category == null) {
-			return "";
-		}
-		else {
-			return _category;
-		}
+		return StringUtil.nullToEmpty(_category);
 	}
 
 	@Override
@@ -540,12 +516,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getIconURL() {
-		if (_iconURL == null) {
-			return "";
-		}
-		else {
-			return _iconURL;
-		}
+		return StringUtil.nullToEmpty(_iconURL);
 	}
 
 	@Override
@@ -556,12 +527,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return StringUtil.nullToEmpty(_version);
 	}
 
 	@Override

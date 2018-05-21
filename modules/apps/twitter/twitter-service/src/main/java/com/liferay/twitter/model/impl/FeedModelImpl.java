@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.twitter.model.Feed;
 import com.liferay.twitter.model.FeedModel;
@@ -280,12 +281,7 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -347,12 +343,7 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 
 	@Override
 	public String getTwitterScreenName() {
-		if (_twitterScreenName == null) {
-			return "";
-		}
-		else {
-			return _twitterScreenName;
-		}
+		return StringUtil.nullToEmpty(_twitterScreenName);
 	}
 
 	@Override

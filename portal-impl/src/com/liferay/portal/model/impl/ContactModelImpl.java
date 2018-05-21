@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -551,12 +552,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -695,12 +691,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return StringUtil.nullToEmpty(_emailAddress);
 	}
 
 	@Override
@@ -711,12 +702,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getFirstName() {
-		if (_firstName == null) {
-			return "";
-		}
-		else {
-			return _firstName;
-		}
+		return StringUtil.nullToEmpty(_firstName);
 	}
 
 	@Override
@@ -727,12 +713,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getMiddleName() {
-		if (_middleName == null) {
-			return "";
-		}
-		else {
-			return _middleName;
-		}
+		return StringUtil.nullToEmpty(_middleName);
 	}
 
 	@Override
@@ -743,12 +724,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getLastName() {
-		if (_lastName == null) {
-			return "";
-		}
-		else {
-			return _lastName;
-		}
+		return StringUtil.nullToEmpty(_lastName);
 	}
 
 	@Override
@@ -809,12 +785,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getSmsSn() {
-		if (_smsSn == null) {
-			return "";
-		}
-		else {
-			return _smsSn;
-		}
+		return StringUtil.nullToEmpty(_smsSn);
 	}
 
 	@Override
@@ -825,12 +796,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getFacebookSn() {
-		if (_facebookSn == null) {
-			return "";
-		}
-		else {
-			return _facebookSn;
-		}
+		return StringUtil.nullToEmpty(_facebookSn);
 	}
 
 	@Override
@@ -841,12 +807,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getJabberSn() {
-		if (_jabberSn == null) {
-			return "";
-		}
-		else {
-			return _jabberSn;
-		}
+		return StringUtil.nullToEmpty(_jabberSn);
 	}
 
 	@Override
@@ -857,12 +818,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getSkypeSn() {
-		if (_skypeSn == null) {
-			return "";
-		}
-		else {
-			return _skypeSn;
-		}
+		return StringUtil.nullToEmpty(_skypeSn);
 	}
 
 	@Override
@@ -873,12 +829,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getTwitterSn() {
-		if (_twitterSn == null) {
-			return "";
-		}
-		else {
-			return _twitterSn;
-		}
+		return StringUtil.nullToEmpty(_twitterSn);
 	}
 
 	@Override
@@ -889,12 +840,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmployeeStatusId() {
-		if (_employeeStatusId == null) {
-			return "";
-		}
-		else {
-			return _employeeStatusId;
-		}
+		return StringUtil.nullToEmpty(_employeeStatusId);
 	}
 
 	@Override
@@ -905,12 +851,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmployeeNumber() {
-		if (_employeeNumber == null) {
-			return "";
-		}
-		else {
-			return _employeeNumber;
-		}
+		return StringUtil.nullToEmpty(_employeeNumber);
 	}
 
 	@Override
@@ -921,12 +862,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getJobTitle() {
-		if (_jobTitle == null) {
-			return "";
-		}
-		else {
-			return _jobTitle;
-		}
+		return StringUtil.nullToEmpty(_jobTitle);
 	}
 
 	@Override
@@ -937,12 +873,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getJobClass() {
-		if (_jobClass == null) {
-			return "";
-		}
-		else {
-			return _jobClass;
-		}
+		return StringUtil.nullToEmpty(_jobClass);
 	}
 
 	@Override
@@ -953,12 +884,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getHoursOfOperation() {
-		if (_hoursOfOperation == null) {
-			return "";
-		}
-		else {
-			return _hoursOfOperation;
-		}
+		return StringUtil.nullToEmpty(_hoursOfOperation);
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -351,12 +352,7 @@ public class TicketModelImpl extends BaseModelImpl<Ticket>
 
 	@Override
 	public String getKey() {
-		if (_key == null) {
-			return "";
-		}
-		else {
-			return _key;
-		}
+		return StringUtil.nullToEmpty(_key);
 	}
 
 	@Override
@@ -398,12 +394,7 @@ public class TicketModelImpl extends BaseModelImpl<Ticket>
 
 	@Override
 	public String getExtraInfo() {
-		if (_extraInfo == null) {
-			return "";
-		}
-		else {
-			return _extraInfo;
-		}
+		return StringUtil.nullToEmpty(_extraInfo);
 	}
 
 	@Override

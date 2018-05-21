@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -678,12 +679,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -864,12 +860,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON(include = false)
 	@Override
 	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
+		return StringUtil.nullToEmpty(_password);
 	}
 
 	@Override
@@ -923,12 +914,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON(include = false)
 	@Override
 	public String getDigest() {
-		if (_digest == null) {
-			return "";
-		}
-		else {
-			return _digest;
-		}
+		return StringUtil.nullToEmpty(_digest);
 	}
 
 	@Override
@@ -939,12 +925,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getReminderQueryQuestion() {
-		if (_reminderQueryQuestion == null) {
-			return "";
-		}
-		else {
-			return _reminderQueryQuestion;
-		}
+		return StringUtil.nullToEmpty(_reminderQueryQuestion);
 	}
 
 	@Override
@@ -955,12 +936,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getReminderQueryAnswer() {
-		if (_reminderQueryAnswer == null) {
-			return "";
-		}
-		else {
-			return _reminderQueryAnswer;
-		}
+		return StringUtil.nullToEmpty(_reminderQueryAnswer);
 	}
 
 	@Override
@@ -982,12 +958,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getScreenName() {
-		if (_screenName == null) {
-			return "";
-		}
-		else {
-			return _screenName;
-		}
+		return StringUtil.nullToEmpty(_screenName);
 	}
 
 	@Override
@@ -1008,12 +979,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return StringUtil.nullToEmpty(_emailAddress);
 	}
 
 	@Override
@@ -1057,12 +1023,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getGoogleUserId() {
-		if (_googleUserId == null) {
-			return "";
-		}
-		else {
-			return _googleUserId;
-		}
+		return StringUtil.nullToEmpty(_googleUserId);
 	}
 
 	@Override
@@ -1094,12 +1055,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getOpenId() {
-		if (_openId == null) {
-			return "";
-		}
-		else {
-			return _openId;
-		}
+		return StringUtil.nullToEmpty(_openId);
 	}
 
 	@Override
@@ -1143,12 +1099,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return StringUtil.nullToEmpty(_languageId);
 	}
 
 	@Override
@@ -1159,12 +1110,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getTimeZoneId() {
-		if (_timeZoneId == null) {
-			return "";
-		}
-		else {
-			return _timeZoneId;
-		}
+		return StringUtil.nullToEmpty(_timeZoneId);
 	}
 
 	@Override
@@ -1175,12 +1121,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getGreeting() {
-		if (_greeting == null) {
-			return "";
-		}
-		else {
-			return _greeting;
-		}
+		return StringUtil.nullToEmpty(_greeting);
 	}
 
 	@Override
@@ -1191,12 +1132,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return StringUtil.nullToEmpty(_comments);
 	}
 
 	@Override
@@ -1207,12 +1143,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getFirstName() {
-		if (_firstName == null) {
-			return "";
-		}
-		else {
-			return _firstName;
-		}
+		return StringUtil.nullToEmpty(_firstName);
 	}
 
 	@Override
@@ -1223,12 +1154,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getMiddleName() {
-		if (_middleName == null) {
-			return "";
-		}
-		else {
-			return _middleName;
-		}
+		return StringUtil.nullToEmpty(_middleName);
 	}
 
 	@Override
@@ -1239,12 +1165,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLastName() {
-		if (_lastName == null) {
-			return "";
-		}
-		else {
-			return _lastName;
-		}
+		return StringUtil.nullToEmpty(_lastName);
 	}
 
 	@Override
@@ -1255,12 +1176,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getJobTitle() {
-		if (_jobTitle == null) {
-			return "";
-		}
-		else {
-			return _jobTitle;
-		}
+		return StringUtil.nullToEmpty(_jobTitle);
 	}
 
 	@Override
@@ -1282,12 +1198,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLoginIP() {
-		if (_loginIP == null) {
-			return "";
-		}
-		else {
-			return _loginIP;
-		}
+		return StringUtil.nullToEmpty(_loginIP);
 	}
 
 	@Override
@@ -1309,12 +1220,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLastLoginIP() {
-		if (_lastLoginIP == null) {
-			return "";
-		}
-		else {
-			return _lastLoginIP;
-		}
+		return StringUtil.nullToEmpty(_lastLoginIP);
 	}
 
 	@Override

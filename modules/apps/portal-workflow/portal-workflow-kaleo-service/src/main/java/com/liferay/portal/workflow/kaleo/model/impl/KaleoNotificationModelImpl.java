@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotification;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotificationModel;
 
@@ -368,12 +369,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -409,12 +405,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return StringUtil.nullToEmpty(_kaleoClassName);
 	}
 
 	@Override
@@ -478,12 +469,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getKaleoNodeName() {
-		if (_kaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _kaleoNodeName;
-		}
+		return StringUtil.nullToEmpty(_kaleoNodeName);
 	}
 
 	@Override
@@ -493,12 +479,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -508,12 +489,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -523,12 +499,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getExecutionType() {
-		if (_executionType == null) {
-			return "";
-		}
-		else {
-			return _executionType;
-		}
+		return StringUtil.nullToEmpty(_executionType);
 	}
 
 	@Override
@@ -548,12 +519,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getTemplate() {
-		if (_template == null) {
-			return "";
-		}
-		else {
-			return _template;
-		}
+		return StringUtil.nullToEmpty(_template);
 	}
 
 	@Override
@@ -563,12 +529,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getTemplateLanguage() {
-		if (_templateLanguage == null) {
-			return "";
-		}
-		else {
-			return _templateLanguage;
-		}
+		return StringUtil.nullToEmpty(_templateLanguage);
 	}
 
 	@Override
@@ -578,12 +539,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getNotificationTypes() {
-		if (_notificationTypes == null) {
-			return "";
-		}
-		else {
-			return _notificationTypes;
-		}
+		return StringUtil.nullToEmpty(_notificationTypes);
 	}
 
 	@Override

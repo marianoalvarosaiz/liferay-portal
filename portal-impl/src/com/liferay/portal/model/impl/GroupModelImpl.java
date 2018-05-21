@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -472,12 +473,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -681,12 +677,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return StringUtil.nullToEmpty(_treePath);
 	}
 
 	@Override
@@ -707,12 +698,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getGroupKey() {
-		if (_groupKey == null) {
-			return "";
-		}
-		else {
-			return _groupKey;
-		}
+		return StringUtil.nullToEmpty(_groupKey);
 	}
 
 	@Override
@@ -733,12 +719,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -834,12 +815,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -960,12 +936,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return StringUtil.nullToEmpty(_typeSettings);
 	}
 
 	@Override
@@ -1004,12 +975,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getFriendlyURL() {
-		if (_friendlyURL == null) {
-			return "";
-		}
-		else {
-			return _friendlyURL;
-		}
+		return StringUtil.nullToEmpty(_friendlyURL);
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -313,12 +314,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getSessionId() {
-		if (_sessionId == null) {
-			return "";
-		}
-		else {
-			return _sessionId;
-		}
+		return StringUtil.nullToEmpty(_sessionId);
 	}
 
 	@Override
@@ -338,12 +334,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getRemoteAddr() {
-		if (_remoteAddr == null) {
-			return "";
-		}
-		else {
-			return _remoteAddr;
-		}
+		return StringUtil.nullToEmpty(_remoteAddr);
 	}
 
 	@Override
@@ -353,12 +344,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getRemoteHost() {
-		if (_remoteHost == null) {
-			return "";
-		}
-		else {
-			return _remoteHost;
-		}
+		return StringUtil.nullToEmpty(_remoteHost);
 	}
 
 	@Override
@@ -368,12 +354,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getUserAgent() {
-		if (_userAgent == null) {
-			return "";
-		}
-		else {
-			return _userAgent;
-		}
+		return StringUtil.nullToEmpty(_userAgent);
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -282,12 +283,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public String getServletContextName() {
-		if (_servletContextName == null) {
-			return "";
-		}
-		else {
-			return _servletContextName;
-		}
+		return StringUtil.nullToEmpty(_servletContextName);
 	}
 
 	@Override
@@ -307,12 +303,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public String getSchemaVersion() {
-		if (_schemaVersion == null) {
-			return "";
-		}
-		else {
-			return _schemaVersion;
-		}
+		return StringUtil.nullToEmpty(_schemaVersion);
 	}
 
 	@Override
@@ -367,12 +358,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public String getTestString() {
-		if (_testString == null) {
-			return "";
-		}
-		else {
-			return _testString;
-		}
+		return StringUtil.nullToEmpty(_testString);
 	}
 
 	@Override

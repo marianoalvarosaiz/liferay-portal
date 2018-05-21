@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -318,12 +319,7 @@ public class AnnouncementsDeliveryModelImpl extends BaseModelImpl<AnnouncementsD
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return StringUtil.nullToEmpty(_type);
 	}
 
 	@Override

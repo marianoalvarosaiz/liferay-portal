@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -353,12 +354,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -473,12 +469,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -516,12 +507,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	@JSON
 	@Override
 	public String getVersionUserName() {
-		if (_versionUserName == null) {
-			return "";
-		}
-		else {
-			return _versionUserName;
-		}
+		return StringUtil.nullToEmpty(_versionUserName);
 	}
 
 	@Override
@@ -594,12 +580,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	@JSON
 	@Override
 	public String getRecordSetVersion() {
-		if (_recordSetVersion == null) {
-			return "";
-		}
-		else {
-			return _recordSetVersion;
-		}
+		return StringUtil.nullToEmpty(_recordSetVersion);
 	}
 
 	@Override
@@ -620,12 +601,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return StringUtil.nullToEmpty(_version);
 	}
 
 	@Override

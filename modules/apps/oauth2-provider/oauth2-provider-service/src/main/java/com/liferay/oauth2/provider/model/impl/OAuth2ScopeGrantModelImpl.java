@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -263,12 +264,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public String getApplicationName() {
-		if (_applicationName == null) {
-			return "";
-		}
-		else {
-			return _applicationName;
-		}
+		return StringUtil.nullToEmpty(_applicationName);
 	}
 
 	@Override
@@ -288,12 +284,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public String getBundleSymbolicName() {
-		if (_bundleSymbolicName == null) {
-			return "";
-		}
-		else {
-			return _bundleSymbolicName;
-		}
+		return StringUtil.nullToEmpty(_bundleSymbolicName);
 	}
 
 	@Override
@@ -313,12 +304,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public String getScope() {
-		if (_scope == null) {
-			return "";
-		}
-		else {
-			return _scope;
-		}
+		return StringUtil.nullToEmpty(_scope);
 	}
 
 	@Override

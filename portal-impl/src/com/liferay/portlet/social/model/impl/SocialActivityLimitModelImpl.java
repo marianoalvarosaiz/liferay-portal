@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.social.kernel.model.SocialActivityLimit;
@@ -395,12 +396,7 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 
 	@Override
 	public String getActivityCounterName() {
-		if (_activityCounterName == null) {
-			return "";
-		}
-		else {
-			return _activityCounterName;
-		}
+		return StringUtil.nullToEmpty(_activityCounterName);
 	}
 
 	@Override
@@ -420,12 +416,7 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 
 	@Override
 	public String getValue() {
-		if (_value == null) {
-			return "";
-		}
-		else {
-			return _value;
-		}
+		return StringUtil.nullToEmpty(_value);
 	}
 
 	@Override

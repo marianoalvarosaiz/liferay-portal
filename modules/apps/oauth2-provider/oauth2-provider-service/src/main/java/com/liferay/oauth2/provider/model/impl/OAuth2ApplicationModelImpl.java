@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -430,12 +431,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -486,12 +482,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getAllowedGrantTypes() {
-		if (_allowedGrantTypes == null) {
-			return "";
-		}
-		else {
-			return _allowedGrantTypes;
-		}
+		return StringUtil.nullToEmpty(_allowedGrantTypes);
 	}
 
 	@Override
@@ -502,12 +493,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getClientId() {
-		if (_clientId == null) {
-			return "";
-		}
-		else {
-			return _clientId;
-		}
+		return StringUtil.nullToEmpty(_clientId);
 	}
 
 	@Override
@@ -539,12 +525,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getClientSecret() {
-		if (_clientSecret == null) {
-			return "";
-		}
-		else {
-			return _clientSecret;
-		}
+		return StringUtil.nullToEmpty(_clientSecret);
 	}
 
 	@Override
@@ -555,12 +536,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -571,12 +547,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getFeatures() {
-		if (_features == null) {
-			return "";
-		}
-		else {
-			return _features;
-		}
+		return StringUtil.nullToEmpty(_features);
 	}
 
 	@Override
@@ -587,12 +558,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getHomePageURL() {
-		if (_homePageURL == null) {
-			return "";
-		}
-		else {
-			return _homePageURL;
-		}
+		return StringUtil.nullToEmpty(_homePageURL);
 	}
 
 	@Override
@@ -614,12 +580,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -630,12 +591,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getPrivacyPolicyURL() {
-		if (_privacyPolicyURL == null) {
-			return "";
-		}
-		else {
-			return _privacyPolicyURL;
-		}
+		return StringUtil.nullToEmpty(_privacyPolicyURL);
 	}
 
 	@Override
@@ -646,12 +602,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getRedirectURIs() {
-		if (_redirectURIs == null) {
-			return "";
-		}
-		else {
-			return _redirectURIs;
-		}
+		return StringUtil.nullToEmpty(_redirectURIs);
 	}
 
 	@Override

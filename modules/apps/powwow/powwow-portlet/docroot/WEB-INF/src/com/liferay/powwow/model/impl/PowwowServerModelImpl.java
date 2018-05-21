@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.powwow.model.PowwowServer;
 import com.liferay.powwow.model.PowwowServerModel;
@@ -296,12 +297,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -337,12 +333,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -354,12 +345,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getProviderType() {
-		if (_providerType == null) {
-			return "";
-		}
-		else {
-			return _providerType;
-		}
+		return StringUtil.nullToEmpty(_providerType);
 	}
 
 	@Override
@@ -379,12 +365,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return StringUtil.nullToEmpty(_url);
 	}
 
 	@Override
@@ -394,12 +375,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getApiKey() {
-		if (_apiKey == null) {
-			return "";
-		}
-		else {
-			return _apiKey;
-		}
+		return StringUtil.nullToEmpty(_apiKey);
 	}
 
 	@Override
@@ -409,12 +385,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getSecret() {
-		if (_secret == null) {
-			return "";
-		}
-		else {
-			return _secret;
-		}
+		return StringUtil.nullToEmpty(_secret);
 	}
 
 	@Override

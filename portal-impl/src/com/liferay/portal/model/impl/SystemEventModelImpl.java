@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
@@ -360,12 +361,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -451,12 +447,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String getClassUuid() {
-		if (_classUuid == null) {
-			return "";
-		}
-		else {
-			return _classUuid;
-		}
+		return StringUtil.nullToEmpty(_classUuid);
 	}
 
 	@Override
@@ -530,12 +521,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String getExtraData() {
-		if (_extraData == null) {
-			return "";
-		}
-		else {
-			return _extraData;
-		}
+		return StringUtil.nullToEmpty(_extraData);
 	}
 
 	@Override

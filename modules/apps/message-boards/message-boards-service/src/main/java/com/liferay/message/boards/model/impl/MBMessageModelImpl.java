@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -465,12 +466,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -587,12 +583,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -779,12 +770,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return StringUtil.nullToEmpty(_subject);
 	}
 
 	@Override
@@ -795,12 +781,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return StringUtil.nullToEmpty(_body);
 	}
 
 	@Override
@@ -811,12 +792,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getFormat() {
-		if (_format == null) {
-			return "";
-		}
-		else {
-			return _format;
-		}
+		return StringUtil.nullToEmpty(_format);
 	}
 
 	@Override
@@ -962,12 +938,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

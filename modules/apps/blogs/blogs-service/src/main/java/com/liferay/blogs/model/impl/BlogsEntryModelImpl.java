@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -492,12 +493,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return StringUtil.nullToEmpty(_uuid);
 	}
 
 	@Override
@@ -612,12 +608,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -658,12 +649,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -674,12 +660,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getSubtitle() {
-		if (_subtitle == null) {
-			return "";
-		}
-		else {
-			return _subtitle;
-		}
+		return StringUtil.nullToEmpty(_subtitle);
 	}
 
 	@Override
@@ -690,12 +671,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return StringUtil.nullToEmpty(_urlTitle);
 	}
 
 	@Override
@@ -716,12 +692,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -732,12 +703,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return StringUtil.nullToEmpty(_content);
 	}
 
 	@Override
@@ -803,12 +769,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getTrackbacks() {
-		if (_trackbacks == null) {
-			return "";
-		}
-		else {
-			return _trackbacks;
-		}
+		return StringUtil.nullToEmpty(_trackbacks);
 	}
 
 	@Override
@@ -819,12 +780,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getCoverImageCaption() {
-		if (_coverImageCaption == null) {
-			return "";
-		}
-		else {
-			return _coverImageCaption;
-		}
+		return StringUtil.nullToEmpty(_coverImageCaption);
 	}
 
 	@Override
@@ -846,12 +802,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getCoverImageURL() {
-		if (_coverImageURL == null) {
-			return "";
-		}
-		else {
-			return _coverImageURL;
-		}
+		return StringUtil.nullToEmpty(_coverImageURL);
 	}
 
 	@Override
@@ -901,12 +852,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getSmallImageURL() {
-		if (_smallImageURL == null) {
-			return "";
-		}
-		else {
-			return _smallImageURL;
-		}
+		return StringUtil.nullToEmpty(_smallImageURL);
 	}
 
 	@Override
@@ -978,12 +924,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

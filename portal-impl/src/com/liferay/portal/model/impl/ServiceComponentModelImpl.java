@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -210,12 +211,7 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 
 	@Override
 	public String getBuildNamespace() {
-		if (_buildNamespace == null) {
-			return "";
-		}
-		else {
-			return _buildNamespace;
-		}
+		return StringUtil.nullToEmpty(_buildNamespace);
 	}
 
 	@Override
@@ -267,12 +263,7 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 
 	@Override
 	public String getData() {
-		if (_data == null) {
-			return "";
-		}
-		else {
-			return _data;
-		}
+		return StringUtil.nullToEmpty(_data);
 	}
 
 	@Override

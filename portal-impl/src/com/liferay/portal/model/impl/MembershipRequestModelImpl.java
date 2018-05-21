@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -406,12 +407,7 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 	@JSON
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return StringUtil.nullToEmpty(_comments);
 	}
 
 	@Override
@@ -422,12 +418,7 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 	@JSON
 	@Override
 	public String getReplyComments() {
-		if (_replyComments == null) {
-			return "";
-		}
-		else {
-			return _replyComments;
-		}
+		return StringUtil.nullToEmpty(_replyComments);
 	}
 
 	@Override

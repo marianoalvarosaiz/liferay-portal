@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -560,12 +561,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -761,12 +757,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -860,12 +851,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return StringUtil.nullToEmpty(_title);
 	}
 
 	@Override
@@ -959,12 +945,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -1062,12 +1043,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getKeywords() {
-		if (_keywords == null) {
-			return "";
-		}
-		else {
-			return _keywords;
-		}
+		return StringUtil.nullToEmpty(_keywords);
 	}
 
 	@Override
@@ -1163,12 +1139,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getRobots() {
-		if (_robots == null) {
-			return "";
-		}
-		else {
-			return _robots;
-		}
+		return StringUtil.nullToEmpty(_robots);
 	}
 
 	@Override
@@ -1262,12 +1233,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return StringUtil.nullToEmpty(_typeSettings);
 	}
 
 	@Override
@@ -1289,12 +1255,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return StringUtil.nullToEmpty(_themeId);
 	}
 
 	@Override
@@ -1305,12 +1266,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return StringUtil.nullToEmpty(_colorSchemeId);
 	}
 
 	@Override
@@ -1321,12 +1277,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return StringUtil.nullToEmpty(_css);
 	}
 
 	@Override
@@ -1387,12 +1338,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override

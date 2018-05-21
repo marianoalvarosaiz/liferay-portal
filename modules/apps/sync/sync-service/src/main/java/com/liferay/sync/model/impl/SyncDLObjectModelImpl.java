@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import com.liferay.sync.model.SyncDLObject;
 import com.liferay.sync.model.SyncDLObjectModel;
@@ -521,12 +522,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -617,12 +613,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON(include = false)
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return StringUtil.nullToEmpty(_treePath);
 	}
 
 	@Override
@@ -643,12 +634,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -659,12 +645,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return StringUtil.nullToEmpty(_extension);
 	}
 
 	@Override
@@ -675,12 +656,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return StringUtil.nullToEmpty(_mimeType);
 	}
 
 	@Override
@@ -691,12 +667,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -707,12 +678,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getChangeLog() {
-		if (_changeLog == null) {
-			return "";
-		}
-		else {
-			return _changeLog;
-		}
+		return StringUtil.nullToEmpty(_changeLog);
 	}
 
 	@Override
@@ -723,12 +689,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getExtraSettings() {
-		if (_extraSettings == null) {
-			return "";
-		}
-		else {
-			return _extraSettings;
-		}
+		return StringUtil.nullToEmpty(_extraSettings);
 	}
 
 	@Override
@@ -739,12 +700,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return StringUtil.nullToEmpty(_version);
 	}
 
 	@Override
@@ -787,12 +743,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getChecksum() {
-		if (_checksum == null) {
-			return "";
-		}
-		else {
-			return _checksum;
-		}
+		return StringUtil.nullToEmpty(_checksum);
 	}
 
 	@Override
@@ -803,12 +754,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getEvent() {
-		if (_event == null) {
-			return "";
-		}
-		else {
-			return _event;
-		}
+		return StringUtil.nullToEmpty(_event);
 	}
 
 	@Override
@@ -829,12 +775,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getLanTokenKey() {
-		if (_lanTokenKey == null) {
-			return "";
-		}
-		else {
-			return _lanTokenKey;
-		}
+		return StringUtil.nullToEmpty(_lanTokenKey);
 	}
 
 	@Override
@@ -894,12 +835,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getLockUserName() {
-		if (_lockUserName == null) {
-			return "";
-		}
-		else {
-			return _lockUserName;
-		}
+		return StringUtil.nullToEmpty(_lockUserName);
 	}
 
 	@Override
@@ -910,12 +846,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return StringUtil.nullToEmpty(_type);
 	}
 
 	@Override
@@ -959,12 +890,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getTypeUuid() {
-		if (_typeUuid == null) {
-			return "";
-		}
-		else {
-			return _typeUuid;
-		}
+		return StringUtil.nullToEmpty(_typeUuid);
 	}
 
 	@Override

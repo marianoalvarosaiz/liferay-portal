@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -433,12 +434,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -474,12 +470,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+		return StringUtil.nullToEmpty(_address);
 	}
 
 	@Override
@@ -499,12 +490,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getPersonalName() {
-		if (_personalName == null) {
-			return "";
-		}
-		else {
-			return _personalName;
-		}
+		return StringUtil.nullToEmpty(_personalName);
 	}
 
 	@Override
@@ -514,12 +500,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getProtocol() {
-		if (_protocol == null) {
-			return "";
-		}
-		else {
-			return _protocol;
-		}
+		return StringUtil.nullToEmpty(_protocol);
 	}
 
 	@Override
@@ -529,12 +510,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getIncomingHostName() {
-		if (_incomingHostName == null) {
-			return "";
-		}
-		else {
-			return _incomingHostName;
-		}
+		return StringUtil.nullToEmpty(_incomingHostName);
 	}
 
 	@Override
@@ -569,12 +545,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getOutgoingHostName() {
-		if (_outgoingHostName == null) {
-			return "";
-		}
-		else {
-			return _outgoingHostName;
-		}
+		return StringUtil.nullToEmpty(_outgoingHostName);
 	}
 
 	@Override
@@ -609,12 +580,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getLogin() {
-		if (_login == null) {
-			return "";
-		}
-		else {
-			return _login;
-		}
+		return StringUtil.nullToEmpty(_login);
 	}
 
 	@Override
@@ -624,12 +590,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
+		return StringUtil.nullToEmpty(_password);
 	}
 
 	@Override
@@ -654,12 +615,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getSignature() {
-		if (_signature == null) {
-			return "";
-		}
-		else {
-			return _signature;
-		}
+		return StringUtil.nullToEmpty(_signature);
 	}
 
 	@Override
@@ -684,12 +640,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getFolderPrefix() {
-		if (_folderPrefix == null) {
-			return "";
-		}
-		else {
-			return _folderPrefix;
-		}
+		return StringUtil.nullToEmpty(_folderPrefix);
 	}
 
 	@Override

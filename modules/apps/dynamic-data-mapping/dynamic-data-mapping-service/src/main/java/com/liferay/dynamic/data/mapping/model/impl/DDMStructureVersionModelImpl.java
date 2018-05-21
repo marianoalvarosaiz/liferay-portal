@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -436,12 +437,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return StringUtil.nullToEmpty(_userName);
 	}
 
 	@Override
@@ -486,12 +482,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return StringUtil.nullToEmpty(_version);
 	}
 
 	@Override
@@ -523,12 +514,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return StringUtil.nullToEmpty(_name);
 	}
 
 	@Override
@@ -622,12 +608,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return StringUtil.nullToEmpty(_description);
 	}
 
 	@Override
@@ -725,12 +706,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getDefinition() {
-		if (_definition == null) {
-			return "";
-		}
-		else {
-			return _definition;
-		}
+		return StringUtil.nullToEmpty(_definition);
 	}
 
 	@Override
@@ -741,12 +717,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getStorageType() {
-		if (_storageType == null) {
-			return "";
-		}
-		else {
-			return _storageType;
-		}
+		return StringUtil.nullToEmpty(_storageType);
 	}
 
 	@Override
@@ -818,12 +789,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return StringUtil.nullToEmpty(_statusByUserName);
 	}
 
 	@Override
