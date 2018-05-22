@@ -1225,16 +1225,18 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String keyNullSafe = Objects.toString(key, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_K;
-			finderArgs = new Object[] { companyId, key };
+			finderArgs = new Object[] { companyId, keyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_K;
 			finderArgs = new Object[] {
-					companyId, key,
+					companyId, keyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -1249,7 +1251,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			if ((list != null) && !list.isEmpty()) {
 				for (AssetCategoryProperty assetCategoryProperty : list) {
 					if ((companyId != assetCategoryProperty.getCompanyId()) ||
-							!Objects.equals(key, assetCategoryProperty.getKey())) {
+							!Objects.equals(keyNullSafe,
+								assetCategoryProperty.getKey())) {
 						list = null;
 
 						break;
@@ -1653,7 +1656,9 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	public int countByC_K(long companyId, String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_K;
 
-		Object[] finderArgs = new Object[] { companyId, key };
+		String keyNullSafe = Objects.toString(key, "");
+
+		Object[] finderArgs = new Object[] { companyId, keyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1788,7 +1793,9 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	@Override
 	public AssetCategoryProperty fetchByCA_K(long categoryId, String key,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { categoryId, key };
+		String keyNullSafe = Objects.toString(key, "");
+
+		Object[] finderArgs = new Object[] { categoryId, keyNullSafe };
 
 		Object result = null;
 
@@ -1801,7 +1808,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 			AssetCategoryProperty assetCategoryProperty = (AssetCategoryProperty)result;
 
 			if ((categoryId != assetCategoryProperty.getCategoryId()) ||
-					!Objects.equals(key, assetCategoryProperty.getKey())) {
+					!Objects.equals(keyNullSafe, assetCategoryProperty.getKey())) {
 				result = null;
 			}
 		}
@@ -1858,8 +1865,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 					cacheResult(assetCategoryProperty);
 
 					if ((assetCategoryProperty.getCategoryId() != categoryId) ||
-							(assetCategoryProperty.getKey() == null) ||
-							!assetCategoryProperty.getKey().equals(key)) {
+							!assetCategoryProperty.getKey().equals(keyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_CA_K,
 							finderArgs, assetCategoryProperty);
 					}
@@ -1909,7 +1915,9 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	public int countByCA_K(long categoryId, String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CA_K;
 
-		Object[] finderArgs = new Object[] { categoryId, key };
+		String keyNullSafe = Objects.toString(key, "");
+
+		Object[] finderArgs = new Object[] { categoryId, keyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

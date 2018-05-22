@@ -1054,7 +1054,9 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 	@Override
 	public LayoutPageTemplateCollection fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Object result = null;
 
@@ -1067,7 +1069,8 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 			LayoutPageTemplateCollection layoutPageTemplateCollection = (LayoutPageTemplateCollection)result;
 
 			if ((groupId != layoutPageTemplateCollection.getGroupId()) ||
-					!Objects.equals(name, layoutPageTemplateCollection.getName())) {
+					!Objects.equals(nameNullSafe,
+						layoutPageTemplateCollection.getName())) {
 				result = null;
 			}
 		}
@@ -1124,8 +1127,8 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 					cacheResult(layoutPageTemplateCollection);
 
 					if ((layoutPageTemplateCollection.getGroupId() != groupId) ||
-							(layoutPageTemplateCollection.getName() == null) ||
-							!layoutPageTemplateCollection.getName().equals(name)) {
+							!layoutPageTemplateCollection.getName()
+															 .equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 							finderArgs, layoutPageTemplateCollection);
 					}
@@ -1176,7 +1179,9 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1333,8 +1338,14 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN;
-		finderArgs = new Object[] { groupId, name, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				groupId, nameNullSafe,
+				
+				start, end, orderByComparator
+			};
 
 		List<LayoutPageTemplateCollection> list = null;
 
@@ -1346,8 +1357,8 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 				for (LayoutPageTemplateCollection layoutPageTemplateCollection : list) {
 					if ((groupId != layoutPageTemplateCollection.getGroupId()) ||
 							!StringUtil.wildcardMatches(
-								layoutPageTemplateCollection.getName(), name,
-								'_', '%', '\\', false)) {
+								layoutPageTemplateCollection.getName(),
+								nameNullSafe, '_', '%', '\\', false)) {
 						list = null;
 
 						break;
@@ -2122,7 +2133,9 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 	public int countByG_LikeN(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -660,7 +660,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	@Override
 	public UserIdMapper fetchByU_T(long userId, String type,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { userId, type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { userId, typeNullSafe };
 
 		Object result = null;
 
@@ -673,7 +675,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			UserIdMapper userIdMapper = (UserIdMapper)result;
 
 			if ((userId != userIdMapper.getUserId()) ||
-					!Objects.equals(type, userIdMapper.getType())) {
+					!Objects.equals(typeNullSafe, userIdMapper.getType())) {
 				result = null;
 			}
 		}
@@ -730,8 +732,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 					cacheResult(userIdMapper);
 
 					if ((userIdMapper.getUserId() != userId) ||
-							(userIdMapper.getType() == null) ||
-							!userIdMapper.getType().equals(type)) {
+							!userIdMapper.getType().equals(typeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_U_T,
 							finderArgs, userIdMapper);
 					}
@@ -781,7 +782,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	public int countByU_T(long userId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_T;
 
-		Object[] finderArgs = new Object[] { userId, type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { userId, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -914,7 +917,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	@Override
 	public UserIdMapper fetchByT_E(String type, String externalUserId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { type, externalUserId };
+		String typeNullSafe = Objects.toString(type, "");
+		String externalUserIdNullSafe = Objects.toString(externalUserId, "");
+
+		Object[] finderArgs = new Object[] { typeNullSafe, externalUserIdNullSafe };
 
 		Object result = null;
 
@@ -926,8 +932,8 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		if (result instanceof UserIdMapper) {
 			UserIdMapper userIdMapper = (UserIdMapper)result;
 
-			if (!Objects.equals(type, userIdMapper.getType()) ||
-					!Objects.equals(externalUserId,
+			if (!Objects.equals(typeNullSafe, userIdMapper.getType()) ||
+					!Objects.equals(externalUserIdNullSafe,
 						userIdMapper.getExternalUserId())) {
 				result = null;
 			}
@@ -998,11 +1004,9 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 					cacheResult(userIdMapper);
 
-					if ((userIdMapper.getType() == null) ||
-							!userIdMapper.getType().equals(type) ||
-							(userIdMapper.getExternalUserId() == null) ||
+					if (!userIdMapper.getType().equals(typeNullSafe) ||
 							!userIdMapper.getExternalUserId()
-											 .equals(externalUserId)) {
+											 .equals(externalUserIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_T_E,
 							finderArgs, userIdMapper);
 					}
@@ -1052,7 +1056,10 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	public int countByT_E(String type, String externalUserId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_E;
 
-		Object[] finderArgs = new Object[] { type, externalUserId };
+		String typeNullSafe = Objects.toString(type, "");
+		String externalUserIdNullSafe = Objects.toString(externalUserId, "");
+
+		Object[] finderArgs = new Object[] { typeNullSafe, externalUserIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

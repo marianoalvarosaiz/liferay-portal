@@ -183,15 +183,21 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<PollsChoice> list = null;
@@ -202,7 +208,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (PollsChoice pollsChoice : list) {
-					if (!Objects.equals(uuid, pollsChoice.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, pollsChoice.getUuid())) {
 						list = null;
 
 						break;
@@ -580,7 +586,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -708,7 +716,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	@Override
 	public PollsChoice fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -720,7 +730,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		if (result instanceof PollsChoice) {
 			PollsChoice pollsChoice = (PollsChoice)result;
 
-			if (!Objects.equals(uuid, pollsChoice.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, pollsChoice.getUuid()) ||
 					(groupId != pollsChoice.getGroupId())) {
 				result = null;
 			}
@@ -777,8 +787,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 
 					cacheResult(pollsChoice);
 
-					if ((pollsChoice.getUuid() == null) ||
-							!pollsChoice.getUuid().equals(uuid) ||
+					if (!pollsChoice.getUuid().equals(uuidNullSafe) ||
 							(pollsChoice.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, pollsChoice);
@@ -829,7 +838,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -990,16 +1001,18 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1013,7 +1026,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (PollsChoice pollsChoice : list) {
-					if (!Objects.equals(uuid, pollsChoice.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, pollsChoice.getUuid()) ||
 							(companyId != pollsChoice.getCompanyId())) {
 						list = null;
 
@@ -1416,7 +1429,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2056,7 +2071,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	@Override
 	public PollsChoice fetchByQ_N(long questionId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { questionId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { questionId, nameNullSafe };
 
 		Object result = null;
 
@@ -2069,7 +2086,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			PollsChoice pollsChoice = (PollsChoice)result;
 
 			if ((questionId != pollsChoice.getQuestionId()) ||
-					!Objects.equals(name, pollsChoice.getName())) {
+					!Objects.equals(nameNullSafe, pollsChoice.getName())) {
 				result = null;
 			}
 		}
@@ -2126,8 +2143,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 					cacheResult(pollsChoice);
 
 					if ((pollsChoice.getQuestionId() != questionId) ||
-							(pollsChoice.getName() == null) ||
-							!pollsChoice.getName().equals(name)) {
+							!pollsChoice.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_Q_N,
 							finderArgs, pollsChoice);
 					}
@@ -2177,7 +2193,9 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	public int countByQ_N(long questionId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_Q_N;
 
-		Object[] finderArgs = new Object[] { questionId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { questionId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

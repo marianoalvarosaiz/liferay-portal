@@ -657,7 +657,9 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	@Override
 	public Entry fetchByU_EA(long userId, String emailAddress,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { userId, emailAddress };
+		String emailAddressNullSafe = Objects.toString(emailAddress, "");
+
+		Object[] finderArgs = new Object[] { userId, emailAddressNullSafe };
 
 		Object result = null;
 
@@ -670,7 +672,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 			Entry entry = (Entry)result;
 
 			if ((userId != entry.getUserId()) ||
-					!Objects.equals(emailAddress, entry.getEmailAddress())) {
+					!Objects.equals(emailAddressNullSafe,
+						entry.getEmailAddress())) {
 				result = null;
 			}
 		}
@@ -738,8 +741,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 					cacheResult(entry);
 
 					if ((entry.getUserId() != userId) ||
-							(entry.getEmailAddress() == null) ||
-							!entry.getEmailAddress().equals(emailAddress)) {
+							!entry.getEmailAddress().equals(emailAddressNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_U_EA,
 							finderArgs, entry);
 					}
@@ -789,7 +791,9 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	public int countByU_EA(long userId, String emailAddress) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_EA;
 
-		Object[] finderArgs = new Object[] { userId, emailAddress };
+		String emailAddressNullSafe = Objects.toString(emailAddress, "");
+
+		Object[] finderArgs = new Object[] { userId, emailAddressNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

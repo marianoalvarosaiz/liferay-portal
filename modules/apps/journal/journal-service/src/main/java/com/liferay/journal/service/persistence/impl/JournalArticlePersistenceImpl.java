@@ -712,15 +712,21 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<JournalArticle> list = null;
@@ -731,7 +737,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
-					if (!Objects.equals(uuid, journalArticle.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, journalArticle.getUuid())) {
 						list = null;
 
 						break;
@@ -1110,7 +1116,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1239,7 +1247,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	@Override
 	public JournalArticle fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -1251,7 +1261,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		if (result instanceof JournalArticle) {
 			JournalArticle journalArticle = (JournalArticle)result;
 
-			if (!Objects.equals(uuid, journalArticle.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, journalArticle.getUuid()) ||
 					(groupId != journalArticle.getGroupId())) {
 				result = null;
 			}
@@ -1308,8 +1318,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 					cacheResult(journalArticle);
 
-					if ((journalArticle.getUuid() == null) ||
-							!journalArticle.getUuid().equals(uuid) ||
+					if (!journalArticle.getUuid().equals(uuidNullSafe) ||
 							(journalArticle.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, journalArticle);
@@ -1360,7 +1369,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1524,16 +1535,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1547,7 +1560,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
-					if (!Objects.equals(uuid, journalArticle.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, journalArticle.getUuid()) ||
 							(companyId != journalArticle.getCompanyId())) {
 						list = null;
 
@@ -1950,7 +1963,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3491,16 +3506,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String DDMStructureKeyNullSafe = Objects.toString(DDMStructureKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_DDMSTRUCTUREKEY;
-			finderArgs = new Object[] { DDMStructureKey };
+			finderArgs = new Object[] { DDMStructureKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_DDMSTRUCTUREKEY;
 			finderArgs = new Object[] {
-					DDMStructureKey,
+					DDMStructureKeyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -3514,7 +3531,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
-					if (!Objects.equals(DDMStructureKey,
+					if (!Objects.equals(DDMStructureKeyNullSafe,
 								journalArticle.getDDMStructureKey())) {
 						list = null;
 
@@ -4112,7 +4129,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByDDMStructureKey(String DDMStructureKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_DDMSTRUCTUREKEY;
 
-		Object[] finderArgs = new Object[] { DDMStructureKey };
+		String DDMStructureKeyNullSafe = Objects.toString(DDMStructureKey, "");
+
+		Object[] finderArgs = new Object[] { DDMStructureKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4363,16 +4382,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_DDMTEMPLATEKEY;
-			finderArgs = new Object[] { DDMTemplateKey };
+			finderArgs = new Object[] { DDMTemplateKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_DDMTEMPLATEKEY;
 			finderArgs = new Object[] {
-					DDMTemplateKey,
+					DDMTemplateKeyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -4386,7 +4407,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
-					if (!Objects.equals(DDMTemplateKey,
+					if (!Objects.equals(DDMTemplateKeyNullSafe,
 								journalArticle.getDDMTemplateKey())) {
 						list = null;
 
@@ -4769,7 +4790,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByDDMTemplateKey(String DDMTemplateKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_DDMTEMPLATEKEY;
 
-		Object[] finderArgs = new Object[] { DDMTemplateKey };
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
+		Object[] finderArgs = new Object[] { DDMTemplateKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4923,15 +4946,21 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LAYOUTUUID;
-			finderArgs = new Object[] { layoutUuid };
+			finderArgs = new Object[] { layoutUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_LAYOUTUUID;
-			finderArgs = new Object[] { layoutUuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					layoutUuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<JournalArticle> list = null;
@@ -4942,7 +4971,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
-					if (!Objects.equals(layoutUuid,
+					if (!Objects.equals(layoutUuidNullSafe,
 								journalArticle.getLayoutUuid())) {
 						list = null;
 
@@ -5324,7 +5353,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByLayoutUuid(String layoutUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LAYOUTUUID;
 
-		Object[] finderArgs = new Object[] { layoutUuid };
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
+		Object[] finderArgs = new Object[] { layoutUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -9722,16 +9753,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A;
-			finderArgs = new Object[] { groupId, articleId };
+			finderArgs = new Object[] { groupId, articleIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_A;
 			finderArgs = new Object[] {
-					groupId, articleId,
+					groupId, articleIdNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -9746,7 +9779,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(articleId,
+							!Objects.equals(articleIdNullSafe,
 								journalArticle.getArticleId())) {
 						list = null;
 
@@ -10500,7 +10533,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_A(long groupId, String articleId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_A;
 
-		Object[] finderArgs = new Object[] { groupId, articleId };
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -10730,16 +10765,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_UT;
-			finderArgs = new Object[] { groupId, urlTitle };
+			finderArgs = new Object[] { groupId, urlTitleNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_UT;
 			finderArgs = new Object[] {
-					groupId, urlTitle,
+					groupId, urlTitleNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -10754,7 +10791,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(urlTitle,
+							!Objects.equals(urlTitleNullSafe,
 								journalArticle.getUrlTitle())) {
 						list = null;
 
@@ -11508,7 +11545,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_UT(long groupId, String urlTitle) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_UT;
 
-		Object[] finderArgs = new Object[] { groupId, urlTitle };
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
+		Object[] finderArgs = new Object[] { groupId, urlTitleNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -11742,16 +11781,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String DDMStructureKeyNullSafe = Objects.toString(DDMStructureKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_DDMSK;
-			finderArgs = new Object[] { groupId, DDMStructureKey };
+			finderArgs = new Object[] { groupId, DDMStructureKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_DDMSK;
 			finderArgs = new Object[] {
-					groupId, DDMStructureKey,
+					groupId, DDMStructureKeyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -11766,7 +11807,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(DDMStructureKey,
+							!Objects.equals(DDMStructureKeyNullSafe,
 								journalArticle.getDDMStructureKey())) {
 						list = null;
 
@@ -12529,7 +12570,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_DDMSK(long groupId, String DDMStructureKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_DDMSK;
 
-		Object[] finderArgs = new Object[] { groupId, DDMStructureKey };
+		String DDMStructureKeyNullSafe = Objects.toString(DDMStructureKey, "");
+
+		Object[] finderArgs = new Object[] { groupId, DDMStructureKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -12763,16 +12806,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_DDMTK;
-			finderArgs = new Object[] { groupId, DDMTemplateKey };
+			finderArgs = new Object[] { groupId, DDMTemplateKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_DDMTK;
 			finderArgs = new Object[] {
-					groupId, DDMTemplateKey,
+					groupId, DDMTemplateKeyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -12787,7 +12832,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(DDMTemplateKey,
+							!Objects.equals(DDMTemplateKeyNullSafe,
 								journalArticle.getDDMTemplateKey())) {
 						list = null;
 
@@ -13550,7 +13595,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_DDMTK(long groupId, String DDMTemplateKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_DDMTK;
 
-		Object[] finderArgs = new Object[] { groupId, DDMTemplateKey };
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
+		Object[] finderArgs = new Object[] { groupId, DDMTemplateKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -13781,16 +13828,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_L;
-			finderArgs = new Object[] { groupId, layoutUuid };
+			finderArgs = new Object[] { groupId, layoutUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_L;
 			finderArgs = new Object[] {
-					groupId, layoutUuid,
+					groupId, layoutUuidNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -13805,7 +13854,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(layoutUuid,
+							!Objects.equals(layoutUuidNullSafe,
 								journalArticle.getLayoutUuid())) {
 						list = null;
 
@@ -14560,7 +14609,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_L(long groupId, String layoutUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_L;
 
-		Object[] finderArgs = new Object[] { groupId, layoutUuid };
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
+		Object[] finderArgs = new Object[] { groupId, layoutUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -14782,9 +14833,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_NOTL;
 		finderArgs = new Object[] {
-				groupId, layoutUuid,
+				groupId, layoutUuidNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -14798,7 +14851,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							Objects.equals(layoutUuid,
+							Objects.equals(layoutUuidNullSafe,
 								journalArticle.getLayoutUuid())) {
 						list = null;
 
@@ -15944,7 +15997,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_NotL(long groupId, String layoutUuid) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_NOTL;
 
-		Object[] finderArgs = new Object[] { groupId, layoutUuid };
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
+		Object[] finderArgs = new Object[] { groupId, layoutUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -18905,16 +18960,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_DDMTK;
-			finderArgs = new Object[] { classNameId, DDMTemplateKey };
+			finderArgs = new Object[] { classNameId, DDMTemplateKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_DDMTK;
 			finderArgs = new Object[] {
-					classNameId, DDMTemplateKey,
+					classNameId, DDMTemplateKeyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -18929,7 +18986,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((classNameId != journalArticle.getClassNameId()) ||
-							!Objects.equals(DDMTemplateKey,
+							!Objects.equals(DDMTemplateKeyNullSafe,
 								journalArticle.getDDMTemplateKey())) {
 						list = null;
 
@@ -19337,7 +19394,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByC_DDMTK(long classNameId, String DDMTemplateKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_DDMTK;
 
-		Object[] finderArgs = new Object[] { classNameId, DDMTemplateKey };
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
+		Object[] finderArgs = new Object[] { classNameId, DDMTemplateKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -24446,7 +24505,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	@Override
 	public JournalArticle fetchByG_C_DDMSK(long groupId, long classNameId,
 		String DDMStructureKey, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, classNameId, DDMStructureKey };
+		String DDMStructureKeyNullSafe = Objects.toString(DDMStructureKey, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, DDMStructureKeyNullSafe
+			};
 
 		Object result = null;
 
@@ -24460,7 +24523,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 			if ((groupId != journalArticle.getGroupId()) ||
 					(classNameId != journalArticle.getClassNameId()) ||
-					!Objects.equals(DDMStructureKey,
+					!Objects.equals(DDMStructureKeyNullSafe,
 						journalArticle.getDDMStructureKey())) {
 				result = null;
 			}
@@ -24534,9 +24597,8 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 					if ((journalArticle.getGroupId() != groupId) ||
 							(journalArticle.getClassNameId() != classNameId) ||
-							(journalArticle.getDDMStructureKey() == null) ||
 							!journalArticle.getDDMStructureKey()
-											   .equals(DDMStructureKey)) {
+											   .equals(DDMStructureKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_DDMSK,
 							finderArgs, journalArticle);
 					}
@@ -24591,7 +24653,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		String DDMStructureKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_DDMSK;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, DDMStructureKey };
+		String DDMStructureKeyNullSafe = Objects.toString(DDMStructureKey, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, DDMStructureKeyNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -24777,16 +24843,20 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_DDMTK;
-			finderArgs = new Object[] { groupId, classNameId, DDMTemplateKey };
+			finderArgs = new Object[] {
+					groupId, classNameId, DDMTemplateKeyNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_DDMTK;
 			finderArgs = new Object[] {
-					groupId, classNameId, DDMTemplateKey,
+					groupId, classNameId, DDMTemplateKeyNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -24802,7 +24872,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
 							(classNameId != journalArticle.getClassNameId()) ||
-							!Objects.equals(DDMTemplateKey,
+							!Objects.equals(DDMTemplateKeyNullSafe,
 								journalArticle.getDDMTemplateKey())) {
 						list = null;
 
@@ -25608,7 +25678,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		String DDMTemplateKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_DDMTK;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, DDMTemplateKey };
+		String DDMTemplateKeyNullSafe = Objects.toString(DDMTemplateKey, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, DDMTemplateKeyNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -25864,16 +25938,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_L;
-			finderArgs = new Object[] { groupId, classNameId, layoutUuid };
+			finderArgs = new Object[] { groupId, classNameId, layoutUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_L;
 			finderArgs = new Object[] {
-					groupId, classNameId, layoutUuid,
+					groupId, classNameId, layoutUuidNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -25889,7 +25965,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
 							(classNameId != journalArticle.getClassNameId()) ||
-							!Objects.equals(layoutUuid,
+							!Objects.equals(layoutUuidNullSafe,
 								journalArticle.getLayoutUuid())) {
 						list = null;
 
@@ -26684,7 +26760,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_C_L(long groupId, long classNameId, String layoutUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_L;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, layoutUuid };
+		String layoutUuidNullSafe = Objects.toString(layoutUuid, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, layoutUuidNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -26909,7 +26989,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	@Override
 	public JournalArticle fetchByG_A_V(long groupId, String articleId,
 		double version, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, articleId, version };
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe, version };
 
 		Object result = null;
 
@@ -26922,7 +27004,8 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			JournalArticle journalArticle = (JournalArticle)result;
 
 			if ((groupId != journalArticle.getGroupId()) ||
-					!Objects.equals(articleId, journalArticle.getArticleId()) ||
+					!Objects.equals(articleIdNullSafe,
+						journalArticle.getArticleId()) ||
 					(version != journalArticle.getVersion())) {
 				result = null;
 			}
@@ -26984,8 +27067,8 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 					cacheResult(journalArticle);
 
 					if ((journalArticle.getGroupId() != groupId) ||
-							(journalArticle.getArticleId() == null) ||
-							!journalArticle.getArticleId().equals(articleId) ||
+							!journalArticle.getArticleId()
+											   .equals(articleIdNullSafe) ||
 							(journalArticle.getVersion() != version)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_A_V,
 							finderArgs, journalArticle);
@@ -27038,7 +27121,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_A_V(long groupId, String articleId, double version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_A_V;
 
-		Object[] finderArgs = new Object[] { groupId, articleId, version };
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -27228,16 +27313,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A_ST;
-			finderArgs = new Object[] { groupId, articleId, status };
+			finderArgs = new Object[] { groupId, articleIdNullSafe, status };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_A_ST;
 			finderArgs = new Object[] {
-					groupId, articleId, status,
+					groupId, articleIdNullSafe, status,
 					
 					start, end, orderByComparator
 				};
@@ -27252,7 +27339,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(articleId,
+							!Objects.equals(articleIdNullSafe,
 								journalArticle.getArticleId()) ||
 							(status != journalArticle.getStatus())) {
 						list = null;
@@ -28288,16 +28375,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderArgs = new Object[] {
-					groupId, articleId, StringUtil.merge(statuses)
+					groupId, articleIdNullSafe, StringUtil.merge(statuses)
 				};
 		}
 		else {
 			finderArgs = new Object[] {
-					groupId, articleId, StringUtil.merge(statuses),
+					groupId, articleIdNullSafe, StringUtil.merge(statuses),
 					
 					start, end, orderByComparator
 				};
@@ -28312,7 +28401,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(articleId,
+							!Objects.equals(articleIdNullSafe,
 								journalArticle.getArticleId()) ||
 							!ArrayUtil.contains(statuses,
 								journalArticle.getStatus())) {
@@ -28445,7 +28534,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_A_ST(long groupId, String articleId, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_A_ST;
 
-		Object[] finderArgs = new Object[] { groupId, articleId, status };
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe, status };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -28527,8 +28618,10 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			Arrays.sort(statuses);
 		}
 
+		String articleIdNullSafe = Objects.toString(articleId);
+
 		Object[] finderArgs = new Object[] {
-				groupId, articleId, StringUtil.merge(statuses)
+				groupId, articleIdNullSafe, StringUtil.merge(statuses)
 			};
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_A_ST,
@@ -28881,9 +28974,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_A_NOTST;
 		finderArgs = new Object[] {
-				groupId, articleId, status,
+				groupId, articleIdNullSafe, status,
 				
 				start, end, orderByComparator
 			};
@@ -28897,7 +28992,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(articleId,
+							!Objects.equals(articleIdNullSafe,
 								journalArticle.getArticleId()) ||
 							(status == journalArticle.getStatus())) {
 						list = null;
@@ -29696,7 +29791,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_A_NotST(long groupId, String articleId, int status) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_A_NOTST;
 
-		Object[] finderArgs = new Object[] { groupId, articleId, status };
+		String articleIdNullSafe = Objects.toString(articleId, "");
+
+		Object[] finderArgs = new Object[] { groupId, articleIdNullSafe, status };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -29952,16 +30049,18 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_UT_ST;
-			finderArgs = new Object[] { groupId, urlTitle, status };
+			finderArgs = new Object[] { groupId, urlTitleNullSafe, status };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_UT_ST;
 			finderArgs = new Object[] {
-					groupId, urlTitle, status,
+					groupId, urlTitleNullSafe, status,
 					
 					start, end, orderByComparator
 				};
@@ -29976,7 +30075,7 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalArticle journalArticle : list) {
 					if ((groupId != journalArticle.getGroupId()) ||
-							!Objects.equals(urlTitle,
+							!Objects.equals(urlTitleNullSafe,
 								journalArticle.getUrlTitle()) ||
 							(status != journalArticle.getStatus())) {
 						list = null;
@@ -30771,7 +30870,9 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 	public int countByG_UT_ST(long groupId, String urlTitle, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_UT_ST;
 
-		Object[] finderArgs = new Object[] { groupId, urlTitle, status };
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
+		Object[] finderArgs = new Object[] { groupId, urlTitleNullSafe, status };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

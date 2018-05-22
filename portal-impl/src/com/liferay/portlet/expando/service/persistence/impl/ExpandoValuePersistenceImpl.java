@@ -4352,16 +4352,18 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String dataNullSafe = Objects.toString(data, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_T_C_D;
-			finderArgs = new Object[] { tableId, columnId, data };
+			finderArgs = new Object[] { tableId, columnId, dataNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_T_C_D;
 			finderArgs = new Object[] {
-					tableId, columnId, data,
+					tableId, columnId, dataNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -4377,7 +4379,7 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 				for (ExpandoValue expandoValue : list) {
 					if ((tableId != expandoValue.getTableId()) ||
 							(columnId != expandoValue.getColumnId()) ||
-							!Objects.equals(data, expandoValue.getData())) {
+							!Objects.equals(dataNullSafe, expandoValue.getData())) {
 						list = null;
 
 						break;
@@ -4801,7 +4803,9 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 	public int countByT_C_D(long tableId, long columnId, String data) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_C_D;
 
-		Object[] finderArgs = new Object[] { tableId, columnId, data };
+		String dataNullSafe = Objects.toString(data, "");
+
+		Object[] finderArgs = new Object[] { tableId, columnId, dataNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
