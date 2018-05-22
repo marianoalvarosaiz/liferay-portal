@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserTracker service. Represents a row in the &quot;UserTracker&quot; database table, with each column mapped to a property of this class.
@@ -313,12 +314,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getSessionId() {
-		if (_sessionId == null) {
-			return "";
-		}
-		else {
-			return _sessionId;
-		}
+		return Objects.toString(_sessionId, "");
 	}
 
 	@Override
@@ -338,12 +334,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getRemoteAddr() {
-		if (_remoteAddr == null) {
-			return "";
-		}
-		else {
-			return _remoteAddr;
-		}
+		return Objects.toString(_remoteAddr, "");
 	}
 
 	@Override
@@ -353,12 +344,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getRemoteHost() {
-		if (_remoteHost == null) {
-			return "";
-		}
-		else {
-			return _remoteHost;
-		}
+		return Objects.toString(_remoteHost, "");
 	}
 
 	@Override
@@ -368,12 +354,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getUserAgent() {
-		if (_userAgent == null) {
-			return "";
-		}
-		else {
-			return _userAgent;
-		}
+		return Objects.toString(_userAgent, "");
 	}
 
 	@Override

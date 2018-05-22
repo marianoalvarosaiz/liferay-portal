@@ -177,15 +177,21 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NAME;
-			finderArgs = new Object[] { name };
+			finderArgs = new Object[] { nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_NAME;
-			finderArgs = new Object[] { name, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					nameNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<ResourceAction> list = null;
@@ -196,7 +202,7 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 			if ((list != null) && !list.isEmpty()) {
 				for (ResourceAction resourceAction : list) {
-					if (!Objects.equals(name, resourceAction.getName())) {
+					if (!Objects.equals(nameNullSafe, resourceAction.getName())) {
 						list = null;
 
 						break;
@@ -575,7 +581,9 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	public int countByName(String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_NAME;
 
-		Object[] finderArgs = new Object[] { name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -703,7 +711,10 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	@Override
 	public ResourceAction fetchByN_A(String name, String actionId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { name, actionId };
+		String nameNullSafe = Objects.toString(name, "");
+		String actionIdNullSafe = Objects.toString(actionId, "");
+
+		Object[] finderArgs = new Object[] { nameNullSafe, actionIdNullSafe };
 
 		Object result = null;
 
@@ -715,8 +726,9 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 		if (result instanceof ResourceAction) {
 			ResourceAction resourceAction = (ResourceAction)result;
 
-			if (!Objects.equals(name, resourceAction.getName()) ||
-					!Objects.equals(actionId, resourceAction.getActionId())) {
+			if (!Objects.equals(nameNullSafe, resourceAction.getName()) ||
+					!Objects.equals(actionIdNullSafe,
+						resourceAction.getActionId())) {
 				result = null;
 			}
 		}
@@ -786,10 +798,9 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 
 					cacheResult(resourceAction);
 
-					if ((resourceAction.getName() == null) ||
-							!resourceAction.getName().equals(name) ||
-							(resourceAction.getActionId() == null) ||
-							!resourceAction.getActionId().equals(actionId)) {
+					if (!resourceAction.getName().equals(nameNullSafe) ||
+							!resourceAction.getActionId()
+											   .equals(actionIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_N_A,
 							finderArgs, resourceAction);
 					}
@@ -839,7 +850,10 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 	public int countByN_A(String name, String actionId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_N_A;
 
-		Object[] finderArgs = new Object[] { name, actionId };
+		String nameNullSafe = Objects.toString(name, "");
+		String actionIdNullSafe = Objects.toString(actionId, "");
+
+		Object[] finderArgs = new Object[] { nameNullSafe, actionIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

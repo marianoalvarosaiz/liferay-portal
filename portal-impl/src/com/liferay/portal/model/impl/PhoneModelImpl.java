@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Phone service. Represents a row in the &quot;Phone&quot; database table, with each column mapped to a property of this class.
@@ -344,12 +345,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -441,12 +437,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -553,12 +544,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getNumber() {
-		if (_number == null) {
-			return "";
-		}
-		else {
-			return _number;
-		}
+		return Objects.toString(_number, "");
 	}
 
 	@Override
@@ -569,12 +555,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return Objects.toString(_extension, "");
 	}
 
 	@Override

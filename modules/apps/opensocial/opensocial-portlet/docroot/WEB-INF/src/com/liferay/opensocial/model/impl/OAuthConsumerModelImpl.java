@@ -38,6 +38,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuthConsumer service. Represents a row in the &quot;OpenSocial_OAuthConsumer&quot; database table, with each column mapped to a property of this class.
@@ -265,12 +266,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getGadgetKey() {
-		if (_gadgetKey == null) {
-			return "";
-		}
-		else {
-			return _gadgetKey;
-		}
+		return Objects.toString(_gadgetKey, "");
 	}
 
 	@Override
@@ -290,12 +286,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getServiceName() {
-		if (_serviceName == null) {
-			return "";
-		}
-		else {
-			return _serviceName;
-		}
+		return Objects.toString(_serviceName, "");
 	}
 
 	@Override
@@ -315,12 +306,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getConsumerKey() {
-		if (_consumerKey == null) {
-			return "";
-		}
-		else {
-			return _consumerKey;
-		}
+		return Objects.toString(_consumerKey, "");
 	}
 
 	@Override
@@ -330,12 +316,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getConsumerSecret() {
-		if (_consumerSecret == null) {
-			return "";
-		}
-		else {
-			return _consumerSecret;
-		}
+		return Objects.toString(_consumerSecret, "");
 	}
 
 	@Override
@@ -345,12 +326,7 @@ public class OAuthConsumerModelImpl extends BaseModelImpl<OAuthConsumer>
 
 	@Override
 	public String getKeyType() {
-		if (_keyType == null) {
-			return "";
-		}
-		else {
-			return _keyType;
-		}
+		return Objects.toString(_keyType, "");
 	}
 
 	@Override

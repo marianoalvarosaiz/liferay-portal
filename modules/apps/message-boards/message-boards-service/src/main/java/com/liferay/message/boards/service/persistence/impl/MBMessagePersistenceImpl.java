@@ -194,15 +194,21 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<MBMessage> list = null;
@@ -213,7 +219,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MBMessage mbMessage : list) {
-					if (!Objects.equals(uuid, mbMessage.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, mbMessage.getUuid())) {
 						list = null;
 
 						break;
@@ -591,7 +597,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -719,7 +727,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 	@Override
 	public MBMessage fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -731,7 +741,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		if (result instanceof MBMessage) {
 			MBMessage mbMessage = (MBMessage)result;
 
-			if (!Objects.equals(uuid, mbMessage.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, mbMessage.getUuid()) ||
 					(groupId != mbMessage.getGroupId())) {
 				result = null;
 			}
@@ -788,8 +798,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 
 					cacheResult(mbMessage);
 
-					if ((mbMessage.getUuid() == null) ||
-							!mbMessage.getUuid().equals(uuid) ||
+					if (!mbMessage.getUuid().equals(uuidNullSafe) ||
 							(mbMessage.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, mbMessage);
@@ -840,7 +849,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1000,16 +1011,18 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1023,7 +1036,7 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MBMessage mbMessage : list) {
-					if (!Objects.equals(uuid, mbMessage.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, mbMessage.getUuid()) ||
 							(companyId != mbMessage.getCompanyId())) {
 						list = null;
 
@@ -1426,7 +1439,9 @@ public class MBMessagePersistenceImpl extends BasePersistenceImpl<MBMessage>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

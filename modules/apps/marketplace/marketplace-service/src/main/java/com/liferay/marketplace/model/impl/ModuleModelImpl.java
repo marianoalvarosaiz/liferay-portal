@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Module service. Represents a row in the &quot;Marketplace_Module&quot; database table, with each column mapped to a property of this class.
@@ -205,12 +206,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -282,12 +278,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getBundleSymbolicName() {
-		if (_bundleSymbolicName == null) {
-			return "";
-		}
-		else {
-			return _bundleSymbolicName;
-		}
+		return Objects.toString(_bundleSymbolicName, "");
 	}
 
 	@Override
@@ -307,12 +298,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getBundleVersion() {
-		if (_bundleVersion == null) {
-			return "";
-		}
-		else {
-			return _bundleVersion;
-		}
+		return Objects.toString(_bundleVersion, "");
 	}
 
 	@Override
@@ -332,12 +318,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getContextName() {
-		if (_contextName == null) {
-			return "";
-		}
-		else {
-			return _contextName;
-		}
+		return Objects.toString(_contextName, "");
 	}
 
 	@Override

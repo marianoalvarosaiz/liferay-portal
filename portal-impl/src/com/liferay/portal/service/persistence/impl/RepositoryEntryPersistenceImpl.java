@@ -186,15 +186,21 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<RepositoryEntry> list = null;
@@ -205,7 +211,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 			if ((list != null) && !list.isEmpty()) {
 				for (RepositoryEntry repositoryEntry : list) {
-					if (!Objects.equals(uuid, repositoryEntry.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, repositoryEntry.getUuid())) {
 						list = null;
 
 						break;
@@ -585,7 +591,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -714,7 +722,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 	@Override
 	public RepositoryEntry fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -726,7 +736,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		if (result instanceof RepositoryEntry) {
 			RepositoryEntry repositoryEntry = (RepositoryEntry)result;
 
-			if (!Objects.equals(uuid, repositoryEntry.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, repositoryEntry.getUuid()) ||
 					(groupId != repositoryEntry.getGroupId())) {
 				result = null;
 			}
@@ -783,8 +793,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 					cacheResult(repositoryEntry);
 
-					if ((repositoryEntry.getUuid() == null) ||
-							!repositoryEntry.getUuid().equals(uuid) ||
+					if (!repositoryEntry.getUuid().equals(uuidNullSafe) ||
 							(repositoryEntry.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, repositoryEntry);
@@ -835,7 +844,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -997,16 +1008,18 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1020,7 +1033,7 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 			if ((list != null) && !list.isEmpty()) {
 				for (RepositoryEntry repositoryEntry : list) {
-					if (!Objects.equals(uuid, repositoryEntry.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, repositoryEntry.getUuid()) ||
 							(companyId != repositoryEntry.getCompanyId())) {
 						list = null;
 
@@ -1424,7 +1437,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2072,7 +2087,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 	@Override
 	public RepositoryEntry fetchByR_M(long repositoryId, String mappedId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { repositoryId, mappedId };
+		String mappedIdNullSafe = Objects.toString(mappedId, "");
+
+		Object[] finderArgs = new Object[] { repositoryId, mappedIdNullSafe };
 
 		Object result = null;
 
@@ -2085,7 +2102,8 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 			RepositoryEntry repositoryEntry = (RepositoryEntry)result;
 
 			if ((repositoryId != repositoryEntry.getRepositoryId()) ||
-					!Objects.equals(mappedId, repositoryEntry.getMappedId())) {
+					!Objects.equals(mappedIdNullSafe,
+						repositoryEntry.getMappedId())) {
 				result = null;
 			}
 		}
@@ -2142,8 +2160,8 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 					cacheResult(repositoryEntry);
 
 					if ((repositoryEntry.getRepositoryId() != repositoryId) ||
-							(repositoryEntry.getMappedId() == null) ||
-							!repositoryEntry.getMappedId().equals(mappedId)) {
+							!repositoryEntry.getMappedId()
+												.equals(mappedIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_R_M,
 							finderArgs, repositoryEntry);
 					}
@@ -2193,7 +2211,9 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 	public int countByR_M(long repositoryId, String mappedId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_R_M;
 
-		Object[] finderArgs = new Object[] { repositoryId, mappedId };
+		String mappedIdNullSafe = Objects.toString(mappedId, "");
+
+		Object[] finderArgs = new Object[] { repositoryId, mappedIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

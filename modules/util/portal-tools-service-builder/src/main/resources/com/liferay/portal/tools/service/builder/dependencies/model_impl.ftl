@@ -92,6 +92,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -638,12 +639,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		@Override
 		public ${entityColumn.genericizedType} get${entityColumn.methodName}() {
 			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
-				if (_${entityColumn.name} == null) {
-					return "";
-				}
-				else {
-					return _${entityColumn.name};
-				}
+				return Objects.toString(_${entityColumn.name}, "");
 			<#else>
 				<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
 					if (_${entityColumn.name}BlobModel == null) {

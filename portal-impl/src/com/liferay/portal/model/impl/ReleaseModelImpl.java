@@ -37,6 +37,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Release service. Represents a row in the &quot;Release_&quot; database table, with each column mapped to a property of this class.
@@ -282,12 +283,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public String getServletContextName() {
-		if (_servletContextName == null) {
-			return "";
-		}
-		else {
-			return _servletContextName;
-		}
+		return Objects.toString(_servletContextName, "");
 	}
 
 	@Override
@@ -307,12 +303,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public String getSchemaVersion() {
-		if (_schemaVersion == null) {
-			return "";
-		}
-		else {
-			return _schemaVersion;
-		}
+		return Objects.toString(_schemaVersion, "");
 	}
 
 	@Override
@@ -367,12 +358,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public String getTestString() {
-		if (_testString == null) {
-			return "";
-		}
-		else {
-			return _testString;
-		}
+		return Objects.toString(_testString, "");
 	}
 
 	@Override

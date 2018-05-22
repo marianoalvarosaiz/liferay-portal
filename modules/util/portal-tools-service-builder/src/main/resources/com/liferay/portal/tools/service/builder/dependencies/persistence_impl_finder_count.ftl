@@ -27,10 +27,18 @@ public int countBy${entityFinder.name}(
 			FINDER_PATH_WITH_PAGINATION_COUNT_BY_${entityFinder.name?upper_case};
 		</#if>
 
+	<#list entityColumns as entityColumn>
+		<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+			String ${entityColumn.name}NullSafe = Objects.toString(${entityColumn.name}, "");
+		</#if>
+	</#list>
+
 	Object[] finderArgs = new Object[] {
 		<#list entityColumns as entityColumn>
 			<#if stringUtil.equals(entityColumn.type, "Date")>
 				_getTime(${entityColumn.name})
+			<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name}NullSafe
 			<#else>
 				${entityColumn.name}
 			</#if>
@@ -127,12 +135,20 @@ public int countBy${entityFinder.name}(
 			</#if>
 		</#list>
 
+		<#list entityColumns as entityColumn>
+			<#if !entityColumn.hasArrayableOperator() && stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				String ${entityColumn.name}NullSafe = Objects.toString(${entityColumn.name});
+			</#if>
+		</#list>
+
 		Object[] finderArgs = new Object[] {
 			<#list entityColumns as entityColumn>
 				<#if entityColumn.hasArrayableOperator()>
 					StringUtil.merge(${entityColumn.names})
 				<#elseif stringUtil.equals(entityColumn.type, "Date")>
 					_getTime(${entityColumn.name})
+				<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					${entityColumn.name}NullSafe
 				<#else>
 					${entityColumn.name}
 				</#if>

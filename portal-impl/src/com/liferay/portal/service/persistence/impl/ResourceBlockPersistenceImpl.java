@@ -188,16 +188,18 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N;
-			finderArgs = new Object[] { companyId, name };
+			finderArgs = new Object[] { companyId, nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_N;
 			finderArgs = new Object[] {
-					companyId, name,
+					companyId, nameNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -212,7 +214,8 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 			if ((list != null) && !list.isEmpty()) {
 				for (ResourceBlock resourceBlock : list) {
 					if ((companyId != resourceBlock.getCompanyId()) ||
-							!Objects.equals(name, resourceBlock.getName())) {
+							!Objects.equals(nameNullSafe,
+								resourceBlock.getName())) {
 						list = null;
 
 						break;
@@ -615,7 +618,9 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -791,16 +796,18 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_G_N;
-			finderArgs = new Object[] { companyId, groupId, name };
+			finderArgs = new Object[] { companyId, groupId, nameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_G_N;
 			finderArgs = new Object[] {
-					companyId, groupId, name,
+					companyId, groupId, nameNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -816,7 +823,8 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 				for (ResourceBlock resourceBlock : list) {
 					if ((companyId != resourceBlock.getCompanyId()) ||
 							(groupId != resourceBlock.getGroupId()) ||
-							!Objects.equals(name, resourceBlock.getName())) {
+							!Objects.equals(nameNullSafe,
+								resourceBlock.getName())) {
 						list = null;
 
 						break;
@@ -1240,7 +1248,9 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 	public int countByC_G_N(long companyId, long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_G_N;
 
-		Object[] finderArgs = new Object[] { companyId, groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1402,8 +1412,11 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 	@Override
 	public ResourceBlock fetchByC_G_N_P(long companyId, long groupId,
 		String name, String permissionsHash, boolean retrieveFromCache) {
+		String nameNullSafe = Objects.toString(name, "");
+		String permissionsHashNullSafe = Objects.toString(permissionsHash, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, groupId, name, permissionsHash
+				companyId, groupId, nameNullSafe, permissionsHashNullSafe
 			};
 
 		Object result = null;
@@ -1418,8 +1431,8 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 
 			if ((companyId != resourceBlock.getCompanyId()) ||
 					(groupId != resourceBlock.getGroupId()) ||
-					!Objects.equals(name, resourceBlock.getName()) ||
-					!Objects.equals(permissionsHash,
+					!Objects.equals(nameNullSafe, resourceBlock.getName()) ||
+					!Objects.equals(permissionsHashNullSafe,
 						resourceBlock.getPermissionsHash())) {
 				result = null;
 			}
@@ -1500,11 +1513,9 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 
 					if ((resourceBlock.getCompanyId() != companyId) ||
 							(resourceBlock.getGroupId() != groupId) ||
-							(resourceBlock.getName() == null) ||
-							!resourceBlock.getName().equals(name) ||
-							(resourceBlock.getPermissionsHash() == null) ||
+							!resourceBlock.getName().equals(nameNullSafe) ||
 							!resourceBlock.getPermissionsHash()
-											  .equals(permissionsHash)) {
+											  .equals(permissionsHashNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_P,
 							finderArgs, resourceBlock);
 					}
@@ -1562,8 +1573,11 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 		String permissionsHash) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_G_N_P;
 
+		String nameNullSafe = Objects.toString(name, "");
+		String permissionsHashNullSafe = Objects.toString(permissionsHash, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, groupId, name, permissionsHash
+				companyId, groupId, nameNullSafe, permissionsHashNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

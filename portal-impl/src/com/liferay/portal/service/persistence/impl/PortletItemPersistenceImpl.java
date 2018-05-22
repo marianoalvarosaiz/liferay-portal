@@ -744,16 +744,18 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_C;
-			finderArgs = new Object[] { groupId, portletId, classNameId };
+			finderArgs = new Object[] { groupId, portletIdNullSafe, classNameId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_P_C;
 			finderArgs = new Object[] {
-					groupId, portletId, classNameId,
+					groupId, portletIdNullSafe, classNameId,
 					
 					start, end, orderByComparator
 				};
@@ -768,7 +770,7 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 			if ((list != null) && !list.isEmpty()) {
 				for (PortletItem portletItem : list) {
 					if ((groupId != portletItem.getGroupId()) ||
-							!Objects.equals(portletId,
+							!Objects.equals(portletIdNullSafe,
 								portletItem.getPortletId()) ||
 							(classNameId != portletItem.getClassNameId())) {
 						list = null;
@@ -1195,7 +1197,11 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	public int countByG_P_C(long groupId, String portletId, long classNameId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_C;
 
-		Object[] finderArgs = new Object[] { groupId, portletId, classNameId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, portletIdNullSafe, classNameId
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1355,7 +1361,12 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 	@Override
 	public PortletItem fetchByG_N_P_C(long groupId, String name,
 		String portletId, long classNameId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name, portletId, classNameId };
+		String nameNullSafe = Objects.toString(name, "");
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, nameNullSafe, portletIdNullSafe, classNameId
+			};
 
 		Object result = null;
 
@@ -1368,8 +1379,9 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 			PortletItem portletItem = (PortletItem)result;
 
 			if ((groupId != portletItem.getGroupId()) ||
-					!Objects.equals(name, portletItem.getName()) ||
-					!Objects.equals(portletId, portletItem.getPortletId()) ||
+					!Objects.equals(nameNullSafe, portletItem.getName()) ||
+					!Objects.equals(portletIdNullSafe,
+						portletItem.getPortletId()) ||
 					(classNameId != portletItem.getClassNameId())) {
 				result = null;
 			}
@@ -1460,10 +1472,8 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 					cacheResult(portletItem);
 
 					if ((portletItem.getGroupId() != groupId) ||
-							(portletItem.getName() == null) ||
-							!portletItem.getName().equals(name) ||
-							(portletItem.getPortletId() == null) ||
-							!portletItem.getPortletId().equals(portletId) ||
+							!portletItem.getName().equals(nameNullSafe) ||
+							!portletItem.getPortletId().equals(portletIdNullSafe) ||
 							(portletItem.getClassNameId() != classNameId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N_P_C,
 							finderArgs, portletItem);
@@ -1521,7 +1531,12 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 		long classNameId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_P_C;
 
-		Object[] finderArgs = new Object[] { groupId, name, portletId, classNameId };
+		String nameNullSafe = Objects.toString(name, "");
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, nameNullSafe, portletIdNullSafe, classNameId
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
