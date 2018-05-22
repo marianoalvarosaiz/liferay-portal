@@ -186,15 +186,21 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDMTemplate> list = null;
@@ -205,7 +211,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMTemplate ddmTemplate : list) {
-					if (!Objects.equals(uuid, ddmTemplate.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, ddmTemplate.getUuid())) {
 						list = null;
 
 						break;
@@ -583,7 +589,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -711,7 +719,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	@Override
 	public DDMTemplate fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -723,7 +733,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		if (result instanceof DDMTemplate) {
 			DDMTemplate ddmTemplate = (DDMTemplate)result;
 
-			if (!Objects.equals(uuid, ddmTemplate.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, ddmTemplate.getUuid()) ||
 					(groupId != ddmTemplate.getGroupId())) {
 				result = null;
 			}
@@ -780,8 +790,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 					cacheResult(ddmTemplate);
 
-					if ((ddmTemplate.getUuid() == null) ||
-							!ddmTemplate.getUuid().equals(uuid) ||
+					if (!ddmTemplate.getUuid().equals(uuidNullSafe) ||
 							(ddmTemplate.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, ddmTemplate);
@@ -832,7 +841,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -991,16 +1002,18 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1014,7 +1027,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMTemplate ddmTemplate : list) {
-					if (!Objects.equals(uuid, ddmTemplate.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, ddmTemplate.getUuid()) ||
 							(companyId != ddmTemplate.getCompanyId())) {
 						list = null;
 
@@ -1417,7 +1430,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2933,15 +2948,21 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String templateKeyNullSafe = Objects.toString(templateKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TEMPLATEKEY;
-			finderArgs = new Object[] { templateKey };
+			finderArgs = new Object[] { templateKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_TEMPLATEKEY;
-			finderArgs = new Object[] { templateKey, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					templateKeyNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDMTemplate> list = null;
@@ -2952,7 +2973,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMTemplate ddmTemplate : list) {
-					if (!Objects.equals(templateKey,
+					if (!Objects.equals(templateKeyNullSafe,
 								ddmTemplate.getTemplateKey())) {
 						list = null;
 
@@ -3334,7 +3355,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByTemplateKey(String templateKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_TEMPLATEKEY;
 
-		Object[] finderArgs = new Object[] { templateKey };
+		String templateKeyNullSafe = Objects.toString(templateKey, "");
+
+		Object[] finderArgs = new Object[] { templateKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3480,15 +3503,21 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE;
-			finderArgs = new Object[] { type };
+			finderArgs = new Object[] { typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_TYPE;
-			finderArgs = new Object[] { type, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					typeNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDMTemplate> list = null;
@@ -3499,7 +3528,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMTemplate ddmTemplate : list) {
-					if (!Objects.equals(type, ddmTemplate.getType())) {
+					if (!Objects.equals(typeNullSafe, ddmTemplate.getType())) {
 						list = null;
 
 						break;
@@ -3877,7 +3906,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByType(String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_TYPE;
 
-		Object[] finderArgs = new Object[] { type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4025,15 +4056,21 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String languageNullSafe = Objects.toString(language, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LANGUAGE;
-			finderArgs = new Object[] { language };
+			finderArgs = new Object[] { languageNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_LANGUAGE;
-			finderArgs = new Object[] { language, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					languageNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDMTemplate> list = null;
@@ -4044,7 +4081,8 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDMTemplate ddmTemplate : list) {
-					if (!Objects.equals(language, ddmTemplate.getLanguage())) {
+					if (!Objects.equals(languageNullSafe,
+								ddmTemplate.getLanguage())) {
 						list = null;
 
 						break;
@@ -4425,7 +4463,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByLanguage(String language) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LANGUAGE;
 
-		Object[] finderArgs = new Object[] { language };
+		String languageNullSafe = Objects.toString(language, "");
+
+		Object[] finderArgs = new Object[] { languageNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -8644,7 +8684,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	@Override
 	public DDMTemplate fetchByG_C_T(long groupId, long classNameId,
 		String templateKey, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, classNameId, templateKey };
+		String templateKeyNullSafe = Objects.toString(templateKey, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, templateKeyNullSafe
+			};
 
 		Object result = null;
 
@@ -8658,7 +8702,8 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 			if ((groupId != ddmTemplate.getGroupId()) ||
 					(classNameId != ddmTemplate.getClassNameId()) ||
-					!Objects.equals(templateKey, ddmTemplate.getTemplateKey())) {
+					!Objects.equals(templateKeyNullSafe,
+						ddmTemplate.getTemplateKey())) {
 				result = null;
 			}
 		}
@@ -8720,8 +8765,8 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 					if ((ddmTemplate.getGroupId() != groupId) ||
 							(ddmTemplate.getClassNameId() != classNameId) ||
-							(ddmTemplate.getTemplateKey() == null) ||
-							!ddmTemplate.getTemplateKey().equals(templateKey)) {
+							!ddmTemplate.getTemplateKey()
+											.equals(templateKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_T,
 							finderArgs, ddmTemplate);
 					}
@@ -8773,7 +8818,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByG_C_T(long groupId, long classNameId, String templateKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_T;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, templateKey };
+		String templateKeyNullSafe = Objects.toString(templateKey, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, templateKeyNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -8952,17 +9001,19 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C_T;
-			finderArgs = new Object[] { classNameId, classPK, type };
+			finderArgs = new Object[] { classNameId, classPK, typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C_T;
 			finderArgs = new Object[] {
-					classNameId, classPK, type,
-					
+					classNameId, classPK, typeNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -8977,7 +9028,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 				for (DDMTemplate ddmTemplate : list) {
 					if ((classNameId != ddmTemplate.getClassNameId()) ||
 							(classPK != ddmTemplate.getClassPK()) ||
-							!Objects.equals(type, ddmTemplate.getType())) {
+							!Objects.equals(typeNullSafe, ddmTemplate.getType())) {
 						list = null;
 
 						break;
@@ -9401,7 +9452,9 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 	public int countByC_C_T(long classNameId, long classPK, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C_T;
 
-		Object[] finderArgs = new Object[] { classNameId, classPK, type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { classNameId, classPK, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -9587,17 +9640,21 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_T;
-			finderArgs = new Object[] { groupId, classNameId, classPK, type };
+			finderArgs = new Object[] {
+					groupId, classNameId, classPK, typeNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_C_T;
 			finderArgs = new Object[] {
-					groupId, classNameId, classPK, type,
-					
+					groupId, classNameId, classPK, typeNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -9613,7 +9670,7 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 					if ((groupId != ddmTemplate.getGroupId()) ||
 							(classNameId != ddmTemplate.getClassNameId()) ||
 							(classPK != ddmTemplate.getClassPK()) ||
-							!Objects.equals(type, ddmTemplate.getType())) {
+							!Objects.equals(typeNullSafe, ddmTemplate.getType())) {
 						list = null;
 
 						break;
@@ -10446,7 +10503,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_C_T;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, classPK, type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, classPK, typeNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -10724,17 +10785,22 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = Objects.toString(type, "");
+		String modeNullSafe = Objects.toString(mode, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_C_T_M;
-			finderArgs = new Object[] { groupId, classNameId, classPK, type, mode };
+			finderArgs = new Object[] {
+					groupId, classNameId, classPK, typeNullSafe, modeNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C_C_T_M;
 			finderArgs = new Object[] {
-					groupId, classNameId, classPK, type, mode,
-					
+					groupId, classNameId, classPK, typeNullSafe, modeNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -10750,8 +10816,8 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 					if ((groupId != ddmTemplate.getGroupId()) ||
 							(classNameId != ddmTemplate.getClassNameId()) ||
 							(classPK != ddmTemplate.getClassPK()) ||
-							!Objects.equals(type, ddmTemplate.getType()) ||
-							!Objects.equals(mode, ddmTemplate.getMode())) {
+							!Objects.equals(typeNullSafe, ddmTemplate.getType()) ||
+							!Objects.equals(modeNullSafe, ddmTemplate.getMode())) {
 						list = null;
 
 						break;
@@ -11677,8 +11743,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 		String type, String mode) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_C_T_M;
 
+		String typeNullSafe = Objects.toString(type, "");
+		String modeNullSafe = Objects.toString(mode, "");
+
 		Object[] finderArgs = new Object[] {
-				groupId, classNameId, classPK, type, mode
+				groupId, classNameId, classPK, typeNullSafe, modeNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

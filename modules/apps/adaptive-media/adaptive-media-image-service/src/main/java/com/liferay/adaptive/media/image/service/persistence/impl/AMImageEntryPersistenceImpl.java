@@ -178,15 +178,21 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<AMImageEntry> list = null;
@@ -197,7 +203,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AMImageEntry amImageEntry : list) {
-					if (!Objects.equals(uuid, amImageEntry.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, amImageEntry.getUuid())) {
 						list = null;
 
 						break;
@@ -575,7 +581,9 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -703,7 +711,9 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	@Override
 	public AMImageEntry fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -715,7 +725,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 		if (result instanceof AMImageEntry) {
 			AMImageEntry amImageEntry = (AMImageEntry)result;
 
-			if (!Objects.equals(uuid, amImageEntry.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, amImageEntry.getUuid()) ||
 					(groupId != amImageEntry.getGroupId())) {
 				result = null;
 			}
@@ -772,8 +782,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 
 					cacheResult(amImageEntry);
 
-					if ((amImageEntry.getUuid() == null) ||
-							!amImageEntry.getUuid().equals(uuid) ||
+					if (!amImageEntry.getUuid().equals(uuidNullSafe) ||
 							(amImageEntry.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, amImageEntry);
@@ -824,7 +833,9 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -983,16 +994,18 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1006,7 +1019,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AMImageEntry amImageEntry : list) {
-					if (!Objects.equals(uuid, amImageEntry.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, amImageEntry.getUuid()) ||
 							(companyId != amImageEntry.getCompanyId())) {
 						list = null;
 
@@ -1410,7 +1423,9 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2575,17 +2590,20 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String configurationUuidNullSafe = Objects.toString(configurationUuid,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CONFIGURATIONUUID;
-			finderArgs = new Object[] { configurationUuid };
+			finderArgs = new Object[] { configurationUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_CONFIGURATIONUUID;
 			finderArgs = new Object[] {
-					configurationUuid,
-					
+					configurationUuidNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -2598,7 +2616,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AMImageEntry amImageEntry : list) {
-					if (!Objects.equals(configurationUuid,
+					if (!Objects.equals(configurationUuidNullSafe,
 								amImageEntry.getConfigurationUuid())) {
 						list = null;
 
@@ -2984,7 +3002,10 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	public int countByConfigurationUuid(String configurationUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CONFIGURATIONUUID;
 
-		Object[] finderArgs = new Object[] { configurationUuid };
+		String configurationUuidNullSafe = Objects.toString(configurationUuid,
+				"");
+
+		Object[] finderArgs = new Object[] { configurationUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3654,17 +3675,20 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String configurationUuidNullSafe = Objects.toString(configurationUuid,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C;
-			finderArgs = new Object[] { companyId, configurationUuid };
+			finderArgs = new Object[] { companyId, configurationUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C;
 			finderArgs = new Object[] {
-					companyId, configurationUuid,
-					
+					companyId, configurationUuidNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -3678,7 +3702,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 			if ((list != null) && !list.isEmpty()) {
 				for (AMImageEntry amImageEntry : list) {
 					if ((companyId != amImageEntry.getCompanyId()) ||
-							!Objects.equals(configurationUuid,
+							!Objects.equals(configurationUuidNullSafe,
 								amImageEntry.getConfigurationUuid())) {
 						list = null;
 
@@ -4086,7 +4110,10 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	public int countByC_C(long companyId, String configurationUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C;
 
-		Object[] finderArgs = new Object[] { companyId, configurationUuid };
+		String configurationUuidNullSafe = Objects.toString(configurationUuid,
+				"");
+
+		Object[] finderArgs = new Object[] { companyId, configurationUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4219,7 +4246,12 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	@Override
 	public AMImageEntry fetchByC_F(String configurationUuid,
 		long fileVersionId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { configurationUuid, fileVersionId };
+		String configurationUuidNullSafe = Objects.toString(configurationUuid,
+				"");
+
+		Object[] finderArgs = new Object[] {
+				configurationUuidNullSafe, fileVersionId
+			};
 
 		Object result = null;
 
@@ -4231,7 +4263,7 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 		if (result instanceof AMImageEntry) {
 			AMImageEntry amImageEntry = (AMImageEntry)result;
 
-			if (!Objects.equals(configurationUuid,
+			if (!Objects.equals(configurationUuidNullSafe,
 						amImageEntry.getConfigurationUuid()) ||
 					(fileVersionId != amImageEntry.getFileVersionId())) {
 				result = null;
@@ -4289,9 +4321,8 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 
 					cacheResult(amImageEntry);
 
-					if ((amImageEntry.getConfigurationUuid() == null) ||
-							!amImageEntry.getConfigurationUuid()
-											 .equals(configurationUuid) ||
+					if (!amImageEntry.getConfigurationUuid()
+										 .equals(configurationUuidNullSafe) ||
 							(amImageEntry.getFileVersionId() != fileVersionId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_F,
 							finderArgs, amImageEntry);
@@ -4342,7 +4373,12 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 	public int countByC_F(String configurationUuid, long fileVersionId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_F;
 
-		Object[] finderArgs = new Object[] { configurationUuid, fileVersionId };
+		String configurationUuidNullSafe = Objects.toString(configurationUuid,
+				"");
+
+		Object[] finderArgs = new Object[] {
+				configurationUuidNullSafe, fileVersionId
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

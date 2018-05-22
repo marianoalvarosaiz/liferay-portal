@@ -185,15 +185,21 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<UserNotificationEvent> list = null;
@@ -204,7 +210,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserNotificationEvent userNotificationEvent : list) {
-					if (!Objects.equals(uuid, userNotificationEvent.getUuid())) {
+					if (!Objects.equals(uuidNullSafe,
+								userNotificationEvent.getUuid())) {
 						list = null;
 
 						break;
@@ -587,7 +594,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -746,16 +755,18 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -769,7 +780,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserNotificationEvent userNotificationEvent : list) {
-					if (!Objects.equals(uuid, userNotificationEvent.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe,
+								userNotificationEvent.getUuid()) ||
 							(companyId != userNotificationEvent.getCompanyId())) {
 						list = null;
 
@@ -1178,7 +1190,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1842,15 +1856,21 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE;
-			finderArgs = new Object[] { type };
+			finderArgs = new Object[] { typeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_TYPE;
-			finderArgs = new Object[] { type, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					typeNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<UserNotificationEvent> list = null;
@@ -1861,7 +1881,8 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserNotificationEvent userNotificationEvent : list) {
-					if (!Objects.equals(type, userNotificationEvent.getType())) {
+					if (!Objects.equals(typeNullSafe,
+								userNotificationEvent.getType())) {
 						list = null;
 
 						break;
@@ -2244,7 +2265,9 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 	public int countByType(String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_TYPE;
 
-		Object[] finderArgs = new Object[] { type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -6461,16 +6484,20 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String typeNullSafe = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_T_DT_D;
-			finderArgs = new Object[] { userId, type, deliveryType, delivered };
+			finderArgs = new Object[] {
+					userId, typeNullSafe, deliveryType, delivered
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_U_T_DT_D;
 			finderArgs = new Object[] {
-					userId, type, deliveryType, delivered,
+					userId, typeNullSafe, deliveryType, delivered,
 					
 					start, end, orderByComparator
 				};
@@ -6485,7 +6512,7 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 			if ((list != null) && !list.isEmpty()) {
 				for (UserNotificationEvent userNotificationEvent : list) {
 					if ((userId != userNotificationEvent.getUserId()) ||
-							!Objects.equals(type,
+							!Objects.equals(typeNullSafe,
 								userNotificationEvent.getType()) ||
 							(deliveryType != userNotificationEvent.getDeliveryType()) ||
 							(delivered != userNotificationEvent.isDelivered())) {
@@ -6945,7 +6972,11 @@ public class UserNotificationEventPersistenceImpl extends BasePersistenceImpl<Us
 		boolean delivered) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_T_DT_D;
 
-		Object[] finderArgs = new Object[] { userId, type, deliveryType, delivered };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] {
+				userId, typeNullSafe, deliveryType, delivered
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

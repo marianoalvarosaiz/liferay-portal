@@ -182,15 +182,21 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<SAPEntry> list = null;
@@ -201,7 +207,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SAPEntry sapEntry : list) {
-					if (!Objects.equals(uuid, sapEntry.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, sapEntry.getUuid())) {
 						list = null;
 
 						break;
@@ -912,7 +918,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1130,16 +1138,18 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1153,7 +1163,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SAPEntry sapEntry : list) {
-					if (!Objects.equals(uuid, sapEntry.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, sapEntry.getUuid()) ||
 							(companyId != sapEntry.getCompanyId())) {
 						list = null;
 
@@ -1905,7 +1915,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3880,7 +3892,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	@Override
 	public SAPEntry fetchByC_N(long companyId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Object result = null;
 
@@ -3893,7 +3907,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			SAPEntry sapEntry = (SAPEntry)result;
 
 			if ((companyId != sapEntry.getCompanyId()) ||
-					!Objects.equals(name, sapEntry.getName())) {
+					!Objects.equals(nameNullSafe, sapEntry.getName())) {
 				result = null;
 			}
 		}
@@ -3961,8 +3975,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 					cacheResult(sapEntry);
 
 					if ((sapEntry.getCompanyId() != companyId) ||
-							(sapEntry.getName() == null) ||
-							!sapEntry.getName().equals(name)) {
+							!sapEntry.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_N,
 							finderArgs, sapEntry);
 					}
@@ -4012,7 +4025,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

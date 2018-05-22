@@ -695,7 +695,11 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 	@Override
 	public FriendlyURLEntryLocalization fetchByFriendlyURLEntryId_LanguageId(
 		long friendlyURLEntryId, String languageId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { friendlyURLEntryId, languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				friendlyURLEntryId, languageIdNullSafe
+			};
 
 		Object result = null;
 
@@ -708,7 +712,7 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 			FriendlyURLEntryLocalization friendlyURLEntryLocalization = (FriendlyURLEntryLocalization)result;
 
 			if ((friendlyURLEntryId != friendlyURLEntryLocalization.getFriendlyURLEntryId()) ||
-					!Objects.equals(languageId,
+					!Objects.equals(languageIdNullSafe,
 						friendlyURLEntryLocalization.getLanguageId())) {
 				result = null;
 			}
@@ -766,9 +770,8 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 					cacheResult(friendlyURLEntryLocalization);
 
 					if ((friendlyURLEntryLocalization.getFriendlyURLEntryId() != friendlyURLEntryId) ||
-							(friendlyURLEntryLocalization.getLanguageId() == null) ||
 							!friendlyURLEntryLocalization.getLanguageId()
-															 .equals(languageId)) {
+															 .equals(languageIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_FRIENDLYURLENTRYID_LANGUAGEID,
 							finderArgs, friendlyURLEntryLocalization);
 					}
@@ -822,7 +825,11 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 		String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_FRIENDLYURLENTRYID_LANGUAGEID;
 
-		Object[] finderArgs = new Object[] { friendlyURLEntryId, languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				friendlyURLEntryId, languageIdNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -977,7 +984,11 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 	@Override
 	public FriendlyURLEntryLocalization fetchByG_C_U(long groupId,
 		long classNameId, String urlTitle, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, classNameId, urlTitle };
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, urlTitleNullSafe
+			};
 
 		Object result = null;
 
@@ -991,7 +1002,7 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 			if ((groupId != friendlyURLEntryLocalization.getGroupId()) ||
 					(classNameId != friendlyURLEntryLocalization.getClassNameId()) ||
-					!Objects.equals(urlTitle,
+					!Objects.equals(urlTitleNullSafe,
 						friendlyURLEntryLocalization.getUrlTitle())) {
 				result = null;
 			}
@@ -1054,9 +1065,8 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 					if ((friendlyURLEntryLocalization.getGroupId() != groupId) ||
 							(friendlyURLEntryLocalization.getClassNameId() != classNameId) ||
-							(friendlyURLEntryLocalization.getUrlTitle() == null) ||
 							!friendlyURLEntryLocalization.getUrlTitle()
-															 .equals(urlTitle)) {
+															 .equals(urlTitleNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_U,
 							finderArgs, friendlyURLEntryLocalization);
 					}
@@ -1110,7 +1120,11 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 	public int countByG_C_U(long groupId, long classNameId, String urlTitle) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_U;
 
-		Object[] finderArgs = new Object[] { groupId, classNameId, urlTitle };
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, classNameId, urlTitleNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -188,15 +188,21 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<Group> list = null;
@@ -207,7 +213,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Group group : list) {
-					if (!Objects.equals(uuid, group.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, group.getUuid())) {
 						list = null;
 
 						break;
@@ -581,7 +587,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -709,7 +717,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	@Override
 	public Group fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -721,7 +731,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		if (result instanceof Group) {
 			Group group = (Group)result;
 
-			if (!Objects.equals(uuid, group.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, group.getUuid()) ||
 					(groupId != group.getGroupId())) {
 				result = null;
 			}
@@ -778,8 +788,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 					cacheResult(group);
 
-					if ((group.getUuid() == null) ||
-							!group.getUuid().equals(uuid) ||
+					if (!group.getUuid().equals(uuidNullSafe) ||
 							(group.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, group);
@@ -830,7 +839,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -990,16 +1001,18 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1013,7 +1026,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Group group : list) {
-					if (!Objects.equals(uuid, group.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, group.getUuid()) ||
 							(companyId != group.getCompanyId())) {
 						list = null;
 
@@ -1411,7 +1424,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3335,7 +3350,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	@Override
 	public Group fetchByC_GK(long companyId, String groupKey,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, groupKey };
+		String groupKeyNullSafe = Objects.toString(groupKey, "");
+
+		Object[] finderArgs = new Object[] { companyId, groupKeyNullSafe };
 
 		Object result = null;
 
@@ -3348,7 +3365,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			Group group = (Group)result;
 
 			if ((companyId != group.getCompanyId()) ||
-					!Objects.equals(groupKey, group.getGroupKey())) {
+					!Objects.equals(groupKeyNullSafe, group.getGroupKey())) {
 				result = null;
 			}
 		}
@@ -3405,8 +3422,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					cacheResult(group);
 
 					if ((group.getCompanyId() != companyId) ||
-							(group.getGroupKey() == null) ||
-							!group.getGroupKey().equals(groupKey)) {
+							!group.getGroupKey().equals(groupKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_GK,
 							finderArgs, group);
 					}
@@ -3456,7 +3472,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByC_GK(long companyId, String groupKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_GK;
 
-		Object[] finderArgs = new Object[] { companyId, groupKey };
+		String groupKeyNullSafe = Objects.toString(groupKey, "");
+
+		Object[] finderArgs = new Object[] { companyId, groupKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3589,7 +3607,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	@Override
 	public Group fetchByC_F(long companyId, String friendlyURL,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, friendlyURL };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
+		Object[] finderArgs = new Object[] { companyId, friendlyURLNullSafe };
 
 		Object result = null;
 
@@ -3602,7 +3622,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			Group group = (Group)result;
 
 			if ((companyId != group.getCompanyId()) ||
-					!Objects.equals(friendlyURL, group.getFriendlyURL())) {
+					!Objects.equals(friendlyURLNullSafe, group.getFriendlyURL())) {
 				result = null;
 			}
 		}
@@ -3659,8 +3679,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					cacheResult(group);
 
 					if ((group.getCompanyId() != companyId) ||
-							(group.getFriendlyURL() == null) ||
-							!group.getFriendlyURL().equals(friendlyURL)) {
+							!group.getFriendlyURL().equals(friendlyURLNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_F,
 							finderArgs, group);
 					}
@@ -3710,7 +3729,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByC_F(long companyId, String friendlyURL) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_F;
 
-		Object[] finderArgs = new Object[] { companyId, friendlyURL };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
+		Object[] finderArgs = new Object[] { companyId, friendlyURLNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -7818,7 +7839,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	@Override
 	public Group fetchByC_L_GK(long companyId, long liveGroupId,
 		String groupKey, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, liveGroupId, groupKey };
+		String groupKeyNullSafe = Objects.toString(groupKey, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, liveGroupId, groupKeyNullSafe
+			};
 
 		Object result = null;
 
@@ -7832,7 +7857,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 			if ((companyId != group.getCompanyId()) ||
 					(liveGroupId != group.getLiveGroupId()) ||
-					!Objects.equals(groupKey, group.getGroupKey())) {
+					!Objects.equals(groupKeyNullSafe, group.getGroupKey())) {
 				result = null;
 			}
 		}
@@ -7894,8 +7919,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 					if ((group.getCompanyId() != companyId) ||
 							(group.getLiveGroupId() != liveGroupId) ||
-							(group.getGroupKey() == null) ||
-							!group.getGroupKey().equals(groupKey)) {
+							!group.getGroupKey().equals(groupKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_L_GK,
 							finderArgs, group);
 					}
@@ -7947,7 +7971,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByC_L_GK(long companyId, long liveGroupId, String groupKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_L_GK;
 
-		Object[] finderArgs = new Object[] { companyId, liveGroupId, groupKey };
+		String groupKeyNullSafe = Objects.toString(groupKey, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, liveGroupId, groupKeyNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -8114,9 +8142,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String treePathNullSafe = Objects.toString(treePath, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_T_S;
 		finderArgs = new Object[] {
-				companyId, treePath, site,
+				companyId, treePathNullSafe, site,
 				
 				start, end, orderByComparator
 			};
@@ -8131,7 +8161,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				for (Group group : list) {
 					if ((companyId != group.getCompanyId()) ||
 							!StringUtil.wildcardMatches(group.getTreePath(),
-								treePath, '_', '%', '\\', true) ||
+								treePathNullSafe, '_', '%', '\\', true) ||
 							(site != group.isSite())) {
 						list = null;
 
@@ -8555,7 +8585,9 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	public int countByC_T_S(long companyId, String treePath, boolean site) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_T_S;
 
-		Object[] finderArgs = new Object[] { companyId, treePath, site };
+		String treePathNullSafe = Objects.toString(treePath, "");
+
+		Object[] finderArgs = new Object[] { companyId, treePathNullSafe, site };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -9158,8 +9190,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	@Override
 	public Group fetchByC_C_L_GK(long companyId, long classNameId,
 		long liveGroupId, String groupKey, boolean retrieveFromCache) {
+		String groupKeyNullSafe = Objects.toString(groupKey, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, classNameId, liveGroupId, groupKey
+				companyId, classNameId, liveGroupId, groupKeyNullSafe
 			};
 
 		Object result = null;
@@ -9175,7 +9209,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 			if ((companyId != group.getCompanyId()) ||
 					(classNameId != group.getClassNameId()) ||
 					(liveGroupId != group.getLiveGroupId()) ||
-					!Objects.equals(groupKey, group.getGroupKey())) {
+					!Objects.equals(groupKeyNullSafe, group.getGroupKey())) {
 				result = null;
 			}
 		}
@@ -9242,8 +9276,7 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					if ((group.getCompanyId() != companyId) ||
 							(group.getClassNameId() != classNameId) ||
 							(group.getLiveGroupId() != liveGroupId) ||
-							(group.getGroupKey() == null) ||
-							!group.getGroupKey().equals(groupKey)) {
+							!group.getGroupKey().equals(groupKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_L_GK,
 							finderArgs, group);
 					}
@@ -9300,8 +9333,10 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		long liveGroupId, String groupKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C_L_GK;
 
+		String groupKeyNullSafe = Objects.toString(groupKey, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, classNameId, liveGroupId, groupKey
+				companyId, classNameId, liveGroupId, groupKeyNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

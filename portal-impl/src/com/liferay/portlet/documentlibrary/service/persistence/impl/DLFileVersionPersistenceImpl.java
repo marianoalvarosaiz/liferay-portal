@@ -189,15 +189,21 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DLFileVersion> list = null;
@@ -208,7 +214,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DLFileVersion dlFileVersion : list) {
-					if (!Objects.equals(uuid, dlFileVersion.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, dlFileVersion.getUuid())) {
 						list = null;
 
 						break;
@@ -586,7 +592,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -714,7 +722,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	@Override
 	public DLFileVersion fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -726,7 +736,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		if (result instanceof DLFileVersion) {
 			DLFileVersion dlFileVersion = (DLFileVersion)result;
 
-			if (!Objects.equals(uuid, dlFileVersion.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, dlFileVersion.getUuid()) ||
 					(groupId != dlFileVersion.getGroupId())) {
 				result = null;
 			}
@@ -783,8 +793,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 					cacheResult(dlFileVersion);
 
-					if ((dlFileVersion.getUuid() == null) ||
-							!dlFileVersion.getUuid().equals(uuid) ||
+					if (!dlFileVersion.getUuid().equals(uuidNullSafe) ||
 							(dlFileVersion.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, dlFileVersion);
@@ -835,7 +844,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -998,16 +1009,18 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1021,7 +1034,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DLFileVersion dlFileVersion : list) {
-					if (!Objects.equals(uuid, dlFileVersion.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, dlFileVersion.getUuid()) ||
 							(companyId != dlFileVersion.getCompanyId())) {
 						list = null;
 
@@ -1425,7 +1438,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2600,15 +2615,21 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String mimeTypeNullSafe = Objects.toString(mimeType, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MIMETYPE;
-			finderArgs = new Object[] { mimeType };
+			finderArgs = new Object[] { mimeTypeNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_MIMETYPE;
-			finderArgs = new Object[] { mimeType, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					mimeTypeNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DLFileVersion> list = null;
@@ -2619,7 +2640,8 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DLFileVersion dlFileVersion : list) {
-					if (!Objects.equals(mimeType, dlFileVersion.getMimeType())) {
+					if (!Objects.equals(mimeTypeNullSafe,
+								dlFileVersion.getMimeType())) {
 						list = null;
 
 						break;
@@ -3000,7 +3022,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	public int countByMimeType(String mimeType) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_MIMETYPE;
 
-		Object[] finderArgs = new Object[] { mimeType };
+		String mimeTypeNullSafe = Objects.toString(mimeType, "");
+
+		Object[] finderArgs = new Object[] { mimeTypeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3657,7 +3681,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	@Override
 	public DLFileVersion fetchByF_V(long fileEntryId, String version,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { fileEntryId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { fileEntryId, versionNullSafe };
 
 		Object result = null;
 
@@ -3670,7 +3696,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			DLFileVersion dlFileVersion = (DLFileVersion)result;
 
 			if ((fileEntryId != dlFileVersion.getFileEntryId()) ||
-					!Objects.equals(version, dlFileVersion.getVersion())) {
+					!Objects.equals(versionNullSafe, dlFileVersion.getVersion())) {
 				result = null;
 			}
 		}
@@ -3727,8 +3753,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 					cacheResult(dlFileVersion);
 
 					if ((dlFileVersion.getFileEntryId() != fileEntryId) ||
-							(dlFileVersion.getVersion() == null) ||
-							!dlFileVersion.getVersion().equals(version)) {
+							!dlFileVersion.getVersion().equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_F_V,
 							finderArgs, dlFileVersion);
 					}
@@ -3778,7 +3803,9 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	public int countByF_V(long fileEntryId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_V;
 
-		Object[] finderArgs = new Object[] { fileEntryId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { fileEntryId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5095,17 +5122,22 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String titleNullSafe = Objects.toString(title, "");
+		String versionNullSafe = Objects.toString(version, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_F_T_V;
-			finderArgs = new Object[] { groupId, folderId, title, version };
+			finderArgs = new Object[] {
+					groupId, folderId, titleNullSafe, versionNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_F_T_V;
 			finderArgs = new Object[] {
-					groupId, folderId, title, version,
-					
+					groupId, folderId, titleNullSafe, versionNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -5120,8 +5152,10 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 				for (DLFileVersion dlFileVersion : list) {
 					if ((groupId != dlFileVersion.getGroupId()) ||
 							(folderId != dlFileVersion.getFolderId()) ||
-							!Objects.equals(title, dlFileVersion.getTitle()) ||
-							!Objects.equals(version, dlFileVersion.getVersion())) {
+							!Objects.equals(titleNullSafe,
+								dlFileVersion.getTitle()) ||
+							!Objects.equals(versionNullSafe,
+								dlFileVersion.getVersion())) {
 						list = null;
 
 						break;
@@ -5601,7 +5635,12 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_F_T_V;
 
-		Object[] finderArgs = new Object[] { groupId, folderId, title, version };
+		String titleNullSafe = Objects.toString(title, "");
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, folderId, titleNullSafe, versionNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

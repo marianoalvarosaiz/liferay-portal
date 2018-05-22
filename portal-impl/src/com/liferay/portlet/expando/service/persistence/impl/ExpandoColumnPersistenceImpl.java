@@ -1281,7 +1281,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	@Override
 	public ExpandoColumn fetchByT_N(long tableId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { tableId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { tableId, nameNullSafe };
 
 		Object result = null;
 
@@ -1294,7 +1296,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			ExpandoColumn expandoColumn = (ExpandoColumn)result;
 
 			if ((tableId != expandoColumn.getTableId()) ||
-					!Objects.equals(name, expandoColumn.getName())) {
+					!Objects.equals(nameNullSafe, expandoColumn.getName())) {
 				result = null;
 			}
 		}
@@ -1351,8 +1353,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 					cacheResult(expandoColumn);
 
 					if ((expandoColumn.getTableId() != tableId) ||
-							(expandoColumn.getName() == null) ||
-							!expandoColumn.getName().equals(name)) {
+							!expandoColumn.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_T_N,
 							finderArgs, expandoColumn);
 					}
@@ -1402,7 +1403,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	public int countByT_N(long tableId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_N;
 
-		Object[] finderArgs = new Object[] { tableId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { tableId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

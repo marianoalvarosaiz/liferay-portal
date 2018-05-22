@@ -693,17 +693,20 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String layoutSetPrototypeUuidNullSafe = Objects.toString(layoutSetPrototypeUuid,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_LAYOUTSETPROTOTYPEUUID;
-			finderArgs = new Object[] { layoutSetPrototypeUuid };
+			finderArgs = new Object[] { layoutSetPrototypeUuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_LAYOUTSETPROTOTYPEUUID;
 			finderArgs = new Object[] {
-					layoutSetPrototypeUuid,
-					
+					layoutSetPrototypeUuidNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -716,7 +719,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutSet layoutSet : list) {
-					if (!Objects.equals(layoutSetPrototypeUuid,
+					if (!Objects.equals(layoutSetPrototypeUuidNullSafe,
 								layoutSet.getLayoutSetPrototypeUuid())) {
 						list = null;
 
@@ -1104,7 +1107,10 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	public int countByLayoutSetPrototypeUuid(String layoutSetPrototypeUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LAYOUTSETPROTOTYPEUUID;
 
-		Object[] finderArgs = new Object[] { layoutSetPrototypeUuid };
+		String layoutSetPrototypeUuidNullSafe = Objects.toString(layoutSetPrototypeUuid,
+				"");
+
+		Object[] finderArgs = new Object[] { layoutSetPrototypeUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

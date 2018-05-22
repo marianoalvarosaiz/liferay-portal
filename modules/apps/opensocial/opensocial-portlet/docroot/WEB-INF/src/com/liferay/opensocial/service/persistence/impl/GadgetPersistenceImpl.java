@@ -185,15 +185,21 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<Gadget> list = null;
@@ -204,7 +210,7 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Gadget gadget : list) {
-					if (!Objects.equals(uuid, gadget.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, gadget.getUuid())) {
 						list = null;
 
 						break;
@@ -914,7 +920,9 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1133,16 +1141,18 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1156,7 +1166,7 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Gadget gadget : list) {
-					if (!Objects.equals(uuid, gadget.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, gadget.getUuid()) ||
 							(companyId != gadget.getCompanyId())) {
 						list = null;
 
@@ -1905,7 +1915,9 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2963,7 +2975,9 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 	@Override
 	public Gadget fetchByC_U(long companyId, String url,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, url };
+		String urlNullSafe = Objects.toString(url, "");
+
+		Object[] finderArgs = new Object[] { companyId, urlNullSafe };
 
 		Object result = null;
 
@@ -2976,7 +2990,7 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 			Gadget gadget = (Gadget)result;
 
 			if ((companyId != gadget.getCompanyId()) ||
-					!Objects.equals(url, gadget.getUrl())) {
+					!Objects.equals(urlNullSafe, gadget.getUrl())) {
 				result = null;
 			}
 		}
@@ -3033,8 +3047,7 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 					cacheResult(gadget);
 
 					if ((gadget.getCompanyId() != companyId) ||
-							(gadget.getUrl() == null) ||
-							!gadget.getUrl().equals(url)) {
+							!gadget.getUrl().equals(urlNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_U,
 							finderArgs, gadget);
 					}
@@ -3084,7 +3097,9 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 	public int countByC_U(long companyId, String url) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_U;
 
-		Object[] finderArgs = new Object[] { companyId, url };
+		String urlNullSafe = Objects.toString(url, "");
+
+		Object[] finderArgs = new Object[] { companyId, urlNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -696,17 +696,19 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String recordSetVersionNullSafe = Objects.toString(recordSetVersion, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_R;
-			finderArgs = new Object[] { recordSetId, recordSetVersion };
+			finderArgs = new Object[] { recordSetId, recordSetVersionNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_R_R;
 			finderArgs = new Object[] {
-					recordSetId, recordSetVersion,
-					
+					recordSetId, recordSetVersionNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -720,7 +722,7 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			if ((list != null) && !list.isEmpty()) {
 				for (DDLRecordVersion ddlRecordVersion : list) {
 					if ((recordSetId != ddlRecordVersion.getRecordSetId()) ||
-							!Objects.equals(recordSetVersion,
+							!Objects.equals(recordSetVersionNullSafe,
 								ddlRecordVersion.getRecordSetVersion())) {
 						list = null;
 
@@ -1129,7 +1131,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 	public int countByR_R(long recordSetId, String recordSetVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_R_R;
 
-		Object[] finderArgs = new Object[] { recordSetId, recordSetVersion };
+		String recordSetVersionNullSafe = Objects.toString(recordSetVersion, "");
+
+		Object[] finderArgs = new Object[] { recordSetId, recordSetVersionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1262,7 +1266,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 	@Override
 	public DDLRecordVersion fetchByR_V(long recordId, String version,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { recordId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { recordId, versionNullSafe };
 
 		Object result = null;
 
@@ -1275,7 +1281,8 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 			DDLRecordVersion ddlRecordVersion = (DDLRecordVersion)result;
 
 			if ((recordId != ddlRecordVersion.getRecordId()) ||
-					!Objects.equals(version, ddlRecordVersion.getVersion())) {
+					!Objects.equals(versionNullSafe,
+						ddlRecordVersion.getVersion())) {
 				result = null;
 			}
 		}
@@ -1332,8 +1339,8 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 					cacheResult(ddlRecordVersion);
 
 					if ((ddlRecordVersion.getRecordId() != recordId) ||
-							(ddlRecordVersion.getVersion() == null) ||
-							!ddlRecordVersion.getVersion().equals(version)) {
+							!ddlRecordVersion.getVersion()
+												 .equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_R_V,
 							finderArgs, ddlRecordVersion);
 					}
@@ -1383,7 +1390,9 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 	public int countByR_V(long recordId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_R_V;
 
-		Object[] finderArgs = new Object[] { recordId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { recordId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2111,18 +2120,20 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String recordSetVersionNullSafe = Objects.toString(recordSetVersion, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_R_R_S;
 			finderArgs = new Object[] {
-					userId, recordSetId, recordSetVersion, status
+					userId, recordSetId, recordSetVersionNullSafe, status
 				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_U_R_R_S;
 			finderArgs = new Object[] {
-					userId, recordSetId, recordSetVersion, status,
+					userId, recordSetId, recordSetVersionNullSafe, status,
 					
 					start, end, orderByComparator
 				};
@@ -2138,7 +2149,7 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 				for (DDLRecordVersion ddlRecordVersion : list) {
 					if ((userId != ddlRecordVersion.getUserId()) ||
 							(recordSetId != ddlRecordVersion.getRecordSetId()) ||
-							!Objects.equals(recordSetVersion,
+							!Objects.equals(recordSetVersionNullSafe,
 								ddlRecordVersion.getRecordSetVersion()) ||
 							(status != ddlRecordVersion.getStatus())) {
 						list = null;
@@ -2595,8 +2606,10 @@ public class DDLRecordVersionPersistenceImpl extends BasePersistenceImpl<DDLReco
 		String recordSetVersion, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_R_R_S;
 
+		String recordSetVersionNullSafe = Objects.toString(recordSetVersion, "");
+
 		Object[] finderArgs = new Object[] {
-				userId, recordSetId, recordSetVersion, status
+				userId, recordSetId, recordSetVersionNullSafe, status
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

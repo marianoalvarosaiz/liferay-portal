@@ -183,15 +183,21 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<WikiNode> list = null;
@@ -202,7 +208,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (WikiNode wikiNode : list) {
-					if (!Objects.equals(uuid, wikiNode.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, wikiNode.getUuid())) {
 						list = null;
 
 						break;
@@ -580,7 +586,9 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -708,7 +716,9 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	@Override
 	public WikiNode fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -720,7 +730,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 		if (result instanceof WikiNode) {
 			WikiNode wikiNode = (WikiNode)result;
 
-			if (!Objects.equals(uuid, wikiNode.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, wikiNode.getUuid()) ||
 					(groupId != wikiNode.getGroupId())) {
 				result = null;
 			}
@@ -777,8 +787,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 
 					cacheResult(wikiNode);
 
-					if ((wikiNode.getUuid() == null) ||
-							!wikiNode.getUuid().equals(uuid) ||
+					if (!wikiNode.getUuid().equals(uuidNullSafe) ||
 							(wikiNode.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, wikiNode);
@@ -829,7 +838,9 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -989,16 +1000,18 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1012,7 +1025,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (WikiNode wikiNode : list) {
-					if (!Objects.equals(uuid, wikiNode.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, wikiNode.getUuid()) ||
 							(companyId != wikiNode.getCompanyId())) {
 						list = null;
 
@@ -1415,7 +1428,9 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2906,7 +2921,9 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	@Override
 	public WikiNode fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Object result = null;
 
@@ -2919,7 +2936,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 			WikiNode wikiNode = (WikiNode)result;
 
 			if ((groupId != wikiNode.getGroupId()) ||
-					!Objects.equals(name, wikiNode.getName())) {
+					!Objects.equals(nameNullSafe, wikiNode.getName())) {
 				result = null;
 			}
 		}
@@ -2976,8 +2993,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 					cacheResult(wikiNode);
 
 					if ((wikiNode.getGroupId() != groupId) ||
-							(wikiNode.getName() == null) ||
-							!wikiNode.getName().equals(name)) {
+							!wikiNode.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 							finderArgs, wikiNode);
 					}
@@ -3027,7 +3043,9 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

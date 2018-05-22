@@ -188,15 +188,21 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<FragmentEntryLink> list = null;
@@ -207,7 +213,8 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 
 			if ((list != null) && !list.isEmpty()) {
 				for (FragmentEntryLink fragmentEntryLink : list) {
-					if (!Objects.equals(uuid, fragmentEntryLink.getUuid())) {
+					if (!Objects.equals(uuidNullSafe,
+								fragmentEntryLink.getUuid())) {
 						list = null;
 
 						break;
@@ -588,7 +595,9 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -717,7 +726,9 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 	@Override
 	public FragmentEntryLink fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -729,7 +740,7 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 		if (result instanceof FragmentEntryLink) {
 			FragmentEntryLink fragmentEntryLink = (FragmentEntryLink)result;
 
-			if (!Objects.equals(uuid, fragmentEntryLink.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, fragmentEntryLink.getUuid()) ||
 					(groupId != fragmentEntryLink.getGroupId())) {
 				result = null;
 			}
@@ -786,8 +797,7 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 
 					cacheResult(fragmentEntryLink);
 
-					if ((fragmentEntryLink.getUuid() == null) ||
-							!fragmentEntryLink.getUuid().equals(uuid) ||
+					if (!fragmentEntryLink.getUuid().equals(uuidNullSafe) ||
 							(fragmentEntryLink.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, fragmentEntryLink);
@@ -838,7 +848,9 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1004,16 +1016,18 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1027,7 +1041,8 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 
 			if ((list != null) && !list.isEmpty()) {
 				for (FragmentEntryLink fragmentEntryLink : list) {
-					if (!Objects.equals(uuid, fragmentEntryLink.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe,
+								fragmentEntryLink.getUuid()) ||
 							(companyId != fragmentEntryLink.getCompanyId())) {
 						list = null;
 
@@ -1431,7 +1446,9 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
