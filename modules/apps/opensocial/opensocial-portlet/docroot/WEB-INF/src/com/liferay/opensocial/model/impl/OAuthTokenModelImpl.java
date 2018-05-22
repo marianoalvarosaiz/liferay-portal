@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuthToken service. Represents a row in the &quot;OpenSocial_OAuthToken&quot; database table, with each column mapped to a property of this class.
@@ -329,12 +330,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -370,12 +366,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getGadgetKey() {
-		if (_gadgetKey == null) {
-			return "";
-		}
-		else {
-			return _gadgetKey;
-		}
+		return Objects.toString(_gadgetKey, "");
 	}
 
 	@Override
@@ -395,12 +386,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getServiceName() {
-		if (_serviceName == null) {
-			return "";
-		}
-		else {
-			return _serviceName;
-		}
+		return Objects.toString(_serviceName, "");
 	}
 
 	@Override
@@ -442,12 +428,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getAccessToken() {
-		if (_accessToken == null) {
-			return "";
-		}
-		else {
-			return _accessToken;
-		}
+		return Objects.toString(_accessToken, "");
 	}
 
 	@Override
@@ -457,12 +438,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getTokenName() {
-		if (_tokenName == null) {
-			return "";
-		}
-		else {
-			return _tokenName;
-		}
+		return Objects.toString(_tokenName, "");
 	}
 
 	@Override
@@ -482,12 +458,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getTokenSecret() {
-		if (_tokenSecret == null) {
-			return "";
-		}
-		else {
-			return _tokenSecret;
-		}
+		return Objects.toString(_tokenSecret, "");
 	}
 
 	@Override
@@ -497,12 +468,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getSessionHandle() {
-		if (_sessionHandle == null) {
-			return "";
-		}
-		else {
-			return _sessionHandle;
-		}
+		return Objects.toString(_sessionHandle, "");
 	}
 
 	@Override

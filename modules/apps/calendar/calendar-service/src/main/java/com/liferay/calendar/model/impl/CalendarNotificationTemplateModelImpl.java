@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the CalendarNotificationTemplate service. Represents a row in the &quot;CalendarNotificationTemplate&quot; database table, with each column mapped to a property of this class.
@@ -349,12 +350,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -458,12 +454,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -525,12 +516,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationType() {
-		if (_notificationType == null) {
-			return "";
-		}
-		else {
-			return _notificationType;
-		}
+		return Objects.toString(_notificationType, "");
 	}
 
 	@Override
@@ -551,12 +537,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationTypeSettings() {
-		if (_notificationTypeSettings == null) {
-			return "";
-		}
-		else {
-			return _notificationTypeSettings;
-		}
+		return Objects.toString(_notificationTypeSettings, "");
 	}
 
 	@Override
@@ -567,12 +548,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationTemplateType() {
-		if (_notificationTemplateType == null) {
-			return "";
-		}
-		else {
-			return _notificationTemplateType;
-		}
+		return Objects.toString(_notificationTemplateType, "");
 	}
 
 	@Override
@@ -593,12 +569,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return Objects.toString(_subject, "");
 	}
 
 	@Override
@@ -609,12 +580,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return Objects.toString(_body, "");
 	}
 
 	@Override

@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -578,12 +579,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -688,12 +684,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getClassUuid() {
-		if (_classUuid == null) {
-			return "";
-		}
-		else {
-			return _classUuid;
-		}
+		return Objects.toString(_classUuid, "");
 	}
 
 	@Override
@@ -835,12 +826,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return Objects.toString(_mimeType, "");
 	}
 
 	@Override
@@ -851,12 +837,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -950,12 +931,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -1053,12 +1029,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getSummary() {
-		if (_summary == null) {
-			return "";
-		}
-		else {
-			return _summary;
-		}
+		return Objects.toString(_summary, "");
 	}
 
 	@Override
@@ -1153,12 +1124,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return Objects.toString(_url, "");
 	}
 
 	@Override
@@ -1169,12 +1135,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getLayoutUuid() {
-		if (_layoutUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutUuid;
-		}
+		return Objects.toString(_layoutUuid, "");
 	}
 
 	@Override

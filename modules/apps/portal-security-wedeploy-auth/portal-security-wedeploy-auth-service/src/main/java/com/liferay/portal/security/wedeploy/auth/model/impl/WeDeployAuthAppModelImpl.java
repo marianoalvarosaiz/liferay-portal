@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WeDeployAuthApp service. Represents a row in the &quot;WeDeployAuth_WeDeployAuthApp&quot; database table, with each column mapped to a property of this class.
@@ -336,12 +337,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -380,12 +376,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -396,12 +387,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getRedirectURI() {
-		if (_redirectURI == null) {
-			return "";
-		}
-		else {
-			return _redirectURI;
-		}
+		return Objects.toString(_redirectURI, "");
 	}
 
 	@Override
@@ -422,12 +408,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getClientId() {
-		if (_clientId == null) {
-			return "";
-		}
-		else {
-			return _clientId;
-		}
+		return Objects.toString(_clientId, "");
 	}
 
 	@Override
@@ -448,12 +429,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getClientSecret() {
-		if (_clientSecret == null) {
-			return "";
-		}
-		else {
-			return _clientSecret;
-		}
+		return Objects.toString(_clientSecret, "");
 	}
 
 	@Override

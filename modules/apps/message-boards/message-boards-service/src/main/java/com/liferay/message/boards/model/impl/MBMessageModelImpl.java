@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBMessage service. Represents a row in the &quot;MBMessage&quot; database table, with each column mapped to a property of this class.
@@ -465,12 +466,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -587,12 +583,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -779,12 +770,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return Objects.toString(_subject, "");
 	}
 
 	@Override
@@ -795,12 +781,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return Objects.toString(_body, "");
 	}
 
 	@Override
@@ -811,12 +792,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getFormat() {
-		if (_format == null) {
-			return "";
-		}
-		else {
-			return _format;
-		}
+		return Objects.toString(_format, "");
 	}
 
 	@Override
@@ -962,12 +938,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

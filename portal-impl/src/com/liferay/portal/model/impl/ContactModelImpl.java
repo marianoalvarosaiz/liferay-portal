@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Contact service. Represents a row in the &quot;Contact_&quot; database table, with each column mapped to a property of this class.
@@ -551,12 +552,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -695,12 +691,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return Objects.toString(_emailAddress, "");
 	}
 
 	@Override
@@ -711,12 +702,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getFirstName() {
-		if (_firstName == null) {
-			return "";
-		}
-		else {
-			return _firstName;
-		}
+		return Objects.toString(_firstName, "");
 	}
 
 	@Override
@@ -727,12 +713,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getMiddleName() {
-		if (_middleName == null) {
-			return "";
-		}
-		else {
-			return _middleName;
-		}
+		return Objects.toString(_middleName, "");
 	}
 
 	@Override
@@ -743,12 +724,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getLastName() {
-		if (_lastName == null) {
-			return "";
-		}
-		else {
-			return _lastName;
-		}
+		return Objects.toString(_lastName, "");
 	}
 
 	@Override
@@ -809,12 +785,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getSmsSn() {
-		if (_smsSn == null) {
-			return "";
-		}
-		else {
-			return _smsSn;
-		}
+		return Objects.toString(_smsSn, "");
 	}
 
 	@Override
@@ -825,12 +796,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getFacebookSn() {
-		if (_facebookSn == null) {
-			return "";
-		}
-		else {
-			return _facebookSn;
-		}
+		return Objects.toString(_facebookSn, "");
 	}
 
 	@Override
@@ -841,12 +807,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getJabberSn() {
-		if (_jabberSn == null) {
-			return "";
-		}
-		else {
-			return _jabberSn;
-		}
+		return Objects.toString(_jabberSn, "");
 	}
 
 	@Override
@@ -857,12 +818,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getSkypeSn() {
-		if (_skypeSn == null) {
-			return "";
-		}
-		else {
-			return _skypeSn;
-		}
+		return Objects.toString(_skypeSn, "");
 	}
 
 	@Override
@@ -873,12 +829,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getTwitterSn() {
-		if (_twitterSn == null) {
-			return "";
-		}
-		else {
-			return _twitterSn;
-		}
+		return Objects.toString(_twitterSn, "");
 	}
 
 	@Override
@@ -889,12 +840,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmployeeStatusId() {
-		if (_employeeStatusId == null) {
-			return "";
-		}
-		else {
-			return _employeeStatusId;
-		}
+		return Objects.toString(_employeeStatusId, "");
 	}
 
 	@Override
@@ -905,12 +851,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmployeeNumber() {
-		if (_employeeNumber == null) {
-			return "";
-		}
-		else {
-			return _employeeNumber;
-		}
+		return Objects.toString(_employeeNumber, "");
 	}
 
 	@Override
@@ -921,12 +862,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getJobTitle() {
-		if (_jobTitle == null) {
-			return "";
-		}
-		else {
-			return _jobTitle;
-		}
+		return Objects.toString(_jobTitle, "");
 	}
 
 	@Override
@@ -937,12 +873,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getJobClass() {
-		if (_jobClass == null) {
-			return "";
-		}
-		else {
-			return _jobClass;
-		}
+		return Objects.toString(_jobClass, "");
 	}
 
 	@Override
@@ -953,12 +884,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getHoursOfOperation() {
-		if (_hoursOfOperation == null) {
-			return "";
-		}
-		else {
-			return _hoursOfOperation;
-		}
+		return Objects.toString(_hoursOfOperation, "");
 	}
 
 	@Override

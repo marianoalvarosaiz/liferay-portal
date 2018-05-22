@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalFeed service. Represents a row in the &quot;JournalFeed&quot; database table, with each column mapped to a property of this class.
@@ -422,12 +423,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -530,12 +526,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -574,12 +565,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getFeedId() {
-		if (_feedId == null) {
-			return "";
-		}
-		else {
-			return _feedId;
-		}
+		return Objects.toString(_feedId, "");
 	}
 
 	@Override
@@ -600,12 +586,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -616,12 +597,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -632,12 +608,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDDMStructureKey() {
-		if (_DDMStructureKey == null) {
-			return "";
-		}
-		else {
-			return _DDMStructureKey;
-		}
+		return Objects.toString(_DDMStructureKey, "");
 	}
 
 	@Override
@@ -648,12 +619,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDDMTemplateKey() {
-		if (_DDMTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMTemplateKey;
-		}
+		return Objects.toString(_DDMTemplateKey, "");
 	}
 
 	@Override
@@ -664,12 +630,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getDDMRendererTemplateKey() {
-		if (_DDMRendererTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMRendererTemplateKey;
-		}
+		return Objects.toString(_DDMRendererTemplateKey, "");
 	}
 
 	@Override
@@ -691,12 +652,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getOrderByCol() {
-		if (_orderByCol == null) {
-			return "";
-		}
-		else {
-			return _orderByCol;
-		}
+		return Objects.toString(_orderByCol, "");
 	}
 
 	@Override
@@ -707,12 +663,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getOrderByType() {
-		if (_orderByType == null) {
-			return "";
-		}
-		else {
-			return _orderByType;
-		}
+		return Objects.toString(_orderByType, "");
 	}
 
 	@Override
@@ -723,12 +674,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getTargetLayoutFriendlyUrl() {
-		if (_targetLayoutFriendlyUrl == null) {
-			return "";
-		}
-		else {
-			return _targetLayoutFriendlyUrl;
-		}
+		return Objects.toString(_targetLayoutFriendlyUrl, "");
 	}
 
 	@Override
@@ -739,12 +685,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getTargetPortletId() {
-		if (_targetPortletId == null) {
-			return "";
-		}
-		else {
-			return _targetPortletId;
-		}
+		return Objects.toString(_targetPortletId, "");
 	}
 
 	@Override
@@ -755,12 +696,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getContentField() {
-		if (_contentField == null) {
-			return "";
-		}
-		else {
-			return _contentField;
-		}
+		return Objects.toString(_contentField, "");
 	}
 
 	@Override
@@ -771,12 +707,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getFeedFormat() {
-		if (_feedFormat == null) {
-			return "";
-		}
-		else {
-			return _feedFormat;
-		}
+		return Objects.toString(_feedFormat, "");
 	}
 
 	@Override

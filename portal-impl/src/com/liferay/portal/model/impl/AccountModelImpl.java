@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Account service. Represents a row in the &quot;Account_&quot; database table, with each column mapped to a property of this class.
@@ -410,12 +411,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -465,12 +461,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -481,12 +472,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getLegalName() {
-		if (_legalName == null) {
-			return "";
-		}
-		else {
-			return _legalName;
-		}
+		return Objects.toString(_legalName, "");
 	}
 
 	@Override
@@ -497,12 +483,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getLegalId() {
-		if (_legalId == null) {
-			return "";
-		}
-		else {
-			return _legalId;
-		}
+		return Objects.toString(_legalId, "");
 	}
 
 	@Override
@@ -513,12 +494,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getLegalType() {
-		if (_legalType == null) {
-			return "";
-		}
-		else {
-			return _legalType;
-		}
+		return Objects.toString(_legalType, "");
 	}
 
 	@Override
@@ -529,12 +505,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getSicCode() {
-		if (_sicCode == null) {
-			return "";
-		}
-		else {
-			return _sicCode;
-		}
+		return Objects.toString(_sicCode, "");
 	}
 
 	@Override
@@ -545,12 +516,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getTickerSymbol() {
-		if (_tickerSymbol == null) {
-			return "";
-		}
-		else {
-			return _tickerSymbol;
-		}
+		return Objects.toString(_tickerSymbol, "");
 	}
 
 	@Override
@@ -561,12 +527,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getIndustry() {
-		if (_industry == null) {
-			return "";
-		}
-		else {
-			return _industry;
-		}
+		return Objects.toString(_industry, "");
 	}
 
 	@Override
@@ -577,12 +538,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return Objects.toString(_type, "");
 	}
 
 	@Override
@@ -593,12 +549,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getSize() {
-		if (_size == null) {
-			return "";
-		}
-		else {
-			return _size;
-		}
+		return Objects.toString(_size, "");
 	}
 
 	@Override

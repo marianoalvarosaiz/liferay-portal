@@ -45,6 +45,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FragmentEntryLink service. Represents a row in the &quot;FragmentEntryLink&quot; database table, with each column mapped to a property of this class.
@@ -323,12 +324,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -426,12 +422,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -563,12 +554,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return Objects.toString(_css, "");
 	}
 
 	@Override
@@ -578,12 +564,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getHtml() {
-		if (_html == null) {
-			return "";
-		}
-		else {
-			return _html;
-		}
+		return Objects.toString(_html, "");
 	}
 
 	@Override
@@ -593,12 +574,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getJs() {
-		if (_js == null) {
-			return "";
-		}
-		else {
-			return _js;
-		}
+		return Objects.toString(_js, "");
 	}
 
 	@Override
@@ -608,12 +584,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getEditableValues() {
-		if (_editableValues == null) {
-			return "";
-		}
-		else {
-			return _editableValues;
-		}
+		return Objects.toString(_editableValues, "");
 	}
 
 	@Override
@@ -645,12 +616,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getNamespace() {
-		if (_namespace == null) {
-			return "";
-		}
-		else {
-			return _namespace;
-		}
+		return Objects.toString(_namespace, "");
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskInstanceToken service. Represents a row in the &quot;KaleoTaskInstanceToken&quot; database table, with each column mapped to a property of this class.
@@ -388,12 +389,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -505,12 +501,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getKaleoTaskName() {
-		if (_kaleoTaskName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTaskName;
-		}
+		return Objects.toString(_kaleoTaskName, "");
 	}
 
 	@Override
@@ -520,12 +511,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getClassName() {
-		if (_className == null) {
-			return "";
-		}
-		else {
-			return _className;
-		}
+		return Objects.toString(_className, "");
 	}
 
 	@Override
@@ -628,12 +614,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public String getWorkflowContext() {
-		if (_workflowContext == null) {
-			return "";
-		}
-		else {
-			return _workflowContext;
-		}
+		return Objects.toString(_workflowContext, "");
 	}
 
 	@Override

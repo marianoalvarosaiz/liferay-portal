@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SyncDevice service. Represents a row in the &quot;SyncDevice&quot; database table, with each column mapped to a property of this class.
@@ -311,12 +312,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -408,12 +404,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -462,12 +453,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return Objects.toString(_type, "");
 	}
 
 	@Override
@@ -500,12 +486,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getHostname() {
-		if (_hostname == null) {
-			return "";
-		}
-		else {
-			return _hostname;
-		}
+		return Objects.toString(_hostname, "");
 	}
 
 	@Override

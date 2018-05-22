@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the LayoutSet service. Represents a row in the &quot;LayoutSet&quot; database table, with each column mapped to a property of this class.
@@ -473,12 +474,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return Objects.toString(_themeId, "");
 	}
 
 	@Override
@@ -489,12 +485,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return Objects.toString(_colorSchemeId, "");
 	}
 
 	@Override
@@ -505,12 +496,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return Objects.toString(_css, "");
 	}
 
 	@Override
@@ -532,12 +518,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getSettings() {
-		if (_settings == null) {
-			return "";
-		}
-		else {
-			return _settings;
-		}
+		return Objects.toString(_settings, "");
 	}
 
 	@Override
@@ -548,12 +529,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getLayoutSetPrototypeUuid() {
-		if (_layoutSetPrototypeUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutSetPrototypeUuid;
-		}
+		return Objects.toString(_layoutSetPrototypeUuid, "");
 	}
 
 	@Override

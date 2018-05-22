@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WikiPageResource service. Represents a row in the &quot;WikiPageResource&quot; database table, with each column mapped to a property of this class.
@@ -195,12 +196,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -294,12 +290,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override

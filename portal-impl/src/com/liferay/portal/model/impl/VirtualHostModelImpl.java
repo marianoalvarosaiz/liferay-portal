@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the VirtualHost service. Represents a row in the &quot;VirtualHost&quot; database table, with each column mapped to a property of this class.
@@ -247,12 +248,7 @@ public class VirtualHostModelImpl extends BaseModelImpl<VirtualHost>
 
 	@Override
 	public String getHostname() {
-		if (_hostname == null) {
-			return "";
-		}
-		else {
-			return _hostname;
-		}
+		return Objects.toString(_hostname, "");
 	}
 
 	@Override

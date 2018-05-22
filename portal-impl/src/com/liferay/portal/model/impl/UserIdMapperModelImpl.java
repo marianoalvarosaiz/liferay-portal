@@ -39,6 +39,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserIdMapper service. Represents a row in the &quot;UserIdMapper&quot; database table, with each column mapped to a property of this class.
@@ -272,12 +273,7 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return Objects.toString(_type, "");
 	}
 
 	@Override
@@ -297,12 +293,7 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -312,12 +303,7 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 
 	@Override
 	public String getExternalUserId() {
-		if (_externalUserId == null) {
-			return "";
-		}
-		else {
-			return _externalUserId;
-		}
+		return Objects.toString(_externalUserId, "");
 	}
 
 	@Override
