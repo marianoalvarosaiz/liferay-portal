@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2Authorization service. Represents a row in the &quot;OAuth2Authorization&quot; database table, with each column mapped to a property of this class.
@@ -405,12 +406,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -463,12 +459,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getAccessTokenContent() {
-		if (_accessTokenContent == null) {
-			return "";
-		}
-		else {
-			return _accessTokenContent;
-		}
+		return Objects.toString(_accessTokenContent, "");
 	}
 
 	@Override
@@ -508,12 +499,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getRemoteIPInfo() {
-		if (_remoteIPInfo == null) {
-			return "";
-		}
-		else {
-			return _remoteIPInfo;
-		}
+		return Objects.toString(_remoteIPInfo, "");
 	}
 
 	@Override
@@ -523,12 +509,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getRefreshTokenContent() {
-		if (_refreshTokenContent == null) {
-			return "";
-		}
-		else {
-			return _refreshTokenContent;
-		}
+		return Objects.toString(_refreshTokenContent, "");
 	}
 
 	@Override

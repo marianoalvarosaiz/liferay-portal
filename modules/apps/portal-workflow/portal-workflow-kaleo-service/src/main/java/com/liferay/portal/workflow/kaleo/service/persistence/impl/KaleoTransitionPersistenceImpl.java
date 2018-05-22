@@ -1711,7 +1711,9 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 	@Override
 	public KaleoTransition fetchByKNI_N(long kaleoNodeId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { kaleoNodeId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { kaleoNodeId, nameNullSafe };
 
 		Object result = null;
 
@@ -1724,7 +1726,7 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 			KaleoTransition kaleoTransition = (KaleoTransition)result;
 
 			if ((kaleoNodeId != kaleoTransition.getKaleoNodeId()) ||
-					!Objects.equals(name, kaleoTransition.getName())) {
+					!Objects.equals(nameNullSafe, kaleoTransition.getName())) {
 				result = null;
 			}
 		}
@@ -1792,8 +1794,7 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 					cacheResult(kaleoTransition);
 
 					if ((kaleoTransition.getKaleoNodeId() != kaleoNodeId) ||
-							(kaleoTransition.getName() == null) ||
-							!kaleoTransition.getName().equals(name)) {
+							!kaleoTransition.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_KNI_N,
 							finderArgs, kaleoTransition);
 					}
@@ -1843,7 +1844,9 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 	public int countByKNI_N(long kaleoNodeId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KNI_N;
 
-		Object[] finderArgs = new Object[] { kaleoNodeId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { kaleoNodeId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

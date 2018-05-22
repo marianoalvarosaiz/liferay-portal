@@ -179,15 +179,21 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<Lock> list = null;
@@ -198,7 +204,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Lock lock : list) {
-					if (!Objects.equals(uuid, lock.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, lock.getUuid())) {
 						list = null;
 
 						break;
@@ -571,7 +577,9 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -725,16 +733,18 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -748,7 +758,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (Lock lock : list) {
-					if (!Objects.equals(uuid, lock.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, lock.getUuid()) ||
 							(companyId != lock.getCompanyId())) {
 						list = null;
 
@@ -1146,7 +1156,9 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1812,7 +1824,10 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	@Override
 	public Lock fetchByC_K(String className, String key,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { className, key };
+		String classNameNullSafe = Objects.toString(className, "");
+		String keyNullSafe = Objects.toString(key, "");
+
+		Object[] finderArgs = new Object[] { classNameNullSafe, keyNullSafe };
 
 		Object result = null;
 
@@ -1824,8 +1839,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		if (result instanceof Lock) {
 			Lock lock = (Lock)result;
 
-			if (!Objects.equals(className, lock.getClassName()) ||
-					!Objects.equals(key, lock.getKey())) {
+			if (!Objects.equals(classNameNullSafe, lock.getClassName()) ||
+					!Objects.equals(keyNullSafe, lock.getKey())) {
 				result = null;
 			}
 		}
@@ -1895,10 +1910,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 					cacheResult(lock);
 
-					if ((lock.getClassName() == null) ||
-							!lock.getClassName().equals(className) ||
-							(lock.getKey() == null) ||
-							!lock.getKey().equals(key)) {
+					if (!lock.getClassName().equals(classNameNullSafe) ||
+							!lock.getKey().equals(keyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_K,
 							finderArgs, lock);
 					}
@@ -1948,7 +1961,10 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	public int countByC_K(String className, String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_K;
 
-		Object[] finderArgs = new Object[] { className, key };
+		String classNameNullSafe = Objects.toString(className, "");
+		String keyNullSafe = Objects.toString(key, "");
+
+		Object[] finderArgs = new Object[] { classNameNullSafe, keyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

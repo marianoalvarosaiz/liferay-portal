@@ -1317,18 +1317,23 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String workflowDefinitionNameNullSafe = Objects.toString(workflowDefinitionName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_W_W;
 			finderArgs = new Object[] {
-					companyId, workflowDefinitionName, workflowDefinitionVersion
+					companyId, workflowDefinitionNameNullSafe,
+					workflowDefinitionVersion
 				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_W_W;
 			finderArgs = new Object[] {
-					companyId, workflowDefinitionName, workflowDefinitionVersion,
+					companyId, workflowDefinitionNameNullSafe,
+					workflowDefinitionVersion,
 					
 					start, end, orderByComparator
 				};
@@ -1343,7 +1348,7 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 			if ((list != null) && !list.isEmpty()) {
 				for (WorkflowDefinitionLink workflowDefinitionLink : list) {
 					if ((companyId != workflowDefinitionLink.getCompanyId()) ||
-							!Objects.equals(workflowDefinitionName,
+							!Objects.equals(workflowDefinitionNameNullSafe,
 								workflowDefinitionLink.getWorkflowDefinitionName()) ||
 							(workflowDefinitionVersion != workflowDefinitionLink.getWorkflowDefinitionVersion())) {
 						list = null;
@@ -1786,8 +1791,12 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 		int workflowDefinitionVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_W_W;
 
+		String workflowDefinitionNameNullSafe = Objects.toString(workflowDefinitionName,
+				"");
+
 		Object[] finderArgs = new Object[] {
-				companyId, workflowDefinitionName, workflowDefinitionVersion
+				companyId, workflowDefinitionNameNullSafe,
+				workflowDefinitionVersion
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

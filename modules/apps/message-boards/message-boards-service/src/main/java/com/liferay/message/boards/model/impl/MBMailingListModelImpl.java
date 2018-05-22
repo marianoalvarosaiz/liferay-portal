@@ -44,6 +44,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBMailingList service. Represents a row in the &quot;MBMailingList&quot; database table, with each column mapped to a property of this class.
@@ -382,12 +383,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -485,12 +481,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -548,12 +539,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return Objects.toString(_emailAddress, "");
 	}
 
 	@Override
@@ -563,12 +549,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInProtocol() {
-		if (_inProtocol == null) {
-			return "";
-		}
-		else {
-			return _inProtocol;
-		}
+		return Objects.toString(_inProtocol, "");
 	}
 
 	@Override
@@ -578,12 +559,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInServerName() {
-		if (_inServerName == null) {
-			return "";
-		}
-		else {
-			return _inServerName;
-		}
+		return Objects.toString(_inServerName, "");
 	}
 
 	@Override
@@ -618,12 +594,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInUserName() {
-		if (_inUserName == null) {
-			return "";
-		}
-		else {
-			return _inUserName;
-		}
+		return Objects.toString(_inUserName, "");
 	}
 
 	@Override
@@ -633,12 +604,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInPassword() {
-		if (_inPassword == null) {
-			return "";
-		}
-		else {
-			return _inPassword;
-		}
+		return Objects.toString(_inPassword, "");
 	}
 
 	@Override
@@ -658,12 +624,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutEmailAddress() {
-		if (_outEmailAddress == null) {
-			return "";
-		}
-		else {
-			return _outEmailAddress;
-		}
+		return Objects.toString(_outEmailAddress, "");
 	}
 
 	@Override
@@ -688,12 +649,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutServerName() {
-		if (_outServerName == null) {
-			return "";
-		}
-		else {
-			return _outServerName;
-		}
+		return Objects.toString(_outServerName, "");
 	}
 
 	@Override
@@ -728,12 +684,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutUserName() {
-		if (_outUserName == null) {
-			return "";
-		}
-		else {
-			return _outUserName;
-		}
+		return Objects.toString(_outUserName, "");
 	}
 
 	@Override
@@ -743,12 +694,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutPassword() {
-		if (_outPassword == null) {
-			return "";
-		}
-		else {
-			return _outPassword;
-		}
+		return Objects.toString(_outPassword, "");
 	}
 
 	@Override

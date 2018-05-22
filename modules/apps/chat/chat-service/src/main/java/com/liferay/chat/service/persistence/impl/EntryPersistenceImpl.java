@@ -3881,17 +3881,19 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String contentNullSafe = Objects.toString(content, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_F_T_C;
-			finderArgs = new Object[] { fromUserId, toUserId, content };
+			finderArgs = new Object[] { fromUserId, toUserId, contentNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_F_T_C;
 			finderArgs = new Object[] {
-					fromUserId, toUserId, content,
-					
+					fromUserId, toUserId, contentNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -3906,7 +3908,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 				for (Entry entry : list) {
 					if ((fromUserId != entry.getFromUserId()) ||
 							(toUserId != entry.getToUserId()) ||
-							!Objects.equals(content, entry.getContent())) {
+							!Objects.equals(contentNullSafe, entry.getContent())) {
 						list = null;
 
 						break;
@@ -4329,7 +4331,9 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	public int countByF_T_C(long fromUserId, long toUserId, String content) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_T_C;
 
-		Object[] finderArgs = new Object[] { fromUserId, toUserId, content };
+		String contentNullSafe = Objects.toString(content, "");
+
+		Object[] finderArgs = new Object[] { fromUserId, toUserId, contentNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

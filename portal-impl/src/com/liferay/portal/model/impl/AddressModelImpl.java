@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Address service. Represents a row in the &quot;Address&quot; database table, with each column mapped to a property of this class.
@@ -406,12 +407,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -503,12 +499,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -615,12 +606,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getStreet1() {
-		if (_street1 == null) {
-			return "";
-		}
-		else {
-			return _street1;
-		}
+		return Objects.toString(_street1, "");
 	}
 
 	@Override
@@ -631,12 +617,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getStreet2() {
-		if (_street2 == null) {
-			return "";
-		}
-		else {
-			return _street2;
-		}
+		return Objects.toString(_street2, "");
 	}
 
 	@Override
@@ -647,12 +628,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getStreet3() {
-		if (_street3 == null) {
-			return "";
-		}
-		else {
-			return _street3;
-		}
+		return Objects.toString(_street3, "");
 	}
 
 	@Override
@@ -663,12 +639,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getCity() {
-		if (_city == null) {
-			return "";
-		}
-		else {
-			return _city;
-		}
+		return Objects.toString(_city, "");
 	}
 
 	@Override
@@ -679,12 +650,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@JSON
 	@Override
 	public String getZip() {
-		if (_zip == null) {
-			return "";
-		}
-		else {
-			return _zip;
-		}
+		return Objects.toString(_zip, "");
 	}
 
 	@Override

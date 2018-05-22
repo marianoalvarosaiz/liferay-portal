@@ -181,15 +181,21 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<DDLRecord> list = null;
@@ -200,7 +206,7 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDLRecord ddlRecord : list) {
-					if (!Objects.equals(uuid, ddlRecord.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, ddlRecord.getUuid())) {
 						list = null;
 
 						break;
@@ -578,7 +584,9 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -706,7 +714,9 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 	@Override
 	public DDLRecord fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -718,7 +728,7 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 		if (result instanceof DDLRecord) {
 			DDLRecord ddlRecord = (DDLRecord)result;
 
-			if (!Objects.equals(uuid, ddlRecord.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, ddlRecord.getUuid()) ||
 					(groupId != ddlRecord.getGroupId())) {
 				result = null;
 			}
@@ -775,8 +785,7 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 
 					cacheResult(ddlRecord);
 
-					if ((ddlRecord.getUuid() == null) ||
-							!ddlRecord.getUuid().equals(uuid) ||
+					if (!ddlRecord.getUuid().equals(uuidNullSafe) ||
 							(ddlRecord.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, ddlRecord);
@@ -827,7 +836,9 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -986,16 +997,18 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1009,7 +1022,7 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (DDLRecord ddlRecord : list) {
-					if (!Objects.equals(uuid, ddlRecord.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, ddlRecord.getUuid()) ||
 							(companyId != ddlRecord.getCompanyId())) {
 						list = null;
 
@@ -1412,7 +1425,9 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3123,17 +3138,19 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String recordSetVersionNullSafe = Objects.toString(recordSetVersion, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_R;
-			finderArgs = new Object[] { recordSetId, recordSetVersion };
+			finderArgs = new Object[] { recordSetId, recordSetVersionNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_R_R;
 			finderArgs = new Object[] {
-					recordSetId, recordSetVersion,
-					
+					recordSetId, recordSetVersionNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -3147,7 +3164,7 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 			if ((list != null) && !list.isEmpty()) {
 				for (DDLRecord ddlRecord : list) {
 					if ((recordSetId != ddlRecord.getRecordSetId()) ||
-							!Objects.equals(recordSetVersion,
+							!Objects.equals(recordSetVersionNullSafe,
 								ddlRecord.getRecordSetVersion())) {
 						list = null;
 
@@ -3550,7 +3567,9 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 	public int countByR_R(long recordSetId, String recordSetVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_R_R;
 
-		Object[] finderArgs = new Object[] { recordSetId, recordSetVersion };
+		String recordSetVersionNullSafe = Objects.toString(recordSetVersion, "");
+
+		Object[] finderArgs = new Object[] { recordSetId, recordSetVersionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowParticipant service. Represents a row in the &quot;PowwowParticipant&quot; database table, with each column mapped to a property of this class.
@@ -379,12 +380,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -446,12 +442,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -501,12 +492,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return Objects.toString(_emailAddress, "");
 	}
 
 	@Override

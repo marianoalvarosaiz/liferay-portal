@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLSyncEvent service. Represents a row in the &quot;DLSyncEvent&quot; database table, with each column mapped to a property of this class.
@@ -233,12 +234,7 @@ public class DLSyncEventModelImpl extends BaseModelImpl<DLSyncEvent>
 
 	@Override
 	public String getEvent() {
-		if (_event == null) {
-			return "";
-		}
-		else {
-			return _event;
-		}
+		return Objects.toString(_event, "");
 	}
 
 	@Override
@@ -248,12 +244,7 @@ public class DLSyncEventModelImpl extends BaseModelImpl<DLSyncEvent>
 
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return Objects.toString(_type, "");
 	}
 
 	@Override

@@ -662,7 +662,9 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	@Override
 	public Folder fetchByA_F(long accountId, String fullName,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { accountId, fullName };
+		String fullNameNullSafe = Objects.toString(fullName, "");
+
+		Object[] finderArgs = new Object[] { accountId, fullNameNullSafe };
 
 		Object result = null;
 
@@ -675,7 +677,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 			Folder folder = (Folder)result;
 
 			if ((accountId != folder.getAccountId()) ||
-					!Objects.equals(fullName, folder.getFullName())) {
+					!Objects.equals(fullNameNullSafe, folder.getFullName())) {
 				result = null;
 			}
 		}
@@ -743,8 +745,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 					cacheResult(folder);
 
 					if ((folder.getAccountId() != accountId) ||
-							(folder.getFullName() == null) ||
-							!folder.getFullName().equals(fullName)) {
+							!folder.getFullName().equals(fullNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_A_F,
 							finderArgs, folder);
 					}
@@ -794,7 +795,9 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	public int countByA_F(long accountId, String fullName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_F;
 
-		Object[] finderArgs = new Object[] { accountId, fullName };
+		String fullNameNullSafe = Objects.toString(fullName, "");
+
+		Object[] finderArgs = new Object[] { accountId, fullNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

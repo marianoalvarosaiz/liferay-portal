@@ -691,15 +691,21 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PORTLETID;
-			finderArgs = new Object[] { portletId };
+			finderArgs = new Object[] { portletIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_PORTLETID;
-			finderArgs = new Object[] { portletId, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					portletIdNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<PortletPreferences> list = null;
@@ -710,7 +716,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (PortletPreferences portletPreferences : list) {
-					if (!Objects.equals(portletId,
+					if (!Objects.equals(portletIdNullSafe,
 								portletPreferences.getPortletId())) {
 						list = null;
 
@@ -1094,7 +1100,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByPortletId(String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_PORTLETID;
 
-		Object[] finderArgs = new Object[] { portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1252,17 +1260,19 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_O_P;
-			finderArgs = new Object[] { ownerType, portletId };
+			finderArgs = new Object[] { ownerType, portletIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_O_P;
 			finderArgs = new Object[] {
-					ownerType, portletId,
-					
+					ownerType, portletIdNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -1276,7 +1286,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((list != null) && !list.isEmpty()) {
 				for (PortletPreferences portletPreferences : list) {
 					if ((ownerType != portletPreferences.getOwnerType()) ||
-							!Objects.equals(portletId,
+							!Objects.equals(portletIdNullSafe,
 								portletPreferences.getPortletId())) {
 						list = null;
 
@@ -1681,7 +1691,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByO_P(int ownerType, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_P;
 
-		Object[] finderArgs = new Object[] { ownerType, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { ownerType, portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1843,17 +1855,19 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_P;
-			finderArgs = new Object[] { plid, portletId };
+			finderArgs = new Object[] { plid, portletIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_P_P;
 			finderArgs = new Object[] {
-					plid, portletId,
-					
+					plid, portletIdNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -1867,7 +1881,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((list != null) && !list.isEmpty()) {
 				for (PortletPreferences portletPreferences : list) {
 					if ((plid != portletPreferences.getPlid()) ||
-							!Objects.equals(portletId,
+							!Objects.equals(portletIdNullSafe,
 								portletPreferences.getPortletId())) {
 						list = null;
 
@@ -2272,7 +2286,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByP_P(long plid, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_P_P;
 
-		Object[] finderArgs = new Object[] { plid, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { plid, portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3036,17 +3052,19 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_O_O_PI;
-			finderArgs = new Object[] { ownerId, ownerType, portletId };
+			finderArgs = new Object[] { ownerId, ownerType, portletIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_O_O_PI;
 			finderArgs = new Object[] {
-					ownerId, ownerType, portletId,
-					
+					ownerId, ownerType, portletIdNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -3061,7 +3079,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 				for (PortletPreferences portletPreferences : list) {
 					if ((ownerId != portletPreferences.getOwnerId()) ||
 							(ownerType != portletPreferences.getOwnerType()) ||
-							!Objects.equals(portletId,
+							!Objects.equals(portletIdNullSafe,
 								portletPreferences.getPortletId())) {
 						list = null;
 
@@ -3493,7 +3511,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByO_O_PI(long ownerId, int ownerType, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_O_PI;
 
-		Object[] finderArgs = new Object[] { ownerId, ownerType, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { ownerId, ownerType, portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3674,17 +3694,19 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_O_P_P;
-			finderArgs = new Object[] { ownerType, plid, portletId };
+			finderArgs = new Object[] { ownerType, plid, portletIdNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_O_P_P;
 			finderArgs = new Object[] {
-					ownerType, plid, portletId,
-					
+					ownerType, plid, portletIdNullSafe,
+
 					start, end, orderByComparator
 				};
 		}
@@ -3699,7 +3721,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 				for (PortletPreferences portletPreferences : list) {
 					if ((ownerType != portletPreferences.getOwnerType()) ||
 							(plid != portletPreferences.getPlid()) ||
-							!Objects.equals(portletId,
+							!Objects.equals(portletIdNullSafe,
 								portletPreferences.getPortletId())) {
 						list = null;
 
@@ -4130,7 +4152,9 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByO_P_P(int ownerType, long plid, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_P_P;
 
-		Object[] finderArgs = new Object[] { ownerType, plid, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { ownerType, plid, portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4307,9 +4331,11 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_O_O_LIKEP;
 		finderArgs = new Object[] {
-				companyId, ownerId, ownerType, portletId,
+				companyId, ownerId, ownerType, portletIdNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -4326,8 +4352,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 							(ownerId != portletPreferences.getOwnerId()) ||
 							(ownerType != portletPreferences.getOwnerType()) ||
 							!StringUtil.wildcardMatches(
-								portletPreferences.getPortletId(), portletId,
-								'_', '%', '\\', true)) {
+								portletPreferences.getPortletId(),
+								portletIdNullSafe, '_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -4784,8 +4810,10 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		String portletId) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_O_O_LIKEP;
 
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, ownerId, ownerType, portletId
+				companyId, ownerId, ownerType, portletIdNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4952,7 +4980,11 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	@Override
 	public PortletPreferences fetchByO_O_P_P(long ownerId, int ownerType,
 		long plid, String portletId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { ownerId, ownerType, plid, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] {
+				ownerId, ownerType, plid, portletIdNullSafe
+			};
 
 		Object result = null;
 
@@ -4967,7 +4999,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			if ((ownerId != portletPreferences.getOwnerId()) ||
 					(ownerType != portletPreferences.getOwnerType()) ||
 					(plid != portletPreferences.getPlid()) ||
-					!Objects.equals(portletId, portletPreferences.getPortletId())) {
+					!Objects.equals(portletIdNullSafe,
+						portletPreferences.getPortletId())) {
 				result = null;
 			}
 		}
@@ -5034,8 +5067,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 					if ((portletPreferences.getOwnerId() != ownerId) ||
 							(portletPreferences.getOwnerType() != ownerType) ||
 							(portletPreferences.getPlid() != plid) ||
-							(portletPreferences.getPortletId() == null) ||
-							!portletPreferences.getPortletId().equals(portletId)) {
+							!portletPreferences.getPortletId()
+												   .equals(portletIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_O_O_P_P,
 							finderArgs, portletPreferences);
 					}
@@ -5092,7 +5125,11 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_O_P_P;
 
-		Object[] finderArgs = new Object[] { ownerId, ownerType, plid, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] {
+				ownerId, ownerType, plid, portletIdNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

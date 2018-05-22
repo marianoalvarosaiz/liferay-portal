@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WikiPage service. Represents a row in the &quot;WikiPage&quot; database table, with each column mapped to a property of this class.
@@ -444,12 +445,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -592,12 +588,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -659,12 +650,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -725,12 +711,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return Objects.toString(_content, "");
 	}
 
 	@Override
@@ -741,12 +722,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getSummary() {
-		if (_summary == null) {
-			return "";
-		}
-		else {
-			return _summary;
-		}
+		return Objects.toString(_summary, "");
 	}
 
 	@Override
@@ -757,12 +733,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getFormat() {
-		if (_format == null) {
-			return "";
-		}
-		else {
-			return _format;
-		}
+		return Objects.toString(_format, "");
 	}
 
 	@Override
@@ -812,12 +783,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getParentTitle() {
-		if (_parentTitle == null) {
-			return "";
-		}
-		else {
-			return _parentTitle;
-		}
+		return Objects.toString(_parentTitle, "");
 	}
 
 	@Override
@@ -838,12 +804,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getRedirectTitle() {
-		if (_redirectTitle == null) {
-			return "";
-		}
-		else {
-			return _redirectTitle;
-		}
+		return Objects.toString(_redirectTitle, "");
 	}
 
 	@Override
@@ -925,12 +886,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

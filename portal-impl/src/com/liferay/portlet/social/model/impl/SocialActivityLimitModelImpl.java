@@ -42,6 +42,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialActivityLimit service. Represents a row in the &quot;SocialActivityLimit&quot; database table, with each column mapped to a property of this class.
@@ -395,12 +396,7 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 
 	@Override
 	public String getActivityCounterName() {
-		if (_activityCounterName == null) {
-			return "";
-		}
-		else {
-			return _activityCounterName;
-		}
+		return Objects.toString(_activityCounterName, "");
 	}
 
 	@Override
@@ -420,12 +416,7 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 
 	@Override
 	public String getValue() {
-		if (_value == null) {
-			return "";
-		}
-		else {
-			return _value;
-		}
+		return Objects.toString(_value, "");
 	}
 
 	@Override

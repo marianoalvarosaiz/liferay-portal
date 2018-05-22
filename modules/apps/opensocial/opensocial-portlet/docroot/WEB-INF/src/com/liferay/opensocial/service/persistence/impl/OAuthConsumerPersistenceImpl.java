@@ -188,15 +188,21 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String gadgetKeyNullSafe = Objects.toString(gadgetKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GADGETKEY;
-			finderArgs = new Object[] { gadgetKey };
+			finderArgs = new Object[] { gadgetKeyNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_GADGETKEY;
-			finderArgs = new Object[] { gadgetKey, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					gadgetKeyNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<OAuthConsumer> list = null;
@@ -207,7 +213,8 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 
 			if ((list != null) && !list.isEmpty()) {
 				for (OAuthConsumer oAuthConsumer : list) {
-					if (!Objects.equals(gadgetKey, oAuthConsumer.getGadgetKey())) {
+					if (!Objects.equals(gadgetKeyNullSafe,
+								oAuthConsumer.getGadgetKey())) {
 						list = null;
 
 						break;
@@ -588,7 +595,9 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 	public int countByGadgetKey(String gadgetKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_GADGETKEY;
 
-		Object[] finderArgs = new Object[] { gadgetKey };
+		String gadgetKeyNullSafe = Objects.toString(gadgetKey, "");
+
+		Object[] finderArgs = new Object[] { gadgetKeyNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -716,7 +725,12 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 	@Override
 	public OAuthConsumer fetchByG_S(String gadgetKey, String serviceName,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { gadgetKey, serviceName };
+		String gadgetKeyNullSafe = Objects.toString(gadgetKey, "");
+		String serviceNameNullSafe = Objects.toString(serviceName, "");
+
+		Object[] finderArgs = new Object[] {
+				gadgetKeyNullSafe, serviceNameNullSafe
+			};
 
 		Object result = null;
 
@@ -728,8 +742,9 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 		if (result instanceof OAuthConsumer) {
 			OAuthConsumer oAuthConsumer = (OAuthConsumer)result;
 
-			if (!Objects.equals(gadgetKey, oAuthConsumer.getGadgetKey()) ||
-					!Objects.equals(serviceName, oAuthConsumer.getServiceName())) {
+			if (!Objects.equals(gadgetKeyNullSafe, oAuthConsumer.getGadgetKey()) ||
+					!Objects.equals(serviceNameNullSafe,
+						oAuthConsumer.getServiceName())) {
 				result = null;
 			}
 		}
@@ -810,10 +825,9 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 
 					cacheResult(oAuthConsumer);
 
-					if ((oAuthConsumer.getGadgetKey() == null) ||
-							!oAuthConsumer.getGadgetKey().equals(gadgetKey) ||
-							(oAuthConsumer.getServiceName() == null) ||
-							!oAuthConsumer.getServiceName().equals(serviceName)) {
+					if (!oAuthConsumer.getGadgetKey().equals(gadgetKeyNullSafe) ||
+							!oAuthConsumer.getServiceName()
+											  .equals(serviceNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_S,
 							finderArgs, oAuthConsumer);
 					}
@@ -863,7 +877,12 @@ public class OAuthConsumerPersistenceImpl extends BasePersistenceImpl<OAuthConsu
 	public int countByG_S(String gadgetKey, String serviceName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_S;
 
-		Object[] finderArgs = new Object[] { gadgetKey, serviceName };
+		String gadgetKeyNullSafe = Objects.toString(gadgetKey, "");
+		String serviceNameNullSafe = Objects.toString(serviceName, "");
+
+		Object[] finderArgs = new Object[] {
+				gadgetKeyNullSafe, serviceNameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -1038,7 +1038,12 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 	@Override
 	public FragmentCollection fetchByG_FCK(long groupId,
 		String fragmentCollectionKey, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, fragmentCollectionKey };
+		String fragmentCollectionKeyNullSafe = Objects.toString(fragmentCollectionKey,
+				"");
+
+		Object[] finderArgs = new Object[] {
+				groupId, fragmentCollectionKeyNullSafe
+			};
 
 		Object result = null;
 
@@ -1051,7 +1056,7 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 			FragmentCollection fragmentCollection = (FragmentCollection)result;
 
 			if ((groupId != fragmentCollection.getGroupId()) ||
-					!Objects.equals(fragmentCollectionKey,
+					!Objects.equals(fragmentCollectionKeyNullSafe,
 						fragmentCollection.getFragmentCollectionKey())) {
 				result = null;
 			}
@@ -1109,9 +1114,8 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 					cacheResult(fragmentCollection);
 
 					if ((fragmentCollection.getGroupId() != groupId) ||
-							(fragmentCollection.getFragmentCollectionKey() == null) ||
 							!fragmentCollection.getFragmentCollectionKey()
-												   .equals(fragmentCollectionKey)) {
+												   .equals(fragmentCollectionKeyNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_FCK,
 							finderArgs, fragmentCollection);
 					}
@@ -1162,7 +1166,12 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 	public int countByG_FCK(long groupId, String fragmentCollectionKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_FCK;
 
-		Object[] finderArgs = new Object[] { groupId, fragmentCollectionKey };
+		String fragmentCollectionKeyNullSafe = Objects.toString(fragmentCollectionKey,
+				"");
+
+		Object[] finderArgs = new Object[] {
+				groupId, fragmentCollectionKeyNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1317,8 +1326,14 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN;
-		finderArgs = new Object[] { groupId, name, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				groupId, nameNullSafe,
+				
+				start, end, orderByComparator
+			};
 
 		List<FragmentCollection> list = null;
 
@@ -1330,8 +1345,8 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 				for (FragmentCollection fragmentCollection : list) {
 					if ((groupId != fragmentCollection.getGroupId()) ||
 							!StringUtil.wildcardMatches(
-								fragmentCollection.getName(), name, '_', '%',
-								'\\', false)) {
+								fragmentCollection.getName(), nameNullSafe,
+								'_', '%', '\\', false)) {
 						list = null;
 
 						break;
@@ -2090,7 +2105,9 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 	public int countByG_LikeN(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

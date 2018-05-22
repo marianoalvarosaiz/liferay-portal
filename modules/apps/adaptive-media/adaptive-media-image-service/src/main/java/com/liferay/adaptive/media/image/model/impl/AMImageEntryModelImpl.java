@@ -38,6 +38,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the AMImageEntry service. Represents a row in the &quot;AMImageEntry&quot; database table, with each column mapped to a property of this class.
@@ -241,12 +242,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -328,12 +324,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getConfigurationUuid() {
-		if (_configurationUuid == null) {
-			return "";
-		}
-		else {
-			return _configurationUuid;
-		}
+		return Objects.toString(_configurationUuid, "");
 	}
 
 	@Override
@@ -375,12 +366,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return Objects.toString(_mimeType, "");
 	}
 
 	@Override

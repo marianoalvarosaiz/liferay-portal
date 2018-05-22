@@ -181,15 +181,21 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<App> list = null;
@@ -199,7 +205,7 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (App app : list) {
-					if (!Objects.equals(uuid, app.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, app.getUuid())) {
 						list = null;
 
 						break;
@@ -571,7 +577,9 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -725,16 +733,18 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -747,7 +757,7 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (App app : list) {
-					if (!Objects.equals(uuid, app.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, app.getUuid()) ||
 							(companyId != app.getCompanyId())) {
 						list = null;
 
@@ -1144,7 +1154,9 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2004,15 +2016,21 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String categoryNullSafe = Objects.toString(category, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CATEGORY;
-			finderArgs = new Object[] { category };
+			finderArgs = new Object[] { categoryNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_CATEGORY;
-			finderArgs = new Object[] { category, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					categoryNullSafe,
+
+					start, end, orderByComparator
+				};
 		}
 
 		List<App> list = null;
@@ -2022,7 +2040,7 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (App app : list) {
-					if (!Objects.equals(category, app.getCategory())) {
+					if (!Objects.equals(categoryNullSafe, app.getCategory())) {
 						list = null;
 
 						break;
@@ -2396,7 +2414,9 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 	public int countByCategory(String category) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CATEGORY;
 
-		Object[] finderArgs = new Object[] { category };
+		String categoryNullSafe = Objects.toString(category, "");
+
+		Object[] finderArgs = new Object[] { categoryNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialRequest service. Represents a row in the &quot;SocialRequest&quot; database table, with each column mapped to a property of this class.
@@ -324,12 +325,7 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -557,12 +553,7 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 	@JSON
 	@Override
 	public String getExtraData() {
-		if (_extraData == null) {
-			return "";
-		}
-		else {
-			return _extraData;
-		}
+		return Objects.toString(_extraData, "");
 	}
 
 	@Override

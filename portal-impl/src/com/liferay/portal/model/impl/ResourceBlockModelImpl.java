@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ResourceBlock service. Represents a row in the &quot;ResourceBlock&quot; database table, with each column mapped to a property of this class.
@@ -323,12 +324,7 @@ public class ResourceBlockModelImpl extends BaseModelImpl<ResourceBlock>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -349,12 +345,7 @@ public class ResourceBlockModelImpl extends BaseModelImpl<ResourceBlock>
 	@JSON
 	@Override
 	public String getPermissionsHash() {
-		if (_permissionsHash == null) {
-			return "";
-		}
-		else {
-			return _permissionsHash;
-		}
+		return Objects.toString(_permissionsHash, "");
 	}
 
 	@Override

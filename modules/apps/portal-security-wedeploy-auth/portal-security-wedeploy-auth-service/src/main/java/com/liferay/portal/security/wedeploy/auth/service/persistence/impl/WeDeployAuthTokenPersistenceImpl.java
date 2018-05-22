@@ -164,7 +164,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	@Override
 	public WeDeployAuthToken fetchByT_T(String token, int type,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { token, type };
+		String tokenNullSafe = Objects.toString(token, "");
+
+		Object[] finderArgs = new Object[] { tokenNullSafe, type };
 
 		Object result = null;
 
@@ -176,7 +178,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		if (result instanceof WeDeployAuthToken) {
 			WeDeployAuthToken weDeployAuthToken = (WeDeployAuthToken)result;
 
-			if (!Objects.equals(token, weDeployAuthToken.getToken()) ||
+			if (!Objects.equals(tokenNullSafe, weDeployAuthToken.getToken()) ||
 					(type != weDeployAuthToken.getType())) {
 				result = null;
 			}
@@ -244,8 +246,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 					cacheResult(weDeployAuthToken);
 
-					if ((weDeployAuthToken.getToken() == null) ||
-							!weDeployAuthToken.getToken().equals(token) ||
+					if (!weDeployAuthToken.getToken().equals(tokenNullSafe) ||
 							(weDeployAuthToken.getType() != type)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_T_T,
 							finderArgs, weDeployAuthToken);
@@ -296,7 +297,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	public int countByT_T(String token, int type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_T;
 
-		Object[] finderArgs = new Object[] { token, type };
+		String tokenNullSafe = Objects.toString(token, "");
+
+		Object[] finderArgs = new Object[] { tokenNullSafe, type };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -445,7 +448,10 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	@Override
 	public WeDeployAuthToken fetchByCI_T_T(String clientId, String token,
 		int type, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { clientId, token, type };
+		String clientIdNullSafe = Objects.toString(clientId, "");
+		String tokenNullSafe = Objects.toString(token, "");
+
+		Object[] finderArgs = new Object[] { clientIdNullSafe, tokenNullSafe, type };
 
 		Object result = null;
 
@@ -457,8 +463,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		if (result instanceof WeDeployAuthToken) {
 			WeDeployAuthToken weDeployAuthToken = (WeDeployAuthToken)result;
 
-			if (!Objects.equals(clientId, weDeployAuthToken.getClientId()) ||
-					!Objects.equals(token, weDeployAuthToken.getToken()) ||
+			if (!Objects.equals(clientIdNullSafe,
+						weDeployAuthToken.getClientId()) ||
+					!Objects.equals(tokenNullSafe, weDeployAuthToken.getToken()) ||
 					(type != weDeployAuthToken.getType())) {
 				result = null;
 			}
@@ -544,10 +551,8 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 					cacheResult(weDeployAuthToken);
 
-					if ((weDeployAuthToken.getClientId() == null) ||
-							!weDeployAuthToken.getClientId().equals(clientId) ||
-							(weDeployAuthToken.getToken() == null) ||
-							!weDeployAuthToken.getToken().equals(token) ||
+					if (!weDeployAuthToken.getClientId().equals(clientIdNullSafe) ||
+							!weDeployAuthToken.getToken().equals(tokenNullSafe) ||
 							(weDeployAuthToken.getType() != type)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_CI_T_T,
 							finderArgs, weDeployAuthToken);
@@ -600,7 +605,10 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	public int countByCI_T_T(String clientId, String token, int type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CI_T_T;
 
-		Object[] finderArgs = new Object[] { clientId, token, type };
+		String clientIdNullSafe = Objects.toString(clientId, "");
+		String tokenNullSafe = Objects.toString(token, "");
+
+		Object[] finderArgs = new Object[] { clientIdNullSafe, tokenNullSafe, type };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

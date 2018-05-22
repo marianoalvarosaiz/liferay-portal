@@ -671,7 +671,9 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 	@Override
 	public AnnouncementsDelivery fetchByU_T(long userId, String type,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { userId, type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { userId, typeNullSafe };
 
 		Object result = null;
 
@@ -684,7 +686,8 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 			AnnouncementsDelivery announcementsDelivery = (AnnouncementsDelivery)result;
 
 			if ((userId != announcementsDelivery.getUserId()) ||
-					!Objects.equals(type, announcementsDelivery.getType())) {
+					!Objects.equals(typeNullSafe,
+						announcementsDelivery.getType())) {
 				result = null;
 			}
 		}
@@ -741,8 +744,7 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 					cacheResult(announcementsDelivery);
 
 					if ((announcementsDelivery.getUserId() != userId) ||
-							(announcementsDelivery.getType() == null) ||
-							!announcementsDelivery.getType().equals(type)) {
+							!announcementsDelivery.getType().equals(typeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_U_T,
 							finderArgs, announcementsDelivery);
 					}
@@ -792,7 +794,9 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 	public int countByU_T(long userId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_T;
 
-		Object[] finderArgs = new Object[] { userId, type };
+		String typeNullSafe = Objects.toString(type, "");
+
+		Object[] finderArgs = new Object[] { userId, typeNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

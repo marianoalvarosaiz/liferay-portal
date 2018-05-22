@@ -2218,7 +2218,9 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 	@Override
 	public KaleoTaskForm fetchByFormUuid_KTI(long kaleoTaskId, String formUuid,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { kaleoTaskId, formUuid };
+		String formUuidNullSafe = Objects.toString(formUuid, "");
+
+		Object[] finderArgs = new Object[] { kaleoTaskId, formUuidNullSafe };
 
 		Object result = null;
 
@@ -2231,7 +2233,8 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 			KaleoTaskForm kaleoTaskForm = (KaleoTaskForm)result;
 
 			if ((kaleoTaskId != kaleoTaskForm.getKaleoTaskId()) ||
-					!Objects.equals(formUuid, kaleoTaskForm.getFormUuid())) {
+					!Objects.equals(formUuidNullSafe,
+						kaleoTaskForm.getFormUuid())) {
 				result = null;
 			}
 		}
@@ -2299,8 +2302,7 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 					cacheResult(kaleoTaskForm);
 
 					if ((kaleoTaskForm.getKaleoTaskId() != kaleoTaskId) ||
-							(kaleoTaskForm.getFormUuid() == null) ||
-							!kaleoTaskForm.getFormUuid().equals(formUuid)) {
+							!kaleoTaskForm.getFormUuid().equals(formUuidNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_FORMUUID_KTI,
 							finderArgs, kaleoTaskForm);
 					}
@@ -2351,7 +2353,9 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 	public int countByFormUuid_KTI(long kaleoTaskId, String formUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_FORMUUID_KTI;
 
-		Object[] finderArgs = new Object[] { kaleoTaskId, formUuid };
+		String formUuidNullSafe = Objects.toString(formUuid, "");
+
+		Object[] finderArgs = new Object[] { kaleoTaskId, formUuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

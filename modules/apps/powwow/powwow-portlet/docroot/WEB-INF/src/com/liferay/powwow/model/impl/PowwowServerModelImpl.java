@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowServer service. Represents a row in the &quot;PowwowServer&quot; database table, with each column mapped to a property of this class.
@@ -296,12 +297,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -337,12 +333,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -354,12 +345,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getProviderType() {
-		if (_providerType == null) {
-			return "";
-		}
-		else {
-			return _providerType;
-		}
+		return Objects.toString(_providerType, "");
 	}
 
 	@Override
@@ -379,12 +365,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return Objects.toString(_url, "");
 	}
 
 	@Override
@@ -394,12 +375,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getApiKey() {
-		if (_apiKey == null) {
-			return "";
-		}
-		else {
-			return _apiKey;
-		}
+		return Objects.toString(_apiKey, "");
 	}
 
 	@Override
@@ -409,12 +385,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getSecret() {
-		if (_secret == null) {
-			return "";
-		}
-		else {
-			return _secret;
-		}
+		return Objects.toString(_secret, "");
 	}
 
 	@Override

@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFileVersion service. Represents a row in the &quot;DLFileVersion&quot; database table, with each column mapped to a property of this class.
@@ -478,12 +479,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -586,12 +582,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -689,12 +680,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return Objects.toString(_treePath, "");
 	}
 
 	@Override
@@ -705,12 +691,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getFileName() {
-		if (_fileName == null) {
-			return "";
-		}
-		else {
-			return _fileName;
-		}
+		return Objects.toString(_fileName, "");
 	}
 
 	@Override
@@ -721,12 +702,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return Objects.toString(_extension, "");
 	}
 
 	@Override
@@ -737,12 +713,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return Objects.toString(_mimeType, "");
 	}
 
 	@Override
@@ -763,12 +734,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -789,12 +755,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -805,12 +766,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getChangeLog() {
-		if (_changeLog == null) {
-			return "";
-		}
-		else {
-			return _changeLog;
-		}
+		return Objects.toString(_changeLog, "");
 	}
 
 	@Override
@@ -821,12 +777,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getExtraSettings() {
-		if (_extraSettings == null) {
-			return "";
-		}
-		else {
-			return _extraSettings;
-		}
+		return Objects.toString(_extraSettings, "");
 	}
 
 	@Override
@@ -848,12 +799,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return Objects.toString(_version, "");
 	}
 
 	@Override
@@ -885,12 +831,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getChecksum() {
-		if (_checksum == null) {
-			return "";
-		}
-		else {
-			return _checksum;
-		}
+		return Objects.toString(_checksum, "");
 	}
 
 	@Override
@@ -962,12 +903,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override
