@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FragmentEntry service. Represents a row in the &quot;FragmentEntry&quot; database table, with each column mapped to a property of this class.
@@ -441,12 +442,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -508,12 +504,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getFragmentEntryKey() {
-		if (_fragmentEntryKey == null) {
-			return "";
-		}
-		else {
-			return _fragmentEntryKey;
-		}
+		return Objects.toString(_fragmentEntryKey, "");
 	}
 
 	@Override
@@ -534,12 +525,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -560,12 +546,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return Objects.toString(_css, "");
 	}
 
 	@Override
@@ -576,12 +557,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getHtml() {
-		if (_html == null) {
-			return "";
-		}
-		else {
-			return _html;
-		}
+		return Objects.toString(_html, "");
 	}
 
 	@Override
@@ -592,12 +568,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getJs() {
-		if (_js == null) {
-			return "";
-		}
-		else {
-			return _js;
-		}
+		return Objects.toString(_js, "");
 	}
 
 	@Override
@@ -669,12 +640,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

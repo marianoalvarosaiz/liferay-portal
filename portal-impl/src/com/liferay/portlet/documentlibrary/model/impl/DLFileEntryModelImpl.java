@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFileEntry service. Represents a row in the &quot;DLFileEntry&quot; database table, with each column mapped to a property of this class.
@@ -507,12 +508,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -627,12 +623,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -759,12 +750,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return Objects.toString(_treePath, "");
 	}
 
 	@Override
@@ -775,12 +761,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -801,12 +782,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getFileName() {
-		if (_fileName == null) {
-			return "";
-		}
-		else {
-			return _fileName;
-		}
+		return Objects.toString(_fileName, "");
 	}
 
 	@Override
@@ -827,12 +803,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return Objects.toString(_extension, "");
 	}
 
 	@Override
@@ -843,12 +814,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return Objects.toString(_mimeType, "");
 	}
 
 	@Override
@@ -869,12 +835,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -895,12 +856,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -911,12 +867,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getExtraSettings() {
-		if (_extraSettings == null) {
-			return "";
-		}
-		else {
-			return _extraSettings;
-		}
+		return Objects.toString(_extraSettings, "");
 	}
 
 	@Override
@@ -950,12 +901,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return Objects.toString(_version, "");
 	}
 
 	@Override

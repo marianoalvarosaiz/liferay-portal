@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -520,12 +521,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -628,12 +624,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -747,12 +738,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -846,12 +832,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -945,12 +926,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -1048,12 +1024,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getKeywords() {
-		if (_keywords == null) {
-			return "";
-		}
-		else {
-			return _keywords;
-		}
+		return Objects.toString(_keywords, "");
 	}
 
 	@Override
@@ -1149,12 +1120,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getRobots() {
-		if (_robots == null) {
-			return "";
-		}
-		else {
-			return _robots;
-		}
+		return Objects.toString(_robots, "");
 	}
 
 	@Override
@@ -1248,12 +1214,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return Objects.toString(_type, "");
 	}
 
 	@Override
@@ -1274,12 +1235,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return Objects.toString(_typeSettings, "");
 	}
 
 	@Override
@@ -1307,12 +1263,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getFriendlyURL() {
-		if (_friendlyURL == null) {
-			return "";
-		}
-		else {
-			return _friendlyURL;
-		}
+		return Objects.toString(_friendlyURL, "");
 	}
 
 	@Override
@@ -1356,12 +1307,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return Objects.toString(_themeId, "");
 	}
 
 	@Override
@@ -1372,12 +1318,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return Objects.toString(_colorSchemeId, "");
 	}
 
 	@Override
@@ -1388,12 +1329,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return Objects.toString(_css, "");
 	}
 
 	@Override
@@ -1427,12 +1363,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getLayoutPrototypeUuid() {
-		if (_layoutPrototypeUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutPrototypeUuid;
-		}
+		return Objects.toString(_layoutPrototypeUuid, "");
 	}
 
 	@Override
@@ -1471,12 +1402,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@JSON
 	@Override
 	public String getSourcePrototypeLayoutUuid() {
-		if (_sourcePrototypeLayoutUuid == null) {
-			return "";
-		}
-		else {
-			return _sourcePrototypeLayoutUuid;
-		}
+		return Objects.toString(_sourcePrototypeLayoutUuid, "");
 	}
 
 	@Override

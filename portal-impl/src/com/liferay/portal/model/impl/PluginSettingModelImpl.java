@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PluginSetting service. Represents a row in the &quot;PluginSetting&quot; database table, with each column mapped to a property of this class.
@@ -297,12 +298,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@JSON
 	@Override
 	public String getPluginId() {
-		if (_pluginId == null) {
-			return "";
-		}
-		else {
-			return _pluginId;
-		}
+		return Objects.toString(_pluginId, "");
 	}
 
 	@Override
@@ -323,12 +319,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@JSON
 	@Override
 	public String getPluginType() {
-		if (_pluginType == null) {
-			return "";
-		}
-		else {
-			return _pluginType;
-		}
+		return Objects.toString(_pluginType, "");
 	}
 
 	@Override
@@ -349,12 +340,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@JSON
 	@Override
 	public String getRoles() {
-		if (_roles == null) {
-			return "";
-		}
-		else {
-			return _roles;
-		}
+		return Objects.toString(_roles, "");
 	}
 
 	@Override

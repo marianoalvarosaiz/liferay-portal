@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Country service. Represents a row in the &quot;Country&quot; database table, with each column mapped to a property of this class.
@@ -294,12 +295,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -320,12 +316,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getA2() {
-		if (_a2 == null) {
-			return "";
-		}
-		else {
-			return _a2;
-		}
+		return Objects.toString(_a2, "");
 	}
 
 	@Override
@@ -346,12 +337,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getA3() {
-		if (_a3 == null) {
-			return "";
-		}
-		else {
-			return _a3;
-		}
+		return Objects.toString(_a3, "");
 	}
 
 	@Override
@@ -372,12 +358,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getNumber() {
-		if (_number == null) {
-			return "";
-		}
-		else {
-			return _number;
-		}
+		return Objects.toString(_number, "");
 	}
 
 	@Override
@@ -388,12 +369,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getIdd() {
-		if (_idd == null) {
-			return "";
-		}
-		else {
-			return _idd;
-		}
+		return Objects.toString(_idd, "");
 	}
 
 	@Override

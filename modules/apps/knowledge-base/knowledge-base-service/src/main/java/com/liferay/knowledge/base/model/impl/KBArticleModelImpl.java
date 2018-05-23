@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KBArticle service. Represents a row in the &quot;KBArticle&quot; database table, with each column mapped to a property of this class.
@@ -494,12 +495,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -630,12 +626,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -767,12 +758,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -783,12 +769,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return Objects.toString(_urlTitle, "");
 	}
 
 	@Override
@@ -809,12 +790,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return Objects.toString(_content, "");
 	}
 
 	@Override
@@ -825,12 +801,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -852,12 +823,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getSections() {
-		if (_sections == null) {
-			return "";
-		}
-		else {
-			return _sections;
-		}
+		return Objects.toString(_sections, "");
 	}
 
 	@Override
@@ -947,12 +913,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getSourceURL() {
-		if (_sourceURL == null) {
-			return "";
-		}
-		else {
-			return _sourceURL;
-		}
+		return Objects.toString(_sourceURL, "");
 	}
 
 	@Override
@@ -1024,12 +985,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

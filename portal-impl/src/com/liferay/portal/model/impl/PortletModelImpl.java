@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Portlet service. Represents a row in the &quot;Portlet&quot; database table, with each column mapped to a property of this class.
@@ -286,12 +287,7 @@ public class PortletModelImpl extends BaseModelImpl<Portlet>
 	@JSON
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return Objects.toString(_portletId, "");
 	}
 
 	@Override
@@ -312,12 +308,7 @@ public class PortletModelImpl extends BaseModelImpl<Portlet>
 	@JSON
 	@Override
 	public String getRoles() {
-		if (_roles == null) {
-			return "";
-		}
-		else {
-			return _roles;
-		}
+		return Objects.toString(_roles, "");
 	}
 
 	@Override

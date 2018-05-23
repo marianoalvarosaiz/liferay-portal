@@ -42,6 +42,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Message service. Represents a row in the &quot;Mail_Message&quot; database table, with each column mapped to a property of this class.
@@ -382,12 +383,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -455,12 +451,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getSender() {
-		if (_sender == null) {
-			return "";
-		}
-		else {
-			return _sender;
-		}
+		return Objects.toString(_sender, "");
 	}
 
 	@Override
@@ -470,12 +461,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getTo() {
-		if (_to == null) {
-			return "";
-		}
-		else {
-			return _to;
-		}
+		return Objects.toString(_to, "");
 	}
 
 	@Override
@@ -485,12 +471,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getCc() {
-		if (_cc == null) {
-			return "";
-		}
-		else {
-			return _cc;
-		}
+		return Objects.toString(_cc, "");
 	}
 
 	@Override
@@ -500,12 +481,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getBcc() {
-		if (_bcc == null) {
-			return "";
-		}
-		else {
-			return _bcc;
-		}
+		return Objects.toString(_bcc, "");
 	}
 
 	@Override
@@ -527,12 +503,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return Objects.toString(_subject, "");
 	}
 
 	@Override
@@ -542,12 +513,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getPreview() {
-		if (_preview == null) {
-			return "";
-		}
-		else {
-			return _preview;
-		}
+		return Objects.toString(_preview, "");
 	}
 
 	@Override
@@ -557,12 +523,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return Objects.toString(_body, "");
 	}
 
 	@Override
@@ -572,12 +533,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getFlags() {
-		if (_flags == null) {
-			return "";
-		}
-		else {
-			return _flags;
-		}
+		return Objects.toString(_flags, "");
 	}
 
 	@Override
@@ -619,12 +575,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getContentType() {
-		if (_contentType == null) {
-			return "";
-		}
-		else {
-			return _contentType;
-		}
+		return Objects.toString(_contentType, "");
 	}
 
 	@Override
