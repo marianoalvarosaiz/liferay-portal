@@ -743,16 +743,18 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String pathNullSafe = Objects.toString(path, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_R_P;
-			finderArgs = new Object[] { companyId, repositoryId, path };
+			finderArgs = new Object[] { companyId, repositoryId, pathNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_R_P;
 			finderArgs = new Object[] {
-					companyId, repositoryId, path,
+					companyId, repositoryId, pathNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -768,7 +770,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 				for (DLContent dlContent : list) {
 					if ((companyId != dlContent.getCompanyId()) ||
 							(repositoryId != dlContent.getRepositoryId()) ||
-							!Objects.equals(path, dlContent.getPath())) {
+							!Objects.equals(pathNullSafe, dlContent.getPath())) {
 						list = null;
 
 						break;
@@ -1192,7 +1194,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	public int countByC_R_P(long companyId, long repositoryId, String path) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_R_P;
 
-		Object[] finderArgs = new Object[] { companyId, repositoryId, path };
+		String pathNullSafe = Objects.toString(path, "");
+
+		Object[] finderArgs = new Object[] { companyId, repositoryId, pathNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1363,9 +1367,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String pathNullSafe = Objects.toString(path, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_R_LIKEP;
 		finderArgs = new Object[] {
-				companyId, repositoryId, path,
+				companyId, repositoryId, pathNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -1381,7 +1387,7 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 					if ((companyId != dlContent.getCompanyId()) ||
 							(repositoryId != dlContent.getRepositoryId()) ||
 							!StringUtil.wildcardMatches(dlContent.getPath(),
-								path, '_', '%', '\\', true)) {
+								pathNullSafe, '_', '%', '\\', true)) {
 						list = null;
 
 						break;
@@ -1805,7 +1811,9 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	public int countByC_R_LikeP(long companyId, long repositoryId, String path) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_R_LIKEP;
 
-		Object[] finderArgs = new Object[] { companyId, repositoryId, path };
+		String pathNullSafe = Objects.toString(path, "");
+
+		Object[] finderArgs = new Object[] { companyId, repositoryId, pathNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1965,8 +1973,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 	@Override
 	public DLContent fetchByC_R_P_V(long companyId, long repositoryId,
 		String path, String version, boolean retrieveFromCache) {
+		String pathNullSafe = Objects.toString(path, "");
+		String versionNullSafe = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, repositoryId, path, version
+				companyId, repositoryId, pathNullSafe, versionNullSafe
 			};
 
 		Object result = null;
@@ -1981,8 +1992,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 			if ((companyId != dlContent.getCompanyId()) ||
 					(repositoryId != dlContent.getRepositoryId()) ||
-					!Objects.equals(path, dlContent.getPath()) ||
-					!Objects.equals(version, dlContent.getVersion())) {
+					!Objects.equals(pathNullSafe, dlContent.getPath()) ||
+					!Objects.equals(versionNullSafe, dlContent.getVersion())) {
 				result = null;
 			}
 		}
@@ -2062,10 +2073,8 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 
 					if ((dlContent.getCompanyId() != companyId) ||
 							(dlContent.getRepositoryId() != repositoryId) ||
-							(dlContent.getPath() == null) ||
-							!dlContent.getPath().equals(path) ||
-							(dlContent.getVersion() == null) ||
-							!dlContent.getVersion().equals(version)) {
+							!dlContent.getPath().equals(pathNullSafe) ||
+							!dlContent.getVersion().equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_R_P_V,
 							finderArgs, dlContent);
 					}
@@ -2122,8 +2131,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 		String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_R_P_V;
 
+		String pathNullSafe = Objects.toString(path, "");
+		String versionNullSafe = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, repositoryId, path, version
+				companyId, repositoryId, pathNullSafe, versionNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

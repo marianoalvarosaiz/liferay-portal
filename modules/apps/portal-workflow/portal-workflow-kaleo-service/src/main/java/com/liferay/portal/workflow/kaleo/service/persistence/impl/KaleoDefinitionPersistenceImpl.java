@@ -673,7 +673,9 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 	@Override
 	public KaleoDefinition fetchByC_N(long companyId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Object result = null;
 
@@ -686,7 +688,7 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 			KaleoDefinition kaleoDefinition = (KaleoDefinition)result;
 
 			if ((companyId != kaleoDefinition.getCompanyId()) ||
-					!Objects.equals(name, kaleoDefinition.getName())) {
+					!Objects.equals(nameNullSafe, kaleoDefinition.getName())) {
 				result = null;
 			}
 		}
@@ -754,8 +756,7 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 					cacheResult(kaleoDefinition);
 
 					if ((kaleoDefinition.getCompanyId() != companyId) ||
-							(kaleoDefinition.getName() == null) ||
-							!kaleoDefinition.getName().equals(name)) {
+							!kaleoDefinition.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_N,
 							finderArgs, kaleoDefinition);
 					}
@@ -805,7 +806,9 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1497,7 +1500,9 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 	@Override
 	public KaleoDefinition fetchByC_N_V(long companyId, String name,
 		int version, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, name, version };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe, version };
 
 		Object result = null;
 
@@ -1510,7 +1515,7 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 			KaleoDefinition kaleoDefinition = (KaleoDefinition)result;
 
 			if ((companyId != kaleoDefinition.getCompanyId()) ||
-					!Objects.equals(name, kaleoDefinition.getName()) ||
+					!Objects.equals(nameNullSafe, kaleoDefinition.getName()) ||
 					(version != kaleoDefinition.getVersion())) {
 				result = null;
 			}
@@ -1583,8 +1588,7 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 					cacheResult(kaleoDefinition);
 
 					if ((kaleoDefinition.getCompanyId() != companyId) ||
-							(kaleoDefinition.getName() == null) ||
-							!kaleoDefinition.getName().equals(name) ||
+							!kaleoDefinition.getName().equals(nameNullSafe) ||
 							(kaleoDefinition.getVersion() != version)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_N_V,
 							finderArgs, kaleoDefinition);
@@ -1637,7 +1641,9 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 	public int countByC_N_V(long companyId, String name, int version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_V;
 
-		Object[] finderArgs = new Object[] { companyId, name, version };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1790,7 +1796,9 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 	@Override
 	public KaleoDefinition fetchByC_N_A(long companyId, String name,
 		boolean active, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, name, active };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe, active };
 
 		Object result = null;
 
@@ -1803,7 +1811,7 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 			KaleoDefinition kaleoDefinition = (KaleoDefinition)result;
 
 			if ((companyId != kaleoDefinition.getCompanyId()) ||
-					!Objects.equals(name, kaleoDefinition.getName()) ||
+					!Objects.equals(nameNullSafe, kaleoDefinition.getName()) ||
 					(active != kaleoDefinition.isActive())) {
 				result = null;
 			}
@@ -1876,8 +1884,7 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 					cacheResult(kaleoDefinition);
 
 					if ((kaleoDefinition.getCompanyId() != companyId) ||
-							(kaleoDefinition.getName() == null) ||
-							!kaleoDefinition.getName().equals(name) ||
+							!kaleoDefinition.getName().equals(nameNullSafe) ||
 							(kaleoDefinition.isActive() != active)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_N_A,
 							finderArgs, kaleoDefinition);
@@ -1930,7 +1937,9 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 	public int countByC_N_A(long companyId, String name, boolean active) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_A;
 
-		Object[] finderArgs = new Object[] { companyId, name, active };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, nameNullSafe, active };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

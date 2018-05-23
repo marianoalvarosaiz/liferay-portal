@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Account service. Represents a row in the &quot;Mail_Account&quot; database table, with each column mapped to a property of this class.
@@ -433,12 +434,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -474,12 +470,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+		return Objects.toString(_address, "");
 	}
 
 	@Override
@@ -499,12 +490,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getPersonalName() {
-		if (_personalName == null) {
-			return "";
-		}
-		else {
-			return _personalName;
-		}
+		return Objects.toString(_personalName, "");
 	}
 
 	@Override
@@ -514,12 +500,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getProtocol() {
-		if (_protocol == null) {
-			return "";
-		}
-		else {
-			return _protocol;
-		}
+		return Objects.toString(_protocol, "");
 	}
 
 	@Override
@@ -529,12 +510,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getIncomingHostName() {
-		if (_incomingHostName == null) {
-			return "";
-		}
-		else {
-			return _incomingHostName;
-		}
+		return Objects.toString(_incomingHostName, "");
 	}
 
 	@Override
@@ -569,12 +545,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getOutgoingHostName() {
-		if (_outgoingHostName == null) {
-			return "";
-		}
-		else {
-			return _outgoingHostName;
-		}
+		return Objects.toString(_outgoingHostName, "");
 	}
 
 	@Override
@@ -609,12 +580,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getLogin() {
-		if (_login == null) {
-			return "";
-		}
-		else {
-			return _login;
-		}
+		return Objects.toString(_login, "");
 	}
 
 	@Override
@@ -624,12 +590,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
+		return Objects.toString(_password, "");
 	}
 
 	@Override
@@ -654,12 +615,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getSignature() {
-		if (_signature == null) {
-			return "";
-		}
-		else {
-			return _signature;
-		}
+		return Objects.toString(_signature, "");
 	}
 
 	@Override
@@ -684,12 +640,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getFolderPrefix() {
-		if (_folderPrefix == null) {
-			return "";
-		}
-		else {
-			return _folderPrefix;
-		}
+		return Objects.toString(_folderPrefix, "");
 	}
 
 	@Override

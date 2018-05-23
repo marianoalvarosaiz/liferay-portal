@@ -57,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -502,12 +503,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -610,12 +606,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -746,12 +737,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getVEventUid() {
-		if (_vEventUid == null) {
-			return "";
-		}
-		else {
-			return _vEventUid;
-		}
+		return Objects.toString(_vEventUid, "");
 	}
 
 	@Override
@@ -772,12 +758,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -873,12 +854,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -976,12 +952,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getLocation() {
-		if (_location == null) {
-			return "";
-		}
-		else {
-			return _location;
-		}
+		return Objects.toString(_location, "");
 	}
 
 	@Override
@@ -1033,12 +1004,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getRecurrence() {
-		if (_recurrence == null) {
-			return "";
-		}
-		else {
-			return _recurrence;
-		}
+		return Objects.toString(_recurrence, "");
 	}
 
 	@Override
@@ -1060,12 +1026,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getFirstReminderType() {
-		if (_firstReminderType == null) {
-			return "";
-		}
-		else {
-			return _firstReminderType;
-		}
+		return Objects.toString(_firstReminderType, "");
 	}
 
 	@Override
@@ -1087,12 +1048,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getSecondReminderType() {
-		if (_secondReminderType == null) {
-			return "";
-		}
-		else {
-			return _secondReminderType;
-		}
+		return Objects.toString(_secondReminderType, "");
 	}
 
 	@Override
@@ -1164,12 +1120,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskFormInstance service. Represents a row in the &quot;KaleoTaskFormInstance&quot; database table, with each column mapped to a property of this class.
@@ -372,12 +373,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -523,12 +519,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getFormValues() {
-		if (_formValues == null) {
-			return "";
-		}
-		else {
-			return _formValues;
-		}
+		return Objects.toString(_formValues, "");
 	}
 
 	@Override
@@ -558,12 +549,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getFormValueEntryUuid() {
-		if (_formValueEntryUuid == null) {
-			return "";
-		}
-		else {
-			return _formValueEntryUuid;
-		}
+		return Objects.toString(_formValueEntryUuid, "");
 	}
 
 	@Override
@@ -573,12 +559,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getMetadata() {
-		if (_metadata == null) {
-			return "";
-		}
-		else {
-			return _metadata;
-		}
+		return Objects.toString(_metadata, "");
 	}
 
 	@Override

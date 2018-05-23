@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDMFormInstanceRecordVersion service. Represents a row in the &quot;DDMFormInstanceRecordVersion&quot; database table, with each column mapped to a property of this class.
@@ -418,12 +419,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -468,12 +464,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 	@JSON
 	@Override
 	public String getFormInstanceVersion() {
-		if (_formInstanceVersion == null) {
-			return "";
-		}
-		else {
-			return _formInstanceVersion;
-		}
+		return Objects.toString(_formInstanceVersion, "");
 	}
 
 	@Override
@@ -517,12 +508,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return Objects.toString(_version, "");
 	}
 
 	@Override
@@ -593,12 +579,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

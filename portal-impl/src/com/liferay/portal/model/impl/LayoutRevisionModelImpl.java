@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -560,12 +561,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -761,12 +757,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -860,12 +851,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return Objects.toString(_title, "");
 	}
 
 	@Override
@@ -959,12 +945,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -1062,12 +1043,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getKeywords() {
-		if (_keywords == null) {
-			return "";
-		}
-		else {
-			return _keywords;
-		}
+		return Objects.toString(_keywords, "");
 	}
 
 	@Override
@@ -1163,12 +1139,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getRobots() {
-		if (_robots == null) {
-			return "";
-		}
-		else {
-			return _robots;
-		}
+		return Objects.toString(_robots, "");
 	}
 
 	@Override
@@ -1262,12 +1233,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return Objects.toString(_typeSettings, "");
 	}
 
 	@Override
@@ -1289,12 +1255,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return Objects.toString(_themeId, "");
 	}
 
 	@Override
@@ -1305,12 +1266,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return Objects.toString(_colorSchemeId, "");
 	}
 
 	@Override
@@ -1321,12 +1277,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return Objects.toString(_css, "");
 	}
 
 	@Override
@@ -1387,12 +1338,7 @@ public class LayoutRevisionModelImpl extends BaseModelImpl<LayoutRevision>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

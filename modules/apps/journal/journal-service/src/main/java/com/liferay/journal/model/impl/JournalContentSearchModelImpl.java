@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalContentSearch service. Represents a row in the &quot;JournalContentSearch&quot; database table, with each column mapped to a property of this class.
@@ -295,12 +296,7 @@ public class JournalContentSearchModelImpl extends BaseModelImpl<JournalContentS
 
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return Objects.toString(_portletId, "");
 	}
 
 	@Override
@@ -320,12 +316,7 @@ public class JournalContentSearchModelImpl extends BaseModelImpl<JournalContentS
 
 	@Override
 	public String getArticleId() {
-		if (_articleId == null) {
-			return "";
-		}
-		else {
-			return _articleId;
-		}
+		return Objects.toString(_articleId, "");
 	}
 
 	@Override

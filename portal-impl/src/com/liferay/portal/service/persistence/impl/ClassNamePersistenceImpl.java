@@ -145,7 +145,9 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	 */
 	@Override
 	public ClassName fetchByValue(String value, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { value };
+		String valueNullSafe = Objects.toString(value, "");
+
+		Object[] finderArgs = new Object[] { valueNullSafe };
 
 		Object result = null;
 
@@ -157,7 +159,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		if (result instanceof ClassName) {
 			ClassName className = (ClassName)result;
 
-			if (!Objects.equals(value, className.getValue())) {
+			if (!Objects.equals(valueNullSafe, className.getValue())) {
 				result = null;
 			}
 		}
@@ -209,8 +211,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 					cacheResult(className);
 
-					if ((className.getValue() == null) ||
-							!className.getValue().equals(value)) {
+					if (!className.getValue().equals(valueNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_VALUE,
 							finderArgs, className);
 					}
@@ -258,7 +259,9 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	public int countByValue(String value) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_VALUE;
 
-		Object[] finderArgs = new Object[] { value };
+		String valueNullSafe = Objects.toString(value, "");
+
+		Object[] finderArgs = new Object[] { valueNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

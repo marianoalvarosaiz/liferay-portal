@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowMeeting service. Represents a row in the &quot;PowwowMeeting&quot; database table, with each column mapped to a property of this class.
@@ -424,12 +425,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -493,12 +489,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -509,12 +500,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -525,12 +511,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getProviderType() {
-		if (_providerType == null) {
-			return "";
-		}
-		else {
-			return _providerType;
-		}
+		return Objects.toString(_providerType, "");
 	}
 
 	@Override
@@ -541,12 +522,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getProviderTypeMetadata() {
-		if (_providerTypeMetadata == null) {
-			return "";
-		}
-		else {
-			return _providerTypeMetadata;
-		}
+		return Objects.toString(_providerTypeMetadata, "");
 	}
 
 	@Override
@@ -557,12 +533,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return Objects.toString(_languageId, "");
 	}
 
 	@Override

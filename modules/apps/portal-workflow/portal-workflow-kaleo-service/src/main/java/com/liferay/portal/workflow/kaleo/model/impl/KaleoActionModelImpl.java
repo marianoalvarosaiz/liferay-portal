@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoAction service. Represents a row in the &quot;KaleoAction&quot; database table, with each column mapped to a property of this class.
@@ -376,12 +377,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -417,12 +413,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return Objects.toString(_kaleoClassName, "");
 	}
 
 	@Override
@@ -486,12 +477,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getKaleoNodeName() {
-		if (_kaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _kaleoNodeName;
-		}
+		return Objects.toString(_kaleoNodeName, "");
 	}
 
 	@Override
@@ -501,12 +487,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return Objects.toString(_name, "");
 	}
 
 	@Override
@@ -516,12 +497,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return Objects.toString(_description, "");
 	}
 
 	@Override
@@ -531,12 +507,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getExecutionType() {
-		if (_executionType == null) {
-			return "";
-		}
-		else {
-			return _executionType;
-		}
+		return Objects.toString(_executionType, "");
 	}
 
 	@Override
@@ -556,12 +527,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getScript() {
-		if (_script == null) {
-			return "";
-		}
-		else {
-			return _script;
-		}
+		return Objects.toString(_script, "");
 	}
 
 	@Override
@@ -571,12 +537,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getScriptLanguage() {
-		if (_scriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _scriptLanguage;
-		}
+		return Objects.toString(_scriptLanguage, "");
 	}
 
 	@Override
@@ -586,12 +547,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getScriptRequiredContexts() {
-		if (_scriptRequiredContexts == null) {
-			return "";
-		}
-		else {
-			return _scriptRequiredContexts;
-		}
+		return Objects.toString(_scriptRequiredContexts, "");
 	}
 
 	@Override

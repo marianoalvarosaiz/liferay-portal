@@ -182,15 +182,21 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<SyncDevice> list = null;
@@ -201,7 +207,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDevice syncDevice : list) {
-					if (!Objects.equals(uuid, syncDevice.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, syncDevice.getUuid())) {
 						list = null;
 
 						break;
@@ -579,7 +585,9 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -733,16 +741,18 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -756,7 +766,7 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SyncDevice syncDevice : list) {
-					if (!Objects.equals(uuid, syncDevice.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, syncDevice.getUuid()) ||
 							(companyId != syncDevice.getCompanyId())) {
 						list = null;
 
@@ -1160,7 +1170,9 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1813,9 +1825,11 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String userNameNullSafe = Objects.toString(userName, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_U;
 		finderArgs = new Object[] {
-				companyId, userName,
+				companyId, userNameNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -1830,8 +1844,8 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 				for (SyncDevice syncDevice : list) {
 					if ((companyId != syncDevice.getCompanyId()) ||
 							!StringUtil.wildcardMatches(
-								syncDevice.getUserName(), userName, '_', '%',
-								'\\', false)) {
+								syncDevice.getUserName(), userNameNullSafe,
+								'_', '%', '\\', false)) {
 						list = null;
 
 						break;
@@ -2234,7 +2248,9 @@ public class SyncDevicePersistenceImpl extends BasePersistenceImpl<SyncDevice>
 	public int countByC_U(long companyId, String userName) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_U;
 
-		Object[] finderArgs = new Object[] { companyId, userName };
+		String userNameNullSafe = Objects.toString(userName, "");
+
+		Object[] finderArgs = new Object[] { companyId, userNameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

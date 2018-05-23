@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalArticle service. Represents a row in the &quot;JournalArticle&quot; database table, with each column mapped to a property of this class.
@@ -540,12 +541,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return Objects.toString(_uuid, "");
 	}
 
 	@Override
@@ -688,12 +684,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -821,12 +812,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return Objects.toString(_treePath, "");
 	}
 
 	@Override
@@ -837,12 +823,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getArticleId() {
-		if (_articleId == null) {
-			return "";
-		}
-		else {
-			return _articleId;
-		}
+		return Objects.toString(_articleId, "");
 	}
 
 	@Override
@@ -886,12 +867,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return Objects.toString(_urlTitle, "");
 	}
 
 	@Override
@@ -912,12 +888,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return Objects.toString(_content, "");
 	}
 
 	@Override
@@ -928,12 +899,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getDDMStructureKey() {
-		if (_DDMStructureKey == null) {
-			return "";
-		}
-		else {
-			return _DDMStructureKey;
-		}
+		return Objects.toString(_DDMStructureKey, "");
 	}
 
 	@Override
@@ -954,12 +920,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getDDMTemplateKey() {
-		if (_DDMTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMTemplateKey;
-		}
+		return Objects.toString(_DDMTemplateKey, "");
 	}
 
 	@Override
@@ -980,12 +941,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getDefaultLanguageId() {
-		if (_defaultLanguageId == null) {
-			return "";
-		}
-		else {
-			return _defaultLanguageId;
-		}
+		return Objects.toString(_defaultLanguageId, "");
 	}
 
 	@Override
@@ -996,12 +952,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getLayoutUuid() {
-		if (_layoutUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutUuid;
-		}
+		return Objects.toString(_layoutUuid, "");
 	}
 
 	@Override
@@ -1144,12 +1095,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getSmallImageURL() {
-		if (_smallImageURL == null) {
-			return "";
-		}
-		else {
-			return _smallImageURL;
-		}
+		return Objects.toString(_smallImageURL, "");
 	}
 
 	@Override
@@ -1221,12 +1167,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return Objects.toString(_statusByUserName, "");
 	}
 
 	@Override

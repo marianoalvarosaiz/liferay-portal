@@ -39,6 +39,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Ticket service. Represents a row in the &quot;Ticket&quot; database table, with each column mapped to a property of this class.
@@ -351,12 +352,7 @@ public class TicketModelImpl extends BaseModelImpl<Ticket>
 
 	@Override
 	public String getKey() {
-		if (_key == null) {
-			return "";
-		}
-		else {
-			return _key;
-		}
+		return Objects.toString(_key, "");
 	}
 
 	@Override
@@ -398,12 +394,7 @@ public class TicketModelImpl extends BaseModelImpl<Ticket>
 
 	@Override
 	public String getExtraInfo() {
-		if (_extraInfo == null) {
-			return "";
-		}
-		else {
-			return _extraInfo;
-		}
+		return Objects.toString(_extraInfo, "");
 	}
 
 	@Override

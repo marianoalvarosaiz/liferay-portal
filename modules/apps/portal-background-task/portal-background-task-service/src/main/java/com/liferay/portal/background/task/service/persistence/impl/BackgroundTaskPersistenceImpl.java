@@ -2228,16 +2228,19 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T;
-			finderArgs = new Object[] { groupId, taskExecutorClassName };
+			finderArgs = new Object[] { groupId, taskExecutorClassNameNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T;
 			finderArgs = new Object[] {
-					groupId, taskExecutorClassName,
+					groupId, taskExecutorClassNameNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -2252,7 +2255,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			if ((list != null) && !list.isEmpty()) {
 				for (BackgroundTask backgroundTask : list) {
 					if ((groupId != backgroundTask.getGroupId()) ||
-							!Objects.equals(taskExecutorClassName,
+							!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName())) {
 						list = null;
 
@@ -2910,7 +2913,12 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 	public int countByG_T(long groupId, String taskExecutorClassName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T;
 
-		Object[] finderArgs = new Object[] { groupId, taskExecutorClassName };
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
+		Object[] finderArgs = new Object[] {
+				groupId, taskExecutorClassNameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3743,16 +3751,19 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_T_S;
-			finderArgs = new Object[] { taskExecutorClassName, status };
+			finderArgs = new Object[] { taskExecutorClassNameNullSafe, status };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_T_S;
 			finderArgs = new Object[] {
-					taskExecutorClassName, status,
+					taskExecutorClassNameNullSafe, status,
 					
 					start, end, orderByComparator
 				};
@@ -3766,7 +3777,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			if ((list != null) && !list.isEmpty()) {
 				for (BackgroundTask backgroundTask : list) {
-					if (!Objects.equals(taskExecutorClassName,
+					if (!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName()) ||
 							(status != backgroundTask.getStatus())) {
 						list = null;
@@ -4400,7 +4411,10 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 	public int countByT_S(String taskExecutorClassName, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_S;
 
-		Object[] finderArgs = new Object[] { taskExecutorClassName, status };
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
+		Object[] finderArgs = new Object[] { taskExecutorClassNameNullSafe, status };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4692,16 +4706,22 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T;
-			finderArgs = new Object[] { groupId, name, taskExecutorClassName };
+			finderArgs = new Object[] {
+					groupId, nameNullSafe, taskExecutorClassNameNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_T;
 			finderArgs = new Object[] {
-					groupId, name, taskExecutorClassName,
+					groupId, nameNullSafe, taskExecutorClassNameNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -4716,8 +4736,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			if ((list != null) && !list.isEmpty()) {
 				for (BackgroundTask backgroundTask : list) {
 					if ((groupId != backgroundTask.getGroupId()) ||
-							!Objects.equals(name, backgroundTask.getName()) ||
-							!Objects.equals(taskExecutorClassName,
+							!Objects.equals(nameNullSafe,
+								backgroundTask.getName()) ||
+							!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName())) {
 						list = null;
 
@@ -5259,17 +5280,19 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), name,
+					StringUtil.merge(groupIds), nameNullSafe,
 					StringUtil.merge(taskExecutorClassNames)
 				};
 		}
 		else {
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), name,
+					StringUtil.merge(groupIds), nameNullSafe,
 					StringUtil.merge(taskExecutorClassNames),
 					
 					start, end, orderByComparator
@@ -5286,7 +5309,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (BackgroundTask backgroundTask : list) {
 					if (!ArrayUtil.contains(groupIds,
 								backgroundTask.getGroupId()) ||
-							!Objects.equals(name, backgroundTask.getName()) ||
+							!Objects.equals(nameNullSafe,
+								backgroundTask.getName()) ||
 							!ArrayUtil.contains(taskExecutorClassNames,
 								backgroundTask.getTaskExecutorClassName())) {
 						list = null;
@@ -5450,7 +5474,13 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		String taskExecutorClassName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_T;
 
-		Object[] finderArgs = new Object[] { groupId, name, taskExecutorClassName };
+		String nameNullSafe = Objects.toString(name, "");
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
+		Object[] finderArgs = new Object[] {
+				groupId, nameNullSafe, taskExecutorClassNameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -5557,8 +5587,10 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
 		}
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] {
-				StringUtil.merge(groupIds), name,
+				StringUtil.merge(groupIds), nameNullSafe,
 				StringUtil.merge(taskExecutorClassNames)
 			};
 
@@ -5796,16 +5828,21 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T_C;
-			finderArgs = new Object[] { groupId, taskExecutorClassName, completed };
+			finderArgs = new Object[] {
+					groupId, taskExecutorClassNameNullSafe, completed
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T_C;
 			finderArgs = new Object[] {
-					groupId, taskExecutorClassName, completed,
+					groupId, taskExecutorClassNameNullSafe, completed,
 					
 					start, end, orderByComparator
 				};
@@ -5820,7 +5857,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			if ((list != null) && !list.isEmpty()) {
 				for (BackgroundTask backgroundTask : list) {
 					if ((groupId != backgroundTask.getGroupId()) ||
-							!Objects.equals(taskExecutorClassName,
+							!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName()) ||
 							(completed != backgroundTask.isCompleted())) {
 						list = null;
@@ -6514,8 +6551,11 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		boolean completed) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T_C;
 
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		Object[] finderArgs = new Object[] {
-				groupId, taskExecutorClassName, completed
+				groupId, taskExecutorClassNameNullSafe, completed
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -6840,16 +6880,21 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_T_S;
-			finderArgs = new Object[] { groupId, taskExecutorClassName, status };
+			finderArgs = new Object[] {
+					groupId, taskExecutorClassNameNullSafe, status
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T_S;
 			finderArgs = new Object[] {
-					groupId, taskExecutorClassName, status,
+					groupId, taskExecutorClassNameNullSafe, status,
 					
 					start, end, orderByComparator
 				};
@@ -6864,7 +6909,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			if ((list != null) && !list.isEmpty()) {
 				for (BackgroundTask backgroundTask : list) {
 					if ((groupId != backgroundTask.getGroupId()) ||
-							!Objects.equals(taskExecutorClassName,
+							!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName()) ||
 							(status != backgroundTask.getStatus())) {
 						list = null;
@@ -7536,8 +7581,11 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T_S;
 
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		Object[] finderArgs = new Object[] {
-				groupId, taskExecutorClassName, status
+				groupId, taskExecutorClassNameNullSafe, status
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -7847,18 +7895,24 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_T_C;
 			finderArgs = new Object[] {
-					groupId, name, taskExecutorClassName, completed
+					groupId, nameNullSafe, taskExecutorClassNameNullSafe,
+					completed
 				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_T_C;
 			finderArgs = new Object[] {
-					groupId, name, taskExecutorClassName, completed,
+					groupId, nameNullSafe, taskExecutorClassNameNullSafe,
+					completed,
 					
 					start, end, orderByComparator
 				};
@@ -7873,8 +7927,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			if ((list != null) && !list.isEmpty()) {
 				for (BackgroundTask backgroundTask : list) {
 					if ((groupId != backgroundTask.getGroupId()) ||
-							!Objects.equals(name, backgroundTask.getName()) ||
-							!Objects.equals(taskExecutorClassName,
+							!Objects.equals(nameNullSafe,
+								backgroundTask.getName()) ||
+							!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName()) ||
 							(completed != backgroundTask.isCompleted())) {
 						list = null;
@@ -8434,18 +8489,22 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), name, taskExecutorClassName,
-					completed
+					StringUtil.merge(groupIds), nameNullSafe,
+					taskExecutorClassNameNullSafe, completed
 				};
 		}
 		else {
 			finderArgs = new Object[] {
-					StringUtil.merge(groupIds), name, taskExecutorClassName,
-					completed,
+					StringUtil.merge(groupIds), nameNullSafe,
+					taskExecutorClassNameNullSafe, completed,
 					
 					start, end, orderByComparator
 				};
@@ -8461,8 +8520,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (BackgroundTask backgroundTask : list) {
 					if (!ArrayUtil.contains(groupIds,
 								backgroundTask.getGroupId()) ||
-							!Objects.equals(name, backgroundTask.getName()) ||
-							!Objects.equals(taskExecutorClassName,
+							!Objects.equals(nameNullSafe,
+								backgroundTask.getName()) ||
+							!Objects.equals(taskExecutorClassNameNullSafe,
 								backgroundTask.getTaskExecutorClassName()) ||
 							(completed != backgroundTask.isCompleted())) {
 						list = null;
@@ -8619,8 +8679,12 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		String taskExecutorClassName, boolean completed) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_T_C;
 
+		String nameNullSafe = Objects.toString(name, "");
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		Object[] finderArgs = new Object[] {
-				groupId, name, taskExecutorClassName, completed
+				groupId, nameNullSafe, taskExecutorClassNameNullSafe, completed
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -8723,9 +8787,13 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			Arrays.sort(groupIds);
 		}
 
+		String nameNullSafe = Objects.toString(name, "");
+		String taskExecutorClassNameNullSafe = Objects.toString(taskExecutorClassName,
+				"");
+
 		Object[] finderArgs = new Object[] {
-				StringUtil.merge(groupIds), name, taskExecutorClassName,
-				completed
+				StringUtil.merge(groupIds), nameNullSafe,
+				taskExecutorClassNameNullSafe, completed
 			};
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_N_T_C,

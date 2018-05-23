@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoNotificationRecipient service. Represents a row in the &quot;KaleoNotificationRecipient&quot; database table, with each column mapped to a property of this class.
@@ -373,12 +374,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return Objects.toString(_userName, "");
 	}
 
 	@Override
@@ -458,12 +454,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientClassName() {
-		if (_recipientClassName == null) {
-			return "";
-		}
-		else {
-			return _recipientClassName;
-		}
+		return Objects.toString(_recipientClassName, "");
 	}
 
 	@Override
@@ -493,12 +484,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScript() {
-		if (_recipientScript == null) {
-			return "";
-		}
-		else {
-			return _recipientScript;
-		}
+		return Objects.toString(_recipientScript, "");
 	}
 
 	@Override
@@ -508,12 +494,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScriptLanguage() {
-		if (_recipientScriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _recipientScriptLanguage;
-		}
+		return Objects.toString(_recipientScriptLanguage, "");
 	}
 
 	@Override
@@ -523,12 +504,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScriptContexts() {
-		if (_recipientScriptContexts == null) {
-			return "";
-		}
-		else {
-			return _recipientScriptContexts;
-		}
+		return Objects.toString(_recipientScriptContexts, "");
 	}
 
 	@Override
@@ -538,12 +514,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+		return Objects.toString(_address, "");
 	}
 
 	@Override
@@ -553,12 +524,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getNotificationReceptionType() {
-		if (_notificationReceptionType == null) {
-			return "";
-		}
-		else {
-			return _notificationReceptionType;
-		}
+		return Objects.toString(_notificationReceptionType, "");
 	}
 
 	@Override

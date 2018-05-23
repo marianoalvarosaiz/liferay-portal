@@ -683,7 +683,12 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	@Override
 	public PluginSetting fetchByC_I_T(long companyId, String pluginId,
 		String pluginType, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, pluginId, pluginType };
+		String pluginIdNullSafe = Objects.toString(pluginId, "");
+		String pluginTypeNullSafe = Objects.toString(pluginType, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, pluginIdNullSafe, pluginTypeNullSafe
+			};
 
 		Object result = null;
 
@@ -696,8 +701,10 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			PluginSetting pluginSetting = (PluginSetting)result;
 
 			if ((companyId != pluginSetting.getCompanyId()) ||
-					!Objects.equals(pluginId, pluginSetting.getPluginId()) ||
-					!Objects.equals(pluginType, pluginSetting.getPluginType())) {
+					!Objects.equals(pluginIdNullSafe,
+						pluginSetting.getPluginId()) ||
+					!Objects.equals(pluginTypeNullSafe,
+						pluginSetting.getPluginType())) {
 				result = null;
 			}
 		}
@@ -772,10 +779,9 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 					cacheResult(pluginSetting);
 
 					if ((pluginSetting.getCompanyId() != companyId) ||
-							(pluginSetting.getPluginId() == null) ||
-							!pluginSetting.getPluginId().equals(pluginId) ||
-							(pluginSetting.getPluginType() == null) ||
-							!pluginSetting.getPluginType().equals(pluginType)) {
+							!pluginSetting.getPluginId().equals(pluginIdNullSafe) ||
+							!pluginSetting.getPluginType()
+											  .equals(pluginTypeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_I_T,
 							finderArgs, pluginSetting);
 					}
@@ -828,7 +834,12 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	public int countByC_I_T(long companyId, String pluginId, String pluginType) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_I_T;
 
-		Object[] finderArgs = new Object[] { companyId, pluginId, pluginType };
+		String pluginIdNullSafe = Objects.toString(pluginId, "");
+		String pluginTypeNullSafe = Objects.toString(pluginType, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, pluginIdNullSafe, pluginTypeNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

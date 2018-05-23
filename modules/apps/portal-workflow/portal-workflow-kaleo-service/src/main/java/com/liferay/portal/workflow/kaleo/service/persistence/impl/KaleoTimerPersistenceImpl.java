@@ -188,16 +188,18 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String kaleoClassNameNullSafe = Objects.toString(kaleoClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK;
-			finderArgs = new Object[] { kaleoClassName, kaleoClassPK };
+			finderArgs = new Object[] { kaleoClassNameNullSafe, kaleoClassPK };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_KCN_KCPK;
 			finderArgs = new Object[] {
-					kaleoClassName, kaleoClassPK,
+					kaleoClassNameNullSafe, kaleoClassPK,
 					
 					start, end, orderByComparator
 				};
@@ -211,7 +213,7 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoTimer kaleoTimer : list) {
-					if (!Objects.equals(kaleoClassName,
+					if (!Objects.equals(kaleoClassNameNullSafe,
 								kaleoTimer.getKaleoClassName()) ||
 							(kaleoClassPK != kaleoTimer.getKaleoClassPK())) {
 						list = null;
@@ -616,7 +618,9 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 	public int countByKCN_KCPK(String kaleoClassName, long kaleoClassPK) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK;
 
-		Object[] finderArgs = new Object[] { kaleoClassName, kaleoClassPK };
+		String kaleoClassNameNullSafe = Objects.toString(kaleoClassName, "");
+
+		Object[] finderArgs = new Object[] { kaleoClassNameNullSafe, kaleoClassPK };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -795,16 +799,20 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String kaleoClassNameNullSafe = Objects.toString(kaleoClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING;
-			finderArgs = new Object[] { kaleoClassName, kaleoClassPK, blocking };
+			finderArgs = new Object[] {
+					kaleoClassNameNullSafe, kaleoClassPK, blocking
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING;
 			finderArgs = new Object[] {
-					kaleoClassName, kaleoClassPK, blocking,
+					kaleoClassNameNullSafe, kaleoClassPK, blocking,
 					
 					start, end, orderByComparator
 				};
@@ -818,7 +826,7 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KaleoTimer kaleoTimer : list) {
-					if (!Objects.equals(kaleoClassName,
+					if (!Objects.equals(kaleoClassNameNullSafe,
 								kaleoTimer.getKaleoClassName()) ||
 							(kaleoClassPK != kaleoTimer.getKaleoClassPK()) ||
 							(blocking != kaleoTimer.isBlocking())) {
@@ -1256,8 +1264,10 @@ public class KaleoTimerPersistenceImpl extends BasePersistenceImpl<KaleoTimer>
 		long kaleoClassPK, boolean blocking) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK_BLOCKING;
 
+		String kaleoClassNameNullSafe = Objects.toString(kaleoClassName, "");
+
 		Object[] finderArgs = new Object[] {
-				kaleoClassName, kaleoClassPK, blocking
+				kaleoClassNameNullSafe, kaleoClassPK, blocking
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

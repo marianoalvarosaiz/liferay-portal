@@ -148,7 +148,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	 */
 	@Override
 	public Company fetchByWebId(String webId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { webId };
+		String webIdNullSafe = Objects.toString(webId, "");
+
+		Object[] finderArgs = new Object[] { webIdNullSafe };
 
 		Object result = null;
 
@@ -160,7 +162,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		if (result instanceof Company) {
 			Company company = (Company)result;
 
-			if (!Objects.equals(webId, company.getWebId())) {
+			if (!Objects.equals(webIdNullSafe, company.getWebId())) {
 				result = null;
 			}
 		}
@@ -212,8 +214,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 					cacheResult(company);
 
-					if ((company.getWebId() == null) ||
-							!company.getWebId().equals(webId)) {
+					if (!company.getWebId().equals(webIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_WEBID,
 							finderArgs, company);
 					}
@@ -260,7 +261,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	public int countByWebId(String webId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_WEBID;
 
-		Object[] finderArgs = new Object[] { webId };
+		String webIdNullSafe = Objects.toString(webId, "");
+
+		Object[] finderArgs = new Object[] { webIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -379,7 +382,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	 */
 	@Override
 	public Company fetchByMx(String mx, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { mx };
+		String mxNullSafe = Objects.toString(mx, "");
+
+		Object[] finderArgs = new Object[] { mxNullSafe };
 
 		Object result = null;
 
@@ -391,7 +396,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 		if (result instanceof Company) {
 			Company company = (Company)result;
 
-			if (!Objects.equals(mx, company.getMx())) {
+			if (!Objects.equals(mxNullSafe, company.getMx())) {
 				result = null;
 			}
 		}
@@ -454,8 +459,7 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 
 					cacheResult(company);
 
-					if ((company.getMx() == null) ||
-							!company.getMx().equals(mx)) {
+					if (!company.getMx().equals(mxNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_MX,
 							finderArgs, company);
 					}
@@ -502,7 +506,9 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 	public int countByMx(String mx) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_MX;
 
-		Object[] finderArgs = new Object[] { mx };
+		String mxNullSafe = Objects.toString(mx, "");
+
+		Object[] finderArgs = new Object[] { mxNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
