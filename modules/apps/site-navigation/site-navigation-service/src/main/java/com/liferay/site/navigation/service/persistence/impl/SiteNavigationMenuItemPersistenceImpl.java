@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -1816,9 +1817,11 @@ public class SiteNavigationMenuItemPersistenceImpl extends BasePersistenceImpl<S
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_S_LIKEN;
 		finderArgs = new Object[] {
-				siteNavigationMenuId, name,
+				siteNavigationMenuId, nameNullSafe,
 				
 				start, end, orderByComparator
 			};
@@ -1833,8 +1836,8 @@ public class SiteNavigationMenuItemPersistenceImpl extends BasePersistenceImpl<S
 				for (SiteNavigationMenuItem siteNavigationMenuItem : list) {
 					if ((siteNavigationMenuId != siteNavigationMenuItem.getSiteNavigationMenuId()) ||
 							!StringUtil.wildcardMatches(
-								siteNavigationMenuItem.getName(), name, '_',
-								'%', '\\', false)) {
+								siteNavigationMenuItem.getName(), nameNullSafe,
+								'_', '%', '\\', false)) {
 						list = null;
 
 						break;
@@ -2246,7 +2249,9 @@ public class SiteNavigationMenuItemPersistenceImpl extends BasePersistenceImpl<S
 	public int countByS_LikeN(long siteNavigationMenuId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_S_LIKEN;
 
-		Object[] finderArgs = new Object[] { siteNavigationMenuId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { siteNavigationMenuId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

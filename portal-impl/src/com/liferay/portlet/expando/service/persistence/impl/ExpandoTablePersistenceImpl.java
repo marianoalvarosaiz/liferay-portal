@@ -714,7 +714,9 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	@Override
 	public ExpandoTable fetchByC_C_N(long companyId, long classNameId,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, classNameId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, classNameId, nameNullSafe };
 
 		Object result = null;
 
@@ -728,7 +730,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 			if ((companyId != expandoTable.getCompanyId()) ||
 					(classNameId != expandoTable.getClassNameId()) ||
-					!Objects.equals(name, expandoTable.getName())) {
+					!Objects.equals(nameNullSafe, expandoTable.getName())) {
 				result = null;
 			}
 		}
@@ -790,8 +792,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 					if ((expandoTable.getCompanyId() != companyId) ||
 							(expandoTable.getClassNameId() != classNameId) ||
-							(expandoTable.getName() == null) ||
-							!expandoTable.getName().equals(name)) {
+							!expandoTable.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_N,
 							finderArgs, expandoTable);
 					}
@@ -843,7 +844,9 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	public int countByC_C_N(long companyId, long classNameId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C_N;
 
-		Object[] finderArgs = new Object[] { companyId, classNameId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { companyId, classNameId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

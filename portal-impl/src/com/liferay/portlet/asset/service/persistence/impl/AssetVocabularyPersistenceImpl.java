@@ -194,15 +194,21 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<AssetVocabulary> list = null;
@@ -213,7 +219,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AssetVocabulary assetVocabulary : list) {
-					if (!Objects.equals(uuid, assetVocabulary.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, assetVocabulary.getUuid())) {
 						list = null;
 
 						break;
@@ -593,7 +599,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -722,7 +730,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	@Override
 	public AssetVocabulary fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -734,7 +744,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 		if (result instanceof AssetVocabulary) {
 			AssetVocabulary assetVocabulary = (AssetVocabulary)result;
 
-			if (!Objects.equals(uuid, assetVocabulary.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, assetVocabulary.getUuid()) ||
 					(groupId != assetVocabulary.getGroupId())) {
 				result = null;
 			}
@@ -791,8 +801,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 
 					cacheResult(assetVocabulary);
 
-					if ((assetVocabulary.getUuid() == null) ||
-							!assetVocabulary.getUuid().equals(uuid) ||
+					if (!assetVocabulary.getUuid().equals(uuidNullSafe) ||
 							(assetVocabulary.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, assetVocabulary);
@@ -843,7 +852,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1006,16 +1017,18 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1029,7 +1042,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 
 			if ((list != null) && !list.isEmpty()) {
 				for (AssetVocabulary assetVocabulary : list) {
-					if (!Objects.equals(uuid, assetVocabulary.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, assetVocabulary.getUuid()) ||
 							(companyId != assetVocabulary.getCompanyId())) {
 						list = null;
 
@@ -1433,7 +1446,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3405,7 +3420,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	@Override
 	public AssetVocabulary fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Object result = null;
 
@@ -3418,7 +3435,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 			AssetVocabulary assetVocabulary = (AssetVocabulary)result;
 
 			if ((groupId != assetVocabulary.getGroupId()) ||
-					!Objects.equals(name, assetVocabulary.getName())) {
+					!Objects.equals(nameNullSafe, assetVocabulary.getName())) {
 				result = null;
 			}
 		}
@@ -3475,8 +3492,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 					cacheResult(assetVocabulary);
 
 					if ((assetVocabulary.getGroupId() != groupId) ||
-							(assetVocabulary.getName() == null) ||
-							!assetVocabulary.getName().equals(name)) {
+							!assetVocabulary.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 							finderArgs, assetVocabulary);
 					}
@@ -3526,7 +3542,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3680,8 +3698,14 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String nameNullSafe = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN;
-		finderArgs = new Object[] { groupId, name, start, end, orderByComparator };
+		finderArgs = new Object[] {
+				groupId, nameNullSafe,
+				
+				start, end, orderByComparator
+			};
 
 		List<AssetVocabulary> list = null;
 
@@ -3693,8 +3717,8 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 				for (AssetVocabulary assetVocabulary : list) {
 					if ((groupId != assetVocabulary.getGroupId()) ||
 							!StringUtil.wildcardMatches(
-								assetVocabulary.getName(), name, '_', '%',
-								'\\', false)) {
+								assetVocabulary.getName(), nameNullSafe, '_',
+								'%', '\\', false)) {
 						list = null;
 
 						break;
@@ -4449,7 +4473,9 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	public int countByG_LikeN(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

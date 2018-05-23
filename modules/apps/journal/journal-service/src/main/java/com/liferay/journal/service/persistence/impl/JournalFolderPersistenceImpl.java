@@ -189,15 +189,21 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<JournalFolder> list = null;
@@ -208,7 +214,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalFolder journalFolder : list) {
-					if (!Objects.equals(uuid, journalFolder.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, journalFolder.getUuid())) {
 						list = null;
 
 						break;
@@ -586,7 +592,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -714,7 +722,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	@Override
 	public JournalFolder fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -726,7 +736,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		if (result instanceof JournalFolder) {
 			JournalFolder journalFolder = (JournalFolder)result;
 
-			if (!Objects.equals(uuid, journalFolder.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, journalFolder.getUuid()) ||
 					(groupId != journalFolder.getGroupId())) {
 				result = null;
 			}
@@ -783,8 +793,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 					cacheResult(journalFolder);
 
-					if ((journalFolder.getUuid() == null) ||
-							!journalFolder.getUuid().equals(uuid) ||
+					if (!journalFolder.getUuid().equals(uuidNullSafe) ||
 							(journalFolder.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, journalFolder);
@@ -835,7 +844,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -998,16 +1009,18 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1021,7 +1034,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalFolder journalFolder : list) {
-					if (!Objects.equals(uuid, journalFolder.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, journalFolder.getUuid()) ||
 							(companyId != journalFolder.getCompanyId())) {
 						list = null;
 
@@ -1424,7 +1437,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3854,7 +3869,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	@Override
 	public JournalFolder fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Object result = null;
 
@@ -3867,7 +3884,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 			JournalFolder journalFolder = (JournalFolder)result;
 
 			if ((groupId != journalFolder.getGroupId()) ||
-					!Objects.equals(name, journalFolder.getName())) {
+					!Objects.equals(nameNullSafe, journalFolder.getName())) {
 				result = null;
 			}
 		}
@@ -3935,8 +3952,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 					cacheResult(journalFolder);
 
 					if ((journalFolder.getGroupId() != groupId) ||
-							(journalFolder.getName() == null) ||
-							!journalFolder.getName().equals(name)) {
+							!journalFolder.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 							finderArgs, journalFolder);
 					}
@@ -3986,7 +4002,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
-		Object[] finderArgs = new Object[] { groupId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4662,7 +4680,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	@Override
 	public JournalFolder fetchByG_P_N(long groupId, long parentFolderId,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, parentFolderId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, parentFolderId, nameNullSafe };
 
 		Object result = null;
 
@@ -4676,7 +4696,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 			if ((groupId != journalFolder.getGroupId()) ||
 					(parentFolderId != journalFolder.getParentFolderId()) ||
-					!Objects.equals(name, journalFolder.getName())) {
+					!Objects.equals(nameNullSafe, journalFolder.getName())) {
 				result = null;
 			}
 		}
@@ -4738,8 +4758,7 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 
 					if ((journalFolder.getGroupId() != groupId) ||
 							(journalFolder.getParentFolderId() != parentFolderId) ||
-							(journalFolder.getName() == null) ||
-							!journalFolder.getName().equals(name)) {
+							!journalFolder.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N,
 							finderArgs, journalFolder);
 					}
@@ -4791,7 +4810,9 @@ public class JournalFolderPersistenceImpl extends BasePersistenceImpl<JournalFol
 	public int countByG_P_N(long groupId, long parentFolderId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_N;
 
-		Object[] finderArgs = new Object[] { groupId, parentFolderId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] { groupId, parentFolderId, nameNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -184,15 +184,21 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<MBMailingList> list = null;
@@ -203,7 +209,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MBMailingList mbMailingList : list) {
-					if (!Objects.equals(uuid, mbMailingList.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, mbMailingList.getUuid())) {
 						list = null;
 
 						break;
@@ -581,7 +587,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -709,7 +717,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	@Override
 	public MBMailingList fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -721,7 +731,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		if (result instanceof MBMailingList) {
 			MBMailingList mbMailingList = (MBMailingList)result;
 
-			if (!Objects.equals(uuid, mbMailingList.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, mbMailingList.getUuid()) ||
 					(groupId != mbMailingList.getGroupId())) {
 				result = null;
 			}
@@ -778,8 +788,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 					cacheResult(mbMailingList);
 
-					if ((mbMailingList.getUuid() == null) ||
-							!mbMailingList.getUuid().equals(uuid) ||
+					if (!mbMailingList.getUuid().equals(uuidNullSafe) ||
 							(mbMailingList.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, mbMailingList);
@@ -830,7 +839,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -991,16 +1002,18 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1014,7 +1027,7 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MBMailingList mbMailingList : list) {
-					if (!Objects.equals(uuid, mbMailingList.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, mbMailingList.getUuid()) ||
 							(companyId != mbMailingList.getCompanyId())) {
 						list = null;
 
@@ -1418,7 +1431,9 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

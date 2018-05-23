@@ -676,7 +676,9 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 	@Override
 	public DDLRecordSetVersion fetchByRS_V(long recordSetId, String version,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { recordSetId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { recordSetId, versionNullSafe };
 
 		Object result = null;
 
@@ -689,7 +691,8 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 			DDLRecordSetVersion ddlRecordSetVersion = (DDLRecordSetVersion)result;
 
 			if ((recordSetId != ddlRecordSetVersion.getRecordSetId()) ||
-					!Objects.equals(version, ddlRecordSetVersion.getVersion())) {
+					!Objects.equals(versionNullSafe,
+						ddlRecordSetVersion.getVersion())) {
 				result = null;
 			}
 		}
@@ -746,8 +749,8 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 					cacheResult(ddlRecordSetVersion);
 
 					if ((ddlRecordSetVersion.getRecordSetId() != recordSetId) ||
-							(ddlRecordSetVersion.getVersion() == null) ||
-							!ddlRecordSetVersion.getVersion().equals(version)) {
+							!ddlRecordSetVersion.getVersion()
+													.equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_RS_V,
 							finderArgs, ddlRecordSetVersion);
 					}
@@ -798,7 +801,9 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 	public int countByRS_V(long recordSetId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_RS_V;
 
-		Object[] finderArgs = new Object[] { recordSetId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { recordSetId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

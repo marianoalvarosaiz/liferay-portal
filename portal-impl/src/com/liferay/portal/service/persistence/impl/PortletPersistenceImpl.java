@@ -660,7 +660,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	@Override
 	public Portlet fetchByC_P(long companyId, String portletId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { companyId, portletIdNullSafe };
 
 		Object result = null;
 
@@ -673,7 +675,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			Portlet portlet = (Portlet)result;
 
 			if ((companyId != portlet.getCompanyId()) ||
-					!Objects.equals(portletId, portlet.getPortletId())) {
+					!Objects.equals(portletIdNullSafe, portlet.getPortletId())) {
 				result = null;
 			}
 		}
@@ -730,8 +732,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 					cacheResult(portlet);
 
 					if ((portlet.getCompanyId() != companyId) ||
-							(portlet.getPortletId() == null) ||
-							!portlet.getPortletId().equals(portletId)) {
+							!portlet.getPortletId().equals(portletIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_P,
 							finderArgs, portlet);
 					}
@@ -781,7 +782,9 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	public int countByC_P(long companyId, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_P;
 
-		Object[] finderArgs = new Object[] { companyId, portletId };
+		String portletIdNullSafe = Objects.toString(portletId, "");
+
+		Object[] finderArgs = new Object[] { companyId, portletIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

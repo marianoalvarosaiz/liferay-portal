@@ -185,15 +185,21 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<SiteFriendlyURL> list = null;
@@ -204,7 +210,7 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SiteFriendlyURL siteFriendlyURL : list) {
-					if (!Objects.equals(uuid, siteFriendlyURL.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, siteFriendlyURL.getUuid())) {
 						list = null;
 
 						break;
@@ -584,7 +590,9 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -713,7 +721,9 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	@Override
 	public SiteFriendlyURL fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -725,7 +735,7 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 		if (result instanceof SiteFriendlyURL) {
 			SiteFriendlyURL siteFriendlyURL = (SiteFriendlyURL)result;
 
-			if (!Objects.equals(uuid, siteFriendlyURL.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, siteFriendlyURL.getUuid()) ||
 					(groupId != siteFriendlyURL.getGroupId())) {
 				result = null;
 			}
@@ -782,8 +792,7 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 					cacheResult(siteFriendlyURL);
 
-					if ((siteFriendlyURL.getUuid() == null) ||
-							!siteFriendlyURL.getUuid().equals(uuid) ||
+					if (!siteFriendlyURL.getUuid().equals(uuidNullSafe) ||
 							(siteFriendlyURL.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, siteFriendlyURL);
@@ -834,7 +843,9 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -996,16 +1007,18 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1019,7 +1032,7 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 			if ((list != null) && !list.isEmpty()) {
 				for (SiteFriendlyURL siteFriendlyURL : list) {
-					if (!Objects.equals(uuid, siteFriendlyURL.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, siteFriendlyURL.getUuid()) ||
 							(companyId != siteFriendlyURL.getCompanyId())) {
 						list = null;
 
@@ -1423,7 +1436,9 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2100,7 +2115,9 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	@Override
 	public SiteFriendlyURL fetchByC_F(long companyId, String friendlyURL,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, friendlyURL };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
+		Object[] finderArgs = new Object[] { companyId, friendlyURLNullSafe };
 
 		Object result = null;
 
@@ -2113,7 +2130,7 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 			SiteFriendlyURL siteFriendlyURL = (SiteFriendlyURL)result;
 
 			if ((companyId != siteFriendlyURL.getCompanyId()) ||
-					!Objects.equals(friendlyURL,
+					!Objects.equals(friendlyURLNullSafe,
 						siteFriendlyURL.getFriendlyURL())) {
 				result = null;
 			}
@@ -2171,8 +2188,8 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 					cacheResult(siteFriendlyURL);
 
 					if ((siteFriendlyURL.getCompanyId() != companyId) ||
-							(siteFriendlyURL.getFriendlyURL() == null) ||
-							!siteFriendlyURL.getFriendlyURL().equals(friendlyURL)) {
+							!siteFriendlyURL.getFriendlyURL()
+												.equals(friendlyURLNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_F,
 							finderArgs, siteFriendlyURL);
 					}
@@ -2222,7 +2239,9 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	public int countByC_F(long companyId, String friendlyURL) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_F;
 
-		Object[] finderArgs = new Object[] { companyId, friendlyURL };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
+		Object[] finderArgs = new Object[] { companyId, friendlyURLNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2371,7 +2390,11 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	@Override
 	public SiteFriendlyURL fetchByC_G_L(long companyId, long groupId,
 		String languageId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, groupId, languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, groupId, languageIdNullSafe
+			};
 
 		Object result = null;
 
@@ -2385,7 +2408,8 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 			if ((companyId != siteFriendlyURL.getCompanyId()) ||
 					(groupId != siteFriendlyURL.getGroupId()) ||
-					!Objects.equals(languageId, siteFriendlyURL.getLanguageId())) {
+					!Objects.equals(languageIdNullSafe,
+						siteFriendlyURL.getLanguageId())) {
 				result = null;
 			}
 		}
@@ -2447,8 +2471,8 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 					if ((siteFriendlyURL.getCompanyId() != companyId) ||
 							(siteFriendlyURL.getGroupId() != groupId) ||
-							(siteFriendlyURL.getLanguageId() == null) ||
-							!siteFriendlyURL.getLanguageId().equals(languageId)) {
+							!siteFriendlyURL.getLanguageId()
+												.equals(languageIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_L,
 							finderArgs, siteFriendlyURL);
 					}
@@ -2501,7 +2525,11 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	public int countByC_G_L(long companyId, long groupId, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_G_L;
 
-		Object[] finderArgs = new Object[] { companyId, groupId, languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, groupId, languageIdNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2655,7 +2683,12 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 	@Override
 	public SiteFriendlyURL fetchByC_F_L(long companyId, String friendlyURL,
 		String languageId, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { companyId, friendlyURL, languageId };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, friendlyURLNullSafe, languageIdNullSafe
+			};
 
 		Object result = null;
 
@@ -2668,9 +2701,10 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 			SiteFriendlyURL siteFriendlyURL = (SiteFriendlyURL)result;
 
 			if ((companyId != siteFriendlyURL.getCompanyId()) ||
-					!Objects.equals(friendlyURL,
+					!Objects.equals(friendlyURLNullSafe,
 						siteFriendlyURL.getFriendlyURL()) ||
-					!Objects.equals(languageId, siteFriendlyURL.getLanguageId())) {
+					!Objects.equals(languageIdNullSafe,
+						siteFriendlyURL.getLanguageId())) {
 				result = null;
 			}
 		}
@@ -2745,10 +2779,10 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 					cacheResult(siteFriendlyURL);
 
 					if ((siteFriendlyURL.getCompanyId() != companyId) ||
-							(siteFriendlyURL.getFriendlyURL() == null) ||
-							!siteFriendlyURL.getFriendlyURL().equals(friendlyURL) ||
-							(siteFriendlyURL.getLanguageId() == null) ||
-							!siteFriendlyURL.getLanguageId().equals(languageId)) {
+							!siteFriendlyURL.getFriendlyURL()
+												.equals(friendlyURLNullSafe) ||
+							!siteFriendlyURL.getLanguageId()
+												.equals(languageIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_F_L,
 							finderArgs, siteFriendlyURL);
 					}
@@ -2802,7 +2836,12 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 		String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_F_L;
 
-		Object[] finderArgs = new Object[] { companyId, friendlyURL, languageId };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				companyId, friendlyURLNullSafe, languageIdNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -190,15 +190,21 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<LayoutFriendlyURL> list = null;
@@ -209,7 +215,8 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutFriendlyURL layoutFriendlyURL : list) {
-					if (!Objects.equals(uuid, layoutFriendlyURL.getUuid())) {
+					if (!Objects.equals(uuidNullSafe,
+								layoutFriendlyURL.getUuid())) {
 						list = null;
 
 						break;
@@ -590,7 +597,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -719,7 +728,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	@Override
 	public LayoutFriendlyURL fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -731,7 +742,7 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		if (result instanceof LayoutFriendlyURL) {
 			LayoutFriendlyURL layoutFriendlyURL = (LayoutFriendlyURL)result;
 
-			if (!Objects.equals(uuid, layoutFriendlyURL.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, layoutFriendlyURL.getUuid()) ||
 					(groupId != layoutFriendlyURL.getGroupId())) {
 				result = null;
 			}
@@ -788,8 +799,7 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 					cacheResult(layoutFriendlyURL);
 
-					if ((layoutFriendlyURL.getUuid() == null) ||
-							!layoutFriendlyURL.getUuid().equals(uuid) ||
+					if (!layoutFriendlyURL.getUuid().equals(uuidNullSafe) ||
 							(layoutFriendlyURL.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, layoutFriendlyURL);
@@ -840,7 +850,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1003,16 +1015,18 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1026,7 +1040,8 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutFriendlyURL layoutFriendlyURL : list) {
-					if (!Objects.equals(uuid, layoutFriendlyURL.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe,
+								layoutFriendlyURL.getUuid()) ||
 							(companyId != layoutFriendlyURL.getCompanyId())) {
 						list = null;
 
@@ -1430,7 +1445,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3112,16 +3129,18 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_F;
-			finderArgs = new Object[] { plid, friendlyURL };
+			finderArgs = new Object[] { plid, friendlyURLNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_P_F;
 			finderArgs = new Object[] {
-					plid, friendlyURL,
+					plid, friendlyURLNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -3136,7 +3155,7 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutFriendlyURL layoutFriendlyURL : list) {
 					if ((plid != layoutFriendlyURL.getPlid()) ||
-							!Objects.equals(friendlyURL,
+							!Objects.equals(friendlyURLNullSafe,
 								layoutFriendlyURL.getFriendlyURL())) {
 						list = null;
 
@@ -3540,7 +3559,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	public int countByP_F(long plid, String friendlyURL) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_P_F;
 
-		Object[] finderArgs = new Object[] { plid, friendlyURL };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
+		Object[] finderArgs = new Object[] { plid, friendlyURLNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3741,14 +3762,18 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		boolean pagination = true;
 		Object[] finderArgs = null;
 
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
-			finderArgs = new Object[] { StringUtil.merge(plids), languageId };
+			finderArgs = new Object[] {
+					StringUtil.merge(plids), languageIdNullSafe
+				};
 		}
 		else {
 			finderArgs = new Object[] {
-					StringUtil.merge(plids), languageId,
+					StringUtil.merge(plids), languageIdNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -3763,7 +3788,7 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 			if ((list != null) && !list.isEmpty()) {
 				for (LayoutFriendlyURL layoutFriendlyURL : list) {
 					if (!ArrayUtil.contains(plids, layoutFriendlyURL.getPlid()) ||
-							!Objects.equals(languageId,
+							!Objects.equals(languageIdNullSafe,
 								layoutFriendlyURL.getLanguageId())) {
 						list = null;
 
@@ -3924,7 +3949,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	@Override
 	public LayoutFriendlyURL fetchByP_L(long plid, String languageId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { plid, languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] { plid, languageIdNullSafe };
 
 		Object result = null;
 
@@ -3937,7 +3964,7 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 			LayoutFriendlyURL layoutFriendlyURL = (LayoutFriendlyURL)result;
 
 			if ((plid != layoutFriendlyURL.getPlid()) ||
-					!Objects.equals(languageId,
+					!Objects.equals(languageIdNullSafe,
 						layoutFriendlyURL.getLanguageId())) {
 				result = null;
 			}
@@ -3995,8 +4022,8 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 					cacheResult(layoutFriendlyURL);
 
 					if ((layoutFriendlyURL.getPlid() != plid) ||
-							(layoutFriendlyURL.getLanguageId() == null) ||
-							!layoutFriendlyURL.getLanguageId().equals(languageId)) {
+							!layoutFriendlyURL.getLanguageId()
+												  .equals(languageIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_P_L,
 							finderArgs, layoutFriendlyURL);
 					}
@@ -4046,7 +4073,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	public int countByP_L(long plid, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_P_L;
 
-		Object[] finderArgs = new Object[] { plid, languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] { plid, languageIdNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4123,7 +4152,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 			Arrays.sort(plids);
 		}
 
-		Object[] finderArgs = new Object[] { StringUtil.merge(plids), languageId };
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
+		Object[] finderArgs = new Object[] {
+				StringUtil.merge(plids), languageIdNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_P_L,
 				finderArgs, this);
@@ -4316,16 +4349,20 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_F;
-			finderArgs = new Object[] { groupId, privateLayout, friendlyURL };
+			finderArgs = new Object[] {
+					groupId, privateLayout, friendlyURLNullSafe
+				};
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_P_F;
 			finderArgs = new Object[] {
-					groupId, privateLayout, friendlyURL,
+					groupId, privateLayout, friendlyURLNullSafe,
 					
 					start, end, orderByComparator
 				};
@@ -4341,7 +4378,7 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 				for (LayoutFriendlyURL layoutFriendlyURL : list) {
 					if ((groupId != layoutFriendlyURL.getGroupId()) ||
 							(privateLayout != layoutFriendlyURL.isPrivateLayout()) ||
-							!Objects.equals(friendlyURL,
+							!Objects.equals(friendlyURLNullSafe,
 								layoutFriendlyURL.getFriendlyURL())) {
 						list = null;
 
@@ -4776,7 +4813,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		String friendlyURL) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_F;
 
-		Object[] finderArgs = new Object[] { groupId, privateLayout, friendlyURL };
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, privateLayout, friendlyURLNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -4940,8 +4981,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 	public LayoutFriendlyURL fetchByG_P_F_L(long groupId,
 		boolean privateLayout, String friendlyURL, String languageId,
 		boolean retrieveFromCache) {
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] {
-				groupId, privateLayout, friendlyURL, languageId
+				groupId, privateLayout, friendlyURLNullSafe, languageIdNullSafe
 			};
 
 		Object result = null;
@@ -4956,9 +5000,9 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 			if ((groupId != layoutFriendlyURL.getGroupId()) ||
 					(privateLayout != layoutFriendlyURL.isPrivateLayout()) ||
-					!Objects.equals(friendlyURL,
+					!Objects.equals(friendlyURLNullSafe,
 						layoutFriendlyURL.getFriendlyURL()) ||
-					!Objects.equals(languageId,
+					!Objects.equals(languageIdNullSafe,
 						layoutFriendlyURL.getLanguageId())) {
 				result = null;
 			}
@@ -5039,11 +5083,10 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 					if ((layoutFriendlyURL.getGroupId() != groupId) ||
 							(layoutFriendlyURL.isPrivateLayout() != privateLayout) ||
-							(layoutFriendlyURL.getFriendlyURL() == null) ||
 							!layoutFriendlyURL.getFriendlyURL()
-												  .equals(friendlyURL) ||
-							(layoutFriendlyURL.getLanguageId() == null) ||
-							!layoutFriendlyURL.getLanguageId().equals(languageId)) {
+												  .equals(friendlyURLNullSafe) ||
+							!layoutFriendlyURL.getLanguageId()
+												  .equals(languageIdNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_F_L,
 							finderArgs, layoutFriendlyURL);
 					}
@@ -5101,8 +5144,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 		String friendlyURL, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_F_L;
 
+		String friendlyURLNullSafe = Objects.toString(friendlyURL, "");
+		String languageIdNullSafe = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] {
-				groupId, privateLayout, friendlyURL, languageId
+				groupId, privateLayout, friendlyURLNullSafe, languageIdNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

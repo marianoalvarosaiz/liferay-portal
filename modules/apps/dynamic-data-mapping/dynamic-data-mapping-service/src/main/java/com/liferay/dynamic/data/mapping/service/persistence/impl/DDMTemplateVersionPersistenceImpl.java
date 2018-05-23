@@ -671,7 +671,9 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 	@Override
 	public DDMTemplateVersion fetchByT_V(long templateId, String version,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { templateId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { templateId, versionNullSafe };
 
 		Object result = null;
 
@@ -684,7 +686,8 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 			DDMTemplateVersion ddmTemplateVersion = (DDMTemplateVersion)result;
 
 			if ((templateId != ddmTemplateVersion.getTemplateId()) ||
-					!Objects.equals(version, ddmTemplateVersion.getVersion())) {
+					!Objects.equals(versionNullSafe,
+						ddmTemplateVersion.getVersion())) {
 				result = null;
 			}
 		}
@@ -741,8 +744,8 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 					cacheResult(ddmTemplateVersion);
 
 					if ((ddmTemplateVersion.getTemplateId() != templateId) ||
-							(ddmTemplateVersion.getVersion() == null) ||
-							!ddmTemplateVersion.getVersion().equals(version)) {
+							!ddmTemplateVersion.getVersion()
+												   .equals(versionNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_T_V,
 							finderArgs, ddmTemplateVersion);
 					}
@@ -792,7 +795,9 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 	public int countByT_V(long templateId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_V;
 
-		Object[] finderArgs = new Object[] { templateId, version };
+		String versionNullSafe = Objects.toString(version, "");
+
+		Object[] finderArgs = new Object[] { templateId, versionNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
