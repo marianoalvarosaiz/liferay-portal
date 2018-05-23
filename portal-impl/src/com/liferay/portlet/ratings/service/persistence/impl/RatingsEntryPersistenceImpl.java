@@ -188,15 +188,21 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<RatingsEntry> list = null;
@@ -207,7 +213,7 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (RatingsEntry ratingsEntry : list) {
-					if (!Objects.equals(uuid, ratingsEntry.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, ratingsEntry.getUuid())) {
 						list = null;
 
 						break;
@@ -585,7 +591,9 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -739,16 +747,18 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -762,7 +772,7 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 
 			if ((list != null) && !list.isEmpty()) {
 				for (RatingsEntry ratingsEntry : list) {
-					if (!Objects.equals(uuid, ratingsEntry.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, ratingsEntry.getUuid()) ||
 							(companyId != ratingsEntry.getCompanyId())) {
 						list = null;
 
@@ -1165,7 +1175,9 @@ public class RatingsEntryPersistenceImpl extends BasePersistenceImpl<RatingsEntr
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

@@ -183,15 +183,21 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid };
+			finderArgs = new Object[] { uuidNullSafe };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID;
-			finderArgs = new Object[] { uuid, start, end, orderByComparator };
+			finderArgs = new Object[] {
+					uuidNullSafe,
+					
+					start, end, orderByComparator
+				};
 		}
 
 		List<KBFolder> list = null;
@@ -202,7 +208,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KBFolder kbFolder : list) {
-					if (!Objects.equals(uuid, kbFolder.getUuid())) {
+					if (!Objects.equals(uuidNullSafe, kbFolder.getUuid())) {
 						list = null;
 
 						break;
@@ -580,7 +586,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
-		Object[] finderArgs = new Object[] { uuid };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -708,7 +716,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	@Override
 	public KBFolder fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Object result = null;
 
@@ -720,7 +730,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		if (result instanceof KBFolder) {
 			KBFolder kbFolder = (KBFolder)result;
 
-			if (!Objects.equals(uuid, kbFolder.getUuid()) ||
+			if (!Objects.equals(uuidNullSafe, kbFolder.getUuid()) ||
 					(groupId != kbFolder.getGroupId())) {
 				result = null;
 			}
@@ -777,8 +787,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 					cacheResult(kbFolder);
 
-					if ((kbFolder.getUuid() == null) ||
-							!kbFolder.getUuid().equals(uuid) ||
+					if (!kbFolder.getUuid().equals(uuidNullSafe) ||
 							(kbFolder.getGroupId() != groupId)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,
 							finderArgs, kbFolder);
@@ -829,7 +838,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
-		Object[] finderArgs = new Object[] { uuid, groupId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -988,16 +999,18 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		String uuidNullSafe = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C;
-			finderArgs = new Object[] { uuid, companyId };
+			finderArgs = new Object[] { uuidNullSafe, companyId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C;
 			finderArgs = new Object[] {
-					uuid, companyId,
+					uuidNullSafe, companyId,
 					
 					start, end, orderByComparator
 				};
@@ -1011,7 +1024,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 			if ((list != null) && !list.isEmpty()) {
 				for (KBFolder kbFolder : list) {
-					if (!Objects.equals(uuid, kbFolder.getUuid()) ||
+					if (!Objects.equals(uuidNullSafe, kbFolder.getUuid()) ||
 							(companyId != kbFolder.getCompanyId())) {
 						list = null;
 
@@ -1414,7 +1427,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
-		Object[] finderArgs = new Object[] { uuid, companyId };
+		String uuidNullSafe = Objects.toString(uuid, "");
+
+		Object[] finderArgs = new Object[] { uuidNullSafe, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2479,7 +2494,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	@Override
 	public KBFolder fetchByG_P_N(long groupId, long parentKBFolderId,
 		String name, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, parentKBFolderId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, parentKBFolderId, nameNullSafe
+			};
 
 		Object result = null;
 
@@ -2493,7 +2512,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 			if ((groupId != kbFolder.getGroupId()) ||
 					(parentKBFolderId != kbFolder.getParentKBFolderId()) ||
-					!Objects.equals(name, kbFolder.getName())) {
+					!Objects.equals(nameNullSafe, kbFolder.getName())) {
 				result = null;
 			}
 		}
@@ -2566,8 +2585,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 					if ((kbFolder.getGroupId() != groupId) ||
 							(kbFolder.getParentKBFolderId() != parentKBFolderId) ||
-							(kbFolder.getName() == null) ||
-							!kbFolder.getName().equals(name)) {
+							!kbFolder.getName().equals(nameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N,
 							finderArgs, kbFolder);
 					}
@@ -2619,7 +2637,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	public int countByG_P_N(long groupId, long parentKBFolderId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_N;
 
-		Object[] finderArgs = new Object[] { groupId, parentKBFolderId, name };
+		String nameNullSafe = Objects.toString(name, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, parentKBFolderId, nameNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2771,7 +2793,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	@Override
 	public KBFolder fetchByG_P_UT(long groupId, long parentKBFolderId,
 		String urlTitle, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { groupId, parentKBFolderId, urlTitle };
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, parentKBFolderId, urlTitleNullSafe
+			};
 
 		Object result = null;
 
@@ -2785,7 +2811,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 			if ((groupId != kbFolder.getGroupId()) ||
 					(parentKBFolderId != kbFolder.getParentKBFolderId()) ||
-					!Objects.equals(urlTitle, kbFolder.getUrlTitle())) {
+					!Objects.equals(urlTitleNullSafe, kbFolder.getUrlTitle())) {
 				result = null;
 			}
 		}
@@ -2858,8 +2884,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 					if ((kbFolder.getGroupId() != groupId) ||
 							(kbFolder.getParentKBFolderId() != parentKBFolderId) ||
-							(kbFolder.getUrlTitle() == null) ||
-							!kbFolder.getUrlTitle().equals(urlTitle)) {
+							!kbFolder.getUrlTitle().equals(urlTitleNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_UT,
 							finderArgs, kbFolder);
 					}
@@ -2912,7 +2937,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		String urlTitle) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_P_UT;
 
-		Object[] finderArgs = new Object[] { groupId, parentKBFolderId, urlTitle };
+		String urlTitleNullSafe = Objects.toString(urlTitle, "");
+
+		Object[] finderArgs = new Object[] {
+				groupId, parentKBFolderId, urlTitleNullSafe
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

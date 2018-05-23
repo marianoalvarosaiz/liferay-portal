@@ -927,7 +927,9 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 	@Override
 	public PowwowParticipant fetchByPMI_EA(long powwowMeetingId,
 		String emailAddress, boolean retrieveFromCache) {
-		Object[] finderArgs = new Object[] { powwowMeetingId, emailAddress };
+		String emailAddressNullSafe = Objects.toString(emailAddress, "");
+
+		Object[] finderArgs = new Object[] { powwowMeetingId, emailAddressNullSafe };
 
 		Object result = null;
 
@@ -940,7 +942,7 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 			PowwowParticipant powwowParticipant = (PowwowParticipant)result;
 
 			if ((powwowMeetingId != powwowParticipant.getPowwowMeetingId()) ||
-					!Objects.equals(emailAddress,
+					!Objects.equals(emailAddressNullSafe,
 						powwowParticipant.getEmailAddress())) {
 				result = null;
 			}
@@ -998,9 +1000,8 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 					cacheResult(powwowParticipant);
 
 					if ((powwowParticipant.getPowwowMeetingId() != powwowMeetingId) ||
-							(powwowParticipant.getEmailAddress() == null) ||
 							!powwowParticipant.getEmailAddress()
-												  .equals(emailAddress)) {
+												  .equals(emailAddressNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_PMI_EA,
 							finderArgs, powwowParticipant);
 					}
@@ -1051,7 +1052,9 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 	public int countByPMI_EA(long powwowMeetingId, String emailAddress) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_PMI_EA;
 
-		Object[] finderArgs = new Object[] { powwowMeetingId, emailAddress };
+		String emailAddressNullSafe = Objects.toString(emailAddress, "");
+
+		Object[] finderArgs = new Object[] { powwowMeetingId, emailAddressNullSafe };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 

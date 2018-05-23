@@ -1767,9 +1767,12 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 	public SocialActivityLimit fetchByG_U_C_C_A_A(long groupId, long userId,
 		long classNameId, long classPK, int activityType,
 		String activityCounterName, boolean retrieveFromCache) {
+		String activityCounterNameNullSafe = Objects.toString(activityCounterName,
+				"");
+
 		Object[] finderArgs = new Object[] {
 				groupId, userId, classNameId, classPK, activityType,
-				activityCounterName
+				activityCounterNameNullSafe
 			};
 
 		Object result = null;
@@ -1787,7 +1790,7 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 					(classNameId != socialActivityLimit.getClassNameId()) ||
 					(classPK != socialActivityLimit.getClassPK()) ||
 					(activityType != socialActivityLimit.getActivityType()) ||
-					!Objects.equals(activityCounterName,
+					!Objects.equals(activityCounterNameNullSafe,
 						socialActivityLimit.getActivityCounterName())) {
 				result = null;
 			}
@@ -1865,9 +1868,8 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 							(socialActivityLimit.getClassNameId() != classNameId) ||
 							(socialActivityLimit.getClassPK() != classPK) ||
 							(socialActivityLimit.getActivityType() != activityType) ||
-							(socialActivityLimit.getActivityCounterName() == null) ||
 							!socialActivityLimit.getActivityCounterName()
-													.equals(activityCounterName)) {
+													.equals(activityCounterNameNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_G_U_C_C_A_A,
 							finderArgs, socialActivityLimit);
 					}
@@ -1929,9 +1931,12 @@ public class SocialActivityLimitPersistenceImpl extends BasePersistenceImpl<Soci
 		long classPK, int activityType, String activityCounterName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_U_C_C_A_A;
 
+		String activityCounterNameNullSafe = Objects.toString(activityCounterName,
+				"");
+
 		Object[] finderArgs = new Object[] {
 				groupId, userId, classNameId, classPK, activityType,
-				activityCounterName
+				activityCounterNameNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);

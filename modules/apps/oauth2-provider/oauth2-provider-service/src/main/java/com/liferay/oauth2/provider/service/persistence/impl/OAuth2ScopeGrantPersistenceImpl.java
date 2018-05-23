@@ -737,9 +737,15 @@ public class OAuth2ScopeGrantPersistenceImpl extends BasePersistenceImpl<OAuth2S
 	public OAuth2ScopeGrant fetchByC_O_A_B_S(long companyId,
 		long oAuth2ApplicationScopeAliasesId, String applicationName,
 		String bundleSymbolicName, String scope, boolean retrieveFromCache) {
+		String applicationNameNullSafe = Objects.toString(applicationName, "");
+		String bundleSymbolicNameNullSafe = Objects.toString(bundleSymbolicName,
+				"");
+		String scopeNullSafe = Objects.toString(scope, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, oAuth2ApplicationScopeAliasesId, applicationName,
-				bundleSymbolicName, scope
+				companyId, oAuth2ApplicationScopeAliasesId,
+				applicationNameNullSafe, bundleSymbolicNameNullSafe,
+				scopeNullSafe
 			};
 
 		Object result = null;
@@ -754,11 +760,11 @@ public class OAuth2ScopeGrantPersistenceImpl extends BasePersistenceImpl<OAuth2S
 
 			if ((companyId != oAuth2ScopeGrant.getCompanyId()) ||
 					(oAuth2ApplicationScopeAliasesId != oAuth2ScopeGrant.getOAuth2ApplicationScopeAliasesId()) ||
-					!Objects.equals(applicationName,
+					!Objects.equals(applicationNameNullSafe,
 						oAuth2ScopeGrant.getApplicationName()) ||
-					!Objects.equals(bundleSymbolicName,
+					!Objects.equals(bundleSymbolicNameNullSafe,
 						oAuth2ScopeGrant.getBundleSymbolicName()) ||
-					!Objects.equals(scope, oAuth2ScopeGrant.getScope())) {
+					!Objects.equals(scopeNullSafe, oAuth2ScopeGrant.getScope())) {
 				result = null;
 			}
 		}
@@ -867,14 +873,11 @@ public class OAuth2ScopeGrantPersistenceImpl extends BasePersistenceImpl<OAuth2S
 
 					if ((oAuth2ScopeGrant.getCompanyId() != companyId) ||
 							(oAuth2ScopeGrant.getOAuth2ApplicationScopeAliasesId() != oAuth2ApplicationScopeAliasesId) ||
-							(oAuth2ScopeGrant.getApplicationName() == null) ||
 							!oAuth2ScopeGrant.getApplicationName()
-												 .equals(applicationName) ||
-							(oAuth2ScopeGrant.getBundleSymbolicName() == null) ||
+												 .equals(applicationNameNullSafe) ||
 							!oAuth2ScopeGrant.getBundleSymbolicName()
-												 .equals(bundleSymbolicName) ||
-							(oAuth2ScopeGrant.getScope() == null) ||
-							!oAuth2ScopeGrant.getScope().equals(scope)) {
+												 .equals(bundleSymbolicNameNullSafe) ||
+							!oAuth2ScopeGrant.getScope().equals(scopeNullSafe)) {
 						finderCache.putResult(FINDER_PATH_FETCH_BY_C_O_A_B_S,
 							finderArgs, oAuth2ScopeGrant);
 					}
@@ -937,9 +940,15 @@ public class OAuth2ScopeGrantPersistenceImpl extends BasePersistenceImpl<OAuth2S
 		String bundleSymbolicName, String scope) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_O_A_B_S;
 
+		String applicationNameNullSafe = Objects.toString(applicationName, "");
+		String bundleSymbolicNameNullSafe = Objects.toString(bundleSymbolicName,
+				"");
+		String scopeNullSafe = Objects.toString(scope, "");
+
 		Object[] finderArgs = new Object[] {
-				companyId, oAuth2ApplicationScopeAliasesId, applicationName,
-				bundleSymbolicName, scope
+				companyId, oAuth2ApplicationScopeAliasesId,
+				applicationNameNullSafe, bundleSymbolicNameNullSafe,
+				scopeNullSafe
 			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
