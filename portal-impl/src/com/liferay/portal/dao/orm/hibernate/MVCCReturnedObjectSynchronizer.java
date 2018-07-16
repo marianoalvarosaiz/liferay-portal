@@ -27,10 +27,10 @@ public class MVCCReturnedObjectSynchronizer
 
 	@Override
 	public Object updateResult(Object result) {
-		return _getUpdatedResult(result);
+		return getUpdatedResult(result);
 	}
 
-	private Object _getUpdatedResult(Object result) {
+	protected Object getUpdatedResult(Object result) {
 		if (result instanceof BaseModel<?> && result instanceof MVCCModel) {
 			BaseModel<?> baseModel = (BaseModel<?>)result;
 			MVCCModel mvccModel = (MVCCModel)result;
