@@ -34,6 +34,8 @@ public class PlainJSONMessageMapperTest {
 			Paths.get("src", "test", "resources", "plain")
 		).mediaType(
 			APPLICATION_JSON
+		).validateEntryPointMessageMapper(
+			new PlainJSONEntryPointMessageMapper()
 		).validatePageMessageMapper(
 			new PlainJSONPageMessageMapper<>()
 		).validateSingleModelMessageMapper(

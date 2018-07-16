@@ -31,18 +31,7 @@ public class PropertiesSourceProcessor extends BaseSourceProcessor {
 	@Override
 	protected String[] doGetIncludes() {
 		if (isPortalSource() || isSubrepository()) {
-			return new String[] {
-				"**/app-server.properties", "**/build.properties",
-				"**/ci.properties", "**/lib/*/dependencies.properties",
-				"**/framework.properties", "**/gradle-wrapper.properties",
-				"**/imported-files.properties",
-				"**/content/Language*.properties",
-				"**/liferay-plugin-package*.properties",
-				"**/modules/modules.properties", "**/portal.properties",
-				"**/portal-ext.properties", "**/portal-legacy-*.properties",
-				"**/portlet.properties", "**/service.properties",
-				"**/source-formatter.properties", "**/test.properties"
-			};
+			return new String[] {"**/*.properties"};
 		}
 
 		return new String[] {
