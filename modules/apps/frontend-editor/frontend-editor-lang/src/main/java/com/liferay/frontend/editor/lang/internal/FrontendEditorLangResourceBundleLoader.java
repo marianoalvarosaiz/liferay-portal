@@ -17,13 +17,14 @@ package com.liferay.frontend.editor.lang.internal;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Carlos Sierra Andrés
@@ -37,12 +38,7 @@ public class FrontendEditorLangResourceBundleLoader
 
 	@Override
 	public ResourceBundle loadResourceBundle(Locale locale) {
-		Class<?> clazz = getClass();
-
-		ClassLoader classLoader = clazz.getClassLoader();
-
-		return ResourceBundleUtil.getBundle(
-			"content.Language", locale, classLoader);
+		return _resourceBundleLoader.loadResourceBundle(locale);
 	}
 
 	/**
@@ -59,5 +55,12 @@ public class FrontendEditorLangResourceBundleLoader
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.frontend.editor.lang)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }
