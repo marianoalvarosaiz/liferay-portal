@@ -289,7 +289,7 @@ public class DDMFormAdminDisplayContextTest extends PowerMockito {
 			mock(DDMFormValuesMerger.class),
 			mock(DDMStructureLocalService.class),
 			mock(DDMStructureService.class), mock(JSONFactory.class),
-			mock(StorageEngine.class));
+			mock(ResourceBundleLoader.class), mock(StorageEngine.class));
 	}
 
 	protected void setUpLanguageUtil() {
