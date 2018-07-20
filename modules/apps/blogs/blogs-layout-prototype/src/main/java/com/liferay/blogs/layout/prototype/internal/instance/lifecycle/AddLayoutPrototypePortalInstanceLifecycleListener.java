@@ -43,6 +43,8 @@ import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Sergio González
@@ -71,8 +73,7 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 
 		ResourceBundleLoader resourceBundleLoader =
 			new AggregateResourceBundleLoader(
-				ResourceBundleUtil.getResourceBundleLoader(
-					"content.Language", getClassLoader()),
+				_resourceBundleLoader,
 				LanguageResources.RESOURCE_BUNDLE_LOADER);
 
 		Map<Locale, String> descriptionMap =
@@ -152,6 +153,13 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 
 	@Reference
 	private Portal _portal;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.blogs.layout.prototype)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 	private UserLocalService _userLocalService;
 

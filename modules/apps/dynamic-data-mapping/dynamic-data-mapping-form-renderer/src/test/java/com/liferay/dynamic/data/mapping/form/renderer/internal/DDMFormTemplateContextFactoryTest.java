@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.soy.utils.SoyHTMLSanitizer;
@@ -597,6 +598,22 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 
 	protected void setUpPortalClassLoaderUtil() {
 		PortalClassLoaderUtil.setClassLoader(PortalImpl.class.getClassLoader());
+	}
+
+	protected void setUpResourceBundleLoader() throws Exception {
+		ResourceBundleLoader resourceBundleLoader = mock(
+			ResourceBundleLoader.class);
+
+		ResourceBundle resourceBundle = mock(ResourceBundle.class);
+
+		when(resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
+		).thenReturn(
+			resourceBundle
+		);
+
+		setDeclaredField(
+			_ddmFormTemplateContextFactory, "_resourceBundleLoader",
+			_jsonFactory);
 	}
 
 	private DDMFormTemplateContextFactoryImpl _ddmFormTemplateContextFactory;
