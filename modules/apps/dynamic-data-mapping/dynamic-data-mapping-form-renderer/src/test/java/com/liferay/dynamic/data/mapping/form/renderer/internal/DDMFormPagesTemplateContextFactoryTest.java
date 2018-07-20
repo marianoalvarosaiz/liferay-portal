@@ -83,7 +83,7 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 	public void setUp() {
 		setUpHtmlUtil();
 		setUpLanguageUtil();
-		setUpResourceBundleLoaderUtil();
+		setUpResourceBundleLoader();
 		setUpDDMFormTemplateContextFactoryUtil();
 	}
 
@@ -502,6 +502,10 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 
 		mockDDMFormFieldTypeServicesTracker(
 			"select",
+			_ddmFormFieldTemplateContextContributorTestHelper.
+				createSelectDDMFormFieldTemplateContextContributor());
+
+		setUpResourceBundleLoader(
 			_ddmFormFieldTemplateContextContributorTestHelper.
 				createSelectDDMFormFieldTemplateContextContributor());
 
@@ -970,16 +974,36 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 		languageUtil.setLanguage(language);
 	}
 
-	protected void setUpResourceBundleLoaderUtil() {
-		mockStatic(ResourceBundleLoaderUtil.class);
-
-		ResourceBundleLoader portalResourceBundleLoader = mock(
-			ResourceBundleLoader.class);
+	protected void setUpResourceBundleLoader() {
+		ResourceBundle resourceBundle = mock(ResourceBundle.class);
 
 		when(
-			ResourceBundleLoaderUtil.getPortalResourceBundleLoader()
+			_resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
 		).thenReturn(
-			portalResourceBundleLoader
+			resourceBundle
+		);
+	}
+
+	protected void setUpResourceBundleLoader(
+			DDMFormFieldTemplateContextContributor
+				ddmFormFieldTemplateContextContributor)
+		throws Exception {
+
+		ResourceBundleLoader resourceBundleLoader = mock(
+			ResourceBundleLoader.class);
+		ResourceBundle resourceBundle = mock(ResourceBundle.class);
+
+		when(
+			resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
+		).thenReturn(
+			resourceBundle
+		);
+
+		field(
+			SelectDDMFormFieldTemplateContextContributor.class,
+			"_resourceBundleLoader"
+		).set(
+			ddmFormFieldTemplateContextContributor, resourceBundleLoader
 		);
 	}
 

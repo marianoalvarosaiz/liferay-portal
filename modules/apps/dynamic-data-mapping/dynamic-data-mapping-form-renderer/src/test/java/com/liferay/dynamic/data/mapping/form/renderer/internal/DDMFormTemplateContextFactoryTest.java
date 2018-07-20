@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.soy.utils.SoyHTMLSanitizer;
@@ -91,6 +92,7 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		setUpDDMFormLayoutJSONSerializer();
 
 		setUpJSONFactory();
+		setUpResourceBundleLoader();
 		setUpLanguageUtil();
 		setUpLocaleThreadLocal();
 		setUpPortal();
@@ -599,11 +601,26 @@ public class DDMFormTemplateContextFactoryTest extends PowerMockito {
 		PortalClassLoaderUtil.setClassLoader(PortalImpl.class.getClassLoader());
 	}
 
+	protected void setUpResourceBundleLoader() {
+		ResourceBundle resourceBundle = mock(ResourceBundle.class);
+
+		when(
+			_resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
+		).thenReturn(
+			resourceBundle
+		);
+
+		setDeclaredField(
+			_ddmFormTemplateContextFactory, "_resourceBundleLoader",
+			_resourceBundleLoader);
+	}
+
 	private DDMFormTemplateContextFactoryImpl _ddmFormTemplateContextFactory;
 	private final JSONFactory _jsonFactory = new JSONFactoryImpl();
 	private Language _language;
 	private Locale _originalSiteDefaultLocale;
 	private final Portal _portal = new PortalImpl();
 	private HttpServletRequest _request;
+	private ResourceBundleLoader _resourceBundleLoader;
 
 }
