@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.ReflectionUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 
 import java.lang.reflect.Field;
 
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -133,6 +136,21 @@ public class DDMFormFieldTypesJSONSerializerTest extends BaseDDMTestCase {
 		return ddmFormFieldTypeServicesTracker;
 	}
 
+	protected ResourceBundleLoader getMockedResourceBundleLoader() {
+		ResourceBundleLoader resourceBundleLoader = mock(
+			ResourceBundleLoader.class);
+
+		ResourceBundle resourceBundle = mock(ResourceBundle.class);
+
+		when(
+			resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
+		).thenReturn(
+			resourceBundle
+		);
+
+		return resourceBundleLoader;
+	}
+
 	protected void setUpDDMFormFieldTypesJSONSerializer() throws Exception {
 		Field field = ReflectionUtil.getDeclaredField(
 			DDMFormFieldTypesJSONSerializerImpl.class,
@@ -146,6 +164,12 @@ public class DDMFormFieldTypesJSONSerializerTest extends BaseDDMTestCase {
 			DDMFormFieldTypesJSONSerializerImpl.class, "_jsonFactory");
 
 		field.set(_ddmFormFieldTypesJSONSerializer, new JSONFactoryImpl());
+
+		field = ReflectionUtil.getDeclaredField(
+			DDMFormFieldTypesJSONSerializerImpl.class, "_resourceBundleLoader");
+
+		field.set(
+			_ddmFormFieldTypesJSONSerializer, getMockedResourceBundleLoader());
 	}
 
 	protected void whenDDMFormFieldTypeGetName(
