@@ -68,6 +68,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 /**
  * @author Marcellus Tavares
@@ -83,7 +84,6 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 	public void setUp() {
 		setUpHtmlUtil();
 		setUpLanguageUtil();
-		setUpResourceBundleLoaderUtil();
 		setUpDDMFormTemplateContextFactoryUtil();
 	}
 
@@ -502,6 +502,10 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 
 		mockDDMFormFieldTypeServicesTracker(
 			"select",
+			_ddmFormFieldTemplateContextContributorTestHelper.
+				createSelectDDMFormFieldTemplateContextContributor());
+
+		setUpResourceBundleLoader(
 			_ddmFormFieldTemplateContextContributorTestHelper.
 				createSelectDDMFormFieldTemplateContextContributor());
 
@@ -970,17 +974,24 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 		languageUtil.setLanguage(language);
 	}
 
-	protected void setUpResourceBundleLoaderUtil() {
-		mockStatic(ResourceBundleLoaderUtil.class);
+	protected void setUpResourceBundleLoader(
+			DDMFormFieldTemplateContextContributor
+				ddmFormFieldTemplateContextContributor)
+		throws Exception {
 
-		ResourceBundleLoader portalResourceBundleLoader = mock(
+		ResourceBundleLoader resourceBundleLoader = mock(
 			ResourceBundleLoader.class);
+		ResourceBundle resourceBundle = mock(ResourceBundle.class);
 
 		when(
-			ResourceBundleLoaderUtil.getPortalResourceBundleLoader()
+			resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
 		).thenReturn(
-			portalResourceBundleLoader
+			resourceBundle
 		);
+
+		Whitebox.setInternalState(
+			ddmFormFieldTemplateContextContributor, "_resourceBundleLoader",
+			resourceBundleLoader);
 	}
 
 	protected void whenLanguageGet(
