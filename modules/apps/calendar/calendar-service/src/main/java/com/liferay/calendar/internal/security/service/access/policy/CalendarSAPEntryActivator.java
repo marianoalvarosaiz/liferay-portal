@@ -41,6 +41,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Tomas Polesovsky
@@ -75,9 +77,7 @@ public class CalendarSAPEntryActivator {
 
 		ResourceBundleLoader resourceBundleLoader =
 			new AggregateResourceBundleLoader(
-				ResourceBundleUtil.getResourceBundleLoader(
-					"content.Language",
-					CalendarSAPEntryActivator.class.getClassLoader()),
+				_resourceBundleLoader,
 				LanguageResources.RESOURCE_BUNDLE_LOADER);
 
 		Map<Locale, String> titleMap = ResourceBundleUtil.getLocalizationMap(
@@ -101,6 +101,13 @@ public class CalendarSAPEntryActivator {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		CalendarSAPEntryActivator.class);
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.calendar.service)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 	@Reference(unbind = "-")
 	private SAPEntryLocalService _sapEntryLocalService;
