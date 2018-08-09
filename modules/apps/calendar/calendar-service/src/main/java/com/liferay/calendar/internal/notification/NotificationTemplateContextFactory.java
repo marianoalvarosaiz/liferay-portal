@@ -296,6 +296,4 @@ public class NotificationTemplateContextFactory {
 	private static GroupLocalService _groupLocalService;
 	private static LayoutLocalService _layoutLocalService;
 
-	private volatile ResourceBundleLoader _resourceBundleLoader;
-
 }
