@@ -795,24 +795,24 @@ public class ClusterSchedulerEngine
 		}
 	}
 
-	private void _checkClusterConfiguration() {
+	private void _checkClusterConfiguration() throws SchedulerException {
 		MethodHandler methodHandler = new MethodHandler(
 			_isSchedulerEnabledMethodKey);
 
 		Future<Boolean> future = _clusterMasterExecutor.executeOnMaster(
 			methodHandler);
 
+		boolean mismatchedConfiguration = false;
+
 		while (!_clusterMasterExecutor.isMaster()) {
 			try {
 				if (_schedulerEngine.isSchedulerEnabled() !=
 						future.get(_callMasterTimeout, TimeUnit.SECONDS)) {
 
-					_log.error(
-						"All nodes should have same scheduler configuration. " +
-							"Check property: " + PropsKeys.SCHEDULER_ENABLED);
+					mismatchedConfiguration = true;
 				}
 
-				return;
+				break;
 			}
 			catch (InterruptedException ie) {
 				if (_log.isWarnEnabled()) {
@@ -836,6 +836,12 @@ public class ClusterSchedulerEngine
 
 				_log.error(sb.toString(), e);
 			}
+		}
+
+		if (mismatchedConfiguration) {
+			throw new SchedulerException(
+				"All nodes should have same scheduler configuration. Check " +
+					"property: " + PropsKeys.SCHEDULER_ENABLED);
 		}
 	}
 
