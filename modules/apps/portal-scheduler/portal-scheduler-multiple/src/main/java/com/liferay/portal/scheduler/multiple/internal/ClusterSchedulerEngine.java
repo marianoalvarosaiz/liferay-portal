@@ -194,6 +194,11 @@ public class ClusterSchedulerEngine
 		}
 	}
 
+	@Override
+	public boolean isSchedulerEnabled() {
+		return _schedulerEngine.isSchedulerEnabled();
+	}
+
 	@Clusterable(acceptor = SchedulerClusterInvokeAcceptor.class)
 	@Override
 	public void pause(String groupName, StorageType storageType)
@@ -397,6 +402,7 @@ public class ClusterSchedulerEngine
 	@Override
 	public void start() throws SchedulerException {
 		if (!_clusterMasterExecutor.isMaster()) {
+			_checkClusterConfiguration();
 			initMemoryClusteredJobs();
 		}
 
@@ -789,6 +795,50 @@ public class ClusterSchedulerEngine
 		}
 	}
 
+	private void _checkClusterConfiguration() {
+		MethodHandler methodHandler = new MethodHandler(
+			_isSchedulerEnabledMethodKey);
+
+		Future<Boolean> future = _clusterMasterExecutor.executeOnMaster(
+			methodHandler);
+
+		while (!_clusterMasterExecutor.isMaster()) {
+			try {
+				if (_schedulerEngine.isSchedulerEnabled() !=
+						future.get(_callMasterTimeout, TimeUnit.SECONDS)) {
+
+					_log.error(
+						"All nodes should have same scheduler configuration. " +
+							"Check property: " + PropsKeys.SCHEDULER_ENABLED);
+				}
+
+				return;
+			}
+			catch (InterruptedException ie) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Give up the master response waiting due to " +
+							"interruption",
+						ie);
+				}
+
+				return;
+			}
+			catch (Exception e) {
+				StringBundler sb = new StringBundler(5);
+
+				sb.append("Unable to load master cluster configuration in ");
+
+				sb.append(_callMasterTimeout);
+				sb.append(" seconds, you might need to increase value set to ");
+				sb.append("\"clusterable.advice.call.master.timeout\", will ");
+				sb.append("retry again");
+
+				_log.error(sb.toString(), e);
+			}
+		}
+	}
+
 	private void _notifySlave(MethodKey methodKey, Object... arguments) {
 		try {
 			MethodHandler methodHandler = new MethodHandler(
@@ -818,6 +868,8 @@ public class ClusterSchedulerEngine
 		String.class, StorageType.class);
 	private static final MethodKey _getScheduledJobsMethodKey = new MethodKey(
 		SchedulerEngineHelperUtil.class, "getScheduledJobs", StorageType.class);
+	private static final MethodKey _isSchedulerEnabledMethodKey = new MethodKey(
+		SchedulerEngineHelperUtil.class, "isSchedulerEnabled");
 	private static final MethodKey _reloadMemoryClusteredJobsMethodKey =
 		new MethodKey(
 			ClusterSchedulerEngine.class, "_reloadMemoryClusteredJobs",
