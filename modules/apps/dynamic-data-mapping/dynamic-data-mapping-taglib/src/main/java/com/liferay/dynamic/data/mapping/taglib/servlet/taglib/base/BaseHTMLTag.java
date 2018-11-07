@@ -89,6 +89,10 @@ public abstract class BaseHTMLTag extends com.liferay.taglib.util.IncludeTag {
 		return _synchronousFormSubmission;
 	}
 
+	public java.util.Locale getDefaultEditLocale() {
+		return _defaultEditLocale;
+	}
+
 	public void setCheckRequired(boolean checkRequired) {
 		_checkRequired = checkRequired;
 	}
@@ -145,6 +149,10 @@ public abstract class BaseHTMLTag extends com.liferay.taglib.util.IncludeTag {
 		_synchronousFormSubmission = synchronousFormSubmission;
 	}
 
+	public void setDefaultEditLocale(java.util.Locale defaultEditLocale) {
+		_defaultEditLocale = defaultEditLocale;
+	}
+
 	@Override
 	public void setPageContext(PageContext pageContext) {
 		super.setPageContext(pageContext);
@@ -160,6 +168,7 @@ public abstract class BaseHTMLTag extends com.liferay.taglib.util.IncludeTag {
 		_classNameId = 0;
 		_classPK = 0;
 		_ddmFormValues = null;
+		_defaultEditLocale = null;
 		_documentLibrarySelectorURL = null;
 		_fieldsNamespace = null;
 		_ignoreRequestValue = false;
@@ -183,6 +192,7 @@ public abstract class BaseHTMLTag extends com.liferay.taglib.util.IncludeTag {
 		setNamespacedAttribute(request, "classNameId", _classNameId);
 		setNamespacedAttribute(request, "classPK", _classPK);
 		setNamespacedAttribute(request, "ddmFormValues", _ddmFormValues);
+		setNamespacedAttribute(request, "defaultEditLocale", _defaultEditLocale);
 		setNamespacedAttribute(request, "documentLibrarySelectorURL", _documentLibrarySelectorURL);
 		setNamespacedAttribute(request, "fieldsNamespace", _fieldsNamespace);
 		setNamespacedAttribute(request, "ignoreRequestValue", _ignoreRequestValue);
@@ -214,5 +224,6 @@ public abstract class BaseHTMLTag extends com.liferay.taglib.util.IncludeTag {
 	private java.util.Locale _requestedLocale = null;
 	private boolean _showEmptyFieldLabel = true;
 	private boolean _synchronousFormSubmission = true;
+	private java.util.Locale _defaultEditLocale = null;
 
 }
