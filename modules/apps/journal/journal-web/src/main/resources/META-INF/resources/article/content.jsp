@@ -141,7 +141,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 			documentLibrarySelectorURL="<%= String.valueOf(journalItemSelectorHelper.getDocumentLibrarySelectorURL()) %>"
 			ignoreRequestValue="<%= changeStructure %>"
 			imageSelectorURL="<%= String.valueOf(journalItemSelectorHelper.getImageSelectorURL()) %>"
-			requestedLocale="<%= locale %>"
+			requestedLocale="<%= LocaleUtil.fromLanguageId(defaultLanguageId) %>"
 		/>
 	</div>
 
