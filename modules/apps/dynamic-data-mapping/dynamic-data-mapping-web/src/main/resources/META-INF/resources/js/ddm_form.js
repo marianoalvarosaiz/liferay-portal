@@ -277,6 +277,12 @@ AUI.add(
 					displayLocale = instance.getDefaultLocale();
 				}
 
+				var requestedLocale = instance.get('requestedLocale');
+
+				if (requestedLocale) {
+					displayLocale = requestedLocale;
+				}
+
 				return displayLocale;
 			},
 
