@@ -77,6 +77,7 @@ public class NonceUtil {
 		while (_nonceDelayQueue.poll() != null);
 	}
 
+	@SuppressWarnings("unused")
 	private static List<NonceDelayed> _getNonces() {
 		_cleanUp();
 
