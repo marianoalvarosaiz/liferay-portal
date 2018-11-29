@@ -640,7 +640,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "assetTag.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "assetTag.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(assetTag.uuid IS NULL OR assetTag.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
@@ -886,7 +885,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "assetTag.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "assetTag.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(assetTag.uuid IS NULL OR assetTag.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "assetTag.groupId = ?";
@@ -1470,7 +1468,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "assetTag.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "assetTag.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(assetTag.uuid IS NULL OR assetTag.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "assetTag.companyId = ?";
@@ -3072,7 +3069,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_NAME_NAME_1 = "assetTag.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "assetTag.name = ?";
 	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(assetTag.name IS NULL OR assetTag.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_N = new FinderPath(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
@@ -3319,7 +3315,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	}
 
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "assetTag.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_NAME_1 = "assetTag.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "assetTag.name = ?";
 	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(assetTag.name IS NULL OR assetTag.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN = new FinderPath(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
@@ -4191,7 +4186,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 	private static final String _FINDER_COLUMN_G_LIKEN_GROUPID_2 = "assetTag.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_LIKEN_GROUPID_7 = "assetTag.groupId IN (";
-	private static final String _FINDER_COLUMN_G_LIKEN_NAME_1 = "assetTag.name IS NULL";
 	private static final String _FINDER_COLUMN_G_LIKEN_NAME_2 = "assetTag.name LIKE ?";
 	private static final String _FINDER_COLUMN_G_LIKEN_NAME_3 = "(assetTag.name IS NULL OR assetTag.name LIKE '')";
 
