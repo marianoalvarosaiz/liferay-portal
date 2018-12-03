@@ -1026,10 +1026,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "role.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "role.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(role.uuid IS NULL OR role.uuid = '')";
-	private static final String _FINDER_COLUMN_UUID_UUID_1_SQL = "role.uuid_ IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2_SQL = "role.uuid_ = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3_SQL = "(role.uuid_ IS NULL OR role.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(RoleModelImpl.ENTITY_CACHE_ENABLED,
@@ -2018,10 +2016,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "role.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "role.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(role.uuid IS NULL OR role.uuid = '') AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1_SQL = "role.uuid_ IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2_SQL = "role.uuid_ = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3_SQL = "(role.uuid_ IS NULL OR role.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "role.companyId = ?";
@@ -3800,7 +3796,6 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		}
 	}
 
-	private static final String _FINDER_COLUMN_NAME_NAME_1 = "role.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "role.name = ?";
 	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(role.name IS NULL OR role.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_TYPE = new FinderPath(RoleModelImpl.ENTITY_CACHE_ENABLED,
@@ -5576,7 +5571,6 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		}
 	}
 
-	private static final String _FINDER_COLUMN_SUBTYPE_SUBTYPE_1 = "role.subtype IS NULL";
 	private static final String _FINDER_COLUMN_SUBTYPE_SUBTYPE_2 = "role.subtype = ?";
 	private static final String _FINDER_COLUMN_SUBTYPE_SUBTYPE_3 = "(role.subtype IS NULL OR role.subtype = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_N = new FinderPath(RoleModelImpl.ENTITY_CACHE_ENABLED,
@@ -5823,7 +5817,6 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	}
 
 	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "role.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_NAME_1 = "role.name IS NULL";
 	private static final String _FINDER_COLUMN_C_N_NAME_2 = "lower(role.name) = ?";
 	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(role.name IS NULL OR role.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_T = new FinderPath(RoleModelImpl.ENTITY_CACHE_ENABLED,
@@ -8211,7 +8204,6 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 	private static final String _FINDER_COLUMN_T_S_TYPE_2 = "role.type = ? AND ";
 	private static final String _FINDER_COLUMN_T_S_TYPE_2_SQL = "role.type_ = ? AND ";
-	private static final String _FINDER_COLUMN_T_S_SUBTYPE_1 = "role.subtype IS NULL";
 	private static final String _FINDER_COLUMN_T_S_SUBTYPE_2 = "role.subtype = ?";
 	private static final String _FINDER_COLUMN_T_S_SUBTYPE_3 = "(role.subtype IS NULL OR role.subtype = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C_C = new FinderPath(RoleModelImpl.ENTITY_CACHE_ENABLED,

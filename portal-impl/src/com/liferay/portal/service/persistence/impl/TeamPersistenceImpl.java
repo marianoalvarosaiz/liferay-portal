@@ -634,7 +634,6 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "team.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "team.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(team.uuid IS NULL OR team.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(TeamModelImpl.ENTITY_CACHE_ENABLED,
@@ -880,7 +879,6 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "team.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "team.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(team.uuid IS NULL OR team.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "team.groupId = ?";
@@ -1459,7 +1457,6 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "team.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "team.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(team.uuid IS NULL OR team.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "team.companyId = ?";
@@ -2558,7 +2555,6 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 	}
 
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "team.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_NAME_1 = "team.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "team.name = ?";
 	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(team.name IS NULL OR team.name = '')";
 

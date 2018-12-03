@@ -631,7 +631,6 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "repository.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "repository.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(repository.uuid IS NULL OR repository.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
@@ -877,7 +876,6 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "repository.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "repository.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(repository.uuid IS NULL OR repository.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "repository.groupId = ?";
@@ -1461,7 +1459,6 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "repository.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "repository.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(repository.uuid IS NULL OR repository.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "repository.companyId = ?";
@@ -2258,10 +2255,8 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 	}
 
 	private static final String _FINDER_COLUMN_G_N_P_GROUPID_2 = "repository.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_P_NAME_1 = "repository.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_N_P_NAME_2 = "repository.name = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_P_NAME_3 = "(repository.name IS NULL OR repository.name = '') AND ";
-	private static final String _FINDER_COLUMN_G_N_P_PORTLETID_1 = "repository.portletId IS NULL";
 	private static final String _FINDER_COLUMN_G_N_P_PORTLETID_2 = "repository.portletId = ?";
 	private static final String _FINDER_COLUMN_G_N_P_PORTLETID_3 = "(repository.portletId IS NULL OR repository.portletId = '')";
 

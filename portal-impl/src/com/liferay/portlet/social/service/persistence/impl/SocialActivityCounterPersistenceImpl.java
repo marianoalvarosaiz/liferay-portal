@@ -2125,7 +2125,6 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_GROUPID_2 = "socialActivityCounter.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_CLASSNAMEID_2 = "socialActivityCounter.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_CLASSPK_2 = "socialActivityCounter.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_1 = "socialActivityCounter.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_2 = "socialActivityCounter.name = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_NAME_3 = "(socialActivityCounter.name IS NULL OR socialActivityCounter.name = '') AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_S_OWNERTYPE_2 = "socialActivityCounter.ownerType = ? AND ";
@@ -2470,7 +2469,6 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_GROUPID_2 = "socialActivityCounter.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_CLASSNAMEID_2 = "socialActivityCounter.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_CLASSPK_2 = "socialActivityCounter.classPK = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_1 = "socialActivityCounter.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_2 = "socialActivityCounter.name = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_NAME_3 = "(socialActivityCounter.name IS NULL OR socialActivityCounter.name = '') AND ";
 	private static final String _FINDER_COLUMN_G_C_C_N_O_E_OWNERTYPE_2 = "socialActivityCounter.ownerType = ? AND ";

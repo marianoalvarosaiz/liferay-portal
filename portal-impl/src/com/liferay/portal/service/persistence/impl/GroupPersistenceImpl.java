@@ -633,7 +633,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "group_.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "group_.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(group_.uuid IS NULL OR group_.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
@@ -879,7 +878,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "group_.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "group_.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(group_.uuid IS NULL OR group_.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "group_.groupId = ?";
@@ -1458,7 +1456,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "group_.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "group_.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(group_.uuid IS NULL OR group_.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "group_.companyId = ?";
@@ -3496,7 +3493,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	}
 
 	private static final String _FINDER_COLUMN_C_GK_COMPANYID_2 = "group_.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_GK_GROUPKEY_1 = "group_.groupKey IS NULL";
 	private static final String _FINDER_COLUMN_C_GK_GROUPKEY_2 = "group_.groupKey = ?";
 	private static final String _FINDER_COLUMN_C_GK_GROUPKEY_3 = "(group_.groupKey IS NULL OR group_.groupKey = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_F = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
@@ -3743,7 +3739,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	}
 
 	private static final String _FINDER_COLUMN_C_F_COMPANYID_2 = "group_.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_1 = "group_.friendlyURL IS NULL";
 	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_2 = "group_.friendlyURL = ?";
 	private static final String _FINDER_COLUMN_C_F_FRIENDLYURL_3 = "(group_.friendlyURL IS NULL OR group_.friendlyURL = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_S = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
@@ -7979,7 +7974,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 	private static final String _FINDER_COLUMN_C_L_GK_COMPANYID_2 = "group_.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_L_GK_LIVEGROUPID_2 = "group_.liveGroupId = ? AND ";
-	private static final String _FINDER_COLUMN_C_L_GK_GROUPKEY_1 = "group_.groupKey IS NULL";
 	private static final String _FINDER_COLUMN_C_L_GK_GROUPKEY_2 = "group_.groupKey = ?";
 	private static final String _FINDER_COLUMN_C_L_GK_GROUPKEY_3 = "(group_.groupKey IS NULL OR group_.groupKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_T_S = new FinderPath(GroupModelImpl.ENTITY_CACHE_ENABLED,
@@ -8584,7 +8578,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	}
 
 	private static final String _FINDER_COLUMN_C_T_S_COMPANYID_2 = "group_.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_T_S_TREEPATH_1 = "group_.treePath IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_T_S_TREEPATH_2 = "group_.treePath LIKE ? AND ";
 	private static final String _FINDER_COLUMN_C_T_S_TREEPATH_3 = "(group_.treePath IS NULL OR group_.treePath LIKE '') AND ";
 	private static final String _FINDER_COLUMN_C_T_S_SITE_2 = "group_.site = ?";
@@ -9192,7 +9185,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	}
 
 	private static final String _FINDER_COLUMN_C_LIKEN_S_COMPANYID_2 = "group_.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_LIKEN_S_NAME_1 = "group_.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_LIKEN_S_NAME_2 = "lower(group_.name) LIKE ? AND ";
 	private static final String _FINDER_COLUMN_C_LIKEN_S_NAME_3 = "(group_.name IS NULL OR group_.name LIKE '') AND ";
 	private static final String _FINDER_COLUMN_C_LIKEN_S_SITE_2 = "group_.site = ?";
@@ -10960,7 +10952,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 	private static final String _FINDER_COLUMN_C_C_L_GK_COMPANYID_2 = "group_.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_L_GK_CLASSNAMEID_2 = "group_.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_L_GK_LIVEGROUPID_2 = "group_.liveGroupId = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_L_GK_GROUPKEY_1 = "group_.groupKey IS NULL";
 	private static final String _FINDER_COLUMN_C_C_L_GK_GROUPKEY_2 = "group_.groupKey = ?";
 	private static final String _FINDER_COLUMN_C_C_L_GK_GROUPKEY_3 = "(group_.groupKey IS NULL OR group_.groupKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_P_LIKEN_S =
@@ -11602,7 +11593,6 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 	private static final String _FINDER_COLUMN_C_P_LIKEN_S_COMPANYID_2 = "group_.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_P_LIKEN_S_PARENTGROUPID_2 = "group_.parentGroupId = ? AND ";
-	private static final String _FINDER_COLUMN_C_P_LIKEN_S_NAME_1 = "group_.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_P_LIKEN_S_NAME_2 = "lower(group_.name) LIKE ? AND ";
 	private static final String _FINDER_COLUMN_C_P_LIKEN_S_NAME_3 = "(group_.name IS NULL OR group_.name LIKE '') AND ";
 	private static final String _FINDER_COLUMN_C_P_LIKEN_S_SITE_2 = "group_.site = ?";
