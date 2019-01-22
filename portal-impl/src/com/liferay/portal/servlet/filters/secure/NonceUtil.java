@@ -19,10 +19,15 @@ import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.cache.PortalCacheListener;
 import com.liferay.portal.kernel.cache.PortalCacheListenerScope;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.PropsValues;
 
@@ -30,6 +35,8 @@ import java.io.Serializable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Alexander Chow
@@ -70,13 +77,60 @@ public class NonceUtil {
 		return false;
 	}
 
+	private static void _cacheBootstrap() {
+		try {
+			if (!ClusterMasterExecutorUtil.isEnabled() ||
+				ClusterMasterExecutorUtil.isMaster()) {
+
+				return;
+			}
+
+			MethodHandler methodHandler = new MethodHandler(
+				_getNoncesMethodKey);
+
+			Future<Set<Nonce>> future =
+				ClusterMasterExecutorUtil.executeOnMaster(methodHandler);
+
+			Set<Nonce> noncesRetrieved = future.get(_TIMEOUT, TimeUnit.SECONDS);
+
+			_nonces.addAll(noncesRetrieved);
+
+			for (Nonce nonce : _nonces) {
+				PortalCacheHelperUtil.putWithoutReplicator(
+					_noncePortalCache, nonce._nonce, nonce);
+			}
+		}
+		catch (Exception exception) {
+			_log.error("Unable to retrieve nonces from master", exception);
+		}
+		finally {
+			_noncePortalCache.registerPortalCacheListener(
+				new NonceDelayedPortalCacheListener(),
+				PortalCacheListenerScope.ALL);
+		}
+	}
+
+	private static Set<Nonce> _getNonces() {
+		return _nonces;
+	}
+
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
 
+	private static final long _TIMEOUT = 10L;
+
+	private static final Log _log = LogFactoryUtil.getLog(NonceUtil.class);
+
+	private static final MethodKey _getNoncesMethodKey = new MethodKey(
+		NonceUtil.class, "_getNonces");
 	private static final PortalCache<String, Nonce> _noncePortalCache =
 		PortalCacheHelperUtil.getPortalCache(
 			PortalCacheManagerNames.MULTI_VM, NonceUtil.class.getName());
 	private static final Set<Nonce> _nonces = new HashSet<>();
+
+	static {
+		_cacheBootstrap();
+	}
 
 	private static class Nonce implements Serializable {
 
@@ -174,12 +228,6 @@ public class NonceUtil {
 			_nonces.clear();
 		}
 
-	}
-
-	static {
-		_noncePortalCache.registerPortalCacheListener(
-			new NonceDelayedPortalCacheListener(),
-			PortalCacheListenerScope.ALL);
 	}
 
 }
