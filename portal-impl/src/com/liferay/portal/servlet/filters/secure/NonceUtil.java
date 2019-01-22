@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.PropsValues;
 
+import java.io.Serializable;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -66,7 +68,7 @@ public class NonceUtil {
 
 	private static final Map<String, Nonce> _nonces = new ConcurrentHashMap<>();
 
-	private static class Nonce {
+	private static class Nonce implements Serializable {
 
 		public Nonce(String nonce) {
 			if (nonce == null) {
