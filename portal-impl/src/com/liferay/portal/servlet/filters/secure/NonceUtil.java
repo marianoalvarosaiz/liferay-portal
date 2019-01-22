@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.PropsValues;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -47,15 +49,19 @@ public class NonceUtil {
 		String nonce = DigesterUtil.digestHex(
 			Digester.MD5, remoteAddress, String.valueOf(timestamp), companyKey);
 
-		_nonceDelayQueue.put(new NonceDelayed(nonce));
+		_nonces.put(nonce, new Nonce(nonce));
 
 		return nonce;
 	}
 
 	public static boolean verify(String nonce) {
-		_cleanUp();
+		Nonce nonceObject = _nonces.remove(nonce);
 
-		return _nonceDelayQueue.contains(new NonceDelayed(nonce));
+		if ((nonceObject != null) && !nonceObject.isExpired()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private static void _cleanUp() {
@@ -67,6 +73,51 @@ public class NonceUtil {
 
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
+	private static final Map<String, Nonce> _nonces = new ConcurrentHashMap<>();
+
+	private static class Nonce {
+
+		public Nonce(String nonce) {
+			if (nonce == null) {
+				throw new NullPointerException("Nonce is null");
+			}
+
+			_createTime = System.currentTimeMillis();
+
+			_expirationTime = _NONCE_EXPIRATION + _createTime;
+
+			_nonce = nonce;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			Nonce nonce = (Nonce)obj;
+
+			if (_nonce.equals(nonce._nonce)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return _nonce.hashCode();
+		}
+
+		public boolean isExpired() {
+			if (System.currentTimeMillis() > _expirationTime) {
+				return true;
+			}
+
+			return false;
+		}
+
+		private final long _createTime;
+		private final long _expirationTime;
+		private final String _nonce;
+
+	}
 
 	private static class NonceDelayed implements Delayed {
 
