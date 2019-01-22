@@ -14,6 +14,11 @@
 
 package com.liferay.portal.servlet.filters.secure;
 
+import com.liferay.portal.kernel.cache.PortalCache;
+import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
+import com.liferay.portal.kernel.cache.PortalCacheListener;
+import com.liferay.portal.kernel.cache.PortalCacheListenerScope;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
@@ -23,8 +28,8 @@ import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Alexander Chow
@@ -48,15 +53,17 @@ public class NonceUtil {
 		String nonce = DigesterUtil.digestHex(
 			Digester.MD5, remoteAddress, String.valueOf(timestamp), companyKey);
 
-		_nonces.put(nonce, new Nonce(nonce));
+		_noncePortalCache.put(nonce, new Nonce(nonce));
 
 		return nonce;
 	}
 
 	public static boolean verify(String nonce) {
-		Nonce nonceObject = _nonces.remove(nonce);
+		Nonce nonceObject = _noncePortalCache.get(nonce);
 
 		if ((nonceObject != null) && !nonceObject.isExpired()) {
+			_noncePortalCache.remove(nonce);
+
 			return true;
 		}
 
@@ -66,7 +73,10 @@ public class NonceUtil {
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
 
-	private static final Map<String, Nonce> _nonces = new ConcurrentHashMap<>();
+	private static final PortalCache<String, Nonce> _noncePortalCache =
+		PortalCacheHelperUtil.getPortalCache(
+			PortalCacheManagerNames.MULTI_VM, NonceUtil.class.getName());
+	private static final Set<Nonce> _nonces = new HashSet<>();
 
 	private static class Nonce implements Serializable {
 
@@ -110,6 +120,66 @@ public class NonceUtil {
 		private final long _expirationTime;
 		private final String _nonce;
 
+	}
+
+	private static class NonceDelayedPortalCacheListener
+		implements PortalCacheListener<String, Nonce> {
+
+		@Override
+		public void dispose() {
+		}
+
+		@Override
+		public void notifyEntryEvicted(
+			PortalCache<String, Nonce> portalCache, String key, Nonce nonce,
+			int timeToLive) {
+
+			_nonces.remove(nonce);
+		}
+
+		@Override
+		public void notifyEntryExpired(
+			PortalCache<String, Nonce> portalCache, String key, Nonce nonce,
+			int timeToLive) {
+
+			_nonces.remove(nonce);
+		}
+
+		@Override
+		public void notifyEntryPut(
+			PortalCache<String, Nonce> portalCache, String key, Nonce nonce,
+			int timeToLive) {
+
+			_nonces.add(nonce);
+		}
+
+		@Override
+		public void notifyEntryRemoved(
+			PortalCache<String, Nonce> portalCache, String key, Nonce nonce,
+			int timeToLive) {
+
+			_nonces.remove(nonce);
+		}
+
+		@Override
+		public void notifyEntryUpdated(
+			PortalCache<String, Nonce> portalCache, String key, Nonce nonce,
+			int timeToLive) {
+
+			notifyEntryPut(portalCache, key, nonce, timeToLive);
+		}
+
+		@Override
+		public void notifyRemoveAll(PortalCache<String, Nonce> portalCache) {
+			_nonces.clear();
+		}
+
+	}
+
+	static {
+		_noncePortalCache.registerPortalCacheListener(
+			new NonceDelayedPortalCacheListener(),
+			PortalCacheListenerScope.ALL);
 	}
 
 }
