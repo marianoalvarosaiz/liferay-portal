@@ -110,6 +110,7 @@ public class NonceUtil {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static Set<Nonce> _getNonces() {
 		return _nonces;
 	}
