@@ -15,11 +15,24 @@
 package com.liferay.portal.security.auth;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.CompanyWrapper;
 import com.liferay.portal.kernel.security.auth.http.HttpAuthorizationHeader;
+import com.liferay.portal.kernel.service.BaseLocalService;
+import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
+import com.liferay.portal.kernel.service.CompanyLocalServiceWrapper;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceWrapper;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.Base64;
+import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.auth.http.HttpAuthManagerImpl;
+import com.liferay.portal.tools.ToolDependencies;
+import com.liferay.portal.util.DigesterImpl;
 import com.liferay.portal.util.HttpImpl;
 
 import java.util.Map;
@@ -31,6 +44,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Tomas Polesovsky
@@ -42,6 +56,10 @@ public class HttpAuthManagerImplTest {
 		HttpUtil httpUtil = new HttpUtil();
 
 		httpUtil.setHttp(new HttpImpl());
+
+		DigesterUtil digesterUtil = new DigesterUtil();
+
+		digesterUtil.setDigester(new DigesterImpl());
 	}
 
 	@Test
@@ -60,6 +78,78 @@ public class HttpAuthManagerImplTest {
 			"te:st",
 			httpAuthorizationHeader.getAuthParameter(
 				HttpAuthorizationHeader.AUTH_PARAMETER_NAME_PASSWORD));
+	}
+
+	@Test
+	public void testNonceIsChecked() throws Exception {
+		long userId = 7;
+		String incorrectNonce = "invalid";
+
+		_setUpCache();
+		_setUpUserLocalService(userId);
+		_setUpCompanyLocalService();
+
+		MockHttpServletRequest mockHttpServletRequest =
+			_generateDigestChallangeRequest();
+
+		HttpAuthorizationHeader httpAuthorizationHeader =
+			_httpAuthManagerImpl.parse(mockHttpServletRequest);
+
+		_httpAuthManagerImpl.generateChallenge(
+			mockHttpServletRequest, new MockHttpServletResponse(),
+			httpAuthorizationHeader);
+
+		mockHttpServletRequest = _generateDigestNonceRequest(incorrectNonce);
+
+		httpAuthorizationHeader = _httpAuthManagerImpl.parse(
+			mockHttpServletRequest);
+
+		long authorizedUserId = _httpAuthManagerImpl.getUserId(
+			mockHttpServletRequest, httpAuthorizationHeader);
+
+		Assert.assertEquals(0L, authorizedUserId);
+	}
+
+	@Test
+	public void testNonceIsUsedOnceOnly() throws Exception {
+		long userId = 7;
+
+		_setUpCache();
+		_setUpUserLocalService(userId);
+		_setUpCompanyLocalService();
+
+		MockHttpServletRequest mockHttpServletRequest =
+			_generateDigestChallangeRequest();
+
+		HttpAuthorizationHeader httpAuthorizationHeader =
+			_httpAuthManagerImpl.parse(mockHttpServletRequest);
+
+		_httpAuthManagerImpl.generateChallenge(
+			mockHttpServletRequest, new MockHttpServletResponse(),
+			httpAuthorizationHeader);
+
+		String generatedNonce = httpAuthorizationHeader.getAuthParameter(
+			HttpAuthorizationHeader.AUTH_PARAMETER_NAME_NONCE);
+
+		mockHttpServletRequest = _generateDigestNonceRequest(generatedNonce);
+
+		httpAuthorizationHeader = _httpAuthManagerImpl.parse(
+			mockHttpServletRequest);
+
+		long authorizedUserId = _httpAuthManagerImpl.getUserId(
+			mockHttpServletRequest, httpAuthorizationHeader);
+
+		Assert.assertEquals(userId, authorizedUserId);
+
+		mockHttpServletRequest = _generateDigestNonceRequest(generatedNonce);
+
+		httpAuthorizationHeader = _httpAuthManagerImpl.parse(
+			mockHttpServletRequest);
+
+		authorizedUserId = _httpAuthManagerImpl.getUserId(
+			mockHttpServletRequest, httpAuthorizationHeader);
+
+		Assert.assertEquals(0L, authorizedUserId);
 	}
 
 	@Test
@@ -307,6 +397,96 @@ public class HttpAuthManagerImplTest {
 			HttpHeaders.AUTHORIZATION, "Unsupported");
 
 		_httpAuthManagerImpl.parse(mockHttpServletRequest);
+	}
+
+	private MockHttpServletRequest _generateDigestChallangeRequest() {
+		String uri = "/dir/index.html";
+
+		String[] digestParams = {
+			"realm=\"" + Portal.PORTAL_REALM + "\"", "uri=\"" + uri + "\"",
+			"username=\"Mufasa\""
+		};
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
+		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, 0L);
+
+		mockHttpServletRequest.addHeader(
+			HttpHeaders.AUTHORIZATION,
+			"DIGEST " + StringUtil.join(digestParams, ",\n"));
+
+		mockHttpServletRequest.setRequestURI(uri);
+
+		return mockHttpServletRequest;
+	}
+
+	private MockHttpServletRequest _generateDigestNonceRequest(String nonce) {
+		String uri = "/dir/index.html";
+
+		String[] digestParams = {
+			"cnonce=\"0a4f113b\"", "nc=00000001", "nonce=\"" + nonce + "\"",
+			"opaque=\"5ccc069c403ebaf9f0171e9517f40e41", "qop=auth",
+			"realm=\"" + Portal.PORTAL_REALM + "\"",
+			"response=\"6629fae49393a05397450978507c4ef1\"",
+			"uri=\"" + uri + "\"", "username=\"Mufasa\""
+		};
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
+		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, 0L);
+
+		mockHttpServletRequest.addHeader(
+			HttpHeaders.AUTHORIZATION,
+			"DIGEST " + StringUtil.join(digestParams, ",\n"));
+
+		mockHttpServletRequest.setRequestURI(uri);
+
+		return mockHttpServletRequest;
+	}
+
+	private void _setService(Class<?> clazz, BaseLocalService service) {
+		ReflectionTestUtil.setFieldValue(clazz, "_service", service);
+	}
+
+	private void _setUpCache() {
+		ToolDependencies.wireCaches();
+	}
+
+	private void _setUpCompanyLocalService() {
+		_setService(
+			CompanyLocalServiceUtil.class,
+			new CompanyLocalServiceWrapper(null) {
+
+				@Override
+				public Company getCompanyById(long companyId) {
+					return new CompanyWrapper(null) {
+
+						@Override
+						public String getKey() {
+							return "key";
+						}
+
+					};
+				}
+
+			});
+	}
+
+	private void _setUpUserLocalService(long userId) {
+		_setService(
+			UserLocalServiceUtil.class,
+			new UserLocalServiceWrapper(null) {
+
+				public long authenticateForDigest(
+					long companyId, String username, String realm, String nonce,
+					String method, String uri, String response) {
+
+					return userId;
+				}
+
+			});
 	}
 
 	private final HttpAuthManagerImpl _httpAuthManagerImpl =
