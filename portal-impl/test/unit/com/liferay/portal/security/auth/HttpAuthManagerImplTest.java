@@ -82,11 +82,8 @@ public class HttpAuthManagerImplTest {
 
 	@Test
 	public void testNonceIsChecked() throws Exception {
-		long userId = 7;
-		String incorrectNonce = "invalid";
-
 		_setUpCache();
-		_setUpUserLocalService(userId);
+		_setUpUserLocalService(7);
 		_setUpCompanyLocalService();
 
 		MockHttpServletRequest mockHttpServletRequest =
@@ -99,7 +96,7 @@ public class HttpAuthManagerImplTest {
 			mockHttpServletRequest, new MockHttpServletResponse(),
 			httpAuthorizationHeader);
 
-		mockHttpServletRequest = _generateDigestNonceRequest(incorrectNonce);
+		mockHttpServletRequest = _generateDigestNonceRequest("invalid");
 
 		httpAuthorizationHeader = _httpAuthManagerImpl.parse(
 			mockHttpServletRequest);
@@ -128,10 +125,10 @@ public class HttpAuthManagerImplTest {
 			mockHttpServletRequest, new MockHttpServletResponse(),
 			httpAuthorizationHeader);
 
-		String generatedNonce = httpAuthorizationHeader.getAuthParameter(
+		String nonce = httpAuthorizationHeader.getAuthParameter(
 			HttpAuthorizationHeader.AUTH_PARAMETER_NAME_NONCE);
 
-		mockHttpServletRequest = _generateDigestNonceRequest(generatedNonce);
+		mockHttpServletRequest = _generateDigestNonceRequest(nonce);
 
 		httpAuthorizationHeader = _httpAuthManagerImpl.parse(
 			mockHttpServletRequest);
@@ -141,7 +138,7 @@ public class HttpAuthManagerImplTest {
 
 		Assert.assertEquals(userId, authorizedUserId);
 
-		mockHttpServletRequest = _generateDigestNonceRequest(generatedNonce);
+		mockHttpServletRequest = _generateDigestNonceRequest(nonce);
 
 		httpAuthorizationHeader = _httpAuthManagerImpl.parse(
 			mockHttpServletRequest);
