@@ -407,12 +407,11 @@ public class HttpAuthManagerImplTest {
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
 
-		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, 0L);
-
 		mockHttpServletRequest.addHeader(
 			HttpHeaders.AUTHORIZATION,
 			"DIGEST " + StringUtil.join(digestParams, ",\n"));
 
+		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, 0L);
 		mockHttpServletRequest.setRequestURI(uri);
 
 		return mockHttpServletRequest;
@@ -432,12 +431,11 @@ public class HttpAuthManagerImplTest {
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
 
-		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, 0L);
-
 		mockHttpServletRequest.addHeader(
 			HttpHeaders.AUTHORIZATION,
 			"DIGEST " + StringUtil.join(digestParams, ",\n"));
 
+		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, 0L);
 		mockHttpServletRequest.setRequestURI(uri);
 
 		return mockHttpServletRequest;
