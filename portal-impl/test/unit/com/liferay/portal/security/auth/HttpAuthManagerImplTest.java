@@ -397,15 +397,15 @@ public class HttpAuthManagerImplTest {
 	}
 
 	private MockHttpServletRequest _generateDigestChallangeRequest() {
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
 		String uri = "/dir/index.html";
 
 		String[] digestParams = {
 			"realm=\"" + Portal.PORTAL_REALM + "\"", "uri=\"" + uri + "\"",
 			"username=\"Mufasa\""
 		};
-
-		MockHttpServletRequest mockHttpServletRequest =
-			new MockHttpServletRequest();
 
 		mockHttpServletRequest.addHeader(
 			HttpHeaders.AUTHORIZATION,
@@ -418,6 +418,9 @@ public class HttpAuthManagerImplTest {
 	}
 
 	private MockHttpServletRequest _generateDigestNonceRequest(String nonce) {
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
 		String uri = "/dir/index.html";
 
 		String[] digestParams = {
@@ -427,9 +430,6 @@ public class HttpAuthManagerImplTest {
 			"response=\"6629fae49393a05397450978507c4ef1\"",
 			"uri=\"" + uri + "\"", "username=\"Mufasa\""
 		};
-
-		MockHttpServletRequest mockHttpServletRequest =
-			new MockHttpServletRequest();
 
 		mockHttpServletRequest.addHeader(
 			HttpHeaders.AUTHORIZATION,
