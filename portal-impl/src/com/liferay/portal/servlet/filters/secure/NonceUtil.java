@@ -89,6 +89,10 @@ public class NonceUtil {
 				return;
 			}
 
+			_noncePortalCache.registerPortalCacheListener(
+				new NonceDelayedPortalCacheListener(),
+				PortalCacheListenerScope.ALL);
+
 			MethodHandler methodHandler = new MethodHandler(
 				_getNoncesMethodKey);
 
@@ -106,11 +110,6 @@ public class NonceUtil {
 		}
 		catch (Exception exception) {
 			_log.error("Unable to retrieve nonces from master", exception);
-		}
-		finally {
-			_noncePortalCache.registerPortalCacheListener(
-				new NonceDelayedPortalCacheListener(),
-				PortalCacheListenerScope.ALL);
 		}
 	}
 
