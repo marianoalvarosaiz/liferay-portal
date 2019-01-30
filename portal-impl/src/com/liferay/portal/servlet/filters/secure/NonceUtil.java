@@ -70,10 +70,12 @@ public class NonceUtil {
 	public static boolean verify(String nonce) {
 		Nonce nonceObject = _noncePortalCache.get(nonce);
 
-		if ((nonceObject != null) && !nonceObject.isExpired()) {
+		if (nonceObject != null) {
 			_noncePortalCache.remove(nonce);
 
-			return true;
+			if (!nonceObject.isExpired()) {
+				return true;
+			}
 		}
 
 		return false;
