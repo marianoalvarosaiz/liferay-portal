@@ -360,7 +360,7 @@ that may or may not be enforced with a unique index at the database level. Case
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		<#list entityColumns as entityColumn>
-			msg.append("<#if entityColumn_index != 0>, </#if>${entityColumn.name}=");
+			msg.append("<#if entityColumn_index != 0>, </#if>${entityColumn.name} ${entityColumn.comparator} ");
 			msg.append(${entityColumn.name});
 
 			<#if !entityColumn_has_next>
@@ -438,7 +438,7 @@ that may or may not be enforced with a unique index at the database level. Case
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		<#list entityColumns as entityColumn>
-			msg.append("<#if entityColumn_index != 0>, </#if>${entityColumn.name}=");
+			msg.append("<#if entityColumn_index != 0>, </#if>${entityColumn.name} ${entityColumn.comparator} ");
 			msg.append(${entityColumn.name});
 
 			<#if !entityColumn_has_next>
@@ -2226,7 +2226,7 @@ that may or may not be enforced with a unique index at the database level. Case
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			<#list entityColumns as entityColumn>
-				msg.append("<#if entityColumn_index != 0>, </#if>${entityColumn.name}=");
+				msg.append("<#if entityColumn_index != 0>, </#if>${entityColumn.name} ${entityColumn.comparator} ");
 				msg.append(${entityColumn.name});
 
 				<#if !entityColumn_has_next>
