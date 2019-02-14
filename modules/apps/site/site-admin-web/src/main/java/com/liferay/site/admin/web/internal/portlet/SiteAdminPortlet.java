@@ -886,9 +886,18 @@ public class SiteAdminPortlet extends MVCPortlet {
 			PropertiesParamUtil.getProperties(
 				actionRequest, "TypeSettingsProperties--");
 
-		if (GetterUtil.getBoolean(
-				formTypeSettingsProperties.getProperty("inheritLocales"))) {
+		boolean inheritLocales = false;
 
+		if (formTypeSettingsProperties.getProperty("inheritLocales") == null) {
+			inheritLocales = GetterUtil.getBoolean(
+				typeSettingsProperties.getProperty("inheritLocales"));
+		}
+		else {
+			inheritLocales = GetterUtil.getBoolean(
+				formTypeSettingsProperties.getProperty("inheritLocales"));
+		}
+
+		if (inheritLocales) {
 			formTypeSettingsProperties.setProperty(
 				PropsKeys.LOCALES,
 				StringUtil.merge(
