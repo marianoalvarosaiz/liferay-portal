@@ -41,6 +41,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 
+import java.math.BigDecimal;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -432,6 +434,14 @@ public class Table {
 				value = GetterUtil.getString(rs.getString(name));
 			}
 		}
+		else if (t == Types.DECIMAL) {
+			try {
+				value = GetterUtil.getNumber(rs.getBigDecimal(name));
+			}
+			catch (SQLException sqle) {
+				value = GetterUtil.getNumber(rs.getString(name));
+			}
+		}
 		else if (t == Types.DOUBLE) {
 			value = GetterUtil.getDouble(rs.getDouble(name));
 		}
@@ -576,6 +586,11 @@ public class Table {
 				value, _SAFE_TABLE_CHARS[1], _SAFE_TABLE_CHARS[0]);
 
 			ps.setString(paramIndex, value);
+		}
+		else if (t == Types.DECIMAL) {
+			ps.setBigDecimal(
+				paramIndex,
+				(BigDecimal)GetterUtil.getNumber(value, BigDecimal.ZERO));
 		}
 		else if (t == Types.DOUBLE) {
 			ps.setDouble(paramIndex, GetterUtil.getDouble(value));
