@@ -365,8 +365,16 @@ public class PortletPreferencesLocalServiceImpl
 	public long getPortletPreferencesCount(
 		int ownerType, long plid, String portletId) {
 
+		plid = _swapPlidForPortletPreferences(plid);
+
+		if (plid > 0) {
+			if (_fetchPortletById(plid, portletId) == null) {
+				return 0;
+			}
+		}
+
 		return portletPreferencesPersistence.countByO_P_P(
-			ownerType, _swapPlidForPortletPreferences(plid), portletId);
+			ownerType, plid, portletId);
 	}
 
 	@Override
@@ -548,6 +556,17 @@ public class PortletPreferencesLocalServiceImpl
 
 		plid = _swapPlidForPreferences(plid);
 
+		if (plid != PortletKeys.PREFS_PLID_SHARED) {
+			Portlet portlet = portletLocalService.fetchPortletById(
+				companyId, portletId);
+
+			if (portlet == null) {
+				return PortletPreferencesFactoryUtil.strictFromXML(
+					companyId, ownerId, ownerType, plid, portletId,
+					PortletConstants.DEFAULT_PREFERENCES);
+			}
+		}
+
 		PortletPreferences portletPreferences =
 			portletPreferencesPersistence.fetchByO_O_P_P(
 				ownerId, ownerType, plid, portletId);
@@ -629,6 +648,17 @@ public class PortletPreferencesLocalServiceImpl
 		portletPreferencesPersistence.update(portletPreferences);
 
 		return portletPreferences;
+	}
+
+	private Portlet _fetchPortletById(long plid, String portletId) {
+		Layout layout = layoutPersistence.fetchByPrimaryKey(plid);
+
+		if (layout == null) {
+			return null;
+		}
+
+		return portletLocalService.fetchPortletById(
+			layout.getCompanyId(), portletId);
 	}
 
 	private LayoutRevision _getLayoutRevision(long plid) {
