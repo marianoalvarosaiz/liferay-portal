@@ -175,6 +175,14 @@ public class PortletPreferencesLocalServiceImpl
 	public PortletPreferences fetchPortletPreferences(
 		long ownerId, int ownerType, long plid, String portletId) {
 
+		if (plid > 0) {
+			Portlet portlet = _fetchPortletById(plid, portletId);
+
+			if (portlet == null) {
+				return null;
+			}
+		}
+
 		return portletPreferencesPersistence.fetchByO_O_P_P(
 			ownerId, ownerType, _swapPlidForPortletPreferences(plid),
 			portletId);
