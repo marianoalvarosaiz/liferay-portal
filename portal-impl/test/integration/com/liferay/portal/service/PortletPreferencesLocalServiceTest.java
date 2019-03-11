@@ -72,6 +72,8 @@ public class PortletPreferencesLocalServiceTest {
 
 		_portlet = PortletLocalServiceUtil.getPortletById(
 			_layout.getCompanyId(), String.valueOf(_PORTLET_ID));
+
+		PortletLocalServiceUtil.deployPortlet(_portlet);
 	}
 
 	@Test
