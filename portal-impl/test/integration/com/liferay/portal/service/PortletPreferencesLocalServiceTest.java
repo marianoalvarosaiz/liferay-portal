@@ -827,8 +827,7 @@ public class PortletPreferencesLocalServiceTest {
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				_portlet.getPortletId()));
 
-		PortletPreferencesTestUtil.addLayoutPortletPreferences(
-			_layout, _portlet);
+		PortletLocalServiceUtil.deployPortlet(_portlet);
 
 		Assert.assertEquals(
 			1,
@@ -1187,9 +1186,9 @@ public class PortletPreferencesLocalServiceTest {
 
 		_groups.add(group);
 
-		Layout layout = LayoutTestUtil.addLayout(group);
+		LayoutTestUtil.addLayout(group);
 
-		PortletPreferencesTestUtil.addGroupPortletPreferences(layout, _portlet);
+		PortletLocalServiceUtil.deployPortlet(_portlet);
 
 		Assert.assertEquals(
 			1,
