@@ -423,8 +423,12 @@ public class LiferayPortlet extends GenericPortlet {
 
 		String redirect = (String)actionRequest.getAttribute(WebKeys.REDIRECT);
 
+		_log("Attribute redirect: " + redirect);
+
 		if (Validator.isBlank(redirect)) {
 			redirect = ParamUtil.getString(actionRequest, "redirect");
+
+			_log("Param redirect: " + redirect);
 
 			if (!Validator.isBlank(redirect)) {
 				redirect = PortalUtil.escapeRedirect(redirect);
@@ -618,6 +622,8 @@ public class LiferayPortlet extends GenericPortlet {
 
 		String redirect = getRedirect(actionRequest, actionResponse);
 
+		_log("LiferayPortlet sendRedirect: " + redirect);
+
 		if (Validator.isNotNull(redirect)) {
 			actionResponse.sendRedirect(redirect);
 		}
@@ -676,6 +682,12 @@ public class LiferayPortlet extends GenericPortlet {
 	protected boolean addProcessActionSuccessMessage;
 	protected boolean alwaysSendRedirect;
 	protected Set<String> validPaths;
+
+	private void _log(String message) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("CASER-4985: " + message);
+		}
+	}
 
 	private String _toXSSSafeJSON(String json) {
 		return StringUtil.replace(json, CharPool.LESS_THAN, "\\u003c");

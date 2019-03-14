@@ -929,6 +929,8 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public String escapeRedirect(String url) {
+		_log("Initial url: " + url);
+
 		if (Validator.isNull(url)) {
 			return url;
 		}
@@ -944,6 +946,8 @@ public class PortalImpl implements Portal {
 
 		String domain = HttpUtil.getDomain(url);
 
+		_log("Domain: " + domain);
+
 		if (domain.isEmpty()) {
 			return null;
 		}
@@ -953,6 +957,8 @@ public class PortalImpl implements Portal {
 		}
 
 		String securityMode = PropsValues.REDIRECT_URL_SECURITY_MODE;
+
+		_log("Security mode: " + securityMode);
 
 		if (securityMode.equals("domain")) {
 			String[] allowedDomains = PropsValues.REDIRECT_URL_DOMAINS_ALLOWED;
@@ -980,6 +986,8 @@ public class PortalImpl implements Portal {
 			if (_log.isWarnEnabled()) {
 				_log.warn("Redirect URL " + url + " is not allowed");
 			}
+
+			_log("Redirect URL " + url + " is not allowed");
 
 			url = null;
 		}
@@ -1016,12 +1024,19 @@ public class PortalImpl implements Portal {
 				if (_log.isWarnEnabled()) {
 					_log.warn("Redirect URL " + url + " is not allowed");
 				}
+
+				_log("Redirect URL " + url + " is not allowed");
 			}
 			catch (UnknownHostException uhe) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(
 						"Unable to determine IP for redirect URL " + url);
 				}
+
+				_log(
+					StringBundler.concat(
+						"Redirect URL ", url, " is not allowed ",
+						uhe.getMessage()));
 			}
 
 			url = null;
@@ -9093,6 +9108,12 @@ public class PortalImpl implements Portal {
 		}
 
 		return virtualHostName.equals(portalDomain);
+	}
+
+	private void _log(String message) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("CASER-4985: " + message);
+		}
 	}
 
 	private static final Log _logWebServerServlet = LogFactoryUtil.getLog(

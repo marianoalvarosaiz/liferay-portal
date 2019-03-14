@@ -19,6 +19,8 @@ import com.liferay.journal.exception.ArticleIdException;
 import com.liferay.journal.exception.DuplicateArticleIdException;
 import com.liferay.journal.exception.NoSuchArticleException;
 import com.liferay.journal.service.JournalArticleService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
@@ -68,9 +70,13 @@ public class CopyArticleMVCActionCommand extends BaseMVCActionCommand {
 		throws Exception {
 
 		try {
+			_log("copyArticle: Start");
 			copyArticle(actionRequest);
+			_log("copyArticle: End");
 		}
 		catch (Exception e) {
+			_log("copyArticle: Exception " + e.getMessage());
+
 			if (e instanceof NoSuchArticleException ||
 				e instanceof PrincipalException) {
 
@@ -104,6 +110,13 @@ public class CopyArticleMVCActionCommand extends BaseMVCActionCommand {
 
 		_journalArticleService = journalArticleService;
 	}
+
+	private void _log(String message) {
+		_log.error("CASER-4985: " + message);
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CopyArticleMVCActionCommand.class);
 
 	private JournalArticleService _journalArticleService;
 
