@@ -125,7 +125,7 @@ public class ConfigInstaller implements ArtifactInstaller, ConfigurationListener
             {
                 Configuration config = getConfigurationAdmin().getConfiguration(
                                             configurationEvent.getPid(),
-                                            configurationEvent.getFactoryPid());
+                                            "?");
                 Dictionary dict = config.getProperties();
                 String fileName = (String) dict.get( DirectoryWatcher.FILENAME );
                 File file = fileName != null ? fromConfigKey(fileName) : null;
@@ -339,11 +339,11 @@ public class ConfigInstaller implements ArtifactInstaller, ConfigurationListener
             Configuration newConfiguration;
             if (factoryPid != null)
             {
-                newConfiguration = getConfigurationAdmin().createFactoryConfiguration(pid, null);
+                newConfiguration = getConfigurationAdmin().createFactoryConfiguration(pid, "?");
             }
             else
             {
-                newConfiguration = getConfigurationAdmin().getConfiguration(pid, null);
+                newConfiguration = getConfigurationAdmin().getConfiguration(pid, "?");
             }
             return newConfiguration;
         }
@@ -371,3 +371,4 @@ public class ConfigInstaller implements ArtifactInstaller, ConfigurationListener
     }
 
 }
+/* @generated */
