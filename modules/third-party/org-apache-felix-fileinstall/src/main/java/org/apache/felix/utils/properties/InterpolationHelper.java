@@ -18,6 +18,8 @@ package org.apache.felix.utils.properties;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.osgi.framework.BundleContext;
 
@@ -39,6 +41,8 @@ public class InterpolationHelper {
     private static final String DELIM_STOP = "}";
     private static final String MARKER = "$__";
     private static final String ENV_PREFIX = "env:";
+    private static final Pattern ESCAPED_OPEN_CURLY_BRACKET = Pattern.compile("\\\\+\\{");
+    private static final Pattern ESCAPED_CLOSED_CURLY_BRACKET = Pattern.compile("\\\\+\\}");
 
 
     /**
@@ -407,7 +411,7 @@ public class InterpolationHelper {
     private static String unescape(String val)
     {
         val = val.replaceAll("\\" + MARKER, "\\$");
-        int escape = val.indexOf(ESCAPE_CHAR);
+        int escape = indexOf(val, 0);
         while (escape >= 0 && escape < val.length() - 1)
         {
             char c = val.charAt(escape + 1);
@@ -415,10 +419,23 @@ public class InterpolationHelper {
             {
                 val = val.substring(0, escape) + val.substring(escape + 1);
             }
-            escape = val.indexOf(ESCAPE_CHAR, escape + 1);
+            escape = indexOf(val, escape + 1);
         }
         return val;
     }
+
+    private static int indexOf(String val, int fromIndex) {
+		Matcher escapedOpenCurlyBracketMatcher = ESCAPED_OPEN_CURLY_BRACKET.matcher(val);
+
+		Matcher escapedClosedCurlyBracketMatcher = ESCAPED_CLOSED_CURLY_BRACKET.matcher(val);
+
+		int escapedOpenCurlyBrackedMatcherIndex = escapedOpenCurlyBracketMatcher.find(fromIndex) ? escapedOpenCurlyBracketMatcher.start() : Integer.MAX_VALUE;
+		int escapedClosedCurlyBrackedMatcherIndex = escapedClosedCurlyBracketMatcher.find(fromIndex) ? escapedClosedCurlyBracketMatcher.start() : Integer.MAX_VALUE;
+
+		int indexOf = Math.min(escapedOpenCurlyBrackedMatcherIndex, escapedClosedCurlyBrackedMatcherIndex);
+
+		return indexOf == Integer.MAX_VALUE ? -1 : indexOf;
+	}
 
     public static class BundleContextSubstitutionCallback implements SubstitutionCallback
     {
@@ -452,3 +469,4 @@ public class InterpolationHelper {
     }
 
 }
+/* @generated */
