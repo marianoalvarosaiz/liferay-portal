@@ -7136,7 +7136,7 @@ jdbc.counter.minIdle=0
 
 browser.launcher.url=
 
-index.on.startup=true
+index.on.startup=false
 
 setup.wizard.enabled=false
 
