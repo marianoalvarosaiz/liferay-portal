@@ -1886,7 +1886,7 @@ definition {
 
 		MockMock.viewMail(
 			asset = "${portalURL}: Your New Account",
-			content = "Your can setup your password here: ${portalURL}/c/portal/update_password?ticketKey=",
+			content = "Your can setup your password fsafsadfdsafdsafahere: ${portalURL}/c/portal/update_password?ticketKey=",
 			recipient = "userfn userln",
 			sender = "Joe Bloggs",
 			subject = "${portalURL}: Your New Account");
