@@ -28,6 +28,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CacheResourceBundleLoader implements ResourceBundleLoader {
 
+	public static void setResourceBundleLastModifiedTime(
+		long resourceBundleLastModifiedTime) {
+
+		_resourceBundleLastModifiedTime = resourceBundleLastModifiedTime;
+	}
+
 	public CacheResourceBundleLoader(
 		ResourceBundleLoader resourceBundleLoader) {
 
@@ -36,7 +42,11 @@ public class CacheResourceBundleLoader implements ResourceBundleLoader {
 
 	@Override
 	public ResourceBundle loadResourceBundle(Locale locale) {
-		ResourceBundle resourceBundle = _resourceBundles.get(locale);
+		ResourceBundle resourceBundle = null;
+
+		if (_lastCacheModifiedTime >= _resourceBundleLastModifiedTime) {
+			resourceBundle = _resourceBundles.get(locale);
+		}
 
 		if (resourceBundle == _nullResourceBundle) {
 			return null;
@@ -59,6 +69,8 @@ public class CacheResourceBundleLoader implements ResourceBundleLoader {
 			else {
 				_resourceBundles.put(locale, resourceBundle);
 			}
+
+			_lastCacheModifiedTime = System.currentTimeMillis();
 		}
 
 		return resourceBundle;
@@ -82,6 +94,9 @@ public class CacheResourceBundleLoader implements ResourceBundleLoader {
 
 		};
 
+	private static volatile long _resourceBundleLastModifiedTime = 0L;
+
+	private long _lastCacheModifiedTime = 0L;
 	private final ResourceBundleLoader _resourceBundleLoader;
 	private final Map<Locale, ResourceBundle> _resourceBundles =
 		new ConcurrentHashMap<>();
