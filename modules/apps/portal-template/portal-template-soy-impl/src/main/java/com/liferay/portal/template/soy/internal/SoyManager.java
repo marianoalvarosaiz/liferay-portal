@@ -14,12 +14,17 @@
 
 package com.liferay.portal.template.soy.internal;
 
+import com.liferay.osgi.util.ServiceTrackerFactory;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.SingleVMPool;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.template.BaseTemplateManager;
 import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.portal.template.soy.SoyTemplateResource;
@@ -27,15 +32,20 @@ import com.liferay.portal.template.soy.SoyTemplateResourceFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.BundleTracker;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Bruno Basto
@@ -91,6 +101,8 @@ public class SoyManager extends BaseTemplateManager {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+
 		int stateMask = ~Bundle.INSTALLED & ~Bundle.UNINSTALLED;
 
 		_soyCapabilityBundleTrackerCustomizer =
@@ -102,11 +114,19 @@ public class SoyManager extends BaseTemplateManager {
 			bundleContext, stateMask, _soyCapabilityBundleTrackerCustomizer);
 
 		_bundleTracker.open();
+
+		_serviceTracker = ServiceTrackerFactory.open(
+			_bundleContext,
+			"(&(!(javax.portlet.name=*))(language.id=*)(objectClass=" +
+				ResourceBundle.class.getName() + "))",
+			new LanguageResourceServiceTrackerCustomizer());
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_bundleTracker.close();
+
+		_serviceTracker.close();
 	}
 
 	@Override
@@ -149,7 +169,9 @@ public class SoyManager extends BaseTemplateManager {
 		SoyTemplateBundleResourceParser soyTemplateBundleResourceParser) {
 	}
 
+	private BundleContext _bundleContext;
 	private BundleTracker<List<TemplateResource>> _bundleTracker;
+	private ServiceTracker<ResourceBundle, ResourceBundle> _serviceTracker;
 	private SoyTemplateResourceBundleTrackerCustomizer
 		_soyCapabilityBundleTrackerCustomizer;
 	private SoyProviderCapabilityBundleRegister
@@ -159,5 +181,45 @@ public class SoyManager extends BaseTemplateManager {
 	private SoyTemplateResourceFactory _soyTemplateResourceFactory;
 
 	private SoyTofuCacheHandler _soyTofuCacheHandler;
+
+	private class LanguageResourceServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<ResourceBundle, ResourceBundle> {
+
+		@Override
+		public ResourceBundle addingService(
+			ServiceReference<ResourceBundle> serviceReference) {
+
+			String languageId = GetterUtil.getString(
+				serviceReference.getProperty("language.id"));
+
+			Locale locale;
+
+			if (Validator.isNotNull(languageId)) {
+				locale = LocaleUtil.fromLanguageId(languageId, true);
+			}
+			else {
+				locale = new Locale(StringPool.BLANK);
+			}
+
+			_soyTofuCacheHandler.removeIfAny(locale);
+
+			return _bundleContext.getService(serviceReference);
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<ResourceBundle> serviceReference,
+			ResourceBundle resourceBundle) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<ResourceBundle> serviceReference,
+			ResourceBundle resourceBundle) {
+
+			addingService(serviceReference);
+		}
+
+	}
 
 }
