@@ -7174,7 +7174,7 @@ jdbc.default.minimumIdle=0
 jdbc.counter.maximumPoolSize=5
 jdbc.counter.minimumIdle=0
 
-// Tomcat
+// Tomca t
 
 jdbc.default.initialSize=0
 jdbc.default.maxActive=20
