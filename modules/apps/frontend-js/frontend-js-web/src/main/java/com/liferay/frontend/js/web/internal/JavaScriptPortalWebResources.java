@@ -14,16 +14,23 @@
 
 package com.liferay.frontend.js.web.internal;
 
+import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResources;
+
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Peter Fellwock
@@ -38,7 +45,7 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 
 	@Override
 	public long getLastModified() {
-		return _bundle.getLastModified();
+		return Math.max(_resourceBundleLastModified, _bundle.getLastModified());
 	}
 
 	@Override
@@ -54,6 +61,21 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundle = bundleContext.getBundle();
+
+		_bundleContext = bundleContext;
+
+		_serviceTracker = ServiceTrackerFactory.open(
+			_bundleContext,
+			"(&(!(javax.portlet.name=*))(language.id=*)(objectClass=" +
+				ResourceBundle.class.getName() + "))",
+			new LanguageResourceServiceTrackerCustomizer());
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_serviceTracker.close();
+
+		_serviceTracker = null;
 	}
 
 	@Reference(
@@ -65,6 +87,37 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 	}
 
 	private Bundle _bundle;
+	private BundleContext _bundleContext;
+	private volatile long _resourceBundleLastModified;
+	private ServiceTracker<ResourceBundle, ResourceBundle> _serviceTracker;
 	private ServletContext _servletContext;
+
+	private class LanguageResourceServiceTrackerCustomizer
+		implements ServiceTrackerCustomizer<ResourceBundle, ResourceBundle> {
+
+		@Override
+		public ResourceBundle addingService(
+			ServiceReference<ResourceBundle> serviceReference) {
+
+			_resourceBundleLastModified = System.currentTimeMillis();
+
+			return _bundleContext.getService(serviceReference);
+		}
+
+		@Override
+		public void modifiedService(
+			ServiceReference<ResourceBundle> serviceReference,
+			ResourceBundle resourceBundle) {
+		}
+
+		@Override
+		public void removedService(
+			ServiceReference<ResourceBundle> serviceReference,
+			ResourceBundle resourceBundle) {
+
+			_resourceBundleLastModified = System.currentTimeMillis();
+		}
+
+	}
 
 }
