@@ -17,12 +17,18 @@ package com.liferay.frontend.js.web.internal;
 import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResources;
 
+import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicLong;
+
 import javax.servlet.ServletContext;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -38,7 +44,7 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 
 	@Override
 	public long getLastModified() {
-		return _bundle.getLastModified();
+		return _lastModified.get();
 	}
 
 	@Override
@@ -52,8 +58,20 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 	}
 
 	@Activate
-	protected void activate(BundleContext bundleContext) {
+	protected void activate(BundleContext bundleContext) throws Exception {
 		_bundle = bundleContext.getBundle();
+
+		bundleContext.addServiceListener(
+			_resourceBundleServiceListener,
+			"(&(!(javax.portlet.name=*))(language.id=*)(objectClass=" +
+				ResourceBundle.class.getName() + "))");
+
+		_lastModified = new AtomicLong(_bundle.getLastModified());
+	}
+
+	@Deactivate
+	protected void deactivate(BundleContext bundleContext) {
+		bundleContext.removeServiceListener(_resourceBundleServiceListener);
 	}
 
 	@Reference(
@@ -65,6 +83,18 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 	}
 
 	private Bundle _bundle;
+	private AtomicLong _lastModified;
+	private final ResourceBundleServiceListener _resourceBundleServiceListener =
+		new ResourceBundleServiceListener();
 	private ServletContext _servletContext;
+
+	private class ResourceBundleServiceListener implements ServiceListener {
+
+		@Override
+		public void serviceChanged(ServiceEvent serviceEvent) {
+			_lastModified.incrementAndGet();
+		}
+
+	}
 
 }
