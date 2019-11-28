@@ -2077,7 +2077,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/jfreechart.jar</file-name>
-				<version>1.0.13</version>
+				<version>1.0.15</version>
 				<project-name>JFreeChart</project-name>
 				<project-url>http://www.jfree.org/jfreechart</project-url>
 				<licenses>
