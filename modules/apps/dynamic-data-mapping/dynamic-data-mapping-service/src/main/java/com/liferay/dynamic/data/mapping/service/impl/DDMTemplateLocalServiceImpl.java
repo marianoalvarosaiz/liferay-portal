@@ -789,6 +789,18 @@ public class DDMTemplateLocalServiceImpl
 
 	@Override
 	public List<DDMTemplate> getTemplates(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId, int start, int end,
+		OrderByComparator<DDMTemplate> orderByComparator) {
+
+		return ddmTemplateFinder.findByC_G_C_C_R_T_M_S(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId,
+			StringPool.BLANK, StringPool.BLANK, WorkflowConstants.STATUS_ANY,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public List<DDMTemplate> getTemplates(
 		long[] groupIds, long classNameId, long classPK) {
 
 		return ddmTemplatePersistence.findByG_C_C(
@@ -925,6 +937,16 @@ public class DDMTemplateLocalServiceImpl
 	public int getTemplatesCount(long groupId, long classNameId, long classPK) {
 		return ddmTemplatePersistence.countByG_C_C(
 			groupId, classNameId, classPK);
+	}
+
+	@Override
+	public int getTemplatesCount(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId) {
+
+		return ddmTemplateFinder.countByC_G_C_C_R_T_M_S(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId,
+			StringPool.BLANK, StringPool.BLANK, WorkflowConstants.STATUS_ANY);
 	}
 
 	/**
