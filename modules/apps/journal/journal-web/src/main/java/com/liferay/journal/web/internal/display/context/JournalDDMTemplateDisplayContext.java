@@ -133,23 +133,42 @@ public class JournalDDMTemplateDisplayContext {
 				themeDisplay.getScopeGroupId());
 		}
 
-		List<DDMTemplate> results = DDMTemplateServiceUtil.search(
-			themeDisplay.getCompanyId(), groupIds,
-			new long[] {PortalUtil.getClassNameId(DDMStructure.class)},
-			_getDDMTemplateClassPKs(),
-			PortalUtil.getClassNameId(JournalArticle.class), _getKeywords(),
-			StringPool.BLANK, StringPool.BLANK, WorkflowConstants.STATUS_ANY,
-			ddmTemplateSearch.getStart(), ddmTemplateSearch.getEnd(),
-			ddmTemplateSearch.getOrderByComparator());
+		List<DDMStructure> results = null;
+		int total = 0;
+
+		if (Validator.isNotNull(_getKeywords())) {
+			results = DDMTemplateServiceUtil.search(
+				themeDisplay.getCompanyId(), groupIds,
+				new long[] {PortalUtil.getClassNameId(DDMStructure.class)},
+				_getDDMTemplateClassPKs(),
+				PortalUtil.getClassNameId(JournalArticle.class), _getKeywords(),
+				StringPool.BLANK, StringPool.BLANK,
+				WorkflowConstants.STATUS_ANY, ddmTemplateSearch.getStart(),
+				ddmTemplateSearch.getEnd(),
+				ddmTemplateSearch.getOrderByComparator());
+
+			total = DDMTemplateServiceUtil.searchCount(
+				themeDisplay.getCompanyId(), groupIds,
+				new long[] {PortalUtil.getClassNameId(DDMStructure.class)},
+				_getDDMTemplateClassPKs(),
+				PortalUtil.getClassNameId(JournalArticle.class), _getKeywords(),
+				StringPool.BLANK, StringPool.BLANK,
+				WorkflowConstants.STATUS_ANY);
+		}
+		else {
+			results = DDMTemplateServiceUtil.getTemplates(
+				themeDisplay.getCompanyId(), groupIds,
+				PortalUtil.getClassNameId(DDMStructure.class), getClassPK(),
+				PortalUtil.getClassNameId(JournalArticle.class),
+				ddmTemplateSearch.getStart(), ddmTemplateSearch.getEnd(),
+				ddmTemplateSearch.getOrderByComparator());
+			total = DDMTemplateServiceUtil.getTemplatesCount(
+				themeDisplay.getCompanyId(), groupIds,
+				PortalUtil.getClassNameId(DDMStructure.class), getClassPK(),
+				PortalUtil.getClassNameId(JournalArticle.class));
+		}
 
 		ddmTemplateSearch.setResults(results);
-
-		int total = DDMTemplateServiceUtil.searchCount(
-			themeDisplay.getCompanyId(), groupIds,
-			new long[] {PortalUtil.getClassNameId(DDMStructure.class)},
-			_getDDMTemplateClassPKs(),
-			PortalUtil.getClassNameId(JournalArticle.class), _getKeywords(),
-			StringPool.BLANK, StringPool.BLANK, WorkflowConstants.STATUS_ANY);
 
 		ddmTemplateSearch.setTotal(total);
 
