@@ -357,6 +357,19 @@ public class DDMTemplateServiceUtil {
 			mode, status);
 	}
 
+	public static java.util.List
+		<com.liferay.dynamic.data.mapping.model.DDMTemplate> getTemplates(
+			long companyId, long[] groupIds, long classNameId, long classPK,
+			long resourceClassNameId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.dynamic.data.mapping.model.DDMTemplate>
+					orderByComparator) {
+
+		return getService().getTemplates(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId,
+			start, end, orderByComparator);
+	}
+
 	/**
 	 * Returns all the templates matching the group, class PK, and resource
 	 * class name ID.
@@ -432,6 +445,14 @@ public class DDMTemplateServiceUtil {
 
 		return getService().getTemplatesByStructureClassNameIdCount(
 			groupId, structureClassNameId, status);
+	}
+
+	public static int getTemplatesCount(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId) {
+
+		return getService().getTemplatesCount(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId);
 	}
 
 	public static void revertTemplate(

@@ -355,6 +355,18 @@ public class DDMTemplateServiceWrapper
 			mode, status);
 	}
 
+	@Override
+	public java.util.List<DDMTemplate> getTemplates(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<DDMTemplate>
+			orderByComparator) {
+
+		return _ddmTemplateService.getTemplates(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId,
+			start, end, orderByComparator);
+	}
+
 	/**
 	 * Returns all the templates matching the group, class PK, and resource
 	 * class name ID.
@@ -427,6 +439,15 @@ public class DDMTemplateServiceWrapper
 
 		return _ddmTemplateService.getTemplatesByStructureClassNameIdCount(
 			groupId, structureClassNameId, status);
+	}
+
+	@Override
+	public int getTemplatesCount(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId) {
+
+		return _ddmTemplateService.getTemplatesCount(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId);
 	}
 
 	@Override
