@@ -810,6 +810,18 @@ public class DDMTemplateLocalServiceWrapper
 
 	@Override
 	public java.util.List<DDMTemplate> getTemplates(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<DDMTemplate>
+			orderByComparator) {
+
+		return _ddmTemplateLocalService.getTemplates(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<DDMTemplate> getTemplates(
 		long[] groupIds, long classNameId, long classPK) {
 
 		return _ddmTemplateLocalService.getTemplates(
@@ -952,6 +964,15 @@ public class DDMTemplateLocalServiceWrapper
 	public int getTemplatesCount(long groupId, long classNameId, long classPK) {
 		return _ddmTemplateLocalService.getTemplatesCount(
 			groupId, classNameId, classPK);
+	}
+
+	@Override
+	public int getTemplatesCount(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId) {
+
+		return _ddmTemplateLocalService.getTemplatesCount(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId);
 	}
 
 	/**

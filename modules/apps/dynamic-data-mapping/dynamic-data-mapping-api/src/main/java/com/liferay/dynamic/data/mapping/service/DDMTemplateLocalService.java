@@ -652,6 +652,12 @@ public interface DDMTemplateLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DDMTemplate> getTemplates(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId, int start, int end,
+		OrderByComparator<DDMTemplate> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DDMTemplate> getTemplates(
 		long[] groupIds, long classNameId, long classPK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -757,6 +763,11 @@ public interface DDMTemplateLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getTemplatesCount(long groupId, long classNameId, long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getTemplatesCount(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId);
 
 	/**
 	 * Returns the number of templates matching the group IDs, class name ID,

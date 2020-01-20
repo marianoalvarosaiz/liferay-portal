@@ -798,6 +798,19 @@ public class DDMTemplateLocalServiceUtil {
 
 	public static java.util.List
 		<com.liferay.dynamic.data.mapping.model.DDMTemplate> getTemplates(
+			long companyId, long[] groupIds, long classNameId, long classPK,
+			long resourceClassNameId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.dynamic.data.mapping.model.DDMTemplate>
+					orderByComparator) {
+
+		return getService().getTemplates(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId,
+			start, end, orderByComparator);
+	}
+
+	public static java.util.List
+		<com.liferay.dynamic.data.mapping.model.DDMTemplate> getTemplates(
 			long[] groupIds, long classNameId, long classPK) {
 
 		return getService().getTemplates(groupIds, classNameId, classPK);
@@ -938,6 +951,14 @@ public class DDMTemplateLocalServiceUtil {
 		long groupId, long classNameId, long classPK) {
 
 		return getService().getTemplatesCount(groupId, classNameId, classPK);
+	}
+
+	public static int getTemplatesCount(
+		long companyId, long[] groupIds, long classNameId, long classPK,
+		long resourceClassNameId) {
+
+		return getService().getTemplatesCount(
+			companyId, groupIds, classNameId, classPK, resourceClassNameId);
 	}
 
 	/**
