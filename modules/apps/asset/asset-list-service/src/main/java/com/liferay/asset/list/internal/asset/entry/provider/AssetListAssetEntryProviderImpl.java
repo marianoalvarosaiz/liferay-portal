@@ -515,13 +515,34 @@ public class AssetListAssetEntryProviderImpl
 		AssetListEntry assetListEntry, long[] segmentsEntryIds, String userId,
 		int start, int end) {
 
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			assetListEntry, segmentsEntryIds, userId);
+		List<AssetEntry> dynamicAssetEntries;
 
-		assetEntryQuery.setEnd(end);
-		assetEntryQuery.setStart(start);
+		if (false) {
+			for (long segmentsEntryId : segmentsEntryIds) {
+				AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+					assetListEntry, segmentsEntryId, userId);
 
-		return _search(assetListEntry.getCompanyId(), assetEntryQuery);
+				assetEntryQuery.setEnd(end);
+				assetEntryQuery.setStart(start);
+
+				List<AssetEntry> assetEntries = _search(
+					assetListEntry.getCompanyId(), assetEntryQuery);
+
+				dynamicAssetEntries.addAll(assetEntries);
+			}
+		}
+		else {
+			AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+				assetListEntry, segmentsEntryIds, userId);
+
+			assetEntryQuery.setEnd(end);
+			assetEntryQuery.setStart(start);
+
+			dynamicAssetEntries = _search(
+				assetListEntry.getCompanyId(), assetEntryQuery);
+		}
+
+		return dynamicAssetEntries;
 	}
 
 	private long _getFirstSegmentsEntryId(
