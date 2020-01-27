@@ -553,12 +553,24 @@ public class AssetListAssetEntryProviderImpl
 		AssetListEntry assetListEntry, long[] segmentsEntryId, int start,
 		int end) {
 
-		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels =
-			_assetListEntryAssetEntryRelLocalService.
-				getAssetListEntryAssetEntryRels(
-					assetListEntry.getAssetListEntryId(),
-					_getFirstSegmentsEntryId(assetListEntry, segmentsEntryId),
-					start, end);
+		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels;
+
+		if (true) {
+			assetListEntryAssetEntryRels =
+				_assetListEntryAssetEntryRelLocalService.
+					getAssetListEntryAssetEntryRels(
+						assetListEntry.getAssetListEntryId(), segmentsEntryId,
+						start, end);
+		}
+		else {
+			assetListEntryAssetEntryRels =
+				_assetListEntryAssetEntryRelLocalService.
+					getAssetListEntryAssetEntryRels(
+						assetListEntry.getAssetListEntryId(),
+						_getFirstSegmentsEntryId(
+							assetListEntry, segmentsEntryId),
+						start, end);
+		}
 
 		Stream<AssetListEntryAssetEntryRel> stream =
 			assetListEntryAssetEntryRels.stream();
