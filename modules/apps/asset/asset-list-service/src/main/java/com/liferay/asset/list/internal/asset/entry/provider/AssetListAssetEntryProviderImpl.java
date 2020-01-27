@@ -27,6 +27,7 @@ import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.list.asset.entry.provider.AssetListAssetEntryProvider;
 import com.liferay.asset.list.asset.entry.query.processor.AssetListAssetEntryQueryProcessor;
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
+import com.liferay.asset.list.internal.configuration.AssetListConfiguration;
 import com.liferay.asset.list.internal.dynamic.data.mapping.util.DDMIndexerUtil;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.model.AssetListEntryAssetEntryRel;
@@ -39,6 +40,8 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -56,13 +59,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -74,6 +80,16 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 @Component(immediate = true, service = AssetListAssetEntryProvider.class)
 public class AssetListAssetEntryProviderImpl
 	implements AssetListAssetEntryProvider {
+
+	@Activate
+	@Modified
+	public void activate(Map<String, Object> properties)
+		throws ConfigurationException {
+
+		_assetListConfiguration =
+			_configurationProvider.getSystemConfiguration(
+				AssetListConfiguration.class);
+	}
 
 	@Override
 	public List<AssetEntry> getAssetEntries(
@@ -515,9 +531,9 @@ public class AssetListAssetEntryProviderImpl
 		AssetListEntry assetListEntry, long[] segmentsEntryIds, String userId,
 		int start, int end) {
 
-		List<AssetEntry> dynamicAssetEntries;
+		List<AssetEntry> dynamicAssetEntries = new ArrayList<>();
 
-		if (false) {
+		if (_assetListConfiguration.considerAllSegmentsForUser()) {
 			for (long segmentsEntryId : segmentsEntryIds) {
 				AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
 					assetListEntry, segmentsEntryId, userId);
@@ -576,7 +592,7 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels;
 
-		if (true) {
+		if (_assetListConfiguration.considerAllSegmentsForUser()) {
 			assetListEntryAssetEntryRels =
 				_assetListEntryAssetEntryRelLocalService.
 					getAssetListEntryAssetEntryRels(
@@ -823,5 +839,10 @@ public class AssetListAssetEntryProviderImpl
 
 	@Reference
 	private Portal _portal;
+
+	private AssetListConfiguration _assetListConfiguration;
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
 
 }
