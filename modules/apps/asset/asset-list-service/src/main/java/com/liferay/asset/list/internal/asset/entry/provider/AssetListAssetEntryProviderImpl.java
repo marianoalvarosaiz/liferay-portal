@@ -36,6 +36,7 @@ import com.liferay.asset.list.service.AssetListEntryAssetEntryRelLocalService;
 import com.liferay.asset.list.service.AssetListEntrySegmentsEntryRelLocalService;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -83,12 +84,12 @@ public class AssetListAssetEntryProviderImpl
 
 	@Activate
 	@Modified
-	public void activate(Map<String, Object> properties)
+	protected void activate(Map<String, Object> properties)
 		throws ConfigurationException {
 
 		_assetListConfiguration =
-			_configurationProvider.getSystemConfiguration(
-				AssetListConfiguration.class);
+			ConfigurableUtil.createConfigurable(
+				AssetListConfiguration.class, properties);
 	}
 
 	@Override
@@ -841,8 +842,5 @@ public class AssetListAssetEntryProviderImpl
 	private Portal _portal;
 
 	private AssetListConfiguration _assetListConfiguration;
-
-	@Reference
-	private ConfigurationProvider _configurationProvider;
 
 }
