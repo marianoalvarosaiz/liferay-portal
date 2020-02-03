@@ -23,7 +23,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  */
 @ExtendedObjectClassDefinition(
 	category = "assets",
-	scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
+	scope = ExtendedObjectClassDefinition.Scope.SYSTEM
 )
 @Meta.OCD(
 	id = "com.liferay.asset.list.internal.configuration.AssetListConfiguration",

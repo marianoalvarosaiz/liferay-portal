@@ -42,7 +42,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
-import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -88,8 +88,8 @@ public class AssetListAssetEntryProviderImpl
 		throws ConfigurationException {
 
 		_assetListConfiguration =
-			ConfigurableUtil.createConfigurable(
-				AssetListConfiguration.class, properties);
+			ConfigurationProviderUtil.getSystemConfiguration(
+				AssetListConfiguration.class);
 	}
 
 	@Override
@@ -534,7 +534,8 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetEntry> dynamicAssetEntries = new ArrayList<>();
 
-		if (_assetListConfiguration.considerAllSegmentsForUser()) {
+		//if (_assetListConfiguration.considerAllSegmentsForUser()) {
+		if (true) {
 			for (long segmentsEntryId : segmentsEntryIds) {
 				AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
 					assetListEntry, segmentsEntryId, userId);
@@ -593,7 +594,8 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels;
 
-		if (_assetListConfiguration.considerAllSegmentsForUser()) {
+		//if (_assetListConfiguration.considerAllSegmentsForUser()) {
+		if (true) {
 			assetListEntryAssetEntryRels =
 				_assetListEntryAssetEntryRelLocalService.
 					getAssetListEntryAssetEntryRels(
