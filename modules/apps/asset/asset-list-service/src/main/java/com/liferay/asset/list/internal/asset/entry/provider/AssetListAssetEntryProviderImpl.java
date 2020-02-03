@@ -36,7 +36,6 @@ import com.liferay.asset.list.service.AssetListEntryAssetEntryRelLocalService;
 import com.liferay.asset.list.service.AssetListEntrySegmentsEntryRelLocalService;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -536,7 +535,7 @@ public class AssetListAssetEntryProviderImpl
 
 		//if (_assetListConfiguration.considerAllSegmentsForUser()) {
 		if (true) {
-			for (long segmentsEntryId : segmentsEntryIds) {
+			for (long segmentsEntryId : _getCombinedSegmentsEntryIds(segmentsEntryIds)) {
 				AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
 					assetListEntry, segmentsEntryId, userId);
 
@@ -561,6 +560,18 @@ public class AssetListAssetEntryProviderImpl
 		}
 
 		return dynamicAssetEntries;
+	}
+
+	private long[] _getCombinedSegmentsEntryIds(long[] segmentEntryIds) {
+		boolean hasIdDefault = ArrayUtil.contains(
+				segmentEntryIds, SegmentsEntryConstants.ID_DEFAULT);
+
+		if (segmentEntryIds.length > 1 && hasIdDefault) {
+			return ArrayUtil.remove(
+				segmentEntryIds, SegmentsEntryConstants.ID_DEFAULT);
+		}
+
+		return segmentEntryIds;
 	}
 
 	private long _getFirstSegmentsEntryId(
@@ -599,8 +610,9 @@ public class AssetListAssetEntryProviderImpl
 			assetListEntryAssetEntryRels =
 				_assetListEntryAssetEntryRelLocalService.
 					getAssetListEntryAssetEntryRels(
-						assetListEntry.getAssetListEntryId(), segmentsEntryId,
-						start, end);
+						assetListEntry.getAssetListEntryId(),
+						_getCombinedSegmentsEntryIds(segmentsEntryId), start,
+						end);
 		}
 		else {
 			assetListEntryAssetEntryRels =
