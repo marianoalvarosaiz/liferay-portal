@@ -539,14 +539,13 @@ public class AssetListAssetEntryProviderImpl
 				AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
 					assetListEntry, segmentsEntryId, userId);
 
-				assetEntryQuery.setEnd(end);
-				assetEntryQuery.setStart(start);
-
 				List<AssetEntry> assetEntries = _search(
 					assetListEntry.getCompanyId(), assetEntryQuery);
 
 				dynamicAssetEntries.addAll(assetEntries);
 			}
+
+			dynamicAssetEntries.subList(start, end);
 		}
 		else {
 			AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
