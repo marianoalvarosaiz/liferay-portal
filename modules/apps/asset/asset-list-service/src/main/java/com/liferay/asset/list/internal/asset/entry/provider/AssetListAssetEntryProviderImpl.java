@@ -36,12 +36,12 @@ import com.liferay.asset.list.service.AssetListEntryAssetEntryRelLocalService;
 import com.liferay.asset.list.service.AssetListEntrySegmentsEntryRelLocalService;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
-import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -77,7 +77,9 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 /**
  * @author Sarai Díaz
  */
-@Component(immediate = true, service = AssetListAssetEntryProvider.class)
+@Component(
+	configurationPid = "com.liferay.asset.list.internal.configuration.AssetListConfiguration",
+	immediate = true, service = AssetListAssetEntryProvider.class)
 public class AssetListAssetEntryProviderImpl
 	implements AssetListAssetEntryProvider {
 
@@ -87,8 +89,8 @@ public class AssetListAssetEntryProviderImpl
 		throws ConfigurationException {
 
 		_assetListConfiguration =
-			ConfigurationProviderUtil.getSystemConfiguration(
-				AssetListConfiguration.class);
+			ConfigurableUtil.createConfigurable(
+				AssetListConfiguration.class, properties);
 	}
 
 	@Override
@@ -533,8 +535,7 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetEntry> dynamicAssetEntries = new ArrayList<>();
 
-		//if (_assetListConfiguration.considerAllSegmentsForUser()) {
-		if (true) {
+		if (_assetListConfiguration.considerAllSegmentsForUser()) {
 			if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
 				for (long segmentsEntryId :
 						_getCombinedSegmentsEntryIds(segmentsEntryIds)) {
@@ -640,8 +641,7 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels;
 
-		//if (_assetListConfiguration.considerAllSegmentsForUser()) {
-		if (true) {
+		if (_assetListConfiguration.considerAllSegmentsForUser()) {
 			assetListEntryAssetEntryRels =
 				_assetListEntryAssetEntryRelLocalService.
 					getAssetListEntryAssetEntryRels(

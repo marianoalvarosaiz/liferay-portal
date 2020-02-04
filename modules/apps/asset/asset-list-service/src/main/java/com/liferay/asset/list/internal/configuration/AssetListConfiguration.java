@@ -21,10 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Ricardo Couso
  */
-@ExtendedObjectClassDefinition(
-	category = "assets",
-	scope = ExtendedObjectClassDefinition.Scope.SYSTEM
-)
+@ExtendedObjectClassDefinition(category = "assets")
 @Meta.OCD(
 	id = "com.liferay.asset.list.internal.configuration.AssetListConfiguration",
 	localization = "content/Language",
