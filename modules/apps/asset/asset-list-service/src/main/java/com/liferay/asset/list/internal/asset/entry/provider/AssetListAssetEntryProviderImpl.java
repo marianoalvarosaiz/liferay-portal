@@ -535,17 +535,53 @@ public class AssetListAssetEntryProviderImpl
 
 		//if (_assetListConfiguration.considerAllSegmentsForUser()) {
 		if (true) {
-			for (long segmentsEntryId : _getCombinedSegmentsEntryIds(segmentsEntryIds)) {
-				AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-					assetListEntry, segmentsEntryId, userId);
+			if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
+				for (long segmentsEntryId :
+						_getCombinedSegmentsEntryIds(segmentsEntryIds)) {
 
-				List<AssetEntry> assetEntries = _search(
-					assetListEntry.getCompanyId(), assetEntryQuery);
+					AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+						assetListEntry, segmentsEntryId, userId);
 
-				dynamicAssetEntries.addAll(assetEntries);
+					List<AssetEntry> assetEntries = _search(
+						assetListEntry.getCompanyId(), assetEntryQuery);
+
+					dynamicAssetEntries.addAll(assetEntries);
+				}
 			}
+			else {
+				int correctedStart = start;
+				int correctedEnd = end;
+				int subtotal;
 
-			dynamicAssetEntries.subList(start, end);
+				for (long segmentsEntryId :
+						_getCombinedSegmentsEntryIds(segmentsEntryIds)) {
+
+					AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+						assetListEntry, segmentsEntryId, userId);
+
+					List<AssetEntry> assetEntries = _search(
+						assetListEntry.getCompanyId(), assetEntryQuery);
+
+					int entriesSize = assetEntries.size();
+
+					subtotal =+ entriesSize;
+
+					if (subtotal < start) {
+						correctedEnd =- entriesSize;
+						correctedStart =- entriesSize;
+
+						continue;
+					}
+
+					dynamicAssetEntries.addAll(assetEntries);
+
+					if (subtotal > end) {
+						break;
+					}
+				}
+
+				dynamicAssetEntries.subList(correctedStart, correctedEnd);
+			}
 		}
 		else {
 			AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
