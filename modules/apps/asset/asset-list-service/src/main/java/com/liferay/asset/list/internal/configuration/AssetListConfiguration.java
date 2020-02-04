@@ -30,16 +30,18 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface AssetListConfiguration {
 
 	/**
-	 * Set this to <code>true</code> to consider all segments a use belongs to
-	 * when retrieving the asset entries an asset publisher should display.
+	 * Set this to <code>true</code> to combine and display in an Asset
+	 * Publisher the assets from all personalized views/segments that the
+	 * viewing user belongs to.
 	 *
 	 * @return default display style.
 	 */
 	@Meta.AD(
 		deflt = "false",
-		description = "consider-all-segments-for-user-description",
-		name = "consider-all-segments-for-user", required = false
+		description = "combine-assets-from-all-segments-in-asset-publisher-description",
+		name = "combine-assets-from-all-segments-in-asset-publisher",
+		required = false
 	)
-	public boolean considerAllSegmentsForUser();
+	public boolean combineAssetsFromAllSegments();
 
 }

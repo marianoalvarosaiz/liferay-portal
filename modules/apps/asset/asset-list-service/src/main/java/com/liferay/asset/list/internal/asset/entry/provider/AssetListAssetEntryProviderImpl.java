@@ -535,7 +535,7 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetEntry> dynamicAssetEntries = new ArrayList<>();
 
-		if (_assetListConfiguration.considerAllSegmentsForUser()) {
+		if (_assetListConfiguration.combineAssetsFromAllSegments()) {
 			if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
 				for (long segmentsEntryId :
 						_getCombinedSegmentsEntryIds(segmentsEntryIds)) {
@@ -641,7 +641,7 @@ public class AssetListAssetEntryProviderImpl
 
 		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels;
 
-		if (_assetListConfiguration.considerAllSegmentsForUser()) {
+		if (_assetListConfiguration.combineAssetsFromAllSegments()) {
 			assetListEntryAssetEntryRels =
 				_assetListEntryAssetEntryRelLocalService.
 					getAssetListEntryAssetEntryRels(
