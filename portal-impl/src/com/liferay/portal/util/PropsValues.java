@@ -17,6 +17,7 @@ package com.liferay.portal.util;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PathUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -1612,8 +1613,9 @@ public class PropsValues {
 		GetterUtil.getLong(
 			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_AUTO_DEPLOY_INTERVAL));
 
-	public static final String MODULE_FRAMEWORK_BASE_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_BASE_DIR);
+	public static final String MODULE_FRAMEWORK_BASE_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_BASE_DIR));
 
 	public static final int MODULE_FRAMEWORK_BEGINNING_START_LEVEL =
 		GetterUtil.getInteger(
@@ -1624,8 +1626,9 @@ public class PropsValues {
 			PropsUtil.get(
 				PropsKeys.MODULE_FRAMEWORK_CONCURRENT_STARTUP_ENABLED));
 
-	public static final String MODULE_FRAMEWORK_CONFIGS_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_CONFIGS_DIR);
+	public static final String MODULE_FRAMEWORK_CONFIGS_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_CONFIGS_DIR));
 
 	public static String[]
 		MODULE_FRAMEWORK_CONFIGURATION_BUNDLE_SYMBOLIC_NAMES =
@@ -1642,14 +1645,17 @@ public class PropsValues {
 			PropsUtil.get(
 				PropsKeys.MODULE_FRAMEWORK_EXPORT_PASSWORD_ATTRIBUTES));
 
-	public static final String MODULE_FRAMEWORK_MARKETPLACE_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_MARKETPLACE_DIR);
+	public static final String MODULE_FRAMEWORK_MARKETPLACE_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_MARKETPLACE_DIR));
 
-	public static final String MODULE_FRAMEWORK_MODULES_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_MODULES_DIR);
+	public static final String MODULE_FRAMEWORK_MODULES_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_MODULES_DIR));
 
-	public static final String MODULE_FRAMEWORK_PORTAL_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_PORTAL_DIR);
+	public static final String MODULE_FRAMEWORK_PORTAL_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_PORTAL_DIR));
 
 	public static final String MODULE_FRAMEWORK_RESOLVER_REVISION_BATCH_SIZE =
 		PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_RESOLVER_REVISION_BATCH_SIZE);
@@ -1662,8 +1668,9 @@ public class PropsValues {
 		PropsUtil.getArray(
 			PropsKeys.MODULE_FRAMEWORK_SERVICES_IGNORED_INTERFACES);
 
-	public static final String MODULE_FRAMEWORK_STATE_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_STATE_DIR);
+	public static final String MODULE_FRAMEWORK_STATE_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_STATE_DIR));
 
 	public static final String[] MODULE_FRAMEWORK_STATIC_JARS =
 		PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_STATIC_JARS);
@@ -1675,8 +1682,9 @@ public class PropsValues {
 	public static final String[] MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA =
 		PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA);
 
-	public static final String MODULE_FRAMEWORK_WAR_DIR = PropsUtil.get(
-		PropsKeys.MODULE_FRAMEWORK_WAR_DIR);
+	public static final String MODULE_FRAMEWORK_WAR_DIR =
+		PathUtil.toCanonicalPath(
+			PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_WAR_DIR));
 
 	public static final String[]
 		MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES =
@@ -1696,8 +1704,11 @@ public class PropsValues {
 						MODULE_FRAMEWORK_WEB_GENERATOR_GENERATED_WABS_STORE));
 
 	public static final String
-		MODULE_FRAMEWORK_WEB_GENERATOR_GENERATED_WABS_STORE_DIR = PropsUtil.get(
-			PropsKeys.MODULE_FRAMEWORK_WEB_GENERATOR_GENERATED_WABS_STORE_DIR);
+		MODULE_FRAMEWORK_WEB_GENERATOR_GENERATED_WABS_STORE_DIR =
+			PathUtil.toCanonicalPath(
+				PropsUtil.get(
+					PropsKeys.
+						MODULE_FRAMEWORK_WEB_GENERATOR_GENERATED_WABS_STORE_DIR));
 
 	public static final String[]
 		MODULE_FRAMEWORK_WEB_SERVLET_ANNOTATION_SCANNING_BLACKLIST =
