@@ -16,10 +16,24 @@ package com.liferay.portal.kernel.util;
 
 import com.liferay.petra.string.StringPool;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author Brian Wing Shun Chan
  */
 public class PathUtil {
+
+	public static String toCanonicalPath(String path) {
+		File file = new File(path);
+
+		try {
+			return file.getCanonicalPath();
+		}
+		catch (IOException ioException) {
+			return path;
+		}
+	}
 
 	public static String toUnixPath(String path) {
 		return StringUtil.replace(
