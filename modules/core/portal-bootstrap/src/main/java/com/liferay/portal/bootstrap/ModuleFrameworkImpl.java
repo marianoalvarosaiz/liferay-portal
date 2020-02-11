@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.NamedThreadFactory;
+import com.liferay.portal.kernel.util.PathUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -735,7 +736,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		properties.put("java.security.manager", null);
 		properties.put("org.osgi.framework.security", null);
 
-		File file = new File(PropsValues.LIFERAY_HOME);
+		File file = new File(
+			PathUtil.toCanonicalPath(PropsValues.LIFERAY_HOME));
 
 		URI uri = file.toURI();
 
