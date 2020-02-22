@@ -37,13 +37,19 @@ import com.liferay.registry.collections.ServiceRegistrationMapImpl;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Bruno Farache
@@ -56,11 +62,22 @@ public class WorkflowHandlerRegistryUtil {
 	}
 
 	public static <T> WorkflowHandler<T> getWorkflowHandler(String className) {
-		return (WorkflowHandler<T>)_workflowHandlerMap.get(className);
+		return (WorkflowHandler<T>)_getWorkflowHandler(
+			_workflowHandlerMap.get(className));
 	}
 
 	public static List<WorkflowHandler<?>> getWorkflowHandlers() {
-		return ListUtil.fromMapValues(_workflowHandlerMap);
+		Collection<Queue<ComparableWorkflowHandlerWrapper<?>>>
+			workflowHandlers = _workflowHandlerMap.values();
+
+		Stream<Queue<ComparableWorkflowHandlerWrapper<?>>> stream =
+			workflowHandlers.stream();
+
+		return stream.map(
+			queue -> _getWorkflowHandler(queue)
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	public static void register(List<WorkflowHandler<?>> workflowHandlers) {
@@ -263,6 +280,15 @@ public class WorkflowHandlerRegistryUtil {
 		return null;
 	}
 
+	private static WorkflowHandler<?> _getWorkflowHandler(
+		Queue<ComparableWorkflowHandlerWrapper<?>> queue) {
+
+		ComparableWorkflowHandlerWrapper<?> comparableWorkflowHandlerWrapper =
+			queue.peek();
+
+		return comparableWorkflowHandlerWrapper._workflowHandler;
+	}
+
 	private static boolean _hasWorkflowInstanceInProgress(
 			long companyId, long groupId, String className, long classPK)
 		throws PortalException {
@@ -295,8 +321,41 @@ public class WorkflowHandlerRegistryUtil {
 		_serviceRegistrations = new ServiceRegistrationMapImpl<>();
 	private static final ServiceTracker<WorkflowHandler<?>, WorkflowHandler<?>>
 		_serviceTracker;
-	private static final Map<String, WorkflowHandler<?>> _workflowHandlerMap =
-		new TreeMap<>();
+	private static final Map<String, Queue<ComparableWorkflowHandlerWrapper<?>>>
+		_workflowHandlerMap = new ConcurrentHashMap<>();
+
+	private static class ComparableWorkflowHandlerWrapper<T>
+		implements Comparable<ComparableWorkflowHandlerWrapper<?>> {
+
+		public ComparableWorkflowHandlerWrapper(
+			int serviceRanking, WorkflowHandler<T> workflowHandler) {
+
+			_serviceRanking = serviceRanking;
+			_workflowHandler = workflowHandler;
+		}
+
+		@Override
+		public int compareTo(ComparableWorkflowHandlerWrapper<?> object) {
+			return Integer.compare(object._serviceRanking, _serviceRanking);
+		}
+
+		@Override
+		public boolean equals(Object object) {
+			ComparableWorkflowHandlerWrapper<?> other =
+				(ComparableWorkflowHandlerWrapper<?>)object;
+
+			return Objects.equals(_workflowHandler, other._workflowHandler);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(_workflowHandler);
+		}
+
+		private final int _serviceRanking;
+		private final WorkflowHandler<T> _workflowHandler;
+
+	}
 
 	private static class WorkflowHandlerServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
@@ -311,8 +370,18 @@ public class WorkflowHandlerRegistryUtil {
 			WorkflowHandler<?> workflowHandler = registry.getService(
 				serviceReference);
 
-			_workflowHandlerMap.put(
-				workflowHandler.getClassName(), workflowHandler);
+			Queue<ComparableWorkflowHandlerWrapper<?>> workflowHandlersQueue =
+				_workflowHandlerMap.computeIfAbsent(
+					workflowHandler.getClassName(),
+					key ->
+						new PriorityBlockingQueue
+							<ComparableWorkflowHandlerWrapper<?>>());
+
+			workflowHandlersQueue.offer(
+				new ComparableWorkflowHandlerWrapper(
+					GetterUtil.getInteger(
+						serviceReference.getProperty("service.ranking")),
+					workflowHandler));
 
 			if (workflowHandler.isScopeable()) {
 				_scopeableWorkflowHandlerMap.put(
@@ -337,7 +406,12 @@ public class WorkflowHandlerRegistryUtil {
 
 			registry.ungetService(serviceReference);
 
-			_workflowHandlerMap.remove(workflowHandler.getClassName());
+			Queue<ComparableWorkflowHandlerWrapper<?>> queue =
+				_workflowHandlerMap.get(workflowHandler.getClassName());
+
+			queue.removeIf(
+				wrapper -> Objects.equals(
+					wrapper._workflowHandler, workflowHandler));
 
 			if (workflowHandler.isScopeable()) {
 				_scopeableWorkflowHandlerMap.remove(
