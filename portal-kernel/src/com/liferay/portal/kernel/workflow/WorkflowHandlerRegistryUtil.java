@@ -56,36 +56,16 @@ import java.util.stream.Stream;
 public class WorkflowHandlerRegistryUtil {
 
 	public static List<WorkflowHandler<?>> getScopeableWorkflowHandlers() {
-		Collection<Queue<ComparableWorkflowHandlerWrapper<?>>>
-			workflowHandlers = _scopeableWorkflowHandlerMap.values();
-
-		Stream<Queue<ComparableWorkflowHandlerWrapper<?>>> stream =
-			workflowHandlers.stream();
-
-		return stream.map(
-			queue -> _getWorkflowHandler(queue)
-		).collect(
-			Collectors.toList()
-		);
+		return _scopeableWorkflowHandlerMap.getWorkflowHandlers();
 	}
 
 	public static <T> WorkflowHandler<T> getWorkflowHandler(String className) {
-		return (WorkflowHandler<T>)_getWorkflowHandler(
-			_workflowHandlerMap.get(className));
+		return (WorkflowHandler<T>)_workflowHandlerMap.getWorkflowHandler(
+			className);
 	}
 
 	public static List<WorkflowHandler<?>> getWorkflowHandlers() {
-		Collection<Queue<ComparableWorkflowHandlerWrapper<?>>>
-			workflowHandlers = _workflowHandlerMap.values();
-
-		Stream<Queue<ComparableWorkflowHandlerWrapper<?>>> stream =
-			workflowHandlers.stream();
-
-		return stream.map(
-			queue -> _getWorkflowHandler(queue)
-		).collect(
-			Collectors.toList()
-		);
+		return _workflowHandlerMap.getWorkflowHandlers();
 	}
 
 	public static void register(List<WorkflowHandler<?>> workflowHandlers) {
@@ -288,15 +268,6 @@ public class WorkflowHandlerRegistryUtil {
 		return null;
 	}
 
-	private static WorkflowHandler<?> _getWorkflowHandler(
-		Queue<ComparableWorkflowHandlerWrapper<?>> queue) {
-
-		ComparableWorkflowHandlerWrapper<?> comparableWorkflowHandlerWrapper =
-			queue.peek();
-
-		return comparableWorkflowHandlerWrapper._workflowHandler;
-	}
-
 	private static boolean _hasWorkflowInstanceInProgress(
 			long companyId, long groupId, String className, long classPK)
 		throws PortalException {
@@ -323,34 +294,34 @@ public class WorkflowHandlerRegistryUtil {
 	private static final Log _log = LogFactoryUtil.getLog(
 		WorkflowHandlerRegistryUtil.class);
 
-	private static final Map<String, Queue<ComparableWorkflowHandlerWrapper<?>>>
-		_scopeableWorkflowHandlerMap = new ConcurrentHashMap<>();
+	private static final WorkflowHandlerPriorityMap
+		_scopeableWorkflowHandlerMap = new WorkflowHandlerPriorityMap();
 	private static final ServiceRegistrationMap<WorkflowHandler<?>>
 		_serviceRegistrations = new ServiceRegistrationMapImpl<>();
 	private static final ServiceTracker<WorkflowHandler<?>, WorkflowHandler<?>>
 		_serviceTracker;
-	private static final Map<String, Queue<ComparableWorkflowHandlerWrapper<?>>>
-		_workflowHandlerMap = new ConcurrentHashMap<>();
+	private static final WorkflowHandlerPriorityMap _workflowHandlerMap =
+		new WorkflowHandlerPriorityMap();
 
-	private static class ComparableWorkflowHandlerWrapper<T>
-		implements Comparable<ComparableWorkflowHandlerWrapper<?>> {
+	private static class ComparableWorkflowHandlerWrapper
+		implements Comparable<ComparableWorkflowHandlerWrapper> {
 
 		public ComparableWorkflowHandlerWrapper(
-			int serviceRanking, WorkflowHandler<T> workflowHandler) {
+			int serviceRanking, WorkflowHandler<?> workflowHandler) {
 
 			_serviceRanking = serviceRanking;
 			_workflowHandler = workflowHandler;
 		}
 
 		@Override
-		public int compareTo(ComparableWorkflowHandlerWrapper<?> object) {
+		public int compareTo(ComparableWorkflowHandlerWrapper object) {
 			return Integer.compare(object._serviceRanking, _serviceRanking);
 		}
 
 		@Override
 		public boolean equals(Object object) {
-			ComparableWorkflowHandlerWrapper<?> other =
-				(ComparableWorkflowHandlerWrapper<?>)object;
+			ComparableWorkflowHandlerWrapper other =
+				(ComparableWorkflowHandlerWrapper)object;
 
 			return Objects.equals(_workflowHandler, other._workflowHandler);
 		}
@@ -361,7 +332,68 @@ public class WorkflowHandlerRegistryUtil {
 		}
 
 		private final int _serviceRanking;
-		private final WorkflowHandler<T> _workflowHandler;
+		private final WorkflowHandler<?> _workflowHandler;
+
+	}
+
+	private static class WorkflowHandlerPriorityMap {
+
+		public void addWorkflow(
+			int serviceRanking, WorkflowHandler<?> workflowHandler) {
+
+			Queue<ComparableWorkflowHandlerWrapper> workflowHandlersQueue =
+				_workflowHandlerMap.computeIfAbsent(
+					workflowHandler.getClassName(),
+					key ->
+						new PriorityBlockingQueue
+							<ComparableWorkflowHandlerWrapper>());
+
+			workflowHandlersQueue.offer(
+				new ComparableWorkflowHandlerWrapper(
+					serviceRanking, workflowHandler));
+		}
+
+		public WorkflowHandler<?> getWorkflowHandler(String className) {
+			Queue<ComparableWorkflowHandlerWrapper> queue =
+				_workflowHandlerMap.get(className);
+
+			return _getWorkflowHandler(queue);
+		}
+
+		public List<WorkflowHandler<?>> getWorkflowHandlers() {
+			Collection<Queue<ComparableWorkflowHandlerWrapper>>
+				workflowHandlers = _workflowHandlerMap.values();
+
+			Stream<Queue<ComparableWorkflowHandlerWrapper>> stream =
+				workflowHandlers.stream();
+
+			return stream.map(
+				queue -> _getWorkflowHandler(queue)
+			).collect(
+				Collectors.toList()
+			);
+		}
+
+		public void removeWorkflow(WorkflowHandler<?> workflowHandler) {
+			Queue<ComparableWorkflowHandlerWrapper> queue =
+				_workflowHandlerMap.get(workflowHandler.getClassName());
+
+			queue.removeIf(
+				wrapper -> Objects.equals(
+					wrapper._workflowHandler, workflowHandler));
+		}
+
+		private WorkflowHandler<?> _getWorkflowHandler(
+			Queue<ComparableWorkflowHandlerWrapper> queue) {
+
+			ComparableWorkflowHandlerWrapper comparableWorkflowHandlerWrapper =
+				queue.peek();
+
+			return comparableWorkflowHandlerWrapper._workflowHandler;
+		}
+
+		private final Map<String, Queue<ComparableWorkflowHandlerWrapper>>
+			_workflowHandlerMap = new ConcurrentHashMap<>();
 
 	}
 
@@ -378,32 +410,14 @@ public class WorkflowHandlerRegistryUtil {
 			WorkflowHandler<?> workflowHandler = registry.getService(
 				serviceReference);
 
-			Queue<ComparableWorkflowHandlerWrapper<?>> workflowHandlersQueue =
-				_workflowHandlerMap.computeIfAbsent(
-					workflowHandler.getClassName(),
-					key ->
-						new PriorityBlockingQueue
-							<ComparableWorkflowHandlerWrapper<?>>());
+			int serviceRanking = GetterUtil.getInteger(
+				serviceReference.getProperty("service.ranking"));
 
-			workflowHandlersQueue.offer(
-				new ComparableWorkflowHandlerWrapper(
-					GetterUtil.getInteger(
-						serviceReference.getProperty("service.ranking")),
-					workflowHandler));
+			_workflowHandlerMap.addWorkflow(serviceRanking, workflowHandler);
 
 			if (workflowHandler.isScopeable()) {
-				workflowHandlersQueue =
-					_scopeableWorkflowHandlerMap.computeIfAbsent(
-						workflowHandler.getClassName(),
-						key ->
-							new PriorityBlockingQueue
-								<ComparableWorkflowHandlerWrapper<?>>());
-
-				workflowHandlersQueue.offer(
-					new ComparableWorkflowHandlerWrapper(
-						GetterUtil.getInteger(
-							serviceReference.getProperty("service.ranking")),
-						workflowHandler));
+				_scopeableWorkflowHandlerMap.addWorkflow(
+					serviceRanking, workflowHandler);
 			}
 
 			return workflowHandler;
@@ -424,20 +438,10 @@ public class WorkflowHandlerRegistryUtil {
 
 			registry.ungetService(serviceReference);
 
-			Queue<ComparableWorkflowHandlerWrapper<?>> queue =
-				_workflowHandlerMap.get(workflowHandler.getClassName());
-
-			queue.removeIf(
-				wrapper -> Objects.equals(
-					wrapper._workflowHandler, workflowHandler));
+			_workflowHandlerMap.removeWorkflow(workflowHandler);
 
 			if (workflowHandler.isScopeable()) {
-				queue = _scopeableWorkflowHandlerMap.get(
-					workflowHandler.getClassName());
-
-				queue.removeIf(
-					wrapper -> Objects.equals(
-						wrapper._workflowHandler, workflowHandler));
+				_scopeableWorkflowHandlerMap.removeWorkflow(workflowHandler);
 			}
 		}
 
