@@ -27,36 +27,19 @@ public class UpgradeLayout extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		if (hasColumn("Layout", "headId") || hasColumn("Layout", "head")) {
-			alter(
-				LayoutTable.class, new AlterTableDropColumn("headId"),
-				new AlterTableDropColumn("head"));
-		}
+		alter(
+			LayoutTable.class, new AlterTableDropColumn("headId"),
+			new AlterTableDropColumn("head"));
 
-		if (!hasColumn("Layout", "masterLayoutPlid")) {
-			alter(
-				LayoutTable.class,
-				new AlterTableDropColumn("masterLayoutPlid"));
-		}
+		alter(LayoutTable.class, new AlterTableDropColumn("masterLayoutPlid"));
 
-		if (!hasColumn("Layout", "status")) {
-			alter(LayoutTable.class, new AlterTableDropColumn("status"));
-		}
+		alter(LayoutTable.class, new AlterTableDropColumn("status"));
 
-		if (!hasColumn("Layout", "statusByUserId")) {
-			alter(
-				LayoutTable.class, new AlterTableDropColumn("statusByUserId"));
-		}
+		alter(LayoutTable.class, new AlterTableDropColumn("statusByUserId"));
 
-		if (!hasColumn("Layout", "statusByUserName")) {
-			alter(
-				LayoutTable.class,
-				new AlterTableDropColumn("statusByUserName"));
-		}
+		alter(LayoutTable.class, new AlterTableDropColumn("statusByUserName"));
 
-		if (!hasColumn("Layout", "statusDate")) {
-			alter(LayoutTable.class, new AlterTableDropColumn("statusDate"));
-		}
+		alter(LayoutTable.class, new AlterTableDropColumn("statusDate"));
 
 		try (PreparedStatement ps = connection.prepareStatement(
 				SQLTransformer.transform(
