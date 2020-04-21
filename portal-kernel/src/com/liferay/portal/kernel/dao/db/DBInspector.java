@@ -30,6 +30,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,19 +113,25 @@ public class DBInspector {
 				return false;
 			}
 
-			int expectedColumnSize = _getColumnSize(columnType);
+			String expectedColumnTypeName = _getColumnTypeName(columnType);
 
-			int actualColumnSize = rs.getInt("COLUMN_SIZE");
-
-			if ((expectedColumnSize != -1) &&
-				(expectedColumnSize != actualColumnSize)) {
-
+			if (expectedColumnTypeName == null) {
 				return false;
 			}
 
-			Integer expectedColumnDataType = _getColumnDataType(columnType);
+			int expectedColumnSize = Math.min(
+				_getColumnSize(columnType),
+				_getDataTypePrecision(expectedColumnTypeName));
+
+			int actualColumnSize = rs.getInt("COLUMN_SIZE");
+
+			if (expectedColumnSize != actualColumnSize) {
+				return false;
+			}
 
 			int actualColumnDataType = rs.getInt("DATA_TYPE");
+
+			Integer expectedColumnDataType = _getColumnDataType(columnType);
 
 			if ((expectedColumnDataType == null) ||
 				(expectedColumnDataType != actualColumnDataType)) {
@@ -250,7 +258,7 @@ public class DBInspector {
 		Matcher matcher = _columnSizePattern.matcher(columnType);
 
 		if (!matcher.matches()) {
-			return -1;
+			return Integer.MAX_VALUE;
 		}
 
 		String columnSize = matcher.group(1);
@@ -268,7 +276,40 @@ public class DBInspector {
 			}
 		}
 
-		return -1;
+		return Integer.MAX_VALUE;
+	}
+
+	private String _getColumnTypeName(String columnType) {
+		Matcher matcher = _columnTypePattern.matcher(columnType);
+
+		if (!matcher.lookingAt()) {
+			return null;
+		}
+
+		DB db = DBManagerUtil.getDB();
+
+		return db.getCurrentDatabaseTypeName(matcher.group(1));
+	}
+
+	private int _getDataTypePrecision(String dataType) throws Exception {
+		Map<String, Integer> dataTypesPrecision = _dataTypesPrecision;
+
+		if (dataTypesPrecision == null) {
+			DatabaseMetaData databaseMetaData = _connection.getMetaData();
+
+			dataTypesPrecision = new HashMap<>();
+
+			try (ResultSet rs = databaseMetaData.getTypeInfo()) {
+				while (rs.next()) {
+					dataTypesPrecision.put(
+						rs.getString("TYPE_NAME"), rs.getInt("PRECISION"));
+				}
+			}
+
+			_dataTypesPrecision = dataTypesPrecision;
+		}
+
+		return dataTypesPrecision.get(StringUtil.toUpperCase(dataType));
 	}
 
 	private boolean _hasTable(String tableName) throws Exception {
@@ -303,6 +344,7 @@ public class DBInspector {
 		"^\\w+(?:\\((\\d+)\\))?.*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern _columnTypePattern = Pattern.compile(
 		"(^\\w+)", Pattern.CASE_INSENSITIVE);
+	private static volatile Map<String, Integer> _dataTypesPrecision;
 
 	private final Connection _connection;
 
