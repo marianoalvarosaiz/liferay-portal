@@ -30,6 +30,8 @@ if (reminderAttempts == null) {
 }
 
 renderResponse.setTitle(LanguageUtil.get(request, "forgot-password"));
+
+boolean forgotPasswordSent = SessionMessages.contains(request, "forgotPasswordSent");
 %>
 
 <portlet:actionURL name="/login/forgot_password" var="forgotPasswordURL">
@@ -76,7 +78,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "forgot-password"));
 
 		<aui:fieldset>
 			<c:choose>
-				<c:when test="<%= user2 == null %>">
+				<c:when test="<%= (user2 == null) && !forgotPasswordSent %>">
 
 					<%
 					String loginParameter = null;
@@ -120,7 +122,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "forgot-password"));
 						<aui:button type="submit" value='<%= PropsValues.USERS_REMINDER_QUERIES_ENABLED ? "next" : "send-new-password" %>' />
 					</aui:button-row>
 				</c:when>
-				<c:when test="<%= (user2 != null) && Validator.isNotNull(user2.getEmailAddress()) %>">
+				<c:when test="<%= forgotPasswordSent || ((user2 != null) && Validator.isNotNull(user2.getEmailAddress())) %>">
 					<aui:input name="step" type="hidden" value="2" />
 
 					<portlet:renderURL var="redirectURL">
@@ -129,7 +131,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "forgot-password"));
 
 					<aui:input name="redirect" type="hidden" value="<%= redirectURL %>" />
 
-					<c:if test="<%= Validator.isNotNull(user2.getReminderQueryQuestion()) && Validator.isNotNull(user2.getReminderQueryAnswer()) %>">
+					<c:if test="<%= !forgotPasswordSent && Validator.isNotNull(user2.getReminderQueryQuestion()) && Validator.isNotNull(user2.getReminderQueryAnswer()) %>">
 
 						<%
 						String login = null;
@@ -153,7 +155,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "forgot-password"));
 					</c:if>
 
 					<c:choose>
-						<c:when test="<%= PropsValues.USERS_REMINDER_QUERIES_REQUIRED && !user2.hasReminderQuery() %>">
+						<c:when test="<%= !forgotPasswordSent && PropsValues.USERS_REMINDER_QUERIES_REQUIRED && !user2.hasReminderQuery() %>">
 							<div class="alert alert-info">
 								<liferay-ui:message key="the-password-cannot-be-reset-because-you-have-not-configured-a-reminder-query" />
 							</div>
