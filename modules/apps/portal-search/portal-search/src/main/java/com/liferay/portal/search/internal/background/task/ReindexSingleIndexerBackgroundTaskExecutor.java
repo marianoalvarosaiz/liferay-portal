@@ -32,9 +32,11 @@ import java.io.Serializable;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 
 /**
  * @author Andrew Betts
@@ -112,10 +114,16 @@ public class ReindexSingleIndexerBackgroundTaskExecutor
 		}
 	}
 
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, unbind = "-")
+	protected void setIndexWriterHelper(IndexWriterHelper indexWriterHelper) {
+		this.indexWriterHelper = indexWriterHelper;
+
+		_countDownLatch.countDown();
+	}
+
 	@Reference
 	protected IndexerRegistry indexerRegistry;
 
-	@Reference
 	protected IndexWriterHelper indexWriterHelper;
 
 	@Reference
@@ -126,5 +134,7 @@ public class ReindexSingleIndexerBackgroundTaskExecutor
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ReindexSingleIndexerBackgroundTaskExecutor.class);
+
+	private volatile CountDownLatch _countDownLatch = new CountDownLatch(1);
 
 }
