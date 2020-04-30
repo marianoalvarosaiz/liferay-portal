@@ -32,9 +32,11 @@ import java.io.Serializable;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 
 /**
  * @author Andrew Betts
@@ -96,7 +98,7 @@ public class ReindexSingleIndexerBackgroundTaskExecutor
 					searchEngine.initialize(companyId);
 				}
 
-				indexWriterHelper.deleteEntityDocuments(
+				_indexWriterHelper.deleteEntityDocuments(
 					indexer.getSearchEngineId(), companyId, className, true);
 
 				indexer.reindex(new String[] {String.valueOf(companyId)});
@@ -112,11 +114,14 @@ public class ReindexSingleIndexerBackgroundTaskExecutor
 		}
 	}
 
-	@Reference
-	protected IndexerRegistry indexerRegistry;
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, unbind = "-")
+	protected void setIndexWriterHelper(IndexWriterHelper indexWriterHelper) {
+		_indexWriterHelper = indexWriterHelper;
+		_countDownLatch.countDown();
+	}
 
 	@Reference
-	protected IndexWriterHelper indexWriterHelper;
+	protected IndexerRegistry indexerRegistry;
 
 	@Reference
 	protected ReindexStatusMessageSender reindexStatusMessageSender;
@@ -126,5 +131,8 @@ public class ReindexSingleIndexerBackgroundTaskExecutor
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ReindexSingleIndexerBackgroundTaskExecutor.class);
+
+	private volatile CountDownLatch _countDownLatch = new CountDownLatch(1);
+	private IndexWriterHelper _indexWriterHelper;
 
 }
