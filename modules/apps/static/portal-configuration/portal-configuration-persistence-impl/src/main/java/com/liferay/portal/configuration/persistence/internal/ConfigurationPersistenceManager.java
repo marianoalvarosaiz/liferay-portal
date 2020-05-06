@@ -225,9 +225,8 @@ public class ConfigurationPersistenceManager
 			_FELIX_FILE_INSTALL_FILENAME);
 
 		if (fileName != null) {
-			File file = new File(URI.create(fileName));
-
-			newDictionary.put(_FELIX_FILE_INSTALL_FILENAME, file.getName());
+			newDictionary.put(
+				_FELIX_FILE_INSTALL_FILENAME, _getFileNameSafe(fileName));
 		}
 
 		Lock lock = _readWriteLock.writeLock();
@@ -460,6 +459,19 @@ public class ConfigurationPersistenceManager
 		return _serviceTrackerMap.getService(configurationModelClassName);
 	}
 
+	private String _getFileNameSafe(String fileName) {
+		File configFile = null;
+
+		try {
+			configFile = new File(URI.create(fileName));
+		}
+		catch (Exception exception) {
+			configFile = new File(fileName);
+		}
+
+		return configFile.getName();
+	}
+
 	private Dictionary<String, String> _verifyDictionary(
 			String pid, String dictionaryString)
 		throws IOException {
@@ -490,9 +502,9 @@ public class ConfigurationPersistenceManager
 		File configFile = null;
 
 		if (felixFileInstallFileName.startsWith("file:")) {
-			configFile = new File(URI.create(felixFileInstallFileName));
-
-			dictionary.put(_FELIX_FILE_INSTALL_FILENAME, configFile.getName());
+			dictionary.put(
+				_FELIX_FILE_INSTALL_FILENAME,
+				_getFileNameSafe(felixFileInstallFileName));
 
 			storeInDatabase(pid, dictionary);
 
