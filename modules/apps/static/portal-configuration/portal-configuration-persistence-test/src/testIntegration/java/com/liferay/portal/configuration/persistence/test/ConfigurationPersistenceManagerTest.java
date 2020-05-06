@@ -66,6 +66,21 @@ public class ConfigurationPersistenceManagerTest {
 		_assertConfiguration(false);
 	}
 
+	@Test
+	public void testWhiteSpacedFelixFileInstallFileName() throws Exception {
+		String pid = "whitespace.pid";
+
+		ConfigurationTestUtil.saveConfiguration(
+			"whitespace.pid",
+			MapUtil.singletonDictionary(
+				"felix.fileinstall.filename",
+				"file:/whitespace path/file.config"));
+
+		Assert.assertTrue(_persistenceManager.exists(pid));
+
+		ConfigurationTestUtil.deleteConfiguration(pid);
+	}
+
 	private void _assertConfiguration(boolean factory) throws Exception {
 		Configuration configuration = null;
 
