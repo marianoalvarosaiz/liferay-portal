@@ -14,12 +14,15 @@
 
 package com.liferay.frontend.js.web.internal;
 
+import java.net.URL;
+
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
@@ -51,13 +54,28 @@ public class JavaScriptPortalWebResourcesCleaner {
 		bundleContext.addServiceListener(
 			_serviceListener,
 			"(&(!(javax.portlet.name=*))(language.id=*)(objectClass=" +
-				ResourceBundle.class.getName() + "))");
+			ResourceBundle.class.getName() + "))");
+
+		_bundleListener = bundleEvent -> {
+			Bundle bundle = bundleEvent.getBundle();
+
+			URL url = bundle.getResource("META-INF/resources/package.json");
+
+			if (url != null) {
+				_javaScriptPortalWebResources.updateLastModifed(
+					bundle.getLastModified());
+			}
+		};
+
+		bundleContext.addBundleListener(_bundleListener);
 	}
 
 	@Deactivate
 	protected void deactivate(BundleContext bundleContext) {
 		bundleContext.removeServiceListener(_serviceListener);
 	}
+
+	private BundleListener _bundleListener;
 
 	@Reference
 	private JavaScriptPortalWebResources _javaScriptPortalWebResources;
