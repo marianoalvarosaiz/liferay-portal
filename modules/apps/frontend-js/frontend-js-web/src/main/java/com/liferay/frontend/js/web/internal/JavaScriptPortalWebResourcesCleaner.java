@@ -54,7 +54,7 @@ public class JavaScriptPortalWebResourcesCleaner {
 		bundleContext.addServiceListener(
 			_serviceListener,
 			"(&(!(javax.portlet.name=*))(language.id=*)(objectClass=" +
-			ResourceBundle.class.getName() + "))");
+				ResourceBundle.class.getName() + "))");
 
 		_bundleListener = bundleEvent -> {
 			Bundle bundle = bundleEvent.getBundle();
