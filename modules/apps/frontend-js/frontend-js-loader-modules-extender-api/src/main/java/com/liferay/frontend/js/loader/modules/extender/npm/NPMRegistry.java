@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.osgi.annotation.versioning.ProviderType;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Iván Zaera Avellón
@@ -32,6 +33,8 @@ public interface NPMRegistry {
 	public void addJSBundleTracker(JSBundleTracker jsBundleTracker);
 
 	public Map<String, String> getGlobalAliases();
+
+	public JSBundle getJSBundle(Bundle bundle);
 
 	public JSModule getJSModule(String identifier);
 

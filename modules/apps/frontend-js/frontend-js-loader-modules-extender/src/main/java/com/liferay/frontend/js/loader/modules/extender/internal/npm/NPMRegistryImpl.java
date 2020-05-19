@@ -95,6 +95,12 @@ public class NPMRegistryImpl implements NPMRegistry {
 		return _globalAliases;
 	}
 
+	public JSBundle getJSBundle(Bundle bundle) {
+		Map<Bundle, JSBundle> tracked = _bundleTracker.getTracked();
+
+		return tracked.get(bundle);
+	}
+
 	/**
 	 * Returns the OSGi bundles containing NPM packages that have been deployed
 	 * to the portal.
