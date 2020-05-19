@@ -14,7 +14,8 @@
 
 package com.liferay.frontend.js.web.internal;
 
-import java.net.URL;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 
 import java.util.ResourceBundle;
 
@@ -59,9 +60,9 @@ public class JavaScriptPortalWebResourcesCleaner {
 		_bundleListener = bundleEvent -> {
 			Bundle bundle = bundleEvent.getBundle();
 
-			URL url = bundle.getResource("META-INF/resources/package.json");
+			JSBundle jsBundle = _npmRegistry.getJSBundle(bundle);
 
-			if (url != null) {
+			if (jsBundle != null) {
 				_javaScriptPortalWebResources.updateLastModifed(
 					bundle.getLastModified());
 			}
@@ -79,6 +80,9 @@ public class JavaScriptPortalWebResourcesCleaner {
 
 	@Reference
 	private JavaScriptPortalWebResources _javaScriptPortalWebResources;
+
+	@Reference
+	private NPMRegistry _npmRegistry;
 
 	private ServiceListener _serviceListener;
 
