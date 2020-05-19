@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceListener;
@@ -58,6 +59,12 @@ public class JavaScriptPortalWebResourcesCleaner {
 				ResourceBundle.class.getName() + "))");
 
 		_bundleListener = bundleEvent -> {
+			if ((bundleEvent.getType() != BundleEvent.STARTED) &&
+				(bundleEvent.getType() != BundleEvent.STOPPED)) {
+
+				return;
+			}
+
 			Bundle bundle = bundleEvent.getBundle();
 
 			JSBundle jsBundle = _npmRegistry.getJSBundle(bundle);
