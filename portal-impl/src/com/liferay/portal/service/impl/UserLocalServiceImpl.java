@@ -6009,26 +6009,10 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				user.getCompanyId(), User.class.getName(), user.getUserId(),
 				TicketConstants.TYPE_PASSWORD, null, null, serviceContext);
 
-			String updatePasswordURL = "/portal/update_password?";
-
-			long plid = serviceContext.getPlid();
-
-			if (plid > 0) {
-				Layout layout = layoutLocalService.fetchLayout(plid);
-
-				if (layout != null) {
-					Group group = layout.getGroup();
-
-					if (!layout.isPrivateLayout() && !group.isUser()) {
-						updatePasswordURL +=
-							"p_l_id=" + serviceContext.getPlid() + "&";
-					}
-				}
-			}
-
 			passwordResetURL = StringBundler.concat(
 				serviceContext.getPortalURL(), serviceContext.getPathMain(),
-				updatePasswordURL, "ticketKey=", ticket.getKey());
+				"/portal/update_password?p_l_id=", serviceContext.getPlid(),
+				"&ticketKey=", ticket.getKey());
 
 			localizedBodyMap = LocalizationUtil.getLocalizationMap(
 				companyPortletPreferences,
