@@ -14,7 +14,12 @@
 
 package com.liferay.frontend.js.web.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.JavaScriptAwarePortalWebResources;
+
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 
@@ -27,12 +32,15 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Shuyang Zhou
  */
 @Component(service = {})
-public class JavaScriptPortalWebResourcesCleaner {
+public class JavaScriptAwarePortalWebResourcesCleaner {
 
 	@Activate
 	protected void activate(BundleContext bundleContext)
@@ -44,8 +52,12 @@ public class JavaScriptPortalWebResourcesCleaner {
 
 			Bundle bundle = serviceReference.getBundle();
 
-			_javaScriptPortalWebResources.updateLastModifed(
-				bundle.getLastModified());
+			Stream<JavaScriptAwarePortalWebResources> stream =
+				_javaScriptAwarePortalWebResourcesList.stream();
+
+			stream.forEach(
+				cacheable -> cacheable.updateLastModifed(
+					bundle.getLastModified()));
 		};
 
 		bundleContext.addServiceListener(
@@ -59,9 +71,28 @@ public class JavaScriptPortalWebResourcesCleaner {
 		bundleContext.removeServiceListener(_serviceListener);
 	}
 
-	@Reference
-	private JavaScriptPortalWebResources _javaScriptPortalWebResources;
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		unbind = "_removeJavaScriptAwarePortalWebResources"
+	)
+	private void _addJavaScriptAwarePortalWebResources(
+		JavaScriptAwarePortalWebResources javaScriptAwarePortalWebResources) {
 
+		_javaScriptAwarePortalWebResourcesList.add(
+			javaScriptAwarePortalWebResources);
+	}
+
+	private void _removeJavaScriptAwarePortalWebResources(
+		JavaScriptAwarePortalWebResources javaScriptAwarePortalWebResources) {
+
+		_javaScriptAwarePortalWebResourcesList.remove(
+			javaScriptAwarePortalWebResources);
+	}
+
+	private final List<JavaScriptAwarePortalWebResources>
+		_javaScriptAwarePortalWebResourcesList = new CopyOnWriteArrayList<>();
 	private ServiceListener _serviceListener;
 
 	@Reference(
