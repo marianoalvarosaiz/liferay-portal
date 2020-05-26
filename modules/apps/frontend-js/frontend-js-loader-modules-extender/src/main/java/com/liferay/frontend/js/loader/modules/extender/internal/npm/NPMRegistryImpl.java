@@ -26,6 +26,7 @@ import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModuleAlias;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
+import com.liferay.frontend.js.loader.modules.extender.npm.JavaScriptAwarePortalWebResources;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.osgi.util.ServiceTrackerFactory;
@@ -52,6 +53,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 
@@ -64,6 +67,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.util.tracker.BundleTracker;
 import org.osgi.util.tracker.BundleTrackerCustomizer;
 import org.osgi.util.tracker.ServiceTracker;
@@ -313,6 +319,19 @@ public class NPMRegistryImpl implements NPMRegistry {
 		}
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		unbind = "_removeJavaScriptAwarePortalWebResources"
+	)
+	private void _addJavaScriptAwarePortalWebResources(
+		JavaScriptAwarePortalWebResources javaScriptAwarePortalWebResources) {
+
+		_javaScriptAwarePortalWebResourcesList.add(
+			javaScriptAwarePortalWebResources);
+	}
+
 	private JSONObject _getPackageJSONObject(Bundle bundle) {
 		try {
 			URL url = bundle.getEntry("package.json");
@@ -481,6 +500,13 @@ public class NPMRegistryImpl implements NPMRegistry {
 		_exactMatchMap = exactMatchMap;
 	}
 
+	private void _removeJavaScriptAwarePortalWebResources(
+		JavaScriptAwarePortalWebResources javaScriptAwarePortalWebResources) {
+
+		_javaScriptAwarePortalWebResourcesList.remove(
+			javaScriptAwarePortalWebResources);
+	}
+
 	private static final JSPackage _NULL_JS_PACKAGE =
 		ProxyFactory.newDummyInstance(JSPackage.class);
 
@@ -496,6 +522,8 @@ public class NPMRegistryImpl implements NPMRegistry {
 		new ConcurrentHashMap<>();
 	private Map<String, String> _exactMatchMap;
 	private final Map<String, String> _globalAliases = new HashMap<>();
+	private final List<JavaScriptAwarePortalWebResources>
+		_javaScriptAwarePortalWebResourcesList = new CopyOnWriteArrayList<>();
 
 	@Reference
 	private JSBundleProcessor _jsBundleProcessor;
@@ -553,6 +581,13 @@ public class NPMRegistryImpl implements NPMRegistry {
 				jsBundles.add(jsBundle);
 
 				_refreshJSModuleCaches(jsBundles);
+
+				Stream<JavaScriptAwarePortalWebResources> stream =
+					_javaScriptAwarePortalWebResourcesList.stream();
+
+				stream.forEach(
+					cacheable -> cacheable.updateLastModifed(
+						bundle.getLastModified()));
 			}
 
 			return jsBundle;
