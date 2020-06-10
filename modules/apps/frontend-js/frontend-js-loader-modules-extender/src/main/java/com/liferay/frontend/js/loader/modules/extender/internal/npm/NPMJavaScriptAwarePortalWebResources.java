@@ -12,9 +12,8 @@
  * details.
  */
 
-package com.liferay.frontend.js.web.internal;
+package com.liferay.frontend.js.loader.modules.extender.internal.npm;
 
-import com.liferay.frontend.js.loader.modules.extender.npm.JavaScriptAwarePortalWebResources;
 import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResources;
 
@@ -37,7 +36,7 @@ import org.osgi.service.component.annotations.Reference;
 		JavaScriptAwarePortalWebResources.class, PortalWebResources.class
 	}
 )
-public class JavaScriptPortalWebResources
+public class NPMJavaScriptAwarePortalWebResources
 	implements JavaScriptAwarePortalWebResources {
 
 	@Override
