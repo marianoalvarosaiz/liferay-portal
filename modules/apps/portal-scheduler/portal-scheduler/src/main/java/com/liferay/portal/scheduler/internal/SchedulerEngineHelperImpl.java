@@ -1085,7 +1085,9 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 				SchedulerEngine.SCHEDULER_CLUSTER_INVOKING, false);
 
 			try {
-				delete(schedulerEntry, storageType);
+				if (storageType != StorageType.PERSISTED) {
+					delete(schedulerEntry, storageType);
+				}
 			}
 			catch (SchedulerException schedulerException) {
 				_log.error(schedulerException, schedulerException);
