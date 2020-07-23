@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Redis Redisson
+Bundle-SymbolicName: com.liferay.redis.redisson
+Bundle-Version: 1.0.0
+-includeresource:\
+	@redisson-all-[0-9.]*.jar;lib:=true,\
+	@redisson-tomcat-9-[0-9.]*.jar;lib:=true
