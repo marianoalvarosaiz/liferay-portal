@@ -964,9 +964,23 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 				SchedulerEngine.SCHEDULER_CLUSTER_INVOKING, false);
 
 			try {
-				schedule(
-					schedulerEntry.getTrigger(), storageType,
-					schedulerEntry.getDescription(), destinationName, null, 0);
+				Trigger trigger = schedulerEntry.getTrigger();
+
+				SchedulerResponse schedulerResponse = null;
+
+				if (storageType == StorageType.PERSISTED) {
+					schedulerResponse = getScheduledJob(
+						trigger.getJobName(), trigger.getGroupName(),
+						StorageType.PERSISTED);
+				}
+
+				if ((schedulerResponse == null) ||
+					(schedulerResponse.getTrigger() == null)) {
+
+					schedule(
+						trigger, storageType, schedulerEntry.getDescription(),
+						destinationName, null, 0);
+				}
 
 				ServiceRegistration<MessageListener> serviceRegistration =
 					_messageListenerServiceRegistrations.get(
@@ -1085,7 +1099,9 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 				SchedulerEngine.SCHEDULER_CLUSTER_INVOKING, false);
 
 			try {
-				delete(schedulerEntry, storageType);
+				if (storageType != StorageType.PERSISTED) {
+					delete(schedulerEntry, storageType);
+				}
 			}
 			catch (SchedulerException schedulerException) {
 				_log.error(schedulerException, schedulerException);
