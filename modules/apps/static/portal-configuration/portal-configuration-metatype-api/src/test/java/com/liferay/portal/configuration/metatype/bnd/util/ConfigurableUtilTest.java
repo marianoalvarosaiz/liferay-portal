@@ -225,7 +225,8 @@ public class ConfigurableUtilTest {
 		Assert.assertEquals(1, testConfiguration.testShort());
 		Assert.assertEquals("test_string", testConfiguration.testString());
 		Assert.assertEquals(
-			"a=b\\,c= d", testConfiguration.testStringBackslashEscape());
+			"a\\=b\\\\\\,c\\=\\ d",
+			testConfiguration.testStringBackslashEscape());
 		Assert.assertArrayEquals(
 			new String[] {"test_string_1", "test_string_2"},
 			testConfiguration.testStringArray());
