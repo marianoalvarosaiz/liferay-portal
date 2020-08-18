@@ -32,6 +32,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({
 	"unchecked", "rawtypes"
@@ -121,10 +122,6 @@ public class Configurable<T> {
 			}
 
 			Class<?> actualType = o.getClass();
-
-			if (actualType == String.class) {
-				o = unescape((String)o);
-			}
 
 			if (actualType.isAssignableFrom(resultType))
 				return o;
@@ -334,7 +331,8 @@ public class Configurable<T> {
 					.find())
 					return Arrays.asList(s.split("\\|"));
 				else
-					return Arrays.asList(s.split("(?<!\\\\),"));
+					return Arrays.stream(s.split("(?<!\\\\),")).map(Configurable::unescape)
+						.collect(Collectors.toList());
 
 			}
 			return Arrays.asList(o);
