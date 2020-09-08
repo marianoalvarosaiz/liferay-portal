@@ -882,12 +882,18 @@ public class JournalArticleStagedModelDataHandler
 			serviceContext.setAddGroupPermissions(addGroupPermissions);
 			serviceContext.setAddGuestPermissions(addGuestPermissions);
 
-			if ((expirationDate != null) && expirationDate.before(new Date())) {
-				article.setStatus(WorkflowConstants.STATUS_EXPIRED);
-			}
+			boolean expired = false;
 
-			if ((article.getStatus() != WorkflowConstants.STATUS_APPROVED) &&
-				(article.getStatus() != WorkflowConstants.STATUS_SCHEDULED)) {
+			if (((expirationDate != null) &&
+				 expirationDate.before(new Date())) ||
+				(article.getStatus() == WorkflowConstants.STATUS_EXPIRED)) {
+
+				expired = true;
+			}
+			else if ((article.getStatus() !=
+						WorkflowConstants.STATUS_APPROVED) &&
+					 (article.getStatus() !=
+						 WorkflowConstants.STATUS_SCHEDULED)) {
 
 				serviceContext.setWorkflowAction(
 					WorkflowConstants.ACTION_SAVE_DRAFT);
@@ -1003,6 +1009,13 @@ public class JournalArticleStagedModelDataHandler
 				serviceContext.getAssetTagNames(),
 				serviceContext.getAssetLinkEntryIds(),
 				serviceContext.getAssetPriority());
+
+			if (expired && !importedArticle.isExpired()) {
+				_journalArticleLocalService.expireArticle(
+					userId, importedArticle.getGroupId(),
+					importedArticle.getArticleId(),
+					importedArticle.getVersion(), articleURL, serviceContext);
+			}
 
 			serviceContext.setModifiedDate(importedArticle.getModifiedDate());
 
