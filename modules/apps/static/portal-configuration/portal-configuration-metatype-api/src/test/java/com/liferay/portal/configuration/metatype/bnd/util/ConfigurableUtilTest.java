@@ -129,6 +129,18 @@ public class ConfigurableUtilTest {
 	}
 
 	@Test
+	public void testCreateConfigurableDoesNotUnescapeString() {
+		Dictionary<String, String> dictionary = new HashMapDictionary<>();
+
+		dictionary.put("testReqiredString", "a=b\\\\,c=d");
+
+		_assertTestConfiguration(
+			ConfigurableUtil.createConfigurable(
+				TestConfiguration.class, dictionary),
+			"a=b\\\\,c=d");
+	}
+
+	@Test
 	public void testMisc() {
 
 		// Exception
