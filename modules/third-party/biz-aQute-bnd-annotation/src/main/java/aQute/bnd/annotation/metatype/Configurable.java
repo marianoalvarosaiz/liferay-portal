@@ -32,6 +32,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({
 	"unchecked", "rawtypes"
@@ -83,8 +84,11 @@ public class Configurable<T> {
 						throw new IllegalStateException("Attribute is required but not set " + method.getName());
 
 					o = ad.deflt();
-					if (o.equals(Meta.NULL))
+					if (o.equals(Meta.NULL)) {
 						o = null;
+					} else {
+						o = new EscapedObjectWrapper(o);
+					}
 				}
 			}
 			if (o == null) {
@@ -104,6 +108,12 @@ public class Configurable<T> {
 		}
 
 		public Object convert(Type type, Object o) throws Exception {
+			Class<?> actualType = o.getClass();
+
+			if (actualType == EscapedObjectWrapper.class) {
+				o = ((EscapedObjectWrapper)o).getWrappedObject();
+			}
+
 			if (type instanceof ParameterizedType) {
 				ParameterizedType pType = (ParameterizedType) type;
 				return convert(pType, o);
@@ -120,9 +130,9 @@ public class Configurable<T> {
 				return convertArray(resultType.getComponentType(), o);
 			}
 
-			Class<?> actualType = o.getClass();
+			if (actualType == EscapedObjectWrapper.class) {
+				actualType = String.class;
 
-			if (actualType == String.class) {
 				o = unescape((String)o);
 			}
 
@@ -334,7 +344,8 @@ public class Configurable<T> {
 					.find())
 					return Arrays.asList(s.split("\\|"));
 				else
-					return Arrays.asList(s.split("(?<!\\\\),"));
+					return Arrays.stream(s.split("(?<!\\\\),")).map(Configurable::unescape)
+						.collect(Collectors.toList());
 
 			}
 			return Arrays.asList(o);
@@ -401,6 +412,18 @@ public class Configurable<T> {
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static class EscapedObjectWrapper {
+		public EscapedObjectWrapper(Object o) {
+			this.o = o;
+		}
+
+		public Object getWrappedObject() {
+			return o;
+		}
+
+		private final Object o;
 	}
 
 	private static final String _BACK_SLASH_PLACE_HOLDER = "BACK_SLASH_PLACE_HOLDER";
