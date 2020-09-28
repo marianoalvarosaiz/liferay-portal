@@ -1634,7 +1634,16 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 	@Override
 	public List<Long> getGroupIds(long companyId, boolean active) {
-		return groupFinder.findByC_A(companyId, active);
+		List<Long> groupIds = _groupLocalServiceCache.getGroupIds(
+			companyId, active);
+
+		if (groupIds == null) {
+			groupIds = groupFinder.findByC_A(companyId, active);
+
+			_groupLocalServiceCache.putGroupIds(companyId, active, groupIds);
+		}
+
+		return groupIds;
 	}
 
 	/**
@@ -5207,6 +5216,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 	private volatile long[] _classNameIds;
 	private volatile long[] _complexSQLClassNameIds;
+	private GroupLocalServiceCache _groupLocalServiceCache =
+		new GroupLocalServiceCache();
 	private final Map<String, Group> _systemGroupsMap = new HashMap<>();
 
 }
