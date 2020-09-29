@@ -1634,7 +1634,16 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 	@Override
 	public List<Long> getGroupIds(long companyId, boolean active) {
-		return groupFinder.findByC_A(companyId, active);
+		List<Long> groupIds = GroupLocalServiceCache.getGroupIds(
+			companyId, active);
+
+		if (groupIds == null) {
+			groupIds = groupFinder.findByC_A(companyId, active);
+
+			GroupLocalServiceCache.putGroupIds(companyId, active, groupIds);
+		}
+
+		return groupIds;
 	}
 
 	/**
