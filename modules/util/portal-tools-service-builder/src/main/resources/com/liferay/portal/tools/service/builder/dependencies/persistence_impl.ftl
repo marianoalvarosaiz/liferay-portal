@@ -67,6 +67,7 @@ import ${apiPackagePath}.service.persistence.${entity.name}Persistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.change.tracking.CTColumnResolutionType;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.dao.orm.ArgumentsResolver;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
@@ -109,6 +110,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -655,7 +658,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						session.flush();
 					}
 
-					nestedSetsTreeManager.delete(${entity.variableName});
+					MethodHandler methodHandler = new MethodHandler(_deleteNestedSetsEntryMethodKey, ${entity.variableName});
+
+					ClusterMasterExecutorUtil.executeOnMaster(methodHandler);
 
 					clearCache();
 
@@ -814,17 +819,20 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						session.flush();
 					}
 
+					MethodHandler methodHandler = null;
+
 					if (isNew) {
-						nestedSetsTreeManager.insert(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+						methodHandler = new MethodHandler(_insertNestedSetsEntryMethodKey, ${entity.variableName});
 					}
 					<#if serviceBuilder.isVersionGTE_7_3_0()>
 						else if ((${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}") != null) && !Objects.equals(${entity.variableName}.getParent${pkEntityColumn.methodName}(), ${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}"))){
-							nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}")), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
 					<#else>
 						else if (${entity.variableName}.getParent${pkEntityColumn.methodName}() != ${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()){
-							nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
 					</#if>
+					methodHandler = new MethodHandler(_moveNestedSetsEntryMethodKey, ${entity.variableName});
 					}
+
+					ClusterMasterExecutorUtil.executeOnMaster(methodHandler);
 
 					clearCache();
 
@@ -2935,6 +2943,33 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			private static Map<FinderPath, Long> _finderPathColumnBitmasksCache = new ConcurrentHashMap<>();
 
 		}
+	</#if>
+
+	<#if entity.isHierarchicalTree()>
+		private synchronized void _deleteNestedSetsEntry(${entity.name} ${entity.variableName}) {
+			nestedSetsTreeManager.delete(${entity.variableName});
+		}
+
+		private synchronized void _insertNestedSetsEntry(${entity.name} ${entity.variableName}) {
+			nestedSetsTreeManager.insert(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+		}
+
+		private synchronized void _moveNestedSetsEntry(${entity.name} ${entity.variableName}) {
+			<#if serviceBuilder.isVersionGTE_7_3_0()>
+				nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}")), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+			<#else>
+				nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+			</#if>
+		}
+
+		private static final MethodKey _deleteNestedSetsEntryMethodKey = new MethodKey(
+			${entity.name}PersistenceImpl.class, "_deleteNestedSetsEntry", ${entity.name}.class);
+
+		private static final MethodKey _insertNestedSetsEntryMethodKey = new MethodKey(
+			${entity.name}PersistenceImpl.class, "_insertNestedSetsEntry", ${entity.name}.class);
+
+		private static final MethodKey _moveNestedSetsEntryMethodKey = new MethodKey(
+			${entity.name}PersistenceImpl.class, "_moveNestedSetsEntry", ${entity.name}.class);
 	</#if>
 }
 
