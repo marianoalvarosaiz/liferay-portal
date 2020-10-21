@@ -655,7 +655,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						session.flush();
 					}
 
-					nestedSetsTreeManager.delete(${entity.variableName});
+					synchronized(this) {
+						nestedSetsTreeManager.delete(${entity.variableName});
+					}
 
 					clearCache();
 
@@ -814,16 +816,18 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 						session.flush();
 					}
 
-					if (isNew) {
-						nestedSetsTreeManager.insert(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
-					}
-					<#if serviceBuilder.isVersionGTE_7_3_0()>
-						else if ((${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}") != null) && !Objects.equals(${entity.variableName}.getParent${pkEntityColumn.methodName}(), ${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}"))){
-							nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}")), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
-					<#else>
-						else if (${entity.variableName}.getParent${pkEntityColumn.methodName}() != ${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()){
-							nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
-					</#if>
+					synchronized(this) {
+						if (isNew) {
+							nestedSetsTreeManager.insert(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+						}
+						<#if serviceBuilder.isVersionGTE_7_3_0()>
+							else if ((${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}") != null) && !Objects.equals(${entity.variableName}.getParent${pkEntityColumn.methodName}(), ${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}"))){
+								nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getColumnOriginalValue("parent${pkEntityColumn.methodName}")), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+						<#else>
+							else if (${entity.variableName}.getParent${pkEntityColumn.methodName}() != ${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()){
+								nestedSetsTreeManager.move(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}ModelImpl.getOriginalParent${pkEntityColumn.methodName}()), fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+						</#if>
+						}
 					}
 
 					clearCache();
