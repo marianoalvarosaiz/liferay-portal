@@ -262,7 +262,9 @@ public class NestedSetsTreeEntryPersistenceImpl
 					session.flush();
 				}
 
-				nestedSetsTreeManager.delete(nestedSetsTreeEntry);
+				synchronized (this) {
+					nestedSetsTreeManager.delete(nestedSetsTreeEntry);
+				}
 
 				clearCache();
 
@@ -329,30 +331,34 @@ public class NestedSetsTreeEntryPersistenceImpl
 					session.flush();
 				}
 
-				if (isNew) {
-					nestedSetsTreeManager.insert(
-						nestedSetsTreeEntry,
-						fetchByPrimaryKey(
-							nestedSetsTreeEntry.
-								getParentNestedSetsTreeEntryId()));
-				}
-				else if ((nestedSetsTreeEntryModelImpl.getColumnOriginalValue(
-							"parentNestedSetsTreeEntryId") != null) &&
-						 !Objects.equals(
-							 nestedSetsTreeEntry.
-								 getParentNestedSetsTreeEntryId(),
-							 nestedSetsTreeEntryModelImpl.
-								 getColumnOriginalValue(
-									 "parentNestedSetsTreeEntryId"))) {
+				synchronized (this) {
+					if (isNew) {
+						nestedSetsTreeManager.insert(
+							nestedSetsTreeEntry,
+							fetchByPrimaryKey(
+								nestedSetsTreeEntry.
+									getParentNestedSetsTreeEntryId()));
+					}
+					else if ((nestedSetsTreeEntryModelImpl.
+								getColumnOriginalValue(
+									"parentNestedSetsTreeEntryId") != null) &&
+							 !Objects.equals(
+								 nestedSetsTreeEntry.
+									 getParentNestedSetsTreeEntryId(),
+								 nestedSetsTreeEntryModelImpl.
+									 getColumnOriginalValue(
+										 "parentNestedSetsTreeEntryId"))) {
 
-					nestedSetsTreeManager.move(
-						nestedSetsTreeEntry,
-						fetchByPrimaryKey(
-							nestedSetsTreeEntryModelImpl.getColumnOriginalValue(
-								"parentNestedSetsTreeEntryId")),
-						fetchByPrimaryKey(
-							nestedSetsTreeEntry.
-								getParentNestedSetsTreeEntryId()));
+						nestedSetsTreeManager.move(
+							nestedSetsTreeEntry,
+							fetchByPrimaryKey(
+								nestedSetsTreeEntryModelImpl.
+									getColumnOriginalValue(
+										"parentNestedSetsTreeEntryId")),
+							fetchByPrimaryKey(
+								nestedSetsTreeEntry.
+									getParentNestedSetsTreeEntryId()));
+					}
 				}
 
 				clearCache();
