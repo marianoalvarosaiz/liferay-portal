@@ -187,11 +187,6 @@ public class CASAutoLogin extends BaseAutoLogin {
 	}
 
 	@Reference(unbind = "-")
-	protected void setUserImporter(UserImporter userImporter) {
-		_userImporter = userImporter;
-	}
-
-	@Reference(unbind = "-")
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
@@ -203,7 +198,12 @@ public class CASAutoLogin extends BaseAutoLogin {
 	@Reference
 	private Portal _portal;
 
-	private UserImporter _userImporter;
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	private volatile UserImporter _userImporter;
+
 	private UserLocalService _userLocalService;
 
 }
