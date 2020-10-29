@@ -15,6 +15,7 @@
 package com.liferay.portal.tools.service.builder.test.service.persistence.impl;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
 import com.liferay.portal.kernel.dao.orm.ArgumentsResolver;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
@@ -32,6 +33,8 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.NestedSetsTreeManager;
 import com.liferay.portal.kernel.service.persistence.impl.PersistenceNestedSetsTreeManager;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -261,7 +264,10 @@ public class NestedSetsTreeEntryPersistenceImpl
 					session.flush();
 				}
 
-				nestedSetsTreeManager.delete(nestedSetsTreeEntry);
+				MethodHandler methodHandler = new MethodHandler(
+					_deleteNestedSetsEntryMethodKey, nestedSetsTreeEntry);
+
+				ClusterMasterExecutorUtil.executeOnMaster(methodHandler);
 
 				clearCache();
 
@@ -328,12 +334,11 @@ public class NestedSetsTreeEntryPersistenceImpl
 					session.flush();
 				}
 
+				MethodHandler methodHandler = null;
+
 				if (isNew) {
-					nestedSetsTreeManager.insert(
-						nestedSetsTreeEntry,
-						fetchByPrimaryKey(
-							nestedSetsTreeEntry.
-								getParentNestedSetsTreeEntryId()));
+					methodHandler = new MethodHandler(
+						_insertNestedSetsEntryMethodKey, nestedSetsTreeEntry);
 				}
 				else if ((nestedSetsTreeEntryModelImpl.getColumnOriginalValue(
 							"parentNestedSetsTreeEntryId") != null) &&
@@ -344,15 +349,14 @@ public class NestedSetsTreeEntryPersistenceImpl
 								 getColumnOriginalValue(
 									 "parentNestedSetsTreeEntryId"))) {
 
-					nestedSetsTreeManager.move(
-						nestedSetsTreeEntry,
-						fetchByPrimaryKey(
-							nestedSetsTreeEntryModelImpl.getColumnOriginalValue(
-								"parentNestedSetsTreeEntryId")),
-						fetchByPrimaryKey(
-							nestedSetsTreeEntry.
-								getParentNestedSetsTreeEntryId()));
+					methodHandler = new MethodHandler(
+						_moveNestedSetsEntryMethodKey, nestedSetsTreeEntry,
+						nestedSetsTreeEntryModelImpl.getColumnOriginalValue(
+							"parentNestedSetsTreeEntryId"),
+						nestedSetsTreeEntry.getParentNestedSetsTreeEntryId());
 				}
+
+				ClusterMasterExecutorUtil.executeOnMaster(methodHandler);
 
 				clearCache();
 
@@ -1106,5 +1110,45 @@ public class NestedSetsTreeEntryPersistenceImpl
 			new ConcurrentHashMap<>();
 
 	}
+
+	private synchronized void _deleteNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		nestedSetsTreeManager.delete(nestedSetsTreeEntry);
+	}
+
+	private synchronized void _insertNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		nestedSetsTreeManager.insert(
+			nestedSetsTreeEntry,
+			fetchByPrimaryKey(
+				nestedSetsTreeEntry.getParentNestedSetsTreeEntryId()));
+	}
+
+	private synchronized void _moveNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry, Serializable oldParent,
+		Serializable newParent) {
+
+		NestedSetsTreeEntryModelImpl nestedSetsTreeEntryModelImpl =
+			(NestedSetsTreeEntryModelImpl)nestedSetsTreeEntry;
+
+		nestedSetsTreeManager.move(
+			nestedSetsTreeEntry, fetchByPrimaryKey(oldParent),
+			fetchByPrimaryKey(newParent));
+	}
+
+	private static final MethodKey _deleteNestedSetsEntryMethodKey =
+		new MethodKey(
+			NestedSetsTreeEntryPersistenceImpl.class, "_deleteNestedSetsEntry",
+			NestedSetsTreeEntry.class);
+	private static final MethodKey _insertNestedSetsEntryMethodKey =
+		new MethodKey(
+			NestedSetsTreeEntryPersistenceImpl.class, "_insertNestedSetsEntry",
+			NestedSetsTreeEntry.class);
+	private static final MethodKey _moveNestedSetsEntryMethodKey =
+		new MethodKey(
+			NestedSetsTreeEntryPersistenceImpl.class, "_moveNestedSetsEntry",
+			NestedSetsTreeEntry.class);
 
 }
