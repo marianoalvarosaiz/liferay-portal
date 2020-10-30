@@ -3009,6 +3009,22 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 		}
 	</#if>
+
+	<#if entity.isHierarchicalTree()>
+		public synchronized void _deleteNestedSetsEntry(${entity.name} ${entity.variableName}) {
+			nestedSetsTreeManager.delete(${entity.variableName});
+		}
+
+		public synchronized void _insertNestedSetsEntry(${entity.name} ${entity.variableName}) {
+			nestedSetsTreeManager.insert(${entity.variableName}, fetchByPrimaryKey(${entity.variableName}.getParent${pkEntityColumn.methodName}()));
+		}
+
+		public static final MethodKey _deleteNestedSetsEntryMethodKey = new MethodKey(
+				${entity.name}PersistenceImpl.class, "_deleteNestedSetsEntry", ${entity.name}.class);
+
+		public static final MethodKey _insertNestedSetsEntryMethodKey = new MethodKey(
+				${entity.name}PersistenceImpl.class, "_insertNestedSetsEntry", ${entity.name}.class);
+	</#if>
 }
 
 <#function bindParameter entityColumns>
