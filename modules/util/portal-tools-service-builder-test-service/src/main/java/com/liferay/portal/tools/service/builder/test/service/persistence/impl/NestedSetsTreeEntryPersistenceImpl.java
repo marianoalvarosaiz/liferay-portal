@@ -1107,4 +1107,28 @@ public class NestedSetsTreeEntryPersistenceImpl
 
 	}
 
+	public synchronized void _deleteNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		nestedSetsTreeManager.delete(nestedSetsTreeEntry);
+	}
+
+	public synchronized void _insertNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		nestedSetsTreeManager.insert(
+			nestedSetsTreeEntry,
+			fetchByPrimaryKey(
+				nestedSetsTreeEntry.getParentNestedSetsTreeEntryId()));
+	}
+
+	public static final MethodKey _deleteNestedSetsEntryMethodKey =
+		new MethodKey(
+			NestedSetsTreeEntryPersistenceImpl.class, "_deleteNestedSetsEntry",
+			NestedSetsTreeEntry.class);
+	public static final MethodKey _insertNestedSetsEntryMethodKey =
+		new MethodKey(
+			NestedSetsTreeEntryPersistenceImpl.class, "_insertNestedSetsEntry",
+			NestedSetsTreeEntry.class);
+
 }

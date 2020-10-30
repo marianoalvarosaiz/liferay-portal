@@ -324,6 +324,18 @@ public class NestedSetsTreeEntryUtil {
 		getPersistence().setRebuildTreeEnabled(rebuildTreeEnabled);
 	}
 
+	public static void _deleteNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		getPersistence()._deleteNestedSetsEntry(nestedSetsTreeEntry);
+	}
+
+	public static void _insertNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		getPersistence()._insertNestedSetsEntry(nestedSetsTreeEntry);
+	}
+
 	public static NestedSetsTreeEntryPersistence getPersistence() {
 		return _serviceTracker.getService();
 	}
