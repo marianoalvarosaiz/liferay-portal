@@ -1107,4 +1107,19 @@ public class NestedSetsTreeEntryPersistenceImpl
 
 	}
 
+	public synchronized void _deleteNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		nestedSetsTreeManager.delete(nestedSetsTreeEntry);
+	}
+
+	public synchronized void _insertNestedSetsEntry(
+		NestedSetsTreeEntry nestedSetsTreeEntry) {
+
+		nestedSetsTreeManager.insert(
+			nestedSetsTreeEntry,
+			fetchByPrimaryKey(
+				nestedSetsTreeEntry.getParentNestedSetsTreeEntryId()));
+	}
+
 }

@@ -187,4 +187,8 @@ public interface NestedSetsTreeEntryPersistence
 
 	public void setRebuildTreeEnabled(boolean rebuildTreeEnabled);
 
+	public void _deleteNestedSetsEntry(NestedSetsTreeEntry nestedSetsTreeEntry);
+
+	public void _insertNestedSetsEntry(NestedSetsTreeEntry nestedSetsTreeEntry);
+
 }
