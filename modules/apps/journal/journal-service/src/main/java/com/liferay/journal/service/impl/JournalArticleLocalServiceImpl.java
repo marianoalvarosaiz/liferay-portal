@@ -1101,6 +1101,17 @@ public class JournalArticleLocalServiceImpl
 			newArticle.setStatus(oldArticle.getStatus());
 		}
 
+		newArticle.setStatusByUserId(user.getUserId());
+		newArticle.setStatusByUserName(user.getFullName());
+
+		Date now = new Date();
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		newArticle.setModifiedDate(serviceContext.getModifiedDate(now));
+		newArticle.setStatusDate(serviceContext.getModifiedDate(now));
+
 		ExpandoBridgeUtil.copyExpandoBridgeAttributes(
 			oldArticle.getExpandoBridge(), newArticle.getExpandoBridge());
 
