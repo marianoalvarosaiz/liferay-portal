@@ -17,6 +17,7 @@ package com.liferay.portal.instance.lifecycle.internal;
 import com.liferay.portal.instance.lifecycle.Clusterable;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
+import com.liferay.portal.kernel.cluster.ClusterMasterTokenTransitionListener;
 import com.liferay.portal.kernel.instance.lifecycle.PortalInstanceLifecycleManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -37,9 +38,29 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = PortalInstanceLifecycleManager.class)
+@Component(
+	immediate = true,
+	service = {
+		ClusterMasterTokenTransitionListener.class,
+		PortalInstanceLifecycleManager.class
+	}
+)
 public class PortalInstanceLifecycleListenerManagerImpl
-	implements PortalInstanceLifecycleManager {
+	implements ClusterMasterTokenTransitionListener,
+			   PortalInstanceLifecycleManager {
+
+	@Override
+	public void masterTokenAcquired() {
+		for (PortalInstanceLifecycleListener portalInstanceLifecycleListener :
+				_rollingRestartAwarePortalInstanceLifecycleListeners) {
+
+			_registerAllCompanies(portalInstanceLifecycleListener);
+		}
+	}
+
+	@Override
+	public void masterTokenReleased() {
+	}
 
 	@Override
 	public void preunregisterCompany(Company company) {
@@ -82,12 +103,13 @@ public class PortalInstanceLifecycleListenerManagerImpl
 
 		_portalInstanceLifecycleListeners.add(portalInstanceLifecycleListener);
 
-		if (_companies.isEmpty()) {
-			return;
-		}
+		_registerAllCompanies(portalInstanceLifecycleListener);
 
-		for (Company company : _companies) {
-			registerCompany(portalInstanceLifecycleListener, company);
+		if (portalInstanceLifecycleListener instanceof
+				RollingRestartAwarePortalInstanceLifecycleListener) {
+
+			_rollingRestartAwarePortalInstanceLifecycleListeners.add(
+				portalInstanceLifecycleListener);
 		}
 	}
 
@@ -168,6 +190,9 @@ public class PortalInstanceLifecycleListenerManagerImpl
 
 		_portalInstanceLifecycleListeners.remove(
 			portalInstanceLifecycleListener);
+
+		_rollingRestartAwarePortalInstanceLifecycleListeners.remove(
+			portalInstanceLifecycleListener);
 	}
 
 	protected void unregisterCompany(
@@ -199,11 +224,26 @@ public class PortalInstanceLifecycleListenerManagerImpl
 	@Reference
 	protected ClusterMasterExecutor clusterMasterExecutor;
 
+	private void _registerAllCompanies(
+		PortalInstanceLifecycleListener portalInstanceLifecycleListener) {
+
+		if (_companies.isEmpty()) {
+			return;
+		}
+
+		for (Company company : _companies) {
+			registerCompany(portalInstanceLifecycleListener, company);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		PortalInstanceLifecycleListenerManagerImpl.class);
 
 	private final Set<Company> _companies = new CopyOnWriteArraySet<>();
 	private final Set<PortalInstanceLifecycleListener>
 		_portalInstanceLifecycleListeners = new CopyOnWriteArraySet<>();
+	private final Set<PortalInstanceLifecycleListener>
+		_rollingRestartAwarePortalInstanceLifecycleListeners =
+			new CopyOnWriteArraySet<>();
 
 }

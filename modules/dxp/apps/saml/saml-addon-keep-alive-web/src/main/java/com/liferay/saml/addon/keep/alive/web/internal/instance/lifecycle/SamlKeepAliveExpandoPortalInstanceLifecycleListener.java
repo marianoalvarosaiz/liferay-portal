@@ -38,7 +38,8 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = PortalInstanceLifecycleListener.class)
 public class SamlKeepAliveExpandoPortalInstanceLifecycleListener
-	extends BasePortalInstanceLifecycleListener {
+	extends BasePortalInstanceLifecycleListener
+	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
