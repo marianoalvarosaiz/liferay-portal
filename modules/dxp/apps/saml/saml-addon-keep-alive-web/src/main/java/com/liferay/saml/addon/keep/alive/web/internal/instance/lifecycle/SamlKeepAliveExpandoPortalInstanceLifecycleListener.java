@@ -23,6 +23,7 @@ import com.liferay.expando.kernel.service.ExpandoTableLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
+import com.liferay.portal.instance.lifecycle.RollingRestartAwarePortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -38,7 +39,8 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = PortalInstanceLifecycleListener.class)
 public class SamlKeepAliveExpandoPortalInstanceLifecycleListener
-	extends BasePortalInstanceLifecycleListener {
+	extends BasePortalInstanceLifecycleListener
+	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
