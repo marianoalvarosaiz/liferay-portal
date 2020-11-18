@@ -16,6 +16,9 @@ package com.liferay.portal.instance.lifecycle;
 
 import com.liferay.portal.kernel.model.Company;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -27,10 +30,28 @@ public abstract class BasePortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
+		if (_alreadyRegistered.contains(company)) {
+			return;
+		}
+
+		doPortalInstanceRegistered(company);
+
+		_alreadyRegistered.add(company);
 	}
 
 	@Override
 	public void portalInstanceUnregistered(Company company) throws Exception {
+		doPortalInstanceUnregistered(company);
+
+		_alreadyRegistered.remove(company);
+	}
+
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+	}
+
+	protected void doPortalInstanceUnregistered(Company company)
+		throws Exception {
 	}
 
 	protected ClassLoader getClassLoader() {
@@ -38,5 +59,7 @@ public abstract class BasePortalInstanceLifecycleListener
 
 		return clazz.getClassLoader();
 	}
+
+	private final Set<Company> _alreadyRegistered = new CopyOnWriteArraySet<>();
 
 }
