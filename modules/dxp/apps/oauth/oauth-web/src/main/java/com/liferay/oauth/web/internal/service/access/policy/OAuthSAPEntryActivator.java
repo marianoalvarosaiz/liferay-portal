@@ -16,6 +16,7 @@ package com.liferay.oauth.web.internal.service.access.policy;
 
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
+import com.liferay.portal.instance.lifecycle.RollingRestartAwarePortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -110,7 +111,8 @@ public class OAuthSAPEntryActivator {
 	private UserLocalService _userLocalService;
 
 	private class PolicyPortalInstanceLifecycleListener
-		extends BasePortalInstanceLifecycleListener {
+		extends BasePortalInstanceLifecycleListener
+		implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 		public void portalInstanceRegistered(Company company) throws Exception {
 			try {
