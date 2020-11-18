@@ -20,6 +20,7 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
+import com.liferay.portal.instance.lifecycle.RollingRestartAwarePortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
@@ -32,7 +33,8 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(immediate = true, service = PortalInstanceLifecycleListener.class)
 public class AddSambaExpandoBridgePortalInstanceLifecycleListener
-	extends BasePortalInstanceLifecycleListener {
+	extends BasePortalInstanceLifecycleListener
+	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
 	public void portalInstanceRegistered(Company company)
