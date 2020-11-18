@@ -42,12 +42,6 @@ public class SamlKeepAliveExpandoPortalInstanceLifecycleListener
 	extends BasePortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
-	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
-		addExpandoColumn(company.getCompanyId(), SamlIdpSpConnection.class);
-		addExpandoColumn(company.getCompanyId(), SamlSpIdpConnection.class);
-	}
-
 	protected void addExpandoColumn(long companyId, Class<?> clazz)
 		throws Exception {
 
@@ -83,6 +77,14 @@ public class SamlKeepAliveExpandoPortalInstanceLifecycleListener
 				ExpandoColumnConstants.STRING,
 				SamlKeepAliveConstants.EXPANDO_COLUMN_NAME_KEEP_ALIVE_URL);
 		}
+	}
+
+	@Override
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+
+		addExpandoColumn(company.getCompanyId(), SamlIdpSpConnection.class);
+		addExpandoColumn(company.getCompanyId(), SamlSpIdpConnection.class);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

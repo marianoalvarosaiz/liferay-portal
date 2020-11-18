@@ -73,8 +73,25 @@ public class WorkflowMetricsDemo
 	extends BasePortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
+	@Deactivate
+	protected void deactivate() throws PortalException {
+		_ddmFormInstanceRecordDemoDataCreator.delete();
+
+		_ddmFormInstanceDemoDataCreator.delete();
+		_workflowMetricsSLADefinitionDemoDataCreator.delete();
+
+		_workflowDefinitionLinkDemoDataCreator.delete();
+
+		_workflowDefinitionDemoDataCreator.delete();
+
+		_omniAdminUserDemoDataCreator.delete();
+		_siteMemberUserDemoDataCreator.delete();
+	}
+
 	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+
 		User omniAdminUser = _omniAdminUserDemoDataCreator.create(
 			company.getCompanyId());
 
@@ -297,21 +314,6 @@ public class WorkflowMetricsDemo
 				}
 			).build(),
 			new ServiceContext());
-	}
-
-	@Deactivate
-	protected void deactivate() throws PortalException {
-		_ddmFormInstanceRecordDemoDataCreator.delete();
-
-		_ddmFormInstanceDemoDataCreator.delete();
-		_workflowMetricsSLADefinitionDemoDataCreator.delete();
-
-		_workflowDefinitionLinkDemoDataCreator.delete();
-
-		_workflowDefinitionDemoDataCreator.delete();
-
-		_omniAdminUserDemoDataCreator.delete();
-		_siteMemberUserDemoDataCreator.delete();
 	}
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")

@@ -40,7 +40,9 @@ public class AddDefaultKaleoProcessStructuresPortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setAddGuestPermissions(true);
