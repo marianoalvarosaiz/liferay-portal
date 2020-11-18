@@ -32,12 +32,16 @@ public class WorkflowMetricsPortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+
 		_workflowMetricsIndexCreator.createIndex(company);
 	}
 
 	@Override
-	public void portalInstanceUnregistered(Company company) throws Exception {
+	protected void doPortalInstanceUnregistered(Company company)
+		throws Exception {
+
 		_workflowMetricsIndexCreator.removeIndex(company);
 	}
 
