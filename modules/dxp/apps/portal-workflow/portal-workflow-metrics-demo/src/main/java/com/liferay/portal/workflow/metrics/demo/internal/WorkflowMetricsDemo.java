@@ -23,6 +23,7 @@ import com.liferay.portal.background.task.constants.BackgroundTaskContextMapCons
 import com.liferay.portal.background.task.service.BackgroundTaskLocalService;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
+import com.liferay.portal.instance.lifecycle.RollingRestartAwarePortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -68,7 +69,9 @@ import org.osgi.service.component.annotations.Reference;
  * @author Inácio Nery
  */
 @Component(immediate = true, service = PortalInstanceLifecycleListener.class)
-public class WorkflowMetricsDemo extends BasePortalInstanceLifecycleListener {
+public class WorkflowMetricsDemo
+	extends BasePortalInstanceLifecycleListener
+	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
