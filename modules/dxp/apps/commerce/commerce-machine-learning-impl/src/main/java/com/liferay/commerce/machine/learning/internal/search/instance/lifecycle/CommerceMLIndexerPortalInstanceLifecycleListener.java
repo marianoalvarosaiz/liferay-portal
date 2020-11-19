@@ -48,7 +48,9 @@ public class CommerceMLIndexerPortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+
 		try {
 			for (CommerceMLIndexer commerceMLIndexer : _commerceMLIndexers) {
 				commerceMLIndexer.createIndex(company.getCompanyId());
@@ -62,7 +64,9 @@ public class CommerceMLIndexerPortalInstanceLifecycleListener
 	}
 
 	@Override
-	public void portalInstanceUnregistered(Company company) throws Exception {
+	protected void doPortalInstanceUnregistered(Company company)
+		throws Exception {
+
 		try {
 			for (CommerceMLIndexer commerceMLIndexer : _commerceMLIndexers) {
 				commerceMLIndexer.dropIndex(company.getCompanyId());

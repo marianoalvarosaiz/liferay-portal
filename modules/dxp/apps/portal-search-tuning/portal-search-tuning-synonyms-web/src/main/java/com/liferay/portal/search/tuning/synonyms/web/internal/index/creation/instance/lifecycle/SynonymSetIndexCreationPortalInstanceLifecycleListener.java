@@ -38,7 +38,9 @@ public class SynonymSetIndexCreationPortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
+	protected void doPortalInstanceRegistered(Company company)
+		throws Exception {
+
 		long companyId = company.getCompanyId();
 
 		SynonymSetIndexName synonymSetIndexName =
