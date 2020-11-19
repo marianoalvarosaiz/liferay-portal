@@ -37,7 +37,7 @@ public class AddSambaExpandoBridgePortalInstanceLifecycleListener
 	implements RollingRestartAwarePortalInstanceLifecycleListener {
 
 	@Override
-	public void portalInstanceRegistered(Company company)
+	protected void doPortalInstanceRegistered(Company company)
 		throws PortalException {
 
 		ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(

@@ -114,7 +114,9 @@ public class OAuthSAPEntryActivator {
 		extends BasePortalInstanceLifecycleListener
 		implements RollingRestartAwarePortalInstanceLifecycleListener {
 
-		public void portalInstanceRegistered(Company company) throws Exception {
+		protected void doPortalInstanceRegistered(Company company)
+			throws Exception {
+
 			try {
 				addSAPEntry(company.getCompanyId());
 			}
