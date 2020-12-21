@@ -185,7 +185,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_F">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -238,7 +238,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_ST_L">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -263,7 +263,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_F_L">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -290,7 +290,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_C_S">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -325,7 +325,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_C_S_L">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -353,7 +353,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_U_F_C">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -388,7 +388,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByG_U_F_C_L">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
@@ -416,7 +416,7 @@
 	<sql id="com.liferay.journal.service.persistence.JournalArticleFinder.findByC_G_F_C_A_V_T_D_C_S_T_D_R">
 		<![CDATA[
 			SELECT
-				JournalArticle.*
+				DISTINCT JournalArticle.*
 			FROM
 				JournalArticle
 			LEFT JOIN
