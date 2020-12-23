@@ -194,19 +194,6 @@
 					(JournalArticle.groupId = tempJournalArticle.groupId) AND
 					(JournalArticle.articleId = tempJournalArticle.articleId) AND
 					(JournalArticle.version < tempJournalArticle.version)
-			LEFT JOIN
-				(
-					SELECT
-						JournalArticleLocalization.companyId, JournalArticleLocalization.articlePK, JournalArticleLocalization.title
-					FROM
-						JournalArticleLocalization
-					WHERE
-						1 = ?
-					GROUP BY
-						JournalArticleLocalization.companyId, JournalArticleLocalization.articlePK, JournalArticleLocalization.title
-				) JournalArticleLocalization ON
-					(JournalArticle.companyId = JournalArticleLocalization.companyId) AND
-					(JournalArticle.id_ = JournalArticleLocalization.articlePK)
 			WHERE
 				(JournalArticle.groupId = ?) AND
 				([$STATUS$]) AND
@@ -299,19 +286,6 @@
 					(JournalArticle.groupId = tempJournalArticle.groupId) AND
 					(JournalArticle.articleId = tempJournalArticle.articleId) AND
 					(JournalArticle.version < tempJournalArticle.version)
-			LEFT JOIN
-				(
-					SELECT
-						JournalArticleLocalization.companyId, JournalArticleLocalization.articlePK, JournalArticleLocalization.title
-					FROM
-						JournalArticleLocalization
-					WHERE
-						1 = ?
-					GROUP BY
-						JournalArticleLocalization.companyId, JournalArticleLocalization.articlePK, JournalArticleLocalization.title
-				) JournalArticleLocalization ON
-					(JournalArticle.companyId = JournalArticleLocalization.companyId) AND
-					(JournalArticle.id_ = JournalArticleLocalization.articlePK)
 			WHERE
 				(JournalArticle.groupId = ?) AND
 				(JournalArticle.classNameId = ?) AND
@@ -362,19 +336,6 @@
 					(JournalArticle.groupId = tempJournalArticle.groupId) AND
 					(JournalArticle.articleId = tempJournalArticle.articleId) AND
 					(JournalArticle.version < tempJournalArticle.version)
-			LEFT JOIN
-				(
-					SELECT
-						JournalArticleLocalization.companyId, JournalArticleLocalization.articlePK, JournalArticleLocalization.title
-					FROM
-						JournalArticleLocalization
-					WHERE
-						1 = ?
-					GROUP BY
-						JournalArticleLocalization.companyId, JournalArticleLocalization.articlePK, JournalArticleLocalization.title
-				) JournalArticleLocalization ON
-					(JournalArticle.companyId = JournalArticleLocalization.companyId) AND
-					(JournalArticle.id_ = JournalArticleLocalization.articlePK)
 			WHERE
 				(JournalArticle.groupId = ?) AND
 				(JournalArticle.classNameId = ?) AND
