@@ -123,6 +123,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.WorkflowDefinitionLink;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.PortletProvider;
@@ -4505,7 +4506,10 @@ public class JournalArticleLocalServiceImpl
 	 *         articles
 	 * @return the range of matching web content articles ordered by the
 	 *         comparator
+	 *
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, Date, Date, int, Date, int, int, OrderByComparator)}
 	 */
+	@Deprecated
 	@Override
 	public List<JournalArticle> search(
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
@@ -4514,10 +4518,50 @@ public class JournalArticleLocalServiceImpl
 		int status, Date reviewDate, int start, int end,
 		OrderByComparator<JournalArticle> orderByComparator) {
 
-		return journalArticleFinder.findByKeywords(
+		return search(
 			companyId, groupId, folderIds, classNameId, keywords, version,
 			ddmStructureKey, ddmTemplateKey, displayDateGT, displayDateLT,
-			status, reviewDate, start, end, orderByComparator);
+			status, reviewDate, LocaleUtil.getMostRelevantLocale(), start, end,
+			orderByComparator);
+	}
+
+	@Override
+	public List<JournalArticle> search(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String keywords, Double version, String ddmStructureKey,
+		String ddmTemplateKey, Date displayDateGT, Date displayDateLT,
+		int status, Date reviewDate, Locale locale, int start, int end,
+		OrderByComparator<JournalArticle> orderByComparator) {
+
+		String[] articleIds = null;
+		String[] titles = null;
+		String[] descriptions = null;
+		String[] contents = null;
+		String[] ddmStructureKeys = _customSQL.keywords(ddmStructureKey, false);
+		String[] ddmTemplateKeys = _customSQL.keywords(ddmTemplateKey, false);
+		boolean andOperator = false;
+
+		if (Validator.isNotNull(keywords)) {
+			articleIds = _customSQL.keywords(keywords, false);
+			titles = _customSQL.keywords(keywords);
+			descriptions = _customSQL.keywords(keywords, false);
+
+			if (isdatabaseContentKeywordSearchEnabled(companyId)) {
+				contents = _customSQL.keywords(keywords, false);
+			}
+		}
+		else {
+			andOperator = true;
+		}
+
+		QueryDefinition<JournalArticle> queryDefinition = new QueryDefinition<>(
+			status, start, end, orderByComparator);
+
+		return doFindByC_G_F_C_A_V_T_D_C_S_T_D_R_L(
+			companyId, groupId, folderIds, classNameId, articleIds, version,
+			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
+			queryDefinition, false);
 	}
 
 	/**
@@ -4585,7 +4629,10 @@ public class JournalArticleLocalServiceImpl
 	 *         articles
 	 * @return the range of matching web content articles ordered by the
 	 *         comparator
+	 *
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, String, String, String, Date, Date, int, Date, Locale, boolean, int, int, OrderByComparator)}
 	 */
+	@Deprecated
 	@Override
 	public List<JournalArticle> search(
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
@@ -4595,14 +4642,31 @@ public class JournalArticleLocalServiceImpl
 		boolean andOperator, int start, int end,
 		OrderByComparator<JournalArticle> orderByComparator) {
 
-		QueryDefinition<JournalArticle> queryDefinition = new QueryDefinition<>(
-			status, start, end, orderByComparator);
-
-		return journalArticleFinder.findByC_G_F_C_A_V_T_D_C_S_T_D_R(
+		return search(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, ddmStructureKey, ddmTemplateKey,
-			displayDateGT, displayDateLT, reviewDate, andOperator,
-			queryDefinition);
+			displayDateGT, displayDateLT, status, reviewDate,
+			LocaleUtil.getMostRelevantLocale(), andOperator, start, end,
+			orderByComparator);
+	}
+
+	@Override
+	public List<JournalArticle> search(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String articleId, Double version, String title, String description,
+		String content, String ddmStructureKey, String ddmTemplateKey,
+		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
+		Locale locale, boolean andOperator, int start, int end,
+		OrderByComparator<JournalArticle> orderByComparator) {
+
+		String[] ddmStructureKeys = _customSQL.keywords(ddmStructureKey, false);
+		String[] ddmTemplateKeys = _customSQL.keywords(ddmTemplateKey, false);
+
+		return search(
+			companyId, groupId, folderIds, classNameId, articleId, version,
+			title, description, content, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, status, reviewDate, locale,
+			andOperator, start, end, orderByComparator);
 	}
 
 	/**
@@ -4669,7 +4733,10 @@ public class JournalArticleLocalServiceImpl
 	 *         articles
 	 * @return the range of matching web content articles ordered by the
 	 *         comparator
+	 *
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, String, String[], String[], Date, Date, int, Date, Locale, boolean, int, int, OrderByComparator)}
 	 */
+	@Deprecated
 	@Override
 	public List<JournalArticle> search(
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
@@ -4679,14 +4746,36 @@ public class JournalArticleLocalServiceImpl
 		boolean andOperator, int start, int end,
 		OrderByComparator<JournalArticle> orderByComparator) {
 
+		return search(
+			companyId, groupId, folderIds, classNameId, articleId, version,
+			title, description, content, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, status, reviewDate,
+			LocaleUtil.getMostRelevantLocale(), andOperator, start, end,
+			orderByComparator);
+	}
+
+	@Override
+	public List<JournalArticle> search(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String articleId, Double version, String title, String description,
+		String content, String[] ddmStructureKeys, String[] ddmTemplateKeys,
+		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
+		Locale locale, boolean andOperator, int start, int end,
+		OrderByComparator<JournalArticle> orderByComparator) {
+
+		String[] articleIds = _customSQL.keywords(articleId, false);
+		String[] titles = _customSQL.keywords(title);
+		String[] descriptions = _customSQL.keywords(description, false);
+		String[] contents = _customSQL.keywords(content, false);
+
 		QueryDefinition<JournalArticle> queryDefinition = new QueryDefinition<>(
 			status, start, end, orderByComparator);
 
-		return journalArticleFinder.findByC_G_F_C_A_V_T_D_C_S_T_D_R(
-			companyId, groupId, folderIds, classNameId, articleId, version,
-			title, description, content, ddmStructureKeys, ddmTemplateKeys,
-			displayDateGT, displayDateLT, reviewDate, andOperator,
-			queryDefinition);
+		return doFindByC_G_F_C_A_V_T_D_C_S_T_D_R_L(
+			companyId, groupId, folderIds, classNameId, articleIds, version,
+			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
+			queryDefinition, false);
 	}
 
 	/**
@@ -4968,7 +5057,10 @@ public class JournalArticleLocalServiceImpl
 	 * @param  reviewDate the web content article's scheduled review date
 	 *         (optionally <code>null</code>)
 	 * @return the number of matching web content articles
+	 *
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, Date, Date, int, Date, Locale)}
 	 */
+	@Deprecated
 	@Override
 	public int searchCount(
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
@@ -4976,10 +5068,48 @@ public class JournalArticleLocalServiceImpl
 		String ddmTemplateKey, Date displayDateGT, Date displayDateLT,
 		int status, Date reviewDate) {
 
-		return journalArticleFinder.countByKeywords(
+		return searchCount(
 			companyId, groupId, folderIds, classNameId, keywords, version,
 			ddmStructureKey, ddmTemplateKey, displayDateGT, displayDateLT,
-			status, reviewDate);
+			status, reviewDate, LocaleUtil.getMostRelevantLocale());
+	}
+
+	@Override
+	public int searchCount(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String keywords, Double version, String ddmStructureKey,
+		String ddmTemplateKey, Date displayDateGT, Date displayDateLT,
+		int status, Date reviewDate, Locale locale) {
+
+		String[] articleIds = null;
+		String[] titles = null;
+		String[] descriptions = null;
+		String[] contents = null;
+		String[] ddmStructureKeys = _customSQL.keywords(ddmStructureKey, false);
+		String[] ddmTemplateKeys = _customSQL.keywords(ddmTemplateKey, false);
+		boolean andOperator = false;
+
+		if (Validator.isNotNull(keywords)) {
+			articleIds = _customSQL.keywords(keywords, false);
+			titles = _customSQL.keywords(keywords);
+			descriptions = _customSQL.keywords(keywords, false);
+
+			if (isdatabaseContentKeywordSearchEnabled(companyId)) {
+				contents = _customSQL.keywords(keywords, false);
+			}
+		}
+		else {
+			andOperator = true;
+		}
+
+		QueryDefinition<JournalArticle> queryDefinition = new QueryDefinition<>(
+			status);
+
+		return doCountByC_G_F_C_A_V_T_D_C_S_T_D_R_L(
+			companyId, groupId, folderIds, classNameId, articleIds, version,
+			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
+			queryDefinition, false);
 	}
 
 	/**
@@ -5027,7 +5157,10 @@ public class JournalArticleLocalServiceImpl
 	 *         or just one field must match. Group, folder IDs, class name ID,
 	 *         and status must all match their values.
 	 * @return the number of matching web content articles
+	 *
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, String, String, String, Date, Date, int, Date, Locale, boolean)}
 	 */
+	@Deprecated
 	@Override
 	public int searchCount(
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
@@ -5036,11 +5169,29 @@ public class JournalArticleLocalServiceImpl
 		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
 		boolean andOperator) {
 
-		return journalArticleFinder.countByC_G_F_C_A_V_T_D_C_S_T_D_R(
+		return searchCount(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, ddmStructureKey, ddmTemplateKey,
-			displayDateGT, displayDateLT, reviewDate, andOperator,
-			new QueryDefinition<JournalArticle>(status));
+			displayDateGT, displayDateLT, status, reviewDate,
+			LocaleUtil.getMostRelevantLocale(), andOperator);
+	}
+
+	@Override
+	public int searchCount(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String articleId, Double version, String title, String description,
+		String content, String ddmStructureKey, String ddmTemplateKey,
+		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
+		Locale locale, boolean andOperator) {
+
+		String[] ddmStructureKeys = _customSQL.keywords(ddmStructureKey, false);
+		String[] ddmTemplateKeys = _customSQL.keywords(ddmTemplateKey, false);
+
+		return searchCount(
+			companyId, groupId, folderIds, classNameId, articleId, version,
+			title, description, content, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, status, reviewDate, locale,
+			andOperator);
 	}
 
 	/**
@@ -5090,7 +5241,10 @@ public class JournalArticleLocalServiceImpl
 	 *         or just one field must match.  Group, folder IDs, class name ID,
 	 *         and status must all match their values.
 	 * @return the number of matching web content articles
+	 *
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, String, String[], String[], Date, Date, int, Date, Locale, boolean)}
 	 */
+	@Deprecated
 	@Override
 	public int searchCount(
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
@@ -5099,11 +5253,34 @@ public class JournalArticleLocalServiceImpl
 		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
 		boolean andOperator) {
 
-		return journalArticleFinder.countByC_G_F_C_A_V_T_D_C_S_T_D_R(
+		return searchCount(
 			companyId, groupId, folderIds, classNameId, articleId, version,
 			title, description, content, ddmStructureKeys, ddmTemplateKeys,
-			displayDateGT, displayDateLT, reviewDate, andOperator,
-			new QueryDefinition<JournalArticle>(status));
+			displayDateGT, displayDateLT, status, reviewDate,
+			LocaleUtil.getMostRelevantLocale(), andOperator);
+	}
+
+	@Override
+	public int searchCount(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String articleId, Double version, String title, String description,
+		String content, String[] ddmStructureKeys, String[] ddmTemplateKeys,
+		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
+		Locale locale, boolean andOperator) {
+
+		String[] articleIds = _customSQL.keywords(articleId, false);
+		String[] titles = _customSQL.keywords(title);
+		String[] descriptions = _customSQL.keywords(description, false);
+		String[] contents = _customSQL.keywords(content, false);
+
+		QueryDefinition<JournalArticle> queryDefinition = new QueryDefinition<>(
+			status);
+
+		return doCountByC_G_F_C_A_V_T_D_C_S_T_D_R_L(
+			companyId, groupId, folderIds, classNameId, articleIds, version,
+			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
+			queryDefinition, false);
 	}
 
 	/**
@@ -8012,6 +8189,26 @@ public class JournalArticleLocalServiceImpl
 				JournalServiceConfiguration.class, companyId);
 
 		return journalServiceConfiguration.articleCommentsEnabled();
+	}
+
+	protected boolean isdatabaseContentKeywordSearchEnabled(long companyId) {
+		JournalServiceConfiguration journalServiceConfiguration = null;
+
+		try {
+			journalServiceConfiguration =
+				ConfigurationProviderUtil.getCompanyConfiguration(
+					JournalServiceConfiguration.class, companyId);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+		}
+
+		if (journalServiceConfiguration == null) {
+			return false;
+		}
+
+		return journalServiceConfiguration.
+			databaseContentKeywordSearchEnabled();
 	}
 
 	protected boolean isExpireAllArticleVersions(long companyId)
