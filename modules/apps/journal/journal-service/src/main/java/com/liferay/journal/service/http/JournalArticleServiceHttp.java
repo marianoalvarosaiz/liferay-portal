@@ -2581,7 +2581,7 @@ public class JournalArticleServiceHttp {
 			java.util.List<Long> folderIds, long classNameId, String keywords,
 			Double version, String ddmStructureKey, String ddmTemplateKey,
 			java.util.Date displayDateGT, java.util.Date displayDateLT,
-			int status, java.util.Date reviewDate, java.util.Locale locale,
+			java.util.Locale locale, int status, java.util.Date reviewDate,
 			int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
 				<com.liferay.journal.model.JournalArticle> orderByComparator) {
@@ -2594,7 +2594,7 @@ public class JournalArticleServiceHttp {
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, companyId, groupId, folderIds, classNameId, keywords,
 				version, ddmStructureKey, ddmTemplateKey, displayDateGT,
-				displayDateLT, status, reviewDate, locale, start, end,
+				displayDateLT, locale, status, reviewDate, start, end,
 				orderByComparator);
 
 			Object returnObj = null;
@@ -2671,7 +2671,7 @@ public class JournalArticleServiceHttp {
 			Double version, String title, String description, String content,
 			String ddmStructureKey, String ddmTemplateKey,
 			java.util.Date displayDateGT, java.util.Date displayDateLT,
-			int status, java.util.Date reviewDate, java.util.Locale locale,
+			java.util.Locale locale, int status, java.util.Date reviewDate,
 			boolean andOperator, int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
 				<com.liferay.journal.model.JournalArticle> orderByComparator) {
@@ -2685,7 +2685,7 @@ public class JournalArticleServiceHttp {
 				methodKey, companyId, groupId, folderIds, classNameId,
 				articleId, version, title, description, content,
 				ddmStructureKey, ddmTemplateKey, displayDateGT, displayDateLT,
-				status, reviewDate, locale, andOperator, start, end,
+				locale, status, reviewDate, andOperator, start, end,
 				orderByComparator);
 
 			Object returnObj = null;
@@ -2762,7 +2762,7 @@ public class JournalArticleServiceHttp {
 			Double version, String title, String description, String content,
 			String[] ddmStructureKeys, String[] ddmTemplateKeys,
 			java.util.Date displayDateGT, java.util.Date displayDateLT,
-			int status, java.util.Date reviewDate, java.util.Locale locale,
+			java.util.Locale locale, int status, java.util.Date reviewDate,
 			boolean andOperator, int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
 				<com.liferay.journal.model.JournalArticle> orderByComparator) {
@@ -2776,7 +2776,7 @@ public class JournalArticleServiceHttp {
 				methodKey, companyId, groupId, folderIds, classNameId,
 				articleId, version, title, description, content,
 				ddmStructureKeys, ddmTemplateKeys, displayDateGT, displayDateLT,
-				status, reviewDate, locale, andOperator, start, end,
+				locale, status, reviewDate, andOperator, start, end,
 				orderByComparator);
 
 			Object returnObj = null;
@@ -2843,8 +2843,8 @@ public class JournalArticleServiceHttp {
 		HttpPrincipal httpPrincipal, long companyId, long groupId,
 		java.util.List<Long> folderIds, long classNameId, String keywords,
 		Double version, String ddmStructureKey, String ddmTemplateKey,
-		java.util.Date displayDateGT, java.util.Date displayDateLT, int status,
-		java.util.Date reviewDate, java.util.Locale locale) {
+		java.util.Date displayDateGT, java.util.Date displayDateLT,
+		java.util.Locale locale, int status, java.util.Date reviewDate) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -2854,7 +2854,7 @@ public class JournalArticleServiceHttp {
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, companyId, groupId, folderIds, classNameId, keywords,
 				version, ddmStructureKey, ddmTemplateKey, displayDateGT,
-				displayDateLT, status, reviewDate, locale);
+				displayDateLT, locale, status, reviewDate);
 
 			Object returnObj = null;
 
@@ -2922,8 +2922,8 @@ public class JournalArticleServiceHttp {
 		java.util.List<Long> folderIds, long classNameId, String articleId,
 		Double version, String title, String description, String content,
 		String ddmStructureKey, String ddmTemplateKey,
-		java.util.Date displayDateGT, java.util.Date displayDateLT, int status,
-		java.util.Date reviewDate, java.util.Locale locale,
+		java.util.Date displayDateGT, java.util.Date displayDateLT,
+		java.util.Locale locale, int status, java.util.Date reviewDate,
 		boolean andOperator) {
 
 		try {
@@ -2935,7 +2935,7 @@ public class JournalArticleServiceHttp {
 				methodKey, companyId, groupId, folderIds, classNameId,
 				articleId, version, title, description, content,
 				ddmStructureKey, ddmTemplateKey, displayDateGT, displayDateLT,
-				status, reviewDate, locale, andOperator);
+				locale, status, reviewDate, andOperator);
 
 			Object returnObj = null;
 
@@ -3837,8 +3837,8 @@ public class JournalArticleServiceHttp {
 	private static final Class<?>[] _searchParameterTypes63 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
 		Double.class, String.class, String.class, java.util.Date.class,
-		java.util.Date.class, int.class, java.util.Date.class,
-		java.util.Locale.class, int.class, int.class,
+		java.util.Date.class, java.util.Locale.class, int.class,
+		java.util.Date.class, int.class, int.class,
 		com.liferay.portal.kernel.util.OrderByComparator.class
 	};
 	private static final Class<?>[] _searchParameterTypes64 = new Class[] {
@@ -3851,9 +3851,10 @@ public class JournalArticleServiceHttp {
 	private static final Class<?>[] _searchParameterTypes65 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
 		Double.class, String.class, String.class, String.class, String.class,
-		String.class, java.util.Date.class, java.util.Date.class, int.class,
-		java.util.Date.class, java.util.Locale.class, boolean.class, int.class,
-		int.class, com.liferay.portal.kernel.util.OrderByComparator.class
+		String.class, java.util.Date.class, java.util.Date.class,
+		java.util.Locale.class, int.class, java.util.Date.class, boolean.class,
+		int.class, int.class,
+		com.liferay.portal.kernel.util.OrderByComparator.class
 	};
 	private static final Class<?>[] _searchParameterTypes66 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
@@ -3865,9 +3866,10 @@ public class JournalArticleServiceHttp {
 	private static final Class<?>[] _searchParameterTypes67 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
 		Double.class, String.class, String.class, String.class, String[].class,
-		String[].class, java.util.Date.class, java.util.Date.class, int.class,
-		java.util.Date.class, java.util.Locale.class, boolean.class, int.class,
-		int.class, com.liferay.portal.kernel.util.OrderByComparator.class
+		String[].class, java.util.Date.class, java.util.Date.class,
+		java.util.Locale.class, int.class, java.util.Date.class, boolean.class,
+		int.class, int.class,
+		com.liferay.portal.kernel.util.OrderByComparator.class
 	};
 	private static final Class<?>[] _searchCountParameterTypes68 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
@@ -3877,8 +3879,8 @@ public class JournalArticleServiceHttp {
 	private static final Class<?>[] _searchCountParameterTypes69 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
 		Double.class, String.class, String.class, java.util.Date.class,
-		java.util.Date.class, int.class, java.util.Date.class,
-		java.util.Locale.class
+		java.util.Date.class, java.util.Locale.class, int.class,
+		java.util.Date.class
 	};
 	private static final Class<?>[] _searchCountParameterTypes70 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
@@ -3889,8 +3891,8 @@ public class JournalArticleServiceHttp {
 	private static final Class<?>[] _searchCountParameterTypes71 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,
 		Double.class, String.class, String.class, String.class, String.class,
-		String.class, java.util.Date.class, java.util.Date.class, int.class,
-		java.util.Date.class, java.util.Locale.class, boolean.class
+		String.class, java.util.Date.class, java.util.Date.class,
+		java.util.Locale.class, int.class, java.util.Date.class, boolean.class
 	};
 	private static final Class<?>[] _searchCountParameterTypes72 = new Class[] {
 		long.class, long.class, java.util.List.class, long.class, String.class,

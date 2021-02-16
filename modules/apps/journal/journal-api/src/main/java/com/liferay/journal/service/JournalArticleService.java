@@ -1509,7 +1509,7 @@ public interface JournalArticleService extends BaseService {
 	 articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
-	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, Date, Date, int, Date, Locale, int, int, OrderByComparator)}
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, Date, Date, Locale, int, Date, int, int, OrderByComparator)}
 	 */
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -1525,7 +1525,7 @@ public interface JournalArticleService extends BaseService {
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
 		String keywords, Double version, String ddmStructureKey,
 		String ddmTemplateKey, Date displayDateGT, Date displayDateLT,
-		int status, Date reviewDate, Locale locale, int start, int end,
+		Locale locale, int status, Date reviewDate, int start, int end,
 		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
@@ -1590,7 +1590,7 @@ public interface JournalArticleService extends BaseService {
 	 articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
-	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, String, String, String, Date, Date, int, Date, Locale, boolean, int, int, OrderByComparator)}
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, String, String, String, Date, Date, Locale, int, Date, boolean, int, int, OrderByComparator)}
 	 */
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -1607,8 +1607,8 @@ public interface JournalArticleService extends BaseService {
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
 		String articleId, Double version, String title, String description,
 		String content, String ddmStructureKey, String ddmTemplateKey,
-		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
-		Locale locale, boolean andOperator, int start, int end,
+		Date displayDateGT, Date displayDateLT, Locale locale, int status,
+		Date reviewDate, boolean andOperator, int start, int end,
 		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
@@ -1675,7 +1675,7 @@ public interface JournalArticleService extends BaseService {
 	 articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
-	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, String, String[], String[], Date, Date, int, Date, Locale, boolean, int, int, OrderByComparator)}
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #search(long, long, List, long, String, Double, String, String, String, String[], String[], Date, Date, Locale, int, Date, boolean, int, int, OrderByComparator)}
 	 */
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -1692,8 +1692,8 @@ public interface JournalArticleService extends BaseService {
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
 		String articleId, Double version, String title, String description,
 		String content, String[] ddmStructureKeys, String[] ddmTemplateKeys,
-		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
-		Locale locale, boolean andOperator, int start, int end,
+		Date displayDateGT, Date displayDateLT, Locale locale, int status,
+		Date reviewDate, boolean andOperator, int start, int end,
 		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
@@ -1735,7 +1735,7 @@ public interface JournalArticleService extends BaseService {
 	 * @param reviewDate the web content article's scheduled review date
 	 (optionally <code>null</code>)
 	 * @return the number of matching web content articles
-	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, Date, Date, int, Date, Locale)}
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, Date, Date, Locale, int, Date)}
 	 */
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -1750,7 +1750,7 @@ public interface JournalArticleService extends BaseService {
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
 		String keywords, Double version, String ddmStructureKey,
 		String ddmTemplateKey, Date displayDateGT, Date displayDateLT,
-		int status, Date reviewDate, Locale locale);
+		Locale locale, int status, Date reviewDate);
 
 	/**
 	 * Returns the number of web content articles matching the parameters,
@@ -1797,7 +1797,7 @@ public interface JournalArticleService extends BaseService {
 	 or just one field must match. Group, folder IDs, class name ID,
 	 and status must all match their values.
 	 * @return the number of matching web content articles
-	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, String, String, String, Date, Date, int, Date, Locale, boolean)}
+	 * @deprecated As of Cavanaugh (7.4.x), replace by {@link #searchCount(long, long, List, long, String, Double, String, String, String, String, String, Date, Date, Locale, int, Date, boolean)}
 	 */
 	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -1813,8 +1813,8 @@ public interface JournalArticleService extends BaseService {
 		long companyId, long groupId, List<Long> folderIds, long classNameId,
 		String articleId, Double version, String title, String description,
 		String content, String ddmStructureKey, String ddmTemplateKey,
-		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
-		Locale locale, boolean andOperator);
+		Date displayDateGT, Date displayDateLT, Locale locale, int status,
+		Date reviewDate, boolean andOperator);
 
 	/**
 	 * Returns the number of web content articles matching the parameters,
