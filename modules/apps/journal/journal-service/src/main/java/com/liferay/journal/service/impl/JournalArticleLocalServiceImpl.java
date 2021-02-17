@@ -7570,10 +7570,7 @@ public class JournalArticleLocalServiceImpl
 		displayDateLT = CalendarUtil.getTimestamp(displayDateLT);
 		reviewDate = CalendarUtil.getTimestamp(reviewDate);
 
-		DSLQueryByC_G_F_C_A_V_T_D_C_S_T_D_S_R_L dslQueryGenerator =
-			new DSLQueryByC_G_F_C_A_V_T_D_C_S_T_D_S_R_L();
-
-		DSLQuery dslQuery = dslQueryGenerator.searchCountQuery(
+		DSLQuery dslQuery = _getSearchCountDSLQuery(
 			companyId, groupId, folderIds, classNameId, articleIds, version,
 			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
 			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
@@ -7603,10 +7600,7 @@ public class JournalArticleLocalServiceImpl
 		displayDateLT = CalendarUtil.getTimestamp(displayDateLT);
 		reviewDate = CalendarUtil.getTimestamp(reviewDate);
 
-		DSLQueryByC_G_F_C_A_V_T_D_C_S_T_D_S_R_L dslQueryGenerator =
-			new DSLQueryByC_G_F_C_A_V_T_D_C_S_T_D_S_R_L();
-
-		DSLQuery dslQuery = dslQueryGenerator.searchQuery(
+		DSLQuery dslQuery = _getSearchDSLQuery(
 			companyId, groupId, folderIds, classNameId, articleIds, version,
 			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
 			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
@@ -9226,6 +9220,42 @@ public class JournalArticleLocalServiceImpl
 		return (JournalArticleModelValidator)modelValidator;
 	}
 
+	private DSLQuery _getSearchCountDSLQuery(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String[] articleIds, Double version, String[] titles,
+		String[] descriptions, String[] contents, String[] ddmStructureKeys,
+		String[] ddmTemplateKeys, Date displayDateGT, Date displayDateLT,
+		Date reviewDate, Locale locale, boolean andOperator,
+		QueryDefinition<JournalArticle> queryDefinition,
+		boolean inlineSQLHelper) {
+
+		SearchDSLQuery searchDSLQuery = new SearchDSLQuery();
+
+		return searchDSLQuery.getSearchCountQuery(
+			companyId, groupId, folderIds, classNameId, articleIds, version,
+			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
+			queryDefinition, inlineSQLHelper);
+	}
+
+	private DSLQuery _getSearchDSLQuery(
+		long companyId, long groupId, List<Long> folderIds, long classNameId,
+		String[] articleIds, Double version, String[] titles,
+		String[] descriptions, String[] contents, String[] ddmStructureKeys,
+		String[] ddmTemplateKeys, Date displayDateGT, Date displayDateLT,
+		Date reviewDate, Locale locale, boolean andOperator,
+		QueryDefinition<JournalArticle> queryDefinition,
+		boolean inlineSQLHelper) {
+
+		SearchDSLQuery searchDSLQuery = new SearchDSLQuery();
+
+		return searchDSLQuery.getSearchQuery(
+			companyId, groupId, folderIds, classNameId, articleIds, version,
+			titles, descriptions, contents, ddmStructureKeys, ddmTemplateKeys,
+			displayDateGT, displayDateLT, reviewDate, locale, andOperator,
+			queryDefinition, inlineSQLHelper);
+	}
+
 	private int _getUniqueUrlTitleCount(
 		long groupId, String articleId, String urlTitle) {
 
@@ -9432,9 +9462,9 @@ public class JournalArticleLocalServiceImpl
 	@Reference
 	private TrashVersionLocalService _trashVersionLocalService;
 
-	private class DSLQueryByC_G_F_C_A_V_T_D_C_S_T_D_S_R_L {
+	private class SearchDSLQuery {
 
-		public DSLQuery searchCountQuery(
+		public DSLQuery getSearchCountQuery(
 			long companyId, long groupId, List<Long> folderIds,
 			long classNameId, String[] articleIds, Double version,
 			String[] titles, String[] descriptions, String[] contents,
@@ -9463,7 +9493,7 @@ public class JournalArticleLocalServiceImpl
 			);
 		}
 
-		public DSLQuery searchQuery(
+		public DSLQuery getSearchQuery(
 			long companyId, long groupId, List<Long> folderIds,
 			long classNameId, String[] articleIds, Double version,
 			String[] titles, String[] descriptions, String[] contents,
