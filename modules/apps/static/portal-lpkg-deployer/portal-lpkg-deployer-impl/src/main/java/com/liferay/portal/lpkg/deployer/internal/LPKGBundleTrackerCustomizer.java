@@ -92,6 +92,22 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 public class LPKGBundleTrackerCustomizer
 	implements BundleTrackerCustomizer<List<Bundle>> {
 
+	public static String extractFileName(String string) {
+		Matcher matcher = _pattern.matcher(string);
+
+		if (matcher.matches()) {
+			String name = matcher.group(1);
+
+			return name.concat(matcher.group(3));
+		}
+
+		if (_log.isWarnEnabled()) {
+			_log.warn("Unable to extract symbolic name from " + string);
+		}
+
+		return StringPool.BLANK;
+	}
+
 	public LPKGBundleTrackerCustomizer(
 		BundleContext bundleContext, Map<String, URL> urls,
 		Set<String> overrideFileNames) {
@@ -528,22 +544,6 @@ public class LPKGBundleTrackerCustomizer
 		return sb.toString();
 	}
 
-	private String _extractFileName(String string) {
-		Matcher matcher = _pattern.matcher(string);
-
-		if (matcher.matches()) {
-			String name = matcher.group(1);
-
-			return name.concat(matcher.group(3));
-		}
-
-		if (_log.isWarnEnabled()) {
-			_log.warn("Unable to extract symbolic name from " + string);
-		}
-
-		return StringPool.BLANK;
-	}
-
 	private boolean _isBundleInstalled(Bundle bundle, URL url, String location)
 		throws IOException {
 
@@ -595,7 +595,7 @@ public class LPKGBundleTrackerCustomizer
 			return false;
 		}
 
-		name = _extractFileName(name);
+		name = extractFileName(name);
 
 		name = StringUtil.toLowerCase(name);
 
