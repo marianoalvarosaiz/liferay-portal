@@ -96,9 +96,9 @@ public class LPKGBundleTrackerCustomizer
 		Matcher matcher = _pattern.matcher(string);
 
 		if (matcher.matches()) {
-			String name = matcher.group(1);
+			String name = matcher.group(2);
 
-			return name.concat(matcher.group(3));
+			return name.concat(matcher.group(4));
 		}
 
 		if (_log.isWarnEnabled()) {
@@ -929,8 +929,8 @@ public class LPKGBundleTrackerCustomizer
 		LPKGBundleTrackerCustomizer.class);
 
 	private static final Pattern _pattern = Pattern.compile(
-		"([a-zA-Z0-9_\\-\\.]+?)-\\d+[\\.\\d+]?[\\.\\d+]?(\\.[a-zA-Z0-9_-]+)*" +
-			"(\\..+)");
+		"(.*!/)?([a-zA-Z0-9_\\-\\.]+?)-\\d+[\\.\\d+]?[\\.\\d+]?" +
+			"(\\.[a-zA-Z0-9_-]+)*(\\..+)");
 	private static final List<String> _staticLPKGBundleSymbolicNames =
 		StaticLPKGResolver.getStaticLPKGBundleSymbolicNames();
 
