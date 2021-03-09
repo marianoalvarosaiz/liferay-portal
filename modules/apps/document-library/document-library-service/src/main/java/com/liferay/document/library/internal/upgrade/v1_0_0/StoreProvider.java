@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portlet.documentlibrary.store.StoreFactory;
 
 import java.util.Dictionary;
 
@@ -46,6 +47,8 @@ public class StoreProvider {
 
 		_serviceTracker = ServiceTrackerFactory.open(
 			bundleContext, Store.class, new StoreServiceTrackerCustomizer());
+
+		StoreFactory.getInstance();
 	}
 
 	@Deactivate
