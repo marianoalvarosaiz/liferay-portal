@@ -14,8 +14,11 @@
 
 package com.liferay.portal.repository;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.LocalRepository;
 import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.repository.RepositoryFactory;
@@ -24,6 +27,9 @@ import com.liferay.portal.kernel.service.RepositoryLocalService;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.repository.registry.RepositoryClassDefinition;
 import com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalog;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 /**
  * @author Adolfo Pérez
@@ -68,12 +74,37 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 			_repositoryClassDefinitionCatalog.getRepositoryClassDefinition(
 				className);
 
-		if (repositoryDefinition == null) {
+		if ((repositoryDefinition == null) ||
+			(_waitForExternalRepository(className) == null)) {
+
 			throw new UndeployedExternalRepositoryException(className);
 		}
 
 		return repositoryDefinition;
 	}
+
+	private RepositoryFactory _waitForExternalRepository(String className) {
+		Registry registry = RegistryUtil.getRegistry();
+
+		String filter = StringBundler.concat(
+			"(&(objectClass=", RepositoryFactory.class.getName(),
+			")(class.name=", className, "))");
+
+		ServiceTracker<RepositoryFactory, RepositoryFactory> serviceTracker =
+			registry.trackServices(registry.getFilter(filter));
+
+		try {
+			return serviceTracker.waitForService(10_000);
+		}
+		catch (InterruptedException interruptedException) {
+			_log.error("Failed waiting for " + className, interruptedException);
+
+			return null;
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		RepositoryFactoryImpl.class);
 
 	@BeanReference(type = RepositoryClassDefinitionCatalog.class)
 	private RepositoryClassDefinitionCatalog _repositoryClassDefinitionCatalog;
