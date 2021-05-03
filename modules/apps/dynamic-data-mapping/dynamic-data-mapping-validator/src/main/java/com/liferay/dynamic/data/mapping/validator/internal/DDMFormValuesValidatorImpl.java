@@ -40,11 +40,12 @@ import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationExcepti
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException.MustSetValidValuesSize;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException.RequiredValue;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidator;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -53,16 +54,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Marcellus Tavares
@@ -89,22 +88,17 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 			ddmForm.getDDMFormFieldsMap(false));
 	}
 
-	@Reference(
-		cardinality = ReferenceCardinality.MULTIPLE,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
-	)
-	protected void addDDMFormFieldValueValidator(
-		DDMFormFieldValueValidator ddmFormFieldValueValidator,
-		Map<String, Object> properties) {
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_ddmFormFieldValueValidatorsServiceTrackerMap =
+			ServiceTrackerMapFactory.openSingleValueMap(
+				bundleContext, DDMFormFieldValueValidator.class,
+				"ddm.form.field.type.name");
+	}
 
-		String type = MapUtil.getString(properties, "ddm.form.field.type.name");
-
-		if (Validator.isNull(type)) {
-			return;
-		}
-
-		_ddmFormFieldValueValidators.put(type, ddmFormFieldValueValidator);
+	@Deactivate
+	protected void deactivate() {
+		_ddmFormFieldValueValidatorsServiceTrackerMap.close();
 	}
 
 	protected boolean evaluateValidationExpression(
@@ -201,7 +195,8 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 		throws DDMFormValuesValidationException {
 
 		DDMFormFieldValueValidator ddmFormFieldValueValidator =
-			_ddmFormFieldValueValidators.get(ddmFormField.getType());
+			_ddmFormFieldValueValidatorsServiceTrackerMap.getService(
+				ddmFormField.getType());
 
 		if (ddmFormFieldValueValidator == null) {
 			return;
@@ -241,15 +236,6 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 		return stream.allMatch(
 			locale -> ddmFormFieldValueAccessor.isEmpty(
 				ddmFormFieldValue, locale));
-	}
-
-	protected void removeDDMFormFieldValueValidator(
-		DDMFormFieldValueValidator ddmFormFieldValueValidator,
-		Map<String, Objects> properties) {
-
-		String type = MapUtil.getString(properties, "ddm.form.field.type.name");
-
-		_ddmFormFieldValueValidators.remove(type);
 	}
 
 	@Reference(unbind = "-")
@@ -423,8 +409,8 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 	private DDMExpressionFactory _ddmExpressionFactory;
 	private DDMFormFieldTypeServicesTracker _ddmFormFieldTypeServicesTracker;
-	private final Map<String, DDMFormFieldValueValidator>
-		_ddmFormFieldValueValidators = new ConcurrentHashMap<>();
+	private ServiceTrackerMap<String, DDMFormFieldValueValidator>
+		_ddmFormFieldValueValidatorsServiceTrackerMap;
 	private final DDMFormFieldValueAccessor<String>
 		_defaultDDMFormFieldValueAccessor =
 			new DefaultDDMFormFieldValueAccessor();
