@@ -37,6 +37,7 @@ import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationExcepti
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException.MustSetValidValue;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException.MustSetValidValuesSize;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException.RequiredValue;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
@@ -804,6 +805,11 @@ public class DDMFormValuesValidatorTest {
 	}
 
 	protected void setUpDDMFormValuesValidator() throws Exception {
+		ReflectionTestUtil.setFieldValue(
+			_ddmFormValuesValidatorImpl,
+			"_ddmFormFieldValueValidatorsServiceTrackerMap",
+			ProxyFactory.newDummyInstance(ServiceTrackerMap.class));
+
 		DDMExpressionFactoryImpl ddmExpressionFactoryImpl =
 			new DDMExpressionFactoryImpl();
 
