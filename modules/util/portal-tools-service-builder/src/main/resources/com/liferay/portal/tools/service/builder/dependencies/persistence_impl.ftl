@@ -1234,6 +1234,12 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					return map;
 				}
 
+				if ((databaseInMaxParameters > 0) &&
+					(primaryKeys.size() > databaseInMaxParameters)) {
+
+					return splitFetchByPrimaryKeys(primaryKeys);
+				}
+
 				Set<Serializable> uncachedPrimaryKeys = null;
 
 				for (Serializable primaryKey : primaryKeys) {
@@ -1343,6 +1349,12 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				}
 
 				return map;
+			}
+
+			if ((databaseInMaxParameters > 0) &&
+				(primaryKeys.size() > databaseInMaxParameters)) {
+
+				return splitFetchByPrimaryKeys(primaryKeys);
 			}
 
 			StringBundler sb = new StringBundler(primaryKeys.size() * 2 + 1);
