@@ -73,6 +73,7 @@ import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -89,6 +90,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -382,6 +384,12 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 			}
 
 			return map;
+		}
+
+		if ((databaseInMaxParameters > 0) &&
+			(primaryKeys.size() > databaseInMaxParameters)) {
+
+			return splitFetchByPrimaryKeys(primaryKeys);
 		}
 
 		Set<Serializable> uncachedPrimaryKeys = null;
@@ -940,6 +948,27 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 
 	protected void setTable(Table<?> table) {
 		_table = table;
+	}
+
+	protected Map<Serializable, T> splitFetchByPrimaryKeys(
+		Set<Serializable> primaryKeys) {
+
+		Map<Serializable, T> map = new HashMap<>();
+
+		Serializable[] primaryKeysArray = primaryKeys.toArray(
+			new Serializable[0]);
+
+		Serializable[][] primaryKeysPages = (Serializable[][])ArrayUtil.split(
+			primaryKeysArray, databaseInMaxParameters);
+
+		for (Serializable[] primaryKeysPage : primaryKeysPages) {
+			Map<Serializable, T> submap = fetchByPrimaryKeys(
+				new HashSet<>(Arrays.asList(primaryKeysPage)));
+
+			submap.forEach(map::put);
+		}
+
+		return map;
 	}
 
 	/**
