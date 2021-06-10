@@ -40,6 +40,10 @@ public class TestComponent {
 		return _secondConfiguration.second();
 	}
 
+	public String getFirst() {
+		return _firstConfiguration.first();
+	}
+
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
