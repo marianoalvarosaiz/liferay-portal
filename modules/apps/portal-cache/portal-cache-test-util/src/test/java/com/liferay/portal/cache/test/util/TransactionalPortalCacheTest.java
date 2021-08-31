@@ -399,6 +399,60 @@ public class TransactionalPortalCacheTest {
 	}
 
 	@Test
+	public void testPortalCacheClearedIfBufferExhausted() {
+		int transactionalCacheMaxElements = GetterUtil.getInteger(
+			PropsUtil.get(PropsKeys.TRANSACTIONAL_CACHE_MAX_ELEMENTS));
+
+		try {
+			_setEnableTransactionalCache(true);
+
+			_setTransactionalCacheMaxElements(1);
+
+			_portalCache.put(_KEY_1, _VALUE_1);
+
+			TransactionalPortalCache<String, String> transactionalPortalCache =
+				new TransactionalPortalCache<>(_portalCache, true);
+
+			TransactionalPortalCacheUtil.begin();
+
+			transactionalPortalCache.put(_KEY_1, _VALUE_2);
+			transactionalPortalCache.put(_KEY_2, _VALUE_2);
+			transactionalPortalCache.put(_KEY_3, _VALUE_3);
+
+			TransactionalPortalCacheUtil.commit(false);
+
+			List<String> cacheKeys = _portalCache.getKeys();
+
+			Assert.assertTrue(cacheKeys.isEmpty());
+		}
+		finally {
+			_setTransactionalCacheMaxElements(transactionalCacheMaxElements);
+		}
+	}
+
+	@Test
+	public void testPortalCacheNotClearedIfBufferNotExhausted() {
+		_setEnableTransactionalCache(true);
+
+		_portalCache.put(_KEY_1, _VALUE_1);
+		_portalCache.put(_KEY_2, _VALUE_2);
+
+		TransactionalPortalCache<String, String> transactionalPortalCache =
+			new TransactionalPortalCache<>(_portalCache, true);
+
+		TransactionalPortalCacheUtil.begin();
+
+		transactionalPortalCache.put(_KEY_1, _VALUE_2);
+		transactionalPortalCache.put(_KEY_3, _VALUE_3);
+
+		TransactionalPortalCacheUtil.commit(false);
+
+		Assert.assertEquals(_VALUE_2, _portalCache.get(_KEY_1));
+		Assert.assertEquals(_VALUE_2, _portalCache.get(_KEY_2));
+		Assert.assertEquals(_VALUE_3, _portalCache.get(_KEY_3));
+	}
+
+	@Test
 	public void testTransactionalCache() {
 		_setEnableTransactionalCache(true);
 
@@ -1455,9 +1509,13 @@ public class TransactionalPortalCacheTest {
 
 	private static final String _KEY_2 = "KEY_2";
 
+	private static final String _KEY_3 = "KEY_3";
+
 	private static final String _VALUE_1 = "VALUE_1";
 
 	private static final String _VALUE_2 = "VALUE_2";
+
+	private static final String _VALUE_3 = "VALUE_3";
 
 	private PortalCache<String, String> _portalCache;
 	private TestPortalCacheListener<String, String> _testCacheListener;
