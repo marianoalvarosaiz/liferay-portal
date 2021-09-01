@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.cache.SkipReplicationThreadLocal;
 import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionAttribute;
 import com.liferay.portal.kernel.transaction.TransactionDefinition;
@@ -30,6 +32,7 @@ import com.liferay.portal.kernel.transaction.TransactionStatus;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.Serializable;
 
@@ -208,6 +211,13 @@ public class TransactionalPortalCacheHelper {
 		}
 
 		if (uncommittedBuffer.isExhausted()) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					StringBundler.concat(
+						"Transactional cache", portalCache.getPortalCacheName(),
+						" is exhausted. Clearing cache to ensure consistency"));
+			}
+
 			uncommittedBuffer.removeAll(SkipReplicationThreadLocal.isEnabled());
 
 			return;
@@ -288,6 +298,9 @@ public class TransactionalPortalCacheHelper {
 
 	private static final ValueEntry _NULL_HOLDER_VALUE_ENTRY = new ValueEntry(
 		_NULL_HOLDER, PortalCache.DEFAULT_TIME_TO_LIVE, false);
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		TransactionalPortalCacheHelper.class);
 
 	private static final ThreadLocal<List<List<PortalCacheMap>>>
 		_backupPortalCacheMapsThreadLocal = new CentralizedThreadLocal<>(
