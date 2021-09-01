@@ -33,6 +33,9 @@ import com.liferay.portal.kernel.transaction.TransactionLifecycleListener;
 import com.liferay.portal.kernel.transaction.TransactionStatus;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.test.log.LogCapture;
+import com.liferay.portal.test.log.LogEntry;
+import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.registry.BasicRegistryImpl;
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.FutureTask;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -361,6 +365,37 @@ public class TransactionalPortalCacheTest {
 		transactionLifecycleListener.committed(null, null);
 
 		transactionLifecycleListener.rollbacked(null, null, null);
+	}
+
+	@Test
+	public void testNoLogPrintedIfBufferExhaustedAndLogDisabled() {
+		int transactionalCacheMaxElements = GetterUtil.getInteger(
+			PropsUtil.get(PropsKeys.TRANSACTIONAL_CACHE_MAX_ELEMENTS));
+
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				TransactionalPortalCacheUtil.class.getName(), Level.OFF)) {
+
+			_setEnableTransactionalCache(true);
+
+			_setTransactionalCacheMaxElements(1);
+
+			TransactionalPortalCache<String, String> transactionalPortalCache =
+				new TransactionalPortalCache<>(_portalCache, true);
+
+			TransactionalPortalCacheUtil.begin();
+
+			transactionalPortalCache.put(_KEY_1, _VALUE_1);
+			transactionalPortalCache.put(_KEY_2, _VALUE_2);
+
+			TransactionalPortalCacheUtil.commit(false);
+
+			List<LogEntry> logEntries = logCapture.getLogEntries();
+
+			Assert.assertTrue(logEntries.isEmpty());
+		}
+		finally {
+			_setTransactionalCacheMaxElements(transactionalCacheMaxElements);
+		}
 	}
 
 	@Test
@@ -740,7 +775,9 @@ public class TransactionalPortalCacheTest {
 		int transactionalCacheMaxElements = GetterUtil.getInteger(
 			PropsUtil.get(PropsKeys.TRANSACTIONAL_CACHE_MAX_ELEMENTS));
 
-		try {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				TransactionalPortalCacheUtil.class.getName(), Level.WARNING)) {
+
 			_setEnableTransactionalCache(true);
 
 			_setTransactionalCacheMaxElements(1);
@@ -766,6 +803,17 @@ public class TransactionalPortalCacheTest {
 			Assert.assertNull(transactionalPortalCache.get(_KEY_1));
 
 			TransactionalPortalCacheUtil.commit(false);
+
+			List<LogEntry> logEntries = logCapture.getLogEntries();
+
+			Assert.assertEquals(logEntries.toString(), 2, logEntries.size());
+
+			for (LogEntry logEntry : logEntries) {
+				Assert.assertEquals(
+					"Transactional cacheTest Portal Cache is exhausted. " +
+						"Clearing cache to ensure consistency",
+					logEntry.getMessage());
+			}
 		}
 		finally {
 			_setTransactionalCacheMaxElements(transactionalCacheMaxElements);
