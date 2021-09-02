@@ -274,6 +274,11 @@ public class FinderCacheImplTest {
 		}
 
 		@Override
+		public T cloneWithOriginalValues() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
 		public int compareTo(TestBaseModel testBaseModel) {
 			throw new UnsupportedOperationException();
 		}
