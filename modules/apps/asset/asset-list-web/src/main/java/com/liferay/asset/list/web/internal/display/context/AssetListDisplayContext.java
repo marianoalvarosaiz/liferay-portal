@@ -30,6 +30,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
+import com.liferay.frontend.taglib.servlet.taglib.ManagementBarSortBaseDisplayContext;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringPool;
@@ -40,8 +41,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.portlet.PortalPreferences;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -58,26 +57,25 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Jürgen Kappler
  */
-public class AssetListDisplayContext {
+public class AssetListDisplayContext
+	extends ManagementBarSortBaseDisplayContext {
 
 	public AssetListDisplayContext(
 		AssetRendererFactoryClassProvider assetRendererFactoryClassProvider,
 		RenderRequest renderRequest, RenderResponse renderResponse) {
 
+		super(
+			PortalUtil.getHttpServletRequest(renderRequest),
+			AssetListPortletKeys.ASSET_LIST);
+
 		_assetRendererFactoryClassProvider = assetRendererFactoryClassProvider;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 
-		_httpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
-
-		_portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(
-			_httpServletRequest);
-		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
+		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
 
@@ -122,9 +120,9 @@ public class AssetListDisplayContext {
 
 		OrderByComparator<AssetListEntry> orderByComparator =
 			AssetListPortletUtil.getAssetListEntryOrderByComparator(
-				_getOrderByCol(), getOrderByType());
+				getOrderByCol(), getOrderByType());
 
-		assetListEntriesSearchContainer.setOrderByCol(_getOrderByCol());
+		assetListEntriesSearchContainer.setOrderByCol(getOrderByCol());
 		assetListEntriesSearchContainer.setOrderByComparator(orderByComparator);
 		assetListEntriesSearchContainer.setOrderByType(getOrderByType());
 
@@ -177,7 +175,7 @@ public class AssetListDisplayContext {
 		}
 
 		_assetListEntryId = ParamUtil.getLong(
-			_httpServletRequest, "assetListEntryId");
+			httpServletRequest, "assetListEntryId");
 
 		return _assetListEntryId;
 	}
@@ -202,7 +200,7 @@ public class AssetListDisplayContext {
 			title = "new-manual-collection";
 		}
 
-		return LanguageUtil.get(_httpServletRequest, title);
+		return LanguageUtil.get(httpServletRequest, title);
 	}
 
 	public int getAssetListEntryType() {
@@ -213,7 +211,7 @@ public class AssetListDisplayContext {
 		AssetListEntry assetListEntry = getAssetListEntry();
 
 		int assetListEntryType = ParamUtil.getInteger(
-			_httpServletRequest, "assetListEntryType");
+			httpServletRequest, "assetListEntryType");
 
 		if (assetListEntry != null) {
 			assetListEntryType = assetListEntry.getType();
@@ -254,7 +252,7 @@ public class AssetListDisplayContext {
 	public String getEmptyResultMessageDescription() {
 		if (isShowAddAssetListEntryAction()) {
 			return LanguageUtil.get(
-				_httpServletRequest,
+				httpServletRequest,
 				"fortunately-it-is-very-easy-to-add-new-ones");
 		}
 
@@ -267,7 +265,7 @@ public class AssetListDisplayContext {
 				navigationItem.setActive(currentItem.equals("collections"));
 				navigationItem.setHref(_renderResponse.createRenderURL());
 				navigationItem.setLabel(
-					LanguageUtil.get(_httpServletRequest, "collections"));
+					LanguageUtil.get(httpServletRequest, "collections"));
 			}
 		).add(
 			navigationItem -> {
@@ -278,35 +276,17 @@ public class AssetListDisplayContext {
 					"/view_info_collection_providers.jsp");
 				navigationItem.setLabel(
 					LanguageUtil.get(
-						_httpServletRequest, "collection-providers"));
+						httpServletRequest, "collection-providers"));
 			}
 		).build();
 	}
 
 	public String getOrderByCol() {
-		return _getOrderByCol();
+		return getOrderByCol("create-date");
 	}
 
 	public String getOrderByType() {
-		if (Validator.isNotNull(_orderByType)) {
-			return _orderByType;
-		}
-
-		String orderByType = ParamUtil.getString(
-			_httpServletRequest, "orderByType");
-
-		if (Validator.isNotNull(orderByType)) {
-			_portalPreferences.setValue(
-				AssetListPortletKeys.ASSET_LIST, "order-by-type", orderByType);
-		}
-		else {
-			orderByType = _portalPreferences.getValue(
-				AssetListPortletKeys.ASSET_LIST, "order-by-type", "asc");
-		}
-
-		_orderByType = orderByType;
-
-		return _orderByType;
+		return getOrderByType("asc");
 	}
 
 	public PortletURL getPortletURL() {
@@ -339,7 +319,7 @@ public class AssetListDisplayContext {
 		}
 
 		_segmentsEntryId = ParamUtil.getLong(
-			_httpServletRequest, "segmentsEntryId",
+			httpServletRequest, "segmentsEntryId",
 			SegmentsEntryConstants.ID_DEFAULT);
 
 		return _segmentsEntryId;
@@ -377,7 +357,7 @@ public class AssetListDisplayContext {
 			dropdownItem.putData(
 				"addAssetListEntryURL", _getAddAssetListEntryURL(type));
 			dropdownItem.putData("title", _getAddAssetListTitle(title));
-			dropdownItem.setLabel(LanguageUtil.get(_httpServletRequest, label));
+			dropdownItem.setLabel(LanguageUtil.get(httpServletRequest, label));
 		};
 	}
 
@@ -393,7 +373,7 @@ public class AssetListDisplayContext {
 
 	private String _getAddAssetListTitle(String title) {
 		return LanguageUtil.format(
-			_httpServletRequest, "add-x-collection", title, true);
+			httpServletRequest, "add-x-collection", title, true);
 	}
 
 	private String _getKeywords() {
@@ -401,31 +381,9 @@ public class AssetListDisplayContext {
 			return _keywords;
 		}
 
-		_keywords = ParamUtil.getString(_httpServletRequest, "keywords");
+		_keywords = ParamUtil.getString(httpServletRequest, "keywords");
 
 		return _keywords;
-	}
-
-	private String _getOrderByCol() {
-		if (Validator.isNotNull(_orderByCol)) {
-			return _orderByCol;
-		}
-
-		String orderByCol = ParamUtil.getString(
-			_httpServletRequest, "orderByCol");
-
-		if (Validator.isNotNull(orderByCol)) {
-			_portalPreferences.setValue(
-				AssetListPortletKeys.ASSET_LIST, "order-by-col", orderByCol);
-		}
-		else {
-			orderByCol = _portalPreferences.getValue(
-				AssetListPortletKeys.ASSET_LIST, "order-by-col", "create-date");
-		}
-
-		_orderByCol = orderByCol;
-
-		return _orderByCol;
 	}
 
 	private boolean _isSearch() {
@@ -446,11 +404,7 @@ public class AssetListDisplayContext {
 	private Integer _assetListEntryType;
 	private final AssetRendererFactoryClassProvider
 		_assetRendererFactoryClassProvider;
-	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
-	private String _orderByCol;
-	private String _orderByType;
-	private final PortalPreferences _portalPreferences;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private Long _segmentsEntryId;

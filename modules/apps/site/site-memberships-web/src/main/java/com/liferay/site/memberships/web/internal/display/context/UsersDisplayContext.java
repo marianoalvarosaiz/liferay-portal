@@ -14,6 +14,7 @@
 
 package com.liferay.site.memberships.web.internal.display.context;
 
+import com.liferay.frontend.taglib.servlet.taglib.ManagementBarSortBaseDisplayContext;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -21,8 +22,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.portlet.PortalPreferences;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.SearchDisplayStyleUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
@@ -53,18 +52,19 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Eudaldo Alonso
  */
-public class UsersDisplayContext {
+public class UsersDisplayContext extends ManagementBarSortBaseDisplayContext {
 
 	public UsersDisplayContext(
 		HttpServletRequest httpServletRequest, RenderRequest renderRequest,
 		RenderResponse renderResponse) {
 
-		_httpServletRequest = httpServletRequest;
+		super(
+			httpServletRequest,
+			SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN);
+
+		httpServletRequest = httpServletRequest;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
-
-		_portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(
-			_httpServletRequest);
 	}
 
 	public String getDisplayStyle() {
@@ -73,7 +73,7 @@ public class UsersDisplayContext {
 		}
 
 		_displayStyle = SearchDisplayStyleUtil.getDisplayStyle(
-			_httpServletRequest,
+			httpServletRequest,
 			SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
 			"display-style-users", "icon");
 
@@ -86,11 +86,11 @@ public class UsersDisplayContext {
 		}
 
 		ThemeDisplay themeDisplay =
-			(ThemeDisplay)_httpServletRequest.getAttribute(
+			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
 		_groupId = ParamUtil.getLong(
-			_httpServletRequest, "groupId",
+			httpServletRequest, "groupId",
 			themeDisplay.getSiteGroupIdOrLiveGroupId());
 
 		return _groupId;
@@ -112,51 +112,17 @@ public class UsersDisplayContext {
 		}
 
 		_navigation = ParamUtil.getString(
-			_httpServletRequest, "navigation", "all");
+			httpServletRequest, "navigation", "all");
 
 		return _navigation;
 	}
 
 	public String getOrderByCol() {
-		if (_orderByCol != null) {
-			return _orderByCol;
-		}
-
-		_orderByCol = ParamUtil.getString(_httpServletRequest, "orderByCol");
-
-		if (Validator.isNull(_orderByCol)) {
-			_orderByCol = _portalPreferences.getValue(
-				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
-				"order-by-col", "modified-date");
-		}
-		else {
-			_portalPreferences.setValue(
-				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
-				"order-by-col", _orderByCol);
-		}
-
-		return _orderByCol;
+		return getOrderByCol("modified-date");
 	}
 
 	public String getOrderByType() {
-		if (_orderByType != null) {
-			return _orderByType;
-		}
-
-		_orderByType = ParamUtil.getString(_httpServletRequest, "orderByType");
-
-		if (Validator.isNull(_orderByType)) {
-			_orderByType = _portalPreferences.getValue(
-				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
-				"order-by-type", "asc");
-		}
-		else {
-			_portalPreferences.setValue(
-				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
-				"order-by-type", _orderByType);
-		}
-
-		return _orderByType;
+		return getOrderByType("asc");
 	}
 
 	public PortletURL getPortletURL() {
@@ -167,7 +133,7 @@ public class UsersDisplayContext {
 		).setRedirect(
 			() -> {
 				ThemeDisplay themeDisplay =
-					(ThemeDisplay)_httpServletRequest.getAttribute(
+					(ThemeDisplay)httpServletRequest.getAttribute(
 						WebKeys.THEME_DISPLAY);
 
 				return themeDisplay.getURLCurrent();
@@ -248,7 +214,7 @@ public class UsersDisplayContext {
 			return _role;
 		}
 
-		long roleId = ParamUtil.getLong(_httpServletRequest, "roleId");
+		long roleId = ParamUtil.getLong(httpServletRequest, "roleId");
 
 		if (roleId > 0) {
 			_role = RoleLocalServiceUtil.fetchRole(roleId);
@@ -265,7 +231,7 @@ public class UsersDisplayContext {
 		}
 
 		ThemeDisplay themeDisplay =
-			(ThemeDisplay)_httpServletRequest.getAttribute(
+			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
 		UserSearch userSearch = new UserSearch(_renderRequest, getPortletURL());
@@ -335,12 +301,8 @@ public class UsersDisplayContext {
 
 	private String _displayStyle;
 	private Long _groupId;
-	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
 	private String _navigation;
-	private String _orderByCol;
-	private String _orderByType;
-	private final PortalPreferences _portalPreferences;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private Role _role;

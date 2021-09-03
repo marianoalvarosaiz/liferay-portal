@@ -22,6 +22,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
+import com.liferay.frontend.taglib.servlet.taglib.ManagementBarSortBaseDisplayContext;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringBundler;
@@ -37,8 +38,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.portlet.PortalPreferences;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
@@ -93,20 +92,19 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Leonardo Barros
  */
-public class WorkflowTaskDisplayContext {
+public class WorkflowTaskDisplayContext
+	extends ManagementBarSortBaseDisplayContext {
 
 	public WorkflowTaskDisplayContext(
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
+		super(
+			PortalUtil.getHttpServletRequest(liferayPortletRequest),
+			PortletKeys.MY_WORKFLOW_TASK);
+
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
-
-		_httpServletRequest = PortalUtil.getHttpServletRequest(
-			liferayPortletRequest);
-
-		_portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(
-			_httpServletRequest);
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)_liferayPortletRequest.getAttribute(
@@ -116,7 +114,7 @@ public class WorkflowTaskDisplayContext {
 			themeDisplay.getLocale(), themeDisplay.getTimeZone());
 
 		_workflowTaskRequestHelper = new WorkflowTaskRequestHelper(
-			_httpServletRequest);
+			httpServletRequest);
 	}
 
 	public AssetEntry getAssetEntry() throws PortalException {
@@ -312,18 +310,7 @@ public class WorkflowTaskDisplayContext {
 	}
 
 	public String getOrderByType() {
-		if (Validator.isNotNull(_orderByType)) {
-			return _orderByType;
-		}
-
-		_orderByType = ParamUtil.getString(_httpServletRequest, "orderByType");
-
-		if (Validator.isNull(_orderByType)) {
-			_orderByType = _portalPreferences.getValue(
-				PortletKeys.MY_WORKFLOW_TASK, "order-by-type", "asc");
-		}
-
-		return _orderByType;
+		return getOrderByType("asc");
 	}
 
 	public String getPortletResource() {
@@ -337,7 +324,7 @@ public class WorkflowTaskDisplayContext {
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		_portletResource = ParamUtil.getString(
-			_httpServletRequest, "portletResource", portletDisplay.getId());
+			httpServletRequest, "portletResource", portletDisplay.getId());
 
 		return _portletResource;
 	}
@@ -484,7 +471,7 @@ public class WorkflowTaskDisplayContext {
 	}
 
 	public Locale getTaskContentLocale() {
-		String languageId = LanguageUtil.getLanguageId(_httpServletRequest);
+		String languageId = LanguageUtil.getLanguageId(httpServletRequest);
 
 		if (Validator.isNotNull(languageId)) {
 			return LocaleUtil.fromLanguageId(languageId);
@@ -739,7 +726,7 @@ public class WorkflowTaskDisplayContext {
 			}
 
 			return role.getTitle(
-				LanguageUtil.getLanguageId(_httpServletRequest));
+				LanguageUtil.getLanguageId(httpServletRequest));
 		}
 		else if (workflowLog.getUserId() != 0) {
 			return PortalUtil.getUserName(
@@ -835,25 +822,13 @@ public class WorkflowTaskDisplayContext {
 		}
 
 		_navigation = ParamUtil.getString(
-			_httpServletRequest, "navigation", "all");
+			httpServletRequest, "navigation", "all");
 
 		return _navigation;
 	}
 
 	private String _getOrderByCol() {
-		if (_orderByCol != null) {
-			return _orderByCol;
-		}
-
-		_orderByCol = ParamUtil.getString(_httpServletRequest, "orderByCol");
-
-		if (Validator.isNull(_orderByCol)) {
-			_orderByCol = _portalPreferences.getValue(
-				PortletKeys.MY_WORKFLOW_TASK, "order-by-col",
-				"last-activity-date");
-		}
-
-		return _orderByCol;
+		return getOrderByCol("last-activity-date");
 	}
 
 	private UnsafeConsumer<DropdownItem, Exception> _getOrderByDropdownItem(
@@ -875,7 +850,7 @@ public class WorkflowTaskDisplayContext {
 		).setNavigation(
 			() -> {
 				String navigation = ParamUtil.getString(
-					_httpServletRequest, "navigation");
+					httpServletRequest, "navigation");
 
 				if (Validator.isNotNull(navigation)) {
 					return _getNavigation();
@@ -1103,13 +1078,9 @@ public class WorkflowTaskDisplayContext {
 
 	private final Format _dateFormatDateTime;
 	private String _displayStyle;
-	private final HttpServletRequest _httpServletRequest;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private String _navigation;
-	private String _orderByCol;
-	private String _orderByType;
-	private final PortalPreferences _portalPreferences;
 	private String _portletResource;
 	private final Map<Long, Role> _roles = new HashMap<>();
 	private final Map<Long, User> _users = new HashMap<>();

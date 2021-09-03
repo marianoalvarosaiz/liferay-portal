@@ -20,6 +20,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
+import com.liferay.frontend.taglib.servlet.taglib.ManagementBarSortBaseDisplayContext;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringPool;
@@ -58,30 +59,27 @@ import java.util.Objects;
 
 import javax.portlet.PortletURL;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Rafael Praxedes
  */
-public class ReportsEngineDisplayContext {
+public class ReportsEngineDisplayContext
+	extends ManagementBarSortBaseDisplayContext {
 
 	public ReportsEngineDisplayContext(
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
+		super(
+			PortalUtil.getHttpServletRequest(liferayPortletRequest),
+			ReportsEngineConsolePortletKeys.REPORTS_ADMIN);
+
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 
-		_httpServletRequest = PortalUtil.getHttpServletRequest(
-			liferayPortletRequest);
-
-		_portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(
-			_httpServletRequest);
-
 		_reportsEngineRequestHelper = new ReportsEngineRequestHelper(
-			_httpServletRequest);
+			httpServletRequest);
 
-		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
+		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
 
@@ -188,29 +186,7 @@ public class ReportsEngineDisplayContext {
 	}
 
 	public String getOrderByType() {
-		if (_orderByType != null) {
-			return _orderByType;
-		}
-
-		_orderByType = ParamUtil.getString(_httpServletRequest, "orderByType");
-
-		if (Validator.isNull(_orderByType)) {
-			_orderByType = _portalPreferences.getValue(
-				ReportsEngineConsolePortletKeys.REPORTS_ADMIN, "order-by-type",
-				"asc");
-		}
-		else {
-			boolean saveOrderBy = ParamUtil.getBoolean(
-				_httpServletRequest, "saveOrderBy");
-
-			if (saveOrderBy) {
-				_portalPreferences.setValue(
-					ReportsEngineConsolePortletKeys.REPORTS_ADMIN,
-					"order-by-type", _orderByType);
-			}
-		}
-
-		return _orderByType;
+		return getOrderByType("asc");
 	}
 
 	public PortletURL getPortletURL() {
@@ -219,7 +195,7 @@ public class ReportsEngineDisplayContext {
 		).setNavigation(
 			() -> {
 				String navigation = ParamUtil.getString(
-					_httpServletRequest, "navigation");
+					httpServletRequest, "navigation");
 
 				if (Validator.isNotNull(navigation)) {
 					return _getNavigation();
@@ -460,25 +436,13 @@ public class ReportsEngineDisplayContext {
 		}
 
 		_navigation = ParamUtil.getString(
-			_httpServletRequest, "navigation", "all");
+			httpServletRequest, "navigation", "all");
 
 		return _navigation;
 	}
 
 	private String _getOrderByCol() {
-		if (_orderByCol != null) {
-			return _orderByCol;
-		}
-
-		_orderByCol = ParamUtil.getString(_httpServletRequest, "orderByCol");
-
-		if (Validator.isNull(_orderByCol)) {
-			_orderByCol = _portalPreferences.getValue(
-				ReportsEngineConsolePortletKeys.REPORTS_ADMIN, "order-by-col",
-				"create-date");
-		}
-
-		return _orderByCol;
+		return getOrderByCol("create-date");
 	}
 
 	private UnsafeConsumer<DropdownItem, Exception> _getOrderByDropdownItem(
@@ -549,13 +513,9 @@ public class ReportsEngineDisplayContext {
 	private static final String[] _DISPLAY_VIEWS = {"list"};
 
 	private String _displayStyle;
-	private final HttpServletRequest _httpServletRequest;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private String _navigation;
-	private String _orderByCol;
-	private String _orderByType;
-	private final PortalPreferences _portalPreferences;
 	private final ReportsEngineRequestHelper _reportsEngineRequestHelper;
 	private SearchContainer<?> _searchContainer;
 	private final ThemeDisplay _themeDisplay;

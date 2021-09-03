@@ -19,6 +19,7 @@ import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.list.util.AssetListPortletUtil;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.frontend.taglib.servlet.taglib.ManagementBarSortBaseDisplayContext;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
@@ -31,8 +32,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.portlet.PortalPreferences;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -50,32 +49,30 @@ import java.util.Objects;
 import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Jürgen Kappler
  */
-public class SelectLayoutCollectionDisplayContext {
+public class SelectLayoutCollectionDisplayContext
+	extends ManagementBarSortBaseDisplayContext {
 
 	public SelectLayoutCollectionDisplayContext(
 		InfoItemServiceTracker infoItemServiceTracker,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
+		super(
+			PortalUtil.getHttpServletRequest(liferayPortletRequest),
+			LayoutAdminPortletKeys.GROUP_PAGES);
+
 		_infoItemServiceTracker = infoItemServiceTracker;
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 
-		_httpServletRequest = PortalUtil.getHttpServletRequest(
-			_liferayPortletRequest);
 		_themeDisplay = (ThemeDisplay)_liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		_groupDisplayContextHelper = new GroupDisplayContextHelper(
-			_httpServletRequest);
-
-		_portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(
-			_httpServletRequest);
+			httpServletRequest);
 	}
 
 	public SearchContainer<InfoCollectionProvider<?>>
@@ -85,7 +82,7 @@ public class SelectLayoutCollectionDisplayContext {
 			new SearchContainer<>(
 				_liferayPortletRequest, getPortletURL(), null,
 				LanguageUtil.get(
-					_httpServletRequest, "there-are-no-collection-providers"));
+					httpServletRequest, "there-are-no-collection-providers"));
 
 		List<InfoCollectionProvider<?>> infoCollectionProviders =
 			_getInfoCollectionProviders();
@@ -102,13 +99,13 @@ public class SelectLayoutCollectionDisplayContext {
 	public SearchContainer<AssetListEntry> getCollectionsSearchContainer() {
 		SearchContainer<AssetListEntry> searchContainer = new SearchContainer<>(
 			_liferayPortletRequest, getPortletURL(), null,
-			LanguageUtil.get(_httpServletRequest, "there-are-no-collections"));
+			LanguageUtil.get(httpServletRequest, "there-are-no-collections"));
 
 		String orderByCol = ParamUtil.getString(
-			_httpServletRequest, "orderByCol", "create-date");
+			httpServletRequest, "orderByCol", "create-date");
 
 		String orderByType = ParamUtil.getString(
-			_httpServletRequest, "orderByType", "asc");
+			httpServletRequest, "orderByType", "asc");
 
 		OrderByComparator<AssetListEntry> orderByComparator =
 			AssetListPortletUtil.getAssetListEntryOrderByComparator(
@@ -185,7 +182,7 @@ public class SelectLayoutCollectionDisplayContext {
 			return _redirect;
 		}
 
-		_redirect = ParamUtil.getString(_httpServletRequest, "redirect");
+		_redirect = ParamUtil.getString(httpServletRequest, "redirect");
 
 		return _redirect;
 	}
@@ -196,7 +193,7 @@ public class SelectLayoutCollectionDisplayContext {
 		}
 
 		_selectedTab = ParamUtil.getString(
-			_httpServletRequest, "selectedTab", "collections");
+			httpServletRequest, "selectedTab", "collections");
 
 		return _selectedTab;
 	}
@@ -278,7 +275,7 @@ public class SelectLayoutCollectionDisplayContext {
 			return _keywords;
 		}
 
-		_keywords = ParamUtil.getString(_httpServletRequest, "keywords");
+		_keywords = ParamUtil.getString(httpServletRequest, "keywords");
 
 		return _keywords;
 	}
@@ -287,7 +284,7 @@ public class SelectLayoutCollectionDisplayContext {
 		NavigationItem navigationItem = new NavigationItem();
 
 		String selectedTabName = ParamUtil.getString(
-			_httpServletRequest, "selectedTab", "collections");
+			httpServletRequest, "selectedTab", "collections");
 
 		if (Objects.equals(tabName, selectedTabName)) {
 			navigationItem.setActive(true);
@@ -300,55 +297,17 @@ public class SelectLayoutCollectionDisplayContext {
 				"selectedTab", tabName
 			).buildString());
 
-		navigationItem.setLabel(LanguageUtil.get(_httpServletRequest, label));
+		navigationItem.setLabel(LanguageUtil.get(httpServletRequest, label));
 
 		return navigationItem;
 	}
 
 	private String _getOrderByCol() {
-		if (Validator.isNotNull(_orderByCol)) {
-			return _orderByCol;
-		}
-
-		String orderByCol = ParamUtil.getString(
-			_httpServletRequest, "orderByCol");
-
-		if (Validator.isNotNull(orderByCol)) {
-			_portalPreferences.setValue(
-				LayoutAdminPortletKeys.GROUP_PAGES, "order-by-col", orderByCol);
-		}
-		else {
-			orderByCol = _portalPreferences.getValue(
-				LayoutAdminPortletKeys.GROUP_PAGES, "order-by-col",
-				"create-date");
-		}
-
-		_orderByCol = orderByCol;
-
-		return _orderByCol;
+		return getOrderByCol("create-date");
 	}
 
 	private String _getOrderByType() {
-		if (Validator.isNotNull(_orderByType)) {
-			return _orderByType;
-		}
-
-		String orderByType = ParamUtil.getString(
-			_httpServletRequest, "orderByType");
-
-		if (Validator.isNotNull(orderByType)) {
-			_portalPreferences.setValue(
-				LayoutAdminPortletKeys.GROUP_PAGES, "order-by-type",
-				orderByType);
-		}
-		else {
-			orderByType = _portalPreferences.getValue(
-				LayoutAdminPortletKeys.GROUP_PAGES, "order-by-type", "asc");
-		}
-
-		_orderByType = orderByType;
-
-		return _orderByType;
+		return getOrderByType("asc");
 	}
 
 	private boolean _isSearch() {
@@ -363,14 +322,10 @@ public class SelectLayoutCollectionDisplayContext {
 		SelectLayoutCollectionDisplayContext.class);
 
 	private final GroupDisplayContextHelper _groupDisplayContextHelper;
-	private final HttpServletRequest _httpServletRequest;
 	private final InfoItemServiceTracker _infoItemServiceTracker;
 	private String _keywords;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
-	private String _orderByCol;
-	private String _orderByType;
-	private final PortalPreferences _portalPreferences;
 	private String _redirect;
 	private String _selectedTab;
 	private final ThemeDisplay _themeDisplay;
