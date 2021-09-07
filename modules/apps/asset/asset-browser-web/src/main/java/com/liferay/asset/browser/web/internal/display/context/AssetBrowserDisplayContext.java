@@ -81,8 +81,14 @@ public class AssetBrowserDisplayContext {
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 
-		_managementBarOrderByHandler = new ManagementBarOrderByHandler(
-			httpServletRequest, AssetBrowserPortletKeys.ASSET_BROWSER);
+		_managementBarOrderByHandler =
+			new ManagementBarOrderByHandler.ManagementBarOrderByHandlerBuilder(
+				httpServletRequest, AssetBrowserPortletKeys.ASSET_BROWSER
+			).defaultOrderByCol(
+				"modified-date"
+			).defaultOrderByType(
+				"asc"
+			).build();
 	}
 
 	public AssetBrowserSearch getAssetBrowserSearch()
@@ -442,11 +448,11 @@ public class AssetBrowserDisplayContext {
 	}
 
 	protected String getOrderByCol() {
-		return _managementBarOrderByHandler.getOrderByCol("modified-date");
+		return _managementBarOrderByHandler.getOrderByCol();
 	}
 
 	protected String getOrderByType() {
-		return _managementBarOrderByHandler.getOrderByType("asc");
+		return _managementBarOrderByHandler.getOrderByType();
 	}
 
 	private long[] _getClassNameIds() {
