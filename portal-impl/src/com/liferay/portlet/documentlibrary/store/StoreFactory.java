@@ -108,14 +108,11 @@ public class StoreFactory {
 	}
 
 	public Store getStore() {
-		Store store = _storeServiceTrackerMapHolder.getService(
-			PropsValues.DL_STORE_IMPL);
-
-		if (store == null) {
+		if (_dlStore == null) {
 			throw new IllegalStateException("Store is not available");
 		}
 
-		return store;
+		return _dlStore;
 	}
 
 	public Store getStore(String key) {
@@ -139,6 +136,7 @@ public class StoreFactory {
 
 	private static final BundleContext _bundleContext =
 		SystemBundleUtil.getBundleContext();
+	private static Store _dlStore;
 	private static StoreFactory _storeFactory;
 	private static final StoreServiceTrackerMapHolder
 		_storeServiceTrackerMapHolder = new StoreServiceTrackerMapHolder();
@@ -243,6 +241,8 @@ public class StoreFactory {
 			if (StringUtil.equals(storeType, PropsValues.DL_STORE_IMPL)) {
 				Registry registry = RegistryUtil.getRegistry();
 
+				_dlStore = store;
+
 				_serviceRegistration = registry.registerService(
 					StoreFactory.class,
 					new StoreFactory() {
@@ -277,6 +277,8 @@ public class StoreFactory {
 
 			if (StringUtil.equals(storeType, PropsValues.DL_STORE_IMPL)) {
 				_serviceRegistration.unregister();
+
+				_dlStore = null;
 			}
 
 			_bundleContext.ungetService(serviceReference);
