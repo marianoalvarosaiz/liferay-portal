@@ -1738,6 +1738,8 @@ public class ExpandoValueLocalServiceImpl
 
 			value = expandoValuePersistence.update(value);
 
+			row = expandoRowPersistence.fetchByT_C(tableId, classPK);
+
 			row.setModifiedDate(new Date());
 
 			expandoRowPersistence.update(row);
