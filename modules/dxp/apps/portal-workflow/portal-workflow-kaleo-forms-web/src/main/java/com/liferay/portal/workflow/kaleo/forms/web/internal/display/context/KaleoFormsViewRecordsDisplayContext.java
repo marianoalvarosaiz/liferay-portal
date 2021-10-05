@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
+import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -86,6 +87,8 @@ public class KaleoFormsViewRecordsDisplayContext {
 			KaleoFormsWebKeys.KALEO_PROCESS);
 
 		_ddlRecordSet = _kaleoProcess.getDDLRecordSet();
+
+		_httpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
 
 		_kaleoFormsAdminRequestHelper = new KaleoFormsAdminRequestHelper(
 			renderRequest);
@@ -270,12 +273,27 @@ public class KaleoFormsViewRecordsDisplayContext {
 	}
 
 	public String getOrderByCol() {
-		return ParamUtil.getString(
-			_renderRequest, "orderByCol", "modified-date");
+		if (Validator.isNotNull(_orderByCol)) {
+			return _orderByCol;
+		}
+
+		_orderByCol = SearchOrderByUtil.getOrderByCol(
+			_httpServletRequest, KaleoFormsPortletKeys.KALEO_FORMS_ADMIN,
+			"view-order-by-col", "modified-date");
+
+		return _orderByCol;
 	}
 
 	public String getOrderByType() {
-		return ParamUtil.getString(_renderRequest, "orderByType", "asc");
+		if (Validator.isNotNull(_orderByType)) {
+			return _orderByType;
+		}
+
+		_orderByType = SearchOrderByUtil.getOrderByType(
+			_httpServletRequest, KaleoFormsPortletKeys.KALEO_FORMS_ADMIN,
+			"view-order-by-type", "asc");
+
+		return _orderByType;
 	}
 
 	public PortletURL getPortletURL() {
@@ -552,6 +570,7 @@ public class KaleoFormsViewRecordsDisplayContext {
 	private final DDLRecordLocalService _ddlRecordLocalService;
 	private final DDLRecordSet _ddlRecordSet;
 	private List<DDMFormField> _ddmFormFields;
+	private final HttpServletRequest _httpServletRequest;
 	private final KaleoFormsAdminRequestHelper _kaleoFormsAdminRequestHelper;
 	private final KaleoProcess _kaleoProcess;
 	private final RenderRequest _renderRequest;
