@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.spring.extender.internal.configuration.ConfigurationUtil;
+import com.liferay.portal.spring.extender.internal.jdbc.DataSourceUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +74,12 @@ public class InitialUpgradeExtender
 			return null;
 		}
 
-		return _processInitialUpgrade(_bundleContext, bundle, _dataSource);
+		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+
+		DataSource dataSource = DataSourceUtil.getDataSource(
+			bundleWiring.getClassLoader());
+
+		return _processInitialUpgrade(_bundleContext, bundle, dataSource);
 	}
 
 	@Override
