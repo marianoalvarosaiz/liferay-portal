@@ -17,12 +17,18 @@ package com.liferay.portal.kernel.dao.orm;
 import com.liferay.petra.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.service.BaseLocalService;
+import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -201,7 +207,16 @@ public class DefaultActionableDynamicQuery implements ActionableDynamicQuery {
 
 	@Override
 	public void setTransactionConfig(TransactionConfig transactionConfig) {
-		_transactionConfig = transactionConfig;
+		if ((_TRANSACTION_ISOLATION_PORTAL != Isolation.SERIALIZABLE.value()) ||
+			(transactionConfig.getPropagation() != Propagation.REQUIRES_NEW)) {
+
+			_transactionConfig = transactionConfig;
+		}
+		else if (_log.isDebugEnabled()) {
+			_log.debug(
+				"Cannot create a new transaction with \"serializable\" " +
+					"portal transaction isolation level enabled");
+		}
 	}
 
 	/**
@@ -394,6 +409,13 @@ public class DefaultActionableDynamicQuery implements ActionableDynamicQuery {
 			_performActionMethod.performAction(object);
 		}
 	}
+
+	private static final int _TRANSACTION_ISOLATION_PORTAL =
+		GetterUtil.getInteger(
+			PropsUtil.get(PropsKeys.TRANSACTION_ISOLATION_PORTAL));
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DefaultActionableDynamicQuery.class);
 
 	private static volatile PortalExecutorManager _portalExecutorManager =
 		ServiceProxyFactory.newServiceTrackedInstance(
