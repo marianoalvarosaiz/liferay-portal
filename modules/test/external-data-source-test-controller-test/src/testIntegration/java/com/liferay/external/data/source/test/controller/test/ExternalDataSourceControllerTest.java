@@ -41,7 +41,6 @@ import java.sql.Connection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -101,17 +100,11 @@ public class ExternalDataSourceControllerTest {
 			"/com.liferay.external.data.source.test.api.jar");
 		_serviceBundle = _installServiceBundle();
 
-		DB db = DBManagerUtil.getDB(DBType.HYPERSONIC, null);
-
-		Properties properties = new Properties();
-
-		properties.put("password", "");
-		properties.put("user", "sa");
+		DB db = DBManagerUtil.getDB();
 
 		URL resource = _serviceBundle.getResource("/META-INF/sql/tables.sql");
 
-		try (Connection connection = JDBCDriver.getConnection(
-				_JDBC_URL, properties);
+		try (Connection connection = DataAccess.getConnection();
 			InputStream inputStream = resource.openStream()) {
 
 			db.runSQL(connection, StringUtil.read(inputStream));
