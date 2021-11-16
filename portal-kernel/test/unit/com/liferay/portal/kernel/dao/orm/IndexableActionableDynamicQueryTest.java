@@ -18,8 +18,10 @@ import com.liferay.petra.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
+import com.liferay.portal.kernel.test.util.PropsTestUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,6 +42,8 @@ public class IndexableActionableDynamicQueryTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+
+		PropsTestUtil.setProps(Collections.emptyMap());
 
 		BundleContext bundleContext = SystemBundleUtil.getBundleContext();
 
