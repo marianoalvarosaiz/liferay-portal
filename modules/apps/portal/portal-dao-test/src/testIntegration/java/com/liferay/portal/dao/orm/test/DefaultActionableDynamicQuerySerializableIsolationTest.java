@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.PropsValuesTestUtil;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -45,11 +46,22 @@ public class DefaultActionableDynamicQuerySerializableIsolationTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
 
+	public SafeCloseable swapWithSafeCloseable() {
+		Object originalValue = ReflectionTestUtil.getAndSetFieldValue(
+			DefaultActionableDynamicQuery.class,
+			"_TRANSACTION_ISOLATION_PORTAL", 8);
+
+		return () -> ReflectionTestUtil.setFieldValue(
+			DefaultActionableDynamicQuery.class,
+			"_TRANSACTION_ISOLATION_PORTAL", originalValue);
+	}
+
 	@Test
 	public void testTransactionLocks() throws Throwable {
-		try (SafeCloseable safeCloseable =
+		try (SafeCloseable safeCloseable1 =
 				PropsValuesTestUtil.swapWithSafeCloseable(
-					"TRANSACTION_ISOLATION_PORTAL", 8)) {
+					"TRANSACTION_ISOLATION_PORTAL", 8);
+			SafeCloseable safeCloseable2 = swapWithSafeCloseable()) {
 
 			TransactionInvokerUtil.invoke(
 				TransactionConfig.Factory.create(
