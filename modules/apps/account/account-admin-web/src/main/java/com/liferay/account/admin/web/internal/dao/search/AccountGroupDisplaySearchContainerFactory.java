@@ -15,6 +15,7 @@
 package com.liferay.account.admin.web.internal.dao.search;
 
 import com.liferay.account.admin.web.internal.display.AccountGroupDisplay;
+import com.liferay.account.constants.AccountPortletKeys;
 import com.liferay.account.model.AccountGroup;
 import com.liferay.account.service.AccountGroupLocalServiceUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
+import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
@@ -49,10 +51,10 @@ public class AccountGroupDisplaySearchContainerFactory {
 
 		accountGroupDisplaySearchContainer.setId("accountGroups");
 
-		String orderByType = ParamUtil.getString(
-			liferayPortletRequest, "orderByType", "asc");
-
-		accountGroupDisplaySearchContainer.setOrderByType(orderByType);
+		accountGroupDisplaySearchContainer.setOrderByType(
+			SearchOrderByUtil.getOrderByType(
+				liferayPortletRequest, AccountPortletKeys.ACCOUNT_GROUPS_ADMIN,
+				"account-group-order-by-type", "asc"));
 
 		accountGroupDisplaySearchContainer.setRowChecker(
 			new EmptyOnClickRowChecker(liferayPortletResponse));
