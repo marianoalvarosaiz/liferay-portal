@@ -174,8 +174,6 @@ public class SiteBrowserDisplayContext {
 
 		total += additionalSites;
 
-		groupSearch.setTotal(total);
-
 		int start = groupSearch.getStart();
 
 		if (groupSearch.getStart() > additionalSites) {
@@ -205,8 +203,6 @@ public class SiteBrowserDisplayContext {
 			total = groups.size();
 
 			total += additionalSites;
-
-			groupSearch.setTotal(total);
 		}
 		else {
 			groups = GroupLocalServiceUtil.search(
@@ -219,8 +215,6 @@ public class SiteBrowserDisplayContext {
 
 			total += additionalSites;
 
-			groupSearch.setTotal(total);
-
 			groups = groups.subList(
 				start, groupSearch.getResultEnd() - additionalSites);
 		}
@@ -228,6 +222,7 @@ public class SiteBrowserDisplayContext {
 		results.addAll(groups);
 
 		groupSearch.setResults(results);
+		groupSearch.setTotal(total);
 
 		_groupSearch = groupSearch;
 
@@ -486,9 +481,9 @@ public class SiteBrowserDisplayContext {
 		).build();
 
 		if (Objects.equals(type, "child-sites")) {
-			Group parentGroup = GroupLocalServiceUtil.getGroup(groupId);
-
-			_groupParams.put("groupsTree", ListUtil.fromArray(parentGroup));
+			_groupParams.put(
+				"groupsTree",
+				ListUtil.fromArray(GroupLocalServiceUtil.getGroup(groupId)));
 		}
 		else if (filterManageableGroups) {
 			if (Objects.equals(type, "sites-that-i-administer")) {
