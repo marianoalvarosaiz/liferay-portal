@@ -1076,8 +1076,16 @@ public class DDMFormAdminDisplayContext {
 		ddmFormInstanceSearch.setRowChecker(
 			new DDMFormInstanceRowChecker(renderResponse));
 
-		_setDDMFormInstanceSearchResults(ddmFormInstanceSearch);
-		_setDDMFormInstanceSearchTotal(ddmFormInstanceSearch);
+		ddmFormInstanceSearch.setResultsAndTotal(
+			() -> _ddmFormInstanceService.search(
+				ddmFormAdminRequestHelper.getCompanyId(),
+				ddmFormAdminRequestHelper.getScopeGroupId(), getKeywords(),
+				ddmFormInstanceSearch.getStart(),
+				ddmFormInstanceSearch.getEnd(),
+				ddmFormInstanceSearch.getOrderByComparator()),
+			_ddmFormInstanceService.searchCount(
+				ddmFormAdminRequestHelper.getCompanyId(),
+				ddmFormAdminRequestHelper.getScopeGroupId(), getKeywords()));
 
 		return ddmFormInstanceSearch;
 	}
@@ -1776,28 +1784,6 @@ public class DDMFormAdminDisplayContext {
 				_ddmFormFieldTypesSerializer.serialize(builder.build());
 
 		return ddmFormFieldTypesSerializerSerializeResponse.getContent();
-	}
-
-	private void _setDDMFormInstanceSearchResults(
-		DDMFormInstanceSearch ddmFormInstanceSearch) {
-
-		List<DDMFormInstance> results = _ddmFormInstanceService.search(
-			ddmFormAdminRequestHelper.getCompanyId(),
-			ddmFormAdminRequestHelper.getScopeGroupId(), getKeywords(),
-			ddmFormInstanceSearch.getStart(), ddmFormInstanceSearch.getEnd(),
-			ddmFormInstanceSearch.getOrderByComparator());
-
-		ddmFormInstanceSearch.setResults(results);
-	}
-
-	private void _setDDMFormInstanceSearchTotal(
-		DDMFormInstanceSearch ddmFormInstanceSearch) {
-
-		int total = _ddmFormInstanceService.searchCount(
-			ddmFormAdminRequestHelper.getCompanyId(),
-			ddmFormAdminRequestHelper.getScopeGroupId(), getKeywords());
-
-		ddmFormInstanceSearch.setTotal(total);
 	}
 
 	private static final String[] _DISPLAY_VIEWS = {"descriptive", "list"};
