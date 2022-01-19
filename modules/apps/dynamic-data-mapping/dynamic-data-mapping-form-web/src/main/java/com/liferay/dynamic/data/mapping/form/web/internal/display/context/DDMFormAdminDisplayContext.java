@@ -143,7 +143,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
 /**
@@ -384,9 +383,6 @@ public class DDMFormAdminDisplayContext {
 		HttpServletRequest httpServletRequest =
 			ddmFormAdminRequestHelper.getRequest();
 
-		HttpServletResponse httpServletResponse =
-			PortalUtil.getHttpServletResponse(renderResponse);
-
 		for (int i = 0; i < jsonArray.length(); i++) {
 			DDMFormFieldType ddmFormFieldType = availableDDMFormFieldTypes.get(
 				i);
@@ -404,8 +400,10 @@ public class DDMFormAdminDisplayContext {
 			DDMFormRenderingContext ddmFormRenderingContext =
 				new DDMFormRenderingContext();
 
-			ddmFormRenderingContext.setHttpServletRequest(httpServletRequest);
-			ddmFormRenderingContext.setHttpServletResponse(httpServletResponse);
+			ddmFormRenderingContext.setHttpServletRequest(
+				ddmFormAdminRequestHelper.getRequest());
+			ddmFormRenderingContext.setHttpServletResponse(
+				PortalUtil.getHttpServletResponse(renderResponse));
 			ddmFormRenderingContext.setContainerId("settings");
 			ddmFormRenderingContext.setGroupId(getScopeGroupId());
 			ddmFormRenderingContext.setLocale(
@@ -519,7 +517,8 @@ public class DDMFormAdminDisplayContext {
 			getDDMFormRenderingContextDDMFormValues());
 
 		return ddmFormRenderer.getDDMFormTemplateContext(
-			ddmForm, ddmFormLayout, ddmFormRenderingContext);
+			ddmForm, ddmFormLayout,
+			createDDMFormRenderingContext(pageContext, renderRequest));
 	}
 
 	public DDMFormViewFormInstanceRecordDisplayContext
@@ -650,11 +649,9 @@ public class DDMFormAdminDisplayContext {
 	public String getEmptyResultsMessage() {
 		SearchContainer<?> search = getSearch();
 
-		HttpServletRequest httpServletRequest =
-			ddmFormAdminRequestHelper.getRequest();
-
 		return LanguageUtil.get(
-			httpServletRequest, search.getEmptyResultsMessage());
+			ddmFormAdminRequestHelper.getRequest(),
+			search.getEmptyResultsMessage());
 	}
 
 	public String getFieldSetDefinitionURL() throws PortalException {
@@ -1102,9 +1099,6 @@ public class DDMFormAdminDisplayContext {
 			_getDDMFormInstanceOrderByComparator(
 				getOrderByCol(), getOrderByType()));
 		ddmFormInstanceSearch.setOrderByType(getOrderByType());
-		ddmFormInstanceSearch.setRowChecker(
-			new DDMFormInstanceRowChecker(renderResponse));
-
 		ddmFormInstanceSearch.setResultsAndTotal(
 			() -> _ddmFormInstanceService.search(
 				ddmFormAdminRequestHelper.getCompanyId(),
@@ -1115,6 +1109,8 @@ public class DDMFormAdminDisplayContext {
 			_ddmFormInstanceService.searchCount(
 				ddmFormAdminRequestHelper.getCompanyId(),
 				ddmFormAdminRequestHelper.getScopeGroupId(), getKeywords()));
+		ddmFormInstanceSearch.setRowChecker(
+			new DDMFormInstanceRowChecker(renderResponse));
 
 		return ddmFormInstanceSearch;
 	}
@@ -1578,17 +1574,12 @@ public class DDMFormAdminDisplayContext {
 
 		ThemeDisplay themeDisplay = ddmFormAdminRequestHelper.getThemeDisplay();
 
-		long fieldSetClassNameId = PortalUtil.getClassNameId(
-			DDMFormInstance.class);
-
-		DDMFormBuilderSettingsRequest ddmFormBuilderSettingsRequest =
-			DDMFormBuilderSettingsRequest.with(
-				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
-				fieldSetClassNameId, getDDMForm(), themeDisplay.getLocale());
-
 		_ddmFormBuilderSettingsResponse =
 			_ddmFormBuilderSettingsRetriever.getSettings(
-				ddmFormBuilderSettingsRequest);
+				DDMFormBuilderSettingsRequest.with(
+					themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
+					PortalUtil.getClassNameId(DDMFormInstance.class),
+					getDDMForm(), themeDisplay.getLocale()));
 
 		return _ddmFormBuilderSettingsResponse;
 	}
