@@ -161,17 +161,17 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 				}
 			}
 
+			if (_total != 0) {
+				_searchContainer.setResultsAndTotal(
+					Collections::emptyList, _total);
+			}
+
 			if (_rowChecker != null) {
 				_searchContainer.setRowChecker(_rowChecker);
 			}
 
 			if (Validator.isNotNull(_summary)) {
 				_searchContainer.setSummary(_summary);
-			}
-
-			if (_total != 0) {
-				_searchContainer.setResultsAndTotal(
-					Collections::emptyList, _total);
 			}
 
 			if (Validator.isNotNull(_totalVar)) {
