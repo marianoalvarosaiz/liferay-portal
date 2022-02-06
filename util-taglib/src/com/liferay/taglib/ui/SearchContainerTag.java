@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.taglib.util.ParamAndPropertyAncestorTagImpl;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.portlet.MimeResponse;
@@ -169,7 +170,8 @@ public class SearchContainerTag<R> extends ParamAndPropertyAncestorTagImpl {
 			}
 
 			if (_total != 0) {
-				_searchContainer.setTotal(_total);
+				_searchContainer.setResultsAndTotal(
+					Collections::emptyList, _total);
 			}
 
 			if (Validator.isNotNull(_totalVar)) {
