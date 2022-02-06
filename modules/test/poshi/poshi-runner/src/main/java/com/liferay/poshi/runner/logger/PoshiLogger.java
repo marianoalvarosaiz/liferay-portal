@@ -21,7 +21,6 @@ import com.liferay.poshi.core.elements.PoshiElement;
 import com.liferay.poshi.core.util.FileUtil;
 import com.liferay.poshi.core.util.GetterUtil;
 import com.liferay.poshi.core.util.PropsValues;
-import com.liferay.poshi.core.util.StringUtil;
 import com.liferay.poshi.runner.exception.PoshiRunnerLoggerException;
 
 import java.io.IOException;
@@ -29,6 +28,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import org.dom4j.Element;
 
@@ -50,12 +51,12 @@ public class PoshiLogger {
 
 		String indexHTMLContent = FileUtil.read(url);
 
-		indexHTMLContent = StringUtil.replace(
+		indexHTMLContent = StringUtils.replace(
 			indexHTMLContent,
 			"<ul class=\"command-log\" data-logid=\"01\" " +
 				"id=\"commandLog\"></ul>",
 			_commandLogger.getCommandLogText());
-		indexHTMLContent = StringUtil.replace(
+		indexHTMLContent = StringUtils.replace(
 			indexHTMLContent,
 			"<ul class=\"syntax-log-container\" id=\"syntaxLogContainer\"" +
 				"></ul>",
@@ -78,19 +79,19 @@ public class PoshiLogger {
 				currentDirName + "/test-results/js/update_images.js");
 		}
 		else {
-			indexHTMLContent = StringUtil.replace(
+			indexHTMLContent = StringUtils.replace(
 				indexHTMLContent, "<link href=\"../css/main.css\"",
 				"<link href=\"" + PropsValues.LOGGER_RESOURCES_URL +
 					"/css/main.css\"");
-			indexHTMLContent = StringUtil.replace(
+			indexHTMLContent = StringUtils.replace(
 				indexHTMLContent, "<script defer src=\"../js/component.js\"",
 				"<script defer src=\"" + PropsValues.LOGGER_RESOURCES_URL +
 					"/js/component.js\"");
-			indexHTMLContent = StringUtil.replace(
+			indexHTMLContent = StringUtils.replace(
 				indexHTMLContent, "<script defer src=\"../js/main.js\"",
 				"<script defer src=\"" + PropsValues.LOGGER_RESOURCES_URL +
 					"/js/main.js\"");
-			indexHTMLContent = StringUtil.replace(
+			indexHTMLContent = StringUtils.replace(
 				indexHTMLContent,
 				"<script defer src=\"../js/update_images.js\"",
 				"<script defer src=\"" + PropsValues.LOGGER_RESOURCES_URL +
@@ -102,7 +103,7 @@ public class PoshiLogger {
 		sb.append(currentDirName);
 		sb.append("/test-results/");
 		sb.append(
-			StringUtil.replace(
+			StringUtils.replace(
 				PoshiContext.getTestCaseNamespacedClassCommandName(), "#",
 				"_"));
 		sb.append("/index.html");
