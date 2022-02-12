@@ -49,13 +49,7 @@ if (Validator.isNotNull(keywords)) {
 	userGroupParams.put("expandoAttributes", keywords);
 }
 
-int userGroupsCount = UserGroupServiceUtil.searchCount(company.getCompanyId(), keywords, userGroupParams);
-
-userGroupSearch.setTotal(userGroupsCount);
-
-List<UserGroup> userGroups = UserGroupServiceUtil.search(company.getCompanyId(), keywords, userGroupParams, userGroupSearch.getStart(), userGroupSearch.getEnd(), userGroupSearch.getOrderByComparator());
-
-userGroupSearch.setResults(userGroups);
+userGroupSearch.setResultsAndTotal(() -> UserGroupServiceUtil.search(company.getCompanyId(), keywords, userGroupParams, userGroupSearch.getStart(), userGroupSearch.getEnd(), userGroupSearch.getOrderByComparator()), UserGroupServiceUtil.searchCount(company.getCompanyId(), keywords, userGroupParams));
 %>
 
 <aui:input disabled="<%= true %>" name="userGroupsRedirect" type="hidden" value="<%= portletURL.toString() %>" />

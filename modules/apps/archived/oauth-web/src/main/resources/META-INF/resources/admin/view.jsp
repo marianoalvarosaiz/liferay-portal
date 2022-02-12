@@ -44,8 +44,7 @@
 			params.put("userId", Long.valueOf(themeDisplay.getUserId()));
 		}
 
-		searchContainer.setTotal(OAuthApplicationLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), displayTerms.getName(), params));
-		searchContainer.setResults(OAuthApplicationLocalServiceUtil.search(themeDisplay.getCompanyId(), displayTerms.getName(), params, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()));
+		searchContainer.setResultsAndTotal(() -> OAuthApplicationLocalServiceUtil.search(themeDisplay.getCompanyId(), displayTerms.getName(), params, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()), OAuthApplicationLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), displayTerms.getName(), params));
 		%>
 
 		<liferay-ui:search-container-row

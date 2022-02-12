@@ -38,10 +38,6 @@ String[] rankingNames = rankingNamesList.toArray(new String[0]);
 		<%
 		SearchContainer<Tuple> searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, 5, portletURL, null, null);
 
-		int total = SocialActivityCounterLocalServiceUtil.getUserActivityCountersCount(scopeGroupId, rankingNames);
-
-		searchContainer.setTotal(total);
-
 		List<String> selectedNamesList = new ArrayList<String>();
 
 		selectedNamesList.add(SocialActivityCounterConstants.NAME_CONTRIBUTION);
@@ -59,11 +55,11 @@ String[] rankingNames = rankingNamesList.toArray(new String[0]);
 
 		String[] selectedNames = selectedNamesList.toArray(new String[0]);
 
-		List<Tuple> results = SocialActivityCounterLocalServiceUtil.getUserActivityCounters(scopeGroupId, rankingNames, selectedNames, searchContainer.getStart(), searchContainer.getEnd());
-
-		searchContainer.setResults(results);
+		searchContainer.setResultsAndTotal(() -> SocialActivityCounterLocalServiceUtil.getUserActivityCounters(scopeGroupId, rankingNames, selectedNames, searchContainer.getStart(), searchContainer.getEnd()), SocialActivityCounterLocalServiceUtil.getUserActivityCountersCount(scopeGroupId, rankingNames));
 
 		List<com.liferay.portal.kernel.dao.search.ResultRow> resultRows = searchContainer.getResultRows();
+
+		List<Tuple> results = searchContainer.getResults();
 
 		for (int i = 0; i < results.size(); i++) {
 			Tuple tuple = results.get(i);
