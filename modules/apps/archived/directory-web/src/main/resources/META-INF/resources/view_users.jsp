@@ -19,9 +19,6 @@
 <%
 String viewUsersRedirect = ParamUtil.getString(request, "viewUsersRedirect");
 
-String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
-String orderByType = ParamUtil.getString(request, "orderByType", "asc");
-
 PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
 
 if (Validator.isNotNull(viewUsersRedirect)) {
@@ -49,8 +46,8 @@ if (Validator.isNotNull(viewUsersRedirect)) {
 		/>
 
 		<liferay-frontend:management-bar-sort
-			orderByCol="<%= orderByCol %>"
-			orderByType="<%= orderByType %>"
+			orderByCol='<%= ParamUtil.getString(request, "orderByCol", "first-name") %>'
+			orderByType='<%= ParamUtil.getString(request, "orderByType", "asc") %>'
 			orderColumns='<%= new String[] {"first-name", "last-name", "screen-name", "job-title"} %>'
 			portletURL="<%= portletURL %>"
 		/>
