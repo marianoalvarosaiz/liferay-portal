@@ -27,14 +27,12 @@ import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.rolesadmin.search.RoleSearch;
 import com.liferay.portlet.rolesadmin.search.RoleSearchTerms;
-import com.liferay.portlet.sites.search.UserGroupRoleRoleChecker;
 import com.liferay.site.memberships.constants.SiteMembershipsPortletKeys;
 import com.liferay.site.memberships.web.internal.util.DepotRolesUtil;
 import com.liferay.users.admin.kernel.util.UsersAdminUtil;
@@ -145,17 +143,7 @@ public class UserRolesDisplayContext {
 				themeDisplay.getPermissionChecker(), _getGroupId(), roles);
 		}
 
-		List<Role> filteredRoles = roles;
-
-		roleSearch.setResultsAndTotal(
-			() -> ListUtil.subList(
-				filteredRoles, roleSearch.getStart(), roleSearch.getEnd()),
-			filteredRoles.size());
-
-		roleSearch.setRowChecker(
-			new UserGroupRoleRoleChecker(
-				_renderResponse,
-				PortalUtil.getSelectedUser(_httpServletRequest, false), group));
+		roleSearch.setResultsAndTotal(roles);
 
 		_roleSearch = roleSearch;
 
