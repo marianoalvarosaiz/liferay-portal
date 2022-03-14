@@ -575,7 +575,7 @@ public class AssetPublisherHelperTest {
 
 		SearchContainer<AssetEntry> searchContainer = new SearchContainer<>();
 
-		searchContainer.setTotal(10);
+		searchContainer.setResultsAndTotal(Collections::emptyList, 10);
 
 		List<AssetEntryResult> assetEntryResults =
 			_assetPublisherHelper.getAssetEntryResults(
