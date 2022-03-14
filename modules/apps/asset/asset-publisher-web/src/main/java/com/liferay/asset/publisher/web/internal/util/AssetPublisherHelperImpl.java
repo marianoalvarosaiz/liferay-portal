@@ -1060,7 +1060,7 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 			}
 		}
 
-		searchContainer.setTotal(total);
+		searchContainer.setResultsAndTotal(searchContainer::getResults, total);
 
 		return assetEntryResults;
 	}
@@ -1089,7 +1089,7 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 		int total = baseModelSearchResult.getLength();
 
-		searchContainer.setTotal(total);
+		searchContainer.setResultsAndTotal(searchContainer::getResults, total);
 
 		List<AssetEntry> assetEntries = baseModelSearchResult.getBaseModels();
 
@@ -1170,7 +1170,7 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 			assetEntryQuery.setStart(QueryUtil.ALL_POS);
 		}
 
-		searchContainer.setTotal(total);
+		searchContainer.setResultsAndTotal(searchContainer::getResults, total);
 
 		return assetEntryResults;
 	}
