@@ -50,7 +50,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1059,19 +1058,6 @@ public class DDMFormValuesFactoryTest {
 		LocaleThreadLocal.setThemeDisplayLocale(LocaleUtil.BRAZIL);
 	}
 
-	protected void setUpLocaleUtil() {
-		LocaleUtil localeUtil = ReflectionTestUtil.getFieldValue(
-			LocaleUtil.class, "_localeUtil");
-
-		Map<String, Locale> locales = ReflectionTestUtil.getFieldValue(
-			localeUtil, "_locales");
-
-		locales.clear();
-
-		locales.put("en_US", LocaleUtil.US);
-		locales.put("pt_BR", LocaleUtil.BRAZIL);
-	}
-
 	private void _setUpLanguage() {
 		Set<Locale> availableLocales = new HashSet<>(
 			Arrays.asList(LocaleUtil.BRAZIL, LocaleUtil.US));
@@ -1094,6 +1080,11 @@ public class DDMFormValuesFactoryTest {
 			"pt_BR"
 		);
 
+		_whenLanguageIsAvailableLocale("en_US");
+		_whenLanguageIsAvailableLocale("pt_BR");
+		_whenLanguageIsAvailableLocale(LocaleUtil.US);
+		_whenLanguageIsAvailableLocale(LocaleUtil.BRAZIL);
+
 		ReflectionTestUtil.setFieldValue(
 			_ddmFormValuesFactory, "_language", _language);
 	}
@@ -1102,6 +1093,22 @@ public class DDMFormValuesFactoryTest {
 		LanguageUtil languageUtil = new LanguageUtil();
 
 		languageUtil.setLanguage(_language);
+	}
+
+	private void _whenLanguageIsAvailableLocale(Locale locale) {
+		Mockito.when(
+			_language.isAvailableLocale(Mockito.eq(locale))
+		).thenReturn(
+			true
+		);
+	}
+
+	private void _whenLanguageIsAvailableLocale(String languageId) {
+		Mockito.when(
+			_language.isAvailableLocale(Mockito.eq(languageId))
+		).thenReturn(
+			true
+		);
 	}
 
 	private final DDMFormValuesFactory _ddmFormValuesFactory =
