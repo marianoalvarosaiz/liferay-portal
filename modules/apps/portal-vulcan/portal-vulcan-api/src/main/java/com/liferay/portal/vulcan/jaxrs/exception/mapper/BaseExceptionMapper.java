@@ -14,6 +14,9 @@
 
 package com.liferay.portal.vulcan.jaxrs.exception.mapper;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.vulcan.configuration.VulcanDeveloperConfiguration;
 
@@ -69,6 +72,14 @@ public abstract class BaseExceptionMapper<T extends Throwable>
 	private Problem _getSanitizedProblem(T exception) {
 		Problem problem = getProblem(exception);
 
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				StringBundler.concat(
+					"[ERROR-CODE: ", problem.getType(), "] ",
+					problem.getTitle()),
+				exception);
+		}
+
 		try {
 			VulcanDeveloperConfiguration vulcanDeveloperConfiguration =
 				ConfigurationProviderUtil.getSystemConfiguration(
@@ -83,9 +94,11 @@ public abstract class BaseExceptionMapper<T extends Throwable>
 
 		problem.setDetail(null);
 		problem.setTitle(null);
-		problem.setType(null);
 
 		return problem;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseExceptionMapper.class);
 
 }
