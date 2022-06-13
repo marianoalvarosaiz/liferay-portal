@@ -16,10 +16,18 @@ package com.liferay.redirect.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.ModelListenerException;
+import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.test.rule.ExpectedDBType;
+import com.liferay.portal.test.rule.ExpectedLog;
+import com.liferay.portal.test.rule.ExpectedLogs;
+import com.liferay.portal.test.rule.ExpectedType;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.redirect.model.RedirectNotFoundEntry;
@@ -33,12 +41,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.engine.jdbc.batch.internal.BatchingBatch;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceRegistration;
 
 /**
  * @author Alejandro Tardín
@@ -62,6 +77,32 @@ public class RedirectNotFoundEntryLocalServiceTest {
 			_addOrUpdateRedirectNotFoundEntry("url");
 
 		Assert.assertEquals(1, redirectNotFoundEntry.getRequestCount());
+	}
+
+	@ExpectedLogs(
+		expectedLogs = {
+			@ExpectedLog(
+				expectedDBType = ExpectedDBType.NONE,
+				expectedLog = "HHH000315: Exception executing batch [java.sql.BatchUpdateException",
+				expectedType = ExpectedType.PREFIX
+			)
+		},
+		level = "ERROR", loggerClass = BatchingBatch.class
+	)
+	@Test
+	public void testAddOrUpdateRedirectNotFoundEntryConcurrently() {
+		ServiceRegistration<ModelListener<RedirectNotFoundEntry>>
+			serviceRegistration = _registerRedirectNotFoundEntryModelListener();
+
+		try {
+			RedirectNotFoundEntry redirectNotFoundEntry =
+				_addOrUpdateRedirectNotFoundEntry("url");
+
+			Assert.assertEquals(2, redirectNotFoundEntry.getRequestCount());
+		}
+		finally {
+			serviceRegistration.unregister();
+		}
 	}
 
 	@Test
@@ -273,6 +314,36 @@ public class RedirectNotFoundEntryLocalServiceTest {
 
 		return _redirectNotFoundEntryLocalService.updateRedirectNotFoundEntry(
 			redirectNotFoundEntry);
+	}
+
+	private ServiceRegistration<ModelListener<RedirectNotFoundEntry>>
+		_registerRedirectNotFoundEntryModelListener() {
+
+		Bundle bundle = FrameworkUtil.getBundle(
+			RedirectNotFoundEntryLocalServiceTest.class);
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		return bundleContext.registerService(
+			(Class<ModelListener<RedirectNotFoundEntry>>)
+				(Class<?>)ModelListener.class,
+			new BaseModelListener<RedirectNotFoundEntry>() {
+
+				@Override
+				public void onBeforeCreate(RedirectNotFoundEntry model)
+					throws ModelListenerException {
+
+					if (_insertBefore) {
+						_insertBefore = false;
+
+						_addOrUpdateRedirectNotFoundEntry("url");
+					}
+				}
+
+				private boolean _insertBefore = true;
+
+			},
+			new HashMapDictionary<>());
 	}
 
 	@DeleteAfterTestRun
