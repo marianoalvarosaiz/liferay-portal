@@ -317,16 +317,18 @@ public class ReleaseManagerImpl implements ReleaseManager {
 		@Override
 		public void keyEmitted(
 			ServiceTrackerMap<String, List<UpgradeInfo>> serviceTrackerMap,
-			String key, UpgradeInfo upgradeInfo,
+			String bundleSymbolicName, UpgradeInfo upgradeInfo,
 			List<UpgradeInfo> upgradeInfos) {
 
 			synchronized (ReleaseManagerImpl.this) {
 				if (_activated &&
 					UpgradeStepRegistratorThreadLocal.isEnabled() &&
 					(PropsValues.UPGRADE_DATABASE_AUTO_RUN ||
-					 (_releaseLocalService.fetchRelease(key) == null))) {
+					 (_releaseLocalService.fetchRelease(bundleSymbolicName) ==
+						 null))) {
 
-					_upgradeExecutor.execute(key, upgradeInfos, null);
+					_upgradeExecutor.execute(
+						bundleSymbolicName, upgradeInfos, null);
 				}
 			}
 		}
@@ -334,7 +336,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 		@Override
 		public void keyRemoved(
 			ServiceTrackerMap<String, List<UpgradeInfo>> serviceTrackerMap,
-			String key, UpgradeInfo upgradeInfo,
+			String bundleSymbolicName, UpgradeInfo upgradeInfo,
 			List<UpgradeInfo> upgradeInfos) {
 		}
 
