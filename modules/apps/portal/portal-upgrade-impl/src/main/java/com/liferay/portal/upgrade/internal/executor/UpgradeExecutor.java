@@ -32,6 +32,7 @@ import com.liferay.portal.upgrade.internal.graph.ReleaseGraphManager;
 import com.liferay.portal.upgrade.internal.index.updater.IndexUpdaterUtil;
 import com.liferay.portal.upgrade.internal.registry.UpgradeInfo;
 import com.liferay.portal.upgrade.internal.release.ReleasePublisher;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.OutputStream;
 
@@ -295,7 +296,9 @@ public class UpgradeExecutor {
 		}
 
 		private boolean _requiresUpdateIndexes(Bundle bundle) {
-			if (!IndexUpdaterUtil.isLiferayServiceBundle(bundle)) {
+			if (!IndexUpdaterUtil.isLiferayServiceBundle(bundle) ||
+				PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
+
 				return false;
 			}
 
