@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -42,8 +43,8 @@ import org.osgi.framework.BundleContext;
  */
 public class IndexUpdaterUtil {
 
-	public static Bundle getBundle(
-		BundleContext bundleContext, String bundleSymbolicName) {
+	public static Bundle getBundle(String bundleSymbolicName) {
+		BundleContext bundleContext = SystemBundleUtil.getBundleContext();
 
 		for (Bundle bundle : bundleContext.getBundles()) {
 			if (bundleSymbolicName.equals(bundle.getSymbolicName())) {
@@ -109,6 +110,12 @@ public class IndexUpdaterUtil {
 					db.updateIndexes(connection, tablesSQL, indexesSQL, true);
 				}
 			});
+	}
+
+	public static void updateIndexes(String bundleSymbolicName)
+		throws Exception {
+
+		updateIndexes(getBundle(bundleSymbolicName));
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

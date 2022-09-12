@@ -187,9 +187,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 						OutputStreamContainerConstants.FACTORY_NAME_DUMMY);
 
 					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
-						IndexUpdaterUtil.updateIndexes(
-							IndexUpdaterUtil.getBundle(
-								bundleContext, bundleSymbolicName));
+						IndexUpdaterUtil.updateIndexes(bundleSymbolicName);
 					}
 				}
 				catch (Throwable throwable) {
@@ -346,9 +344,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 
 					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
 						try {
-							IndexUpdaterUtil.updateIndexes(
-								IndexUpdaterUtil.getBundle(
-									_bundleContext, bundleSymbolicName));
+							IndexUpdaterUtil.updateIndexes(bundleSymbolicName);
 						}
 						catch (Exception exception) {
 							_log.error(exception);

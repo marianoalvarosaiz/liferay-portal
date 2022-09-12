@@ -42,10 +42,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -180,11 +178,6 @@ public class UpgradeExecutor {
 		return release;
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
 	private boolean _isInitialRelease(List<UpgradeInfo> upgradeInfos) {
 		UpgradeInfo upgradeInfo = upgradeInfos.get(0);
 
@@ -203,8 +196,6 @@ public class UpgradeExecutor {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradeExecutor.class);
-
-	private BundleContext _bundleContext;
 
 	@Reference
 	private ReleaseLocalService _releaseLocalService;
@@ -271,8 +262,7 @@ public class UpgradeExecutor {
 				}
 			}
 
-			Bundle bundle = IndexUpdaterUtil.getBundle(
-				_bundleContext, _bundleSymbolicName);
+			Bundle bundle = IndexUpdaterUtil.getBundle(_bundleSymbolicName);
 
 			if (_requiresUpdateIndexes(bundle)) {
 				try {
