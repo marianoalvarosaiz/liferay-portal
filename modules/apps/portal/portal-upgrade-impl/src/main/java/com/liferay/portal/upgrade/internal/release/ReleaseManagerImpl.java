@@ -36,6 +36,7 @@ import com.liferay.portal.output.stream.container.constants.OutputStreamContaine
 import com.liferay.portal.upgrade.PortalUpgradeProcess;
 import com.liferay.portal.upgrade.internal.executor.UpgradeExecutor;
 import com.liferay.portal.upgrade.internal.graph.ReleaseGraphManager;
+import com.liferay.portal.upgrade.internal.index.updater.IndexUpdaterUtil;
 import com.liferay.portal.upgrade.internal.registry.UpgradeInfo;
 import com.liferay.portal.upgrade.internal.registry.UpgradeStepRegistratorThreadLocal;
 import com.liferay.portal.util.PropsValues;
@@ -153,7 +154,8 @@ public class ReleaseManagerImpl implements ReleaseManager {
 			Collections.reverseOrder(
 				new PropertyServiceReferenceComparator<UpgradeStep>(
 					"upgrade.from.schema.version")),
-			new ReleaseManagerImpl.UpgradeInfoServiceTrackerMapListener());
+			new ReleaseManagerImpl.UpgradeInfoServiceTrackerMapListener(
+				bundleContext));
 
 		synchronized (this) {
 			Set<String> bundleSymbolicNames = null;
@@ -183,6 +185,12 @@ public class ReleaseManagerImpl implements ReleaseManager {
 					_upgradeExecutor.execute(
 						bundleSymbolicName, upgradeSteps,
 						OutputStreamContainerConstants.FACTORY_NAME_DUMMY);
+
+					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
+						IndexUpdaterUtil.updateIndexes(
+							IndexUpdaterUtil.getBundle(
+								bundleContext, bundleSymbolicName));
+					}
 				}
 				catch (Throwable throwable) {
 					_log.error(
@@ -314,6 +322,12 @@ public class ReleaseManagerImpl implements ReleaseManager {
 		implements ServiceTrackerMapListener
 			<String, UpgradeInfo, List<UpgradeInfo>> {
 
+		public UpgradeInfoServiceTrackerMapListener(
+			BundleContext bundleContext) {
+
+			_bundleContext = bundleContext;
+		}
+
 		@Override
 		public void keyEmitted(
 			ServiceTrackerMap<String, List<UpgradeInfo>> serviceTrackerMap,
@@ -329,6 +343,17 @@ public class ReleaseManagerImpl implements ReleaseManager {
 
 					_upgradeExecutor.execute(
 						bundleSymbolicName, upgradeInfos, null);
+
+					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
+						try {
+							IndexUpdaterUtil.updateIndexes(
+								IndexUpdaterUtil.getBundle(
+									_bundleContext, bundleSymbolicName));
+						}
+						catch (Exception exception) {
+							_log.error(exception);
+						}
+					}
 				}
 			}
 		}
@@ -341,6 +366,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 		}
 
 		private final BundleContext _bundleContext;
+
 	}
 
 }
