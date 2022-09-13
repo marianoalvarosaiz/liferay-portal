@@ -220,9 +220,7 @@ public class UpgradeStepRegistratorTracker {
 					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP &&
 						(release != null)) {
 
-						IndexUpdaterUtil.updateIndexes(
-							IndexUpdaterUtil.getBundle(
-								_bundleContext, bundleSymbolicName));
+						IndexUpdaterUtil.updateIndexes(bundleSymbolicName);
 					}
 				}
 				catch (Throwable throwable) {

@@ -59,8 +59,7 @@ public class IndexUpdaterOSGiCommands {
 		"Update database indexes for specific a module via symbolic name"
 	)
 	public String updateIndexes(String bundleSymbolicName) throws Exception {
-		Bundle bundle = IndexUpdaterUtil.getBundle(
-			_bundleContext, bundleSymbolicName);
+		Bundle bundle = IndexUpdaterUtil.getBundle(bundleSymbolicName);
 
 		if (IndexUpdaterUtil.isLiferayServiceBundle(bundle)) {
 			IndexUpdaterUtil.updateIndexes(bundle);

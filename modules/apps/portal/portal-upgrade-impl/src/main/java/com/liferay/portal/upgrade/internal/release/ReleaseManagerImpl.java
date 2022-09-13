@@ -154,8 +154,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 			Collections.reverseOrder(
 				new PropertyServiceReferenceComparator<UpgradeStep>(
 					"upgrade.from.schema.version")),
-			new ReleaseManagerImpl.UpgradeInfoServiceTrackerMapListener(
-				bundleContext));
+			new ReleaseManagerImpl.UpgradeInfoServiceTrackerMapListener());
 
 		synchronized (this) {
 			Set<String> bundleSymbolicNames = new HashSet<>();
@@ -186,9 +185,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP &&
 						bundleSymbolicNames.contains(bundleSymbolicName)) {
 
-						IndexUpdaterUtil.updateIndexes(
-							IndexUpdaterUtil.getBundle(
-								bundleContext, bundleSymbolicName));
+						IndexUpdaterUtil.updateIndexes(bundleSymbolicName);
 					}
 				}
 				catch (Throwable throwable) {
@@ -321,12 +318,6 @@ public class ReleaseManagerImpl implements ReleaseManager {
 		implements ServiceTrackerMapListener
 			<String, UpgradeInfo, List<UpgradeInfo>> {
 
-		public UpgradeInfoServiceTrackerMapListener(
-			BundleContext bundleContext) {
-
-			_bundleContext = bundleContext;
-		}
-
 		@Override
 		public void keyEmitted(
 			ServiceTrackerMap<String, List<UpgradeInfo>> serviceTrackerMap,
@@ -350,9 +341,7 @@ public class ReleaseManagerImpl implements ReleaseManager {
 						(release != null)) {
 
 						try {
-							IndexUpdaterUtil.updateIndexes(
-								IndexUpdaterUtil.getBundle(
-									_bundleContext, bundleSymbolicName));
+							IndexUpdaterUtil.updateIndexes(bundleSymbolicName);
 						}
 						catch (Exception exception) {
 							_log.error(exception);
@@ -368,8 +357,6 @@ public class ReleaseManagerImpl implements ReleaseManager {
 			String bundleSymbolicName, UpgradeInfo upgradeInfo,
 			List<UpgradeInfo> upgradeInfos) {
 		}
-
-		private final BundleContext _bundleContext;
 
 	}
 
