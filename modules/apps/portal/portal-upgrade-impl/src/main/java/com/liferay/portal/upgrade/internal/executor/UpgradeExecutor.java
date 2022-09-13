@@ -56,7 +56,7 @@ public class UpgradeExecutor {
 
 	public void execute(
 		String bundleSymbolicName, List<UpgradeInfo> upgradeInfos,
-		String outputStreamContainerFactoryName) {
+		String outputStreamContainerFactoryName, boolean enableIndexUpdate) {
 
 		Bundle bundle = null;
 
@@ -117,7 +117,7 @@ public class UpgradeExecutor {
 		if (size != 0) {
 			release = executeUpgradeInfos(
 				bundleSymbolicName, upgradeInfosList.get(0),
-				outputStreamContainerFactoryName);
+				outputStreamContainerFactoryName, enableIndexUpdate);
 		}
 
 		if (release != null) {
@@ -140,7 +140,7 @@ public class UpgradeExecutor {
 
 	public Release executeUpgradeInfos(
 		String bundleSymbolicName, List<UpgradeInfo> upgradeInfos,
-		String outputStreamContainerFactoryName) {
+		String outputStreamContainerFactoryName, boolean enableIndexUpdate) {
 
 		Release release = _releaseLocalService.fetchRelease(bundleSymbolicName);
 
@@ -153,7 +153,7 @@ public class UpgradeExecutor {
 
 		UpgradeInfosRunnable upgradeInfosRunnable = new UpgradeInfosRunnable(
 			bundleSymbolicName, upgradeInfos,
-			_swappedLogExecutor::getOutputStream);
+			_swappedLogExecutor::getOutputStream, enableIndexUpdate);
 
 		_swappedLogExecutor.execute(
 			bundleSymbolicName, upgradeInfosRunnable,
@@ -287,15 +287,19 @@ public class UpgradeExecutor {
 
 		private UpgradeInfosRunnable(
 			String bundleSymbolicName, List<UpgradeInfo> upgradeInfos,
-			Supplier<OutputStream> outputStreamSupplier) {
+			Supplier<OutputStream> outputStreamSupplier,
+			boolean enableIndexUpdate) {
 
 			_bundleSymbolicName = bundleSymbolicName;
 			_upgradeInfos = upgradeInfos;
 			_outputStreamSupplier = outputStreamSupplier;
+			_enableIndexUpdate = enableIndexUpdate;
 		}
 
 		private boolean _requiresUpdateIndexes(Bundle bundle) {
-			if (!IndexUpdaterUtil.isLiferayServiceBundle(bundle)) {
+			if (!IndexUpdaterUtil.isLiferayServiceBundle(bundle) ||
+				!_enableIndexUpdate) {
+
 				return false;
 			}
 
@@ -320,6 +324,7 @@ public class UpgradeExecutor {
 		private static final int _STATE_IN_PROGRESS = -1;
 
 		private final String _bundleSymbolicName;
+		private final boolean _enableIndexUpdate;
 		private final Supplier<OutputStream> _outputStreamSupplier;
 		private final List<UpgradeInfo> _upgradeInfos;
 
