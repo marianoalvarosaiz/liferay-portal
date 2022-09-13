@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.output.stream.container.constants.OutputStreamContainerConstants;
 import com.liferay.portal.upgrade.internal.executor.SwappedLogExecutor;
 import com.liferay.portal.upgrade.internal.executor.UpgradeExecutor;
+import com.liferay.portal.upgrade.internal.index.updater.IndexUpdaterUtil;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 import com.liferay.portal.util.PropsValues;
 
@@ -206,14 +207,23 @@ public class UpgradeStepRegistratorTracker {
 			List<UpgradeInfo> upgradeInfos =
 				upgradeStepRegistry.getUpgradeInfos();
 
-			if (PropsValues.UPGRADE_DATABASE_AUTO_RUN ||
-				(_releaseLocalService.fetchRelease(bundleSymbolicName) ==
-					null)) {
+			Release release = _releaseLocalService.fetchRelease(
+				bundleSymbolicName);
 
+			if (PropsValues.UPGRADE_DATABASE_AUTO_RUN || (release == null)) {
 				try {
 					_upgradeExecutor.execute(
 						bundleSymbolicName, upgradeInfos,
-						OutputStreamContainerConstants.FACTORY_NAME_DUMMY);
+						OutputStreamContainerConstants.FACTORY_NAME_DUMMY,
+						release == null);
+
+					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP &&
+						(release != null)) {
+
+						IndexUpdaterUtil.updateIndexes(
+							IndexUpdaterUtil.getBundle(
+								_bundleContext, bundleSymbolicName));
+					}
 				}
 				catch (Throwable throwable) {
 					_swappedLogExecutor.execute(

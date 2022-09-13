@@ -36,6 +36,7 @@ import com.liferay.portal.output.stream.container.constants.OutputStreamContaine
 import com.liferay.portal.upgrade.PortalUpgradeProcess;
 import com.liferay.portal.upgrade.internal.executor.UpgradeExecutor;
 import com.liferay.portal.upgrade.internal.graph.ReleaseGraphManager;
+import com.liferay.portal.upgrade.internal.index.updater.IndexUpdaterUtil;
 import com.liferay.portal.upgrade.internal.registry.UpgradeInfo;
 import com.liferay.portal.upgrade.internal.registry.UpgradeStepRegistratorThreadLocal;
 import com.liferay.portal.util.PropsValues;
@@ -153,24 +154,21 @@ public class ReleaseManagerImpl implements ReleaseManager {
 			Collections.reverseOrder(
 				new PropertyServiceReferenceComparator<UpgradeStep>(
 					"upgrade.from.schema.version")),
-			new ReleaseManagerImpl.UpgradeInfoServiceTrackerMapListener());
+			new ReleaseManagerImpl.UpgradeInfoServiceTrackerMapListener(
+				bundleContext));
 
 		synchronized (this) {
-			Set<String> bundleSymbolicNames = null;
+			Set<String> bundleSymbolicNames = new HashSet<>();
 
-			if (!PropsValues.UPGRADE_DATABASE_AUTO_RUN) {
-				bundleSymbolicNames = new HashSet<>();
+			for (Release release :
+					_releaseLocalService.getReleases(
+						QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
 
-				for (Release release :
-						_releaseLocalService.getReleases(
-							QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
-
-					bundleSymbolicNames.add(release.getBundleSymbolicName());
-				}
+				bundleSymbolicNames.add(release.getBundleSymbolicName());
 			}
 
 			for (String bundleSymbolicName : _serviceTrackerMap.keySet()) {
-				if ((bundleSymbolicNames != null) &&
+				if (!PropsValues.UPGRADE_DATABASE_AUTO_RUN &&
 					bundleSymbolicNames.contains(bundleSymbolicName)) {
 
 					continue;
@@ -182,7 +180,16 @@ public class ReleaseManagerImpl implements ReleaseManager {
 				try {
 					_upgradeExecutor.execute(
 						bundleSymbolicName, upgradeSteps,
-						OutputStreamContainerConstants.FACTORY_NAME_DUMMY);
+						OutputStreamContainerConstants.FACTORY_NAME_DUMMY,
+						!bundleSymbolicNames.contains(bundleSymbolicName));
+
+					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP &&
+						bundleSymbolicNames.contains(bundleSymbolicName)) {
+
+						IndexUpdaterUtil.updateIndexes(
+							IndexUpdaterUtil.getBundle(
+								bundleContext, bundleSymbolicName));
+					}
 				}
 				catch (Throwable throwable) {
 					_log.error(
@@ -314,6 +321,12 @@ public class ReleaseManagerImpl implements ReleaseManager {
 		implements ServiceTrackerMapListener
 			<String, UpgradeInfo, List<UpgradeInfo>> {
 
+		public UpgradeInfoServiceTrackerMapListener(
+			BundleContext bundleContext) {
+
+			_bundleContext = bundleContext;
+		}
+
 		@Override
 		public void keyEmitted(
 			ServiceTrackerMap<String, List<UpgradeInfo>> serviceTrackerMap,
@@ -321,14 +334,30 @@ public class ReleaseManagerImpl implements ReleaseManager {
 			List<UpgradeInfo> upgradeInfos) {
 
 			synchronized (ReleaseManagerImpl.this) {
+				Release release = _releaseLocalService.fetchRelease(
+					bundleSymbolicName);
+
 				if (_activated &&
 					UpgradeStepRegistratorThreadLocal.isEnabled() &&
 					(PropsValues.UPGRADE_DATABASE_AUTO_RUN ||
-					 (_releaseLocalService.fetchRelease(bundleSymbolicName) ==
-						 null))) {
+					 (release == null))) {
 
 					_upgradeExecutor.execute(
-						bundleSymbolicName, upgradeInfos, null);
+						bundleSymbolicName, upgradeInfos, null,
+						release == null);
+
+					if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP &&
+						(release != null)) {
+
+						try {
+							IndexUpdaterUtil.updateIndexes(
+								IndexUpdaterUtil.getBundle(
+									_bundleContext, bundleSymbolicName));
+						}
+						catch (Exception exception) {
+							_log.error(exception);
+						}
+					}
 				}
 			}
 		}
@@ -339,6 +368,8 @@ public class ReleaseManagerImpl implements ReleaseManager {
 			String bundleSymbolicName, UpgradeInfo upgradeInfo,
 			List<UpgradeInfo> upgradeInfos) {
 		}
+
+		private final BundleContext _bundleContext;
 
 	}
 
