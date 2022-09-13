@@ -78,7 +78,8 @@ public class ReleaseManagerOSGiCommands {
 		}
 
 		try {
-			_upgradeExecutor.execute(bundleSymbolicName, upgradeInfos, null);
+			_upgradeExecutor.execute(
+				bundleSymbolicName, upgradeInfos, null, true);
 		}
 		catch (Throwable throwable) {
 			_swappedLogExecutor.execute(
@@ -110,7 +111,7 @@ public class ReleaseManagerOSGiCommands {
 			releaseGraphManager.getUpgradeInfos(
 				_releaseManagerImpl.getSchemaVersionString(bundleSymbolicName),
 				toVersionString),
-			null);
+			null, true);
 
 		return null;
 	}
@@ -208,7 +209,7 @@ public class ReleaseManagerOSGiCommands {
 						upgradableBundleSymbolicName);
 
 				_upgradeExecutor.execute(
-					upgradableBundleSymbolicName, upgradeInfos, null);
+					upgradableBundleSymbolicName, upgradeInfos, null, true);
 			}
 			catch (Throwable throwable) {
 				_swappedLogExecutor.execute(
