@@ -53,15 +53,15 @@ definition {
 			Portlet.startServer(keepOsGiState = "true");
 		}
 
-		var hasMySQLIndex = SQL.hasMySQLIndex(indexName = "IX_EC00543C");
+		var hasCompanyMissingIndex = SQL.hasMySQLIndex(indexName = "IX_EC00543C");
 
-		if ("${hasMySQLIndex}" == "false") {
+		if ("${hasCompanyMissingIndex}" == "false") {
 			fail("Company index IX_EC00543C wasn't recreated");
 		}
 
-		var hasMySQLIndex = SQL.hasMySQLIndex(indexName = "IX_D3ACAD4A");
+		var hasJournalArticleMissingIndex = SQL.hasMySQLIndex(indexName = "IX_D3ACAD4A");
 
-		if ("${hasMySQLIndex}" == "false") {
+		if ("${hasJournalArticleMissingIndex}" == "false") {
 			fail("JournalArticle index IX_D3ACAD4A wasn't recreated");
 		}
 	}

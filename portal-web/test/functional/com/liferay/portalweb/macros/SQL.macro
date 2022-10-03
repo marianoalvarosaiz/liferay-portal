@@ -52,6 +52,10 @@ definition {
 
 		var index = SQL.executeMySQLStatement(mysqlStatement = "${indexQuery}");
 
+		echo("IndexName: ${indexName}");
+
+		echo("index: ${index}");
+
 		if (contains("${index}", "1")) {
 			return "true";
 		}
