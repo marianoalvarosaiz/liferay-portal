@@ -198,6 +198,23 @@ that may or may not be enforced with a unique index at the database level. Case
 	</#list>
 
 	int start, int end, OrderByComparator<${entity.name}> orderByComparator, boolean useFinderCache) {
+
+		return _findBy${entityFinder.name}(
+
+				<#list entityColumns as entityColumn>
+					${entityColumn.name},
+				</#list>
+
+				start, end, orderByComparator, useFinderCache, false);
+	}
+
+	private List<${entity.name}> _findBy${entityFinder.name}(
+
+	<#list entityColumns as entityColumn>
+		${entityColumn.type} ${entityColumn.name},
+	</#list>
+
+	int start, int end, OrderByComparator<${entity.name}> orderByComparator, boolean useFinderCache, boolean readOnlyCache) {
 		<#list entityColumns as entityColumn>
 			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
 				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
@@ -296,10 +313,12 @@ that may or may not be enforced with a unique index at the database level. Case
 
 				list = (List<${entity.name}>)QueryUtil.list(query, getDialect(), start, end);
 
-				cacheResult(list);
+				if (!readOnlyCache) {
+					cacheResult(list);
 
-				if (${useCache}) {
-					${finderCache}.putResult(finderPath, finderArgs, list);
+					if (${useCache}) {
+						${finderCache}.putResult(finderPath, finderArgs, list);
+					}
 				}
 			}
 			catch (Exception exception) {
@@ -1533,6 +1552,32 @@ that may or may not be enforced with a unique index at the database level. Case
 	</#list>
 
 	int start, int end, OrderByComparator<${entity.name}> orderByComparator, boolean useFinderCache) {
+
+		return _findBy${entityFinder.name}(
+
+				<#list entityColumns as entityColumn>
+					<#if entityColumn.hasArrayableOperator()>
+						${entityColumn.pluralName},
+					<#else>
+						${entityColumn.name},
+					</#if>
+				</#list>
+
+				start, end, orderByComparator, useFinderCache, false);
+
+	}
+
+	private List<${entity.name}> _findBy${entityFinder.name}(
+
+	<#list entityColumns as entityColumn>
+		<#if entityColumn.hasArrayableOperator()>
+			${entityColumn.type}[] ${entityColumn.pluralName},
+		<#else>
+			${entityColumn.type} ${entityColumn.name},
+		</#if>
+	</#list>
+
+	int start, int end, OrderByComparator<${entity.name}> orderByComparator, boolean useFinderCache, boolean readOnlyCache) {
 		<#list entityColumns as entityColumn>
 			<#if entityColumn.hasArrayableOperator()>
 				if (${entityColumn.pluralName} == null) {
@@ -1712,10 +1757,12 @@ that may or may not be enforced with a unique index at the database level. Case
 
 				list = (List<${entity.name}>)QueryUtil.list(query, getDialect(), start, end);
 
-				cacheResult(list);
+				if (!readOnlyCache) {
+					cacheResult(list);
 
-				if (${useCache}) {
-					${finderCache}.putResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs, list);
+					if (${useCache}) {
+						${finderCache}.putResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs, list);
+					}
 				}
 			}
 			catch (Exception exception) {
@@ -1734,6 +1781,7 @@ that may or may not be enforced with a unique index at the database level. Case
 
 		return list;
 	}
+
 </#if>
 
 <#-- Case 7.1: entityFinder.isCollection() && entityFinder.hasArrayableOperator() && entityFinder.hasArrayablePagination() -->
@@ -1903,229 +1951,255 @@ that may or may not be enforced with a unique index at the database level. Case
 	</#list>
 
 	int start, int end, OrderByComparator<${entity.name}> orderByComparator, boolean useFinderCache) {
-		<#list entityColumns as entityColumn>
-			<#if entityColumn.hasArrayableOperator()>
-				if (${entityColumn.pluralName} == null) {
-					${entityColumn.pluralName} = new ${entityColumn.type}[0];
-				}
-				else if (${entityColumn.pluralName}.length > 1) {
-					<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
-						for (int i = 0; i < ${entityColumn.pluralName}.length; i++) {
-							${entityColumn.pluralName}[i] = Objects.toString(${entityColumn.pluralName}[i], "");
-						}
-					</#if>
+		return _findBy${entityFinder.name}(
 
-					<#if serviceBuilder.isVersionGTE_7_2_0()>
-						${entityColumn.pluralName} = ArrayUtil.sortedUnique(${entityColumn.pluralName});
-					<#else>
-						${entityColumn.pluralName} =
-							<#if stringUtil.equals(entityColumn.type, "String") && !entityColumn.isConvertNull()>
-								ArrayUtil.distinct(${entityColumn.pluralName}, NULL_SAFE_STRING_COMPARATOR);
-							<#else>
-								ArrayUtil.unique(${entityColumn.pluralName});
-							</#if>
-
-						<#if stringUtil.equals(entityColumn.type, "String") && !entityColumn.isConvertNull()>
-							Arrays.sort(${entityColumn.pluralName}, NULL_SAFE_STRING_COMPARATOR);
-						<#else>
-							Arrays.sort(${entityColumn.pluralName});
-						</#if>
-					</#if>
-				}
-			<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
-				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
-			</#if>
-		</#list>
-
-		if (
-		<#assign firstCol = true />
-		<#list entityColumns as entityColumn>
-			<#if entityColumn.hasArrayableOperator()>
-				<#if firstCol>
-					<#assign firstCol = false />
-				<#else>
-					&&
-				</#if>
-
-				${entityColumn.pluralName}.length == 1
-			</#if>
-		</#list>
-		) {
-			<#if entityFinder.isUnique()>
-				${entity.name} ${entity.variableName} = fetchBy${entityFinder.name}(
-					<#list entityColumns as entityColumn>
-						<#if entityColumn.hasArrayableOperator()>
-							${entityColumn.pluralName}[0]
-						<#else>
-							${entityColumn.name}
-						</#if>
-
-						<#if entityColumn_has_next>
-							,
-						</#if>
-					</#list>);
-
-				if (${entity.variableName} == null) {
-					return Collections.emptyList();
-				}
-				else {
-					return Collections.singletonList(${entity.variableName});
-				}
-			<#else>
-				return findBy${entityFinder.name}(
-					<#list entityColumns as entityColumn>
-						<#if entityColumn.hasArrayableOperator()>
-							${entityColumn.pluralName}[0],
-						<#else>
-							${entityColumn.name},
-						</#if>
-					</#list>
-
-					start, end, orderByComparator);
-			</#if>
-		}
-
-		<#if entity.isChangeTrackingEnabled()>
-			boolean productionMode = ${ctPersistenceHelper}.isProductionMode(${entity.name}.class);
-		</#if>
-
-		Object[] finderArgs = null;
-
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (orderByComparator == null)) {
-			if (${useCache}) {
-				finderArgs = new Object[] {
-					<#list entityColumns as entityColumn>
-						<#if entityColumn.hasArrayableOperator()>
-							StringUtil.merge(${entityColumn.pluralName})
-						<#else>
-							${entityColumn.name}
-						</#if>
-
-						<#if entityColumn_has_next>
-							,
-						</#if>
-					</#list>
-				};
-			}
-		}
-		else if (${useCache}) {
-			finderArgs = new Object[] {
 				<#list entityColumns as entityColumn>
 					<#if entityColumn.hasArrayableOperator()>
-						StringUtil.merge(${entityColumn.pluralName}),
+						${entityColumn.pluralName},
 					<#else>
 						${entityColumn.name},
 					</#if>
 				</#list>
 
-				start, end, orderByComparator
-			};
-		}
+				start, end, orderByComparator, useFinderCache, false);
+	}
 
-		List<${entity.name}> list = null;
+	private List<${entity.name}> _findBy${entityFinder.name}(
 
-		if (${useCache}) {
-			list = (List<${entity.name}>)${finderCache}.getResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs
-				<#if serviceBuilder.isVersionLTE_7_3_0()>
-					, this
+			<#list entityColumns as entityColumn>
+				<#if entityColumn.hasArrayableOperator()>
+					${entityColumn.type}[] ${entityColumn.pluralName},
+				<#else>
+					${entityColumn.type} ${entityColumn.name},
 				</#if>
-				);
+			</#list>
 
-			if ((list != null) && !list.isEmpty()) {
-				for (${entity.name} ${entity.variableName} : list) {
-					if (
-						<#list entityColumns as entityColumn>
-							<#if entityColumn.hasArrayableOperator()>
-								!ArrayUtil.contains(${entityColumn.pluralName}, ${entity.variableName}.get${entityColumn.methodName}())
+			int start, int end, OrderByComparator<${entity.name}> orderByComparator, boolean useFinderCache, boolean readOnlyCache) {
+				<#list entityColumns as entityColumn>
+					<#if entityColumn.hasArrayableOperator()>
+						if (${entityColumn.pluralName} == null) {
+							${entityColumn.pluralName} = new ${entityColumn.type}[0];
+						}
+						else if (${entityColumn.pluralName}.length > 1) {
+							<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+								for (int i = 0; i < ${entityColumn.pluralName}.length; i++) {
+									${entityColumn.pluralName}[i] = Objects.toString(${entityColumn.pluralName}[i], "");
+								}
+							</#if>
+
+							<#if serviceBuilder.isVersionGTE_7_2_0()>
+								${entityColumn.pluralName} = ArrayUtil.sortedUnique(${entityColumn.pluralName});
 							<#else>
-								<#include "persistence_impl_finder_field_comparator.ftl">
-							</#if>
+								${entityColumn.pluralName} =
+									<#if stringUtil.equals(entityColumn.type, "String") && !entityColumn.isConvertNull()>
+										ArrayUtil.distinct(${entityColumn.pluralName}, NULL_SAFE_STRING_COMPARATOR);
+									<#else>
+										ArrayUtil.unique(${entityColumn.pluralName});
+									</#if>
 
-							<#if entityColumn_has_next>
-								||
+								<#if stringUtil.equals(entityColumn.type, "String") && !entityColumn.isConvertNull()>
+									Arrays.sort(${entityColumn.pluralName}, NULL_SAFE_STRING_COMPARATOR);
+								<#else>
+									Arrays.sort(${entityColumn.pluralName});
+								</#if>
 							</#if>
-						</#list>
-					) {
-						list = null;
+						}
+					<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+					</#if>
+				</#list>
 
-						break;
+				if (
+				<#assign firstCol = true />
+				<#list entityColumns as entityColumn>
+					<#if entityColumn.hasArrayableOperator()>
+						<#if firstCol>
+							<#assign firstCol = false />
+						<#else>
+							&&
+						</#if>
+
+						${entityColumn.pluralName}.length == 1
+					</#if>
+				</#list>
+				) {
+					<#if entityFinder.isUnique()>
+						${entity.name} ${entity.variableName} = fetchBy${entityFinder.name}(
+							<#list entityColumns as entityColumn>
+								<#if entityColumn.hasArrayableOperator()>
+									${entityColumn.pluralName}[0]
+								<#else>
+									${entityColumn.name}
+								</#if>
+
+								<#if entityColumn_has_next>
+									,
+								</#if>
+							</#list>);
+
+						if (${entity.variableName} == null) {
+							return Collections.emptyList();
+						}
+						else {
+							return Collections.singletonList(${entity.variableName});
+						}
+					<#else>
+						return findBy${entityFinder.name}(
+							<#list entityColumns as entityColumn>
+								<#if entityColumn.hasArrayableOperator()>
+									${entityColumn.pluralName}[0],
+								<#else>
+									${entityColumn.name},
+								</#if>
+							</#list>
+
+							start, end, orderByComparator);
+					</#if>
+				}
+
+				<#if entity.isChangeTrackingEnabled()>
+					boolean productionMode = ${ctPersistenceHelper}.isProductionMode(${entity.name}.class);
+				</#if>
+
+				Object[] finderArgs = null;
+
+				if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (orderByComparator == null)) {
+					if (${useCache}) {
+						finderArgs = new Object[] {
+							<#list entityColumns as entityColumn>
+								<#if entityColumn.hasArrayableOperator()>
+									StringUtil.merge(${entityColumn.pluralName})
+								<#else>
+									${entityColumn.name}
+								</#if>
+
+								<#if entityColumn_has_next>
+									,
+								</#if>
+							</#list>
+						};
 					}
 				}
-			}
-		}
-
-		if (list == null) {
-			try {
-				if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (databaseInMaxParameters > 0) && (<#list entityFinderArrayableColsList as arrayableentityColumn>
-						(${arrayableentityColumn.pluralName}.length > databaseInMaxParameters)
-
-						<#if arrayableentityColumn_has_next>
-							||
-						</#if>
-					</#list>)) {
-
-					list = new ArrayList<${entity.name}>();
-
-					<#list entityFinderArrayableColsList as arrayableentityColumn>
-						${arrayableentityColumn.type}[][] ${arrayableentityColumn.pluralName}Pages = (${arrayableentityColumn.type}[][])ArrayUtil.split(${arrayableentityColumn.pluralName}, databaseInMaxParameters);
-					</#list>
-
-					<#list entityFinderArrayableColsList as arrayableentityColumn>
-						for (${arrayableentityColumn.type}[] ${arrayableentityColumn.pluralName}Page : ${arrayableentityColumn.pluralName}Pages) {
-					</#list>
-
-						list.addAll(_findBy${entityFinder.name}(
-
+				else if (${useCache}) {
+					finderArgs = new Object[] {
 						<#list entityColumns as entityColumn>
 							<#if entityColumn.hasArrayableOperator()>
-								${entityColumn.pluralName}Page,
+								StringUtil.merge(${entityColumn.pluralName}),
 							<#else>
 								${entityColumn.name},
 							</#if>
 						</#list>
 
-						start, end, orderByComparator));
-					<#list entityFinderArrayableColsList as arrayableentityColumn>
-						}
-					</#list>
-
-					Collections.sort(list, orderByComparator);
-
-					list = Collections.unmodifiableList(list);
-				}
-				else {
-					list = _findBy${entityFinder.name}(
-
-					<#list entityColumns as entityColumn>
-						<#if entityColumn.hasArrayableOperator()>
-							${entityColumn.pluralName},
-						<#else>
-							${entityColumn.name},
-						</#if>
-					</#list>
-
-					start, end, orderByComparator);
+						start, end, orderByComparator
+					};
 				}
 
-				cacheResult(list);
+				List<${entity.name}> list = null;
 
 				if (${useCache}) {
-					${finderCache}.putResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs, list);
-				}
-			}
-			catch (Exception exception) {
-				<#if serviceBuilder.isVersionLTE_7_2_0()>
-					if (${useCache}) {
-						${finderCache}.removeResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs);
+					list = (List<${entity.name}>)${finderCache}.getResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs
+						<#if serviceBuilder.isVersionLTE_7_3_0()>
+							, this
+						</#if>
+						);
+
+					if ((list != null) && !list.isEmpty()) {
+						for (${entity.name} ${entity.variableName} : list) {
+							if (
+								<#list entityColumns as entityColumn>
+									<#if entityColumn.hasArrayableOperator()>
+										!ArrayUtil.contains(${entityColumn.pluralName}, ${entity.variableName}.get${entityColumn.methodName}())
+									<#else>
+										<#include "persistence_impl_finder_field_comparator.ftl">
+									</#if>
+
+									<#if entityColumn_has_next>
+										||
+									</#if>
+								</#list>
+							) {
+								list = null;
+
+								break;
+							}
+						}
 					}
-				</#if>
+				}
 
-				throw processException(exception);
+				if (list == null) {
+					try {
+						if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (databaseInMaxParameters > 0) && (<#list entityFinderArrayableColsList as arrayableentityColumn>
+								(${arrayableentityColumn.pluralName}.length > databaseInMaxParameters)
+
+								<#if arrayableentityColumn_has_next>
+									||
+								</#if>
+							</#list>)) {
+
+							list = new ArrayList<${entity.name}>();
+
+							<#list entityFinderArrayableColsList as arrayableentityColumn>
+								${arrayableentityColumn.type}[][] ${arrayableentityColumn.pluralName}Pages = (${arrayableentityColumn.type}[][])ArrayUtil.split(${arrayableentityColumn.pluralName}, databaseInMaxParameters);
+							</#list>
+
+							<#list entityFinderArrayableColsList as arrayableentityColumn>
+								for (${arrayableentityColumn.type}[] ${arrayableentityColumn.pluralName}Page : ${arrayableentityColumn.pluralName}Pages) {
+							</#list>
+
+								list.addAll(_findBy${entityFinder.name}(
+
+								<#list entityColumns as entityColumn>
+									<#if entityColumn.hasArrayableOperator()>
+										${entityColumn.pluralName}Page,
+									<#else>
+										${entityColumn.name},
+									</#if>
+								</#list>
+
+								start, end, orderByComparator));
+							<#list entityFinderArrayableColsList as arrayableentityColumn>
+								}
+							</#list>
+
+							Collections.sort(list, orderByComparator);
+
+							list = Collections.unmodifiableList(list);
+						}
+						else {
+							list = _findBy${entityFinder.name}(
+
+							<#list entityColumns as entityColumn>
+								<#if entityColumn.hasArrayableOperator()>
+									${entityColumn.pluralName},
+								<#else>
+									${entityColumn.name},
+								</#if>
+							</#list>
+
+							start, end, orderByComparator);
+						}
+
+						if (!readOnlyCache) {
+							cacheResult(list);
+
+							if (${useCache}) {
+								${finderCache}.putResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs, list);
+							}
+						}
+					}
+					catch (Exception exception) {
+						<#if serviceBuilder.isVersionLTE_7_2_0()>
+							if (${useCache}) {
+								${finderCache}.removeResult(_finderPathWithPaginationFindBy${entityFinder.name}, finderArgs);
+							}
+						</#if>
+
+						throw processException(exception);
+					}
+				}
+
+				return list;
 			}
-		}
-
-		return list;
-	}
 
 	private List<${entity.name}> _findBy${entityFinder.name}(
 
@@ -2199,16 +2273,32 @@ that may or may not be enforced with a unique index at the database level. Case
 	</#list>
 
 	) throws ${noSuchEntity}Exception {
-		${entity.name} ${entity.variableName} = fetchBy${entityFinder.name}(
+		return _findBy${entityFinder.name}(
+
+				<#list entityColumns as entityColumn>
+					${entityColumn.name}
+					,
+				</#list>
+				false);
+	}
+
+	private ${entity.name} _findBy${entityFinder.name}(
+
+	<#list entityColumns as entityColumn>
+		${entityColumn.type} ${entityColumn.name}
+		,
+	</#list>
+	boolean readOnlyCache
+
+	) throws ${noSuchEntity}Exception {
+		${entity.name} ${entity.variableName} = _fetchBy${entityFinder.name}(
 
 		<#list entityColumns as entityColumn>
 			${entityColumn.name}
 
-			<#if entityColumn_has_next>
-				,
-			</#if>
+			,
 		</#list>
-
+		true, readOnlyCache
 		);
 
 		if ( ${entity.variableName} == null) {
@@ -2283,6 +2373,26 @@ that may or may not be enforced with a unique index at the database level. Case
 	</#list>
 
 	boolean useFinderCache) {
+		return _fetchBy${entityFinder.name}(
+
+			<#list entityColumns as entityColumn>
+				${entityColumn.name}
+
+				,
+			</#list>
+
+			useFinderCache, false);
+	}
+
+	private ${entity.name} _fetchBy${entityFinder.name}(
+
+	<#list entityColumns as entityColumn>
+		${entityColumn.type} ${entityColumn.name}
+
+		,
+	</#list>
+
+	boolean useFinderCache, boolean readOnlyCache) {
 		<#list entityColumns as entityColumn>
 			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
 				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
@@ -2405,9 +2515,11 @@ that may or may not be enforced with a unique index at the database level. Case
 
 					${entity.name} ${entity.variableName} = list.get(0);
 
-					result = ${entity.variableName};
+					if (!readOnlyCache) {
+						result = ${entity.variableName};
 
-					cacheResult(${entity.variableName});
+						cacheResult(${entity.variableName});
+					}
 				}
 			}
 			catch (Exception exception) {
