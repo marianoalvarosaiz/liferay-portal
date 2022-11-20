@@ -199,7 +199,7 @@ public class I18nFilter extends BasePortalFilter {
 				String layoutURL = requestURI.substring(friendlyURLEnd);
 
 				if (Validator.isNull(layoutURL)) {
-					redirect = contextPath + i18nPath + StringPool.SLASH;
+					redirect = contextPath + i18nPath + layoutURL;
 				}
 				else {
 					redirect = contextPath + i18nPath + layoutURL;
