@@ -17,10 +17,11 @@ package com.liferay.portal.dao.orm.common;
 import com.liferay.portal.dao.sql.transformer.HQLToJPQLTransformerLogic;
 import com.liferay.portal.dao.sql.transformer.JPQLToHQLTransformerLogic;
 import com.liferay.portal.dao.sql.transformer.SQLTransformerFactory;
+import com.liferay.portal.kernel.cache.PortalCache;
+import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -31,15 +32,17 @@ import java.util.function.Function;
 public class SQLTransformer {
 
 	public static void reloadSQLTransformer() {
-		if (_transformedSqls == null) {
-			_transformedSqls = new ConcurrentHashMap<>();
+		if (_sqlTransformer == null) {
+			_sqlTransformer = SQLTransformerFactory.getSQLTransformer(
+				DBManagerUtil.getDB());
+
+			_transformedSqlsPortalCache = PortalCacheHelperUtil.getPortalCache(
+				PortalCacheManagerNames.SINGLE_VM,
+				SQLTransformer.class.getName());
 		}
 		else {
-			_transformedSqls.clear();
+			_transformedSqlsPortalCache.removeAll();
 		}
-
-		_sqlTransformer = SQLTransformerFactory.getSQLTransformer(
-			DBManagerUtil.getDB());
 	}
 
 	public static String transform(String sql) {
@@ -47,7 +50,7 @@ public class SQLTransformer {
 	}
 
 	public static String transformFromHQLToJQPL(String sql) {
-		String newSQL = _transformedSqls.get(sql);
+		String newSQL = _transformedSqlsPortalCache.get(sql);
 
 		if (newSQL != null) {
 			return newSQL;
@@ -65,13 +68,13 @@ public class SQLTransformer {
 			newSQL = function.apply(newSQL);
 		}
 
-		_transformedSqls.put(sql, newSQL);
+		_transformedSqlsPortalCache.put(sql, newSQL);
 
 		return newSQL;
 	}
 
 	public static String transformFromJPQLToHQL(String sql) {
-		String newSQL = _transformedSqls.get(sql);
+		String newSQL = _transformedSqlsPortalCache.get(sql);
 
 		if (newSQL != null) {
 			return newSQL;
@@ -84,13 +87,13 @@ public class SQLTransformer {
 
 		newSQL = countFunction.apply(newSQL);
 
-		_transformedSqls.put(sql, newSQL);
+		_transformedSqlsPortalCache.put(sql, newSQL);
 
 		return newSQL;
 	}
 
 	private static com.liferay.portal.dao.sql.transformer.SQLTransformer
 		_sqlTransformer;
-	private static Map<String, String> _transformedSqls;
+	private static PortalCache<String, String> _transformedSqlsPortalCache;
 
 }
