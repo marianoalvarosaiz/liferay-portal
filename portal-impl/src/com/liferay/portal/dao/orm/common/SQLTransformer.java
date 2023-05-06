@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import java.util.function.Function;
 
@@ -32,9 +34,13 @@ import java.util.function.Function;
 public class SQLTransformer {
 
 	public static void reloadSQLTransformer() {
+		_log.error("SqlTransformer: " + _sqlTransformer);
+
 		if (_sqlTransformer == null) {
 			_sqlTransformer = SQLTransformerFactory.getSQLTransformer(
 				DBManagerUtil.getDB());
+
+			_log.error("SqlTransformer: " + _sqlTransformer);
 
 			_transformedSqlsPortalCache = PortalCacheHelperUtil.getPortalCache(
 				PortalCacheManagerNames.SINGLE_VM,
@@ -43,13 +49,25 @@ public class SQLTransformer {
 		else {
 			_transformedSqlsPortalCache.removeAll();
 		}
+
+		_log.error("SqlTransformer: " + _sqlTransformer);
 	}
 
 	public static String transform(String sql) {
+		_log.error("transform: " + _sqlTransformer);
+		
+		try {
+			throw new NullPointerException();
+		} catch(Exception e) {
+			_log.error(e);
+		}
+
 		return _sqlTransformer.transform(sql);
 	}
 
 	public static String transformFromHQLToJQPL(String sql) {
+		_log.error("transformFromHQLToJQPL: " + _sqlTransformer);
+
 		String newSQL = _transformedSqlsPortalCache.get(sql);
 
 		if (newSQL != null) {
@@ -74,6 +92,8 @@ public class SQLTransformer {
 	}
 
 	public static String transformFromJPQLToHQL(String sql) {
+		_log.error("transformFromJPQLToHQL: " + _sqlTransformer);
+
 		String newSQL = _transformedSqlsPortalCache.get(sql);
 
 		if (newSQL != null) {
@@ -91,6 +111,8 @@ public class SQLTransformer {
 
 		return newSQL;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(SQLTransformer.class);
 
 	private static com.liferay.portal.dao.sql.transformer.SQLTransformer
 		_sqlTransformer;

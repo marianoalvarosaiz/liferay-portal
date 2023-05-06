@@ -127,9 +127,7 @@ public class DBInitUtil {
 			return true;
 		}
 		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
-			}
+				_log.error(exception);
 		}
 
 		return false;
@@ -189,9 +187,7 @@ public class DBInitUtil {
 				"alter table Release_ add mvccVersion LONG default 0 not null");
 		}
 		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
-			}
+				_log.error(exception);
 		}
 
 		try {
@@ -200,18 +196,14 @@ public class DBInitUtil {
 				"alter table Release_ add schemaVersion VARCHAR(75) null");
 		}
 		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
-			}
+				_log.error(exception);
 		}
 
 		try {
 			db.runSQL(connection, "alter table Release_ add state_ INTEGER");
 		}
 		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
-			}
+				_log.error(exception);
 		}
 
 		if (_checkDefaultRelease(connection)) {
