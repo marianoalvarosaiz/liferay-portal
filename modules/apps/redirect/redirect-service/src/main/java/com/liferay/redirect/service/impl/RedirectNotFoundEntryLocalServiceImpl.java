@@ -67,9 +67,13 @@ public class RedirectNotFoundEntryLocalServiceImpl
 					redirectNotFoundEntry);
 			}
 			catch (Exception exception) {
+				System.out.println("There is an exception: " + exception.getMessage());
+
 				redirectNotFoundEntry =
 					redirectNotFoundEntryPersistence.fetchByG_U(
 						group.getGroupId(), url);
+
+				System.out.println("Is it null? "+ redirectNotFoundEntry);
 
 				if (redirectNotFoundEntry == null) {
 					throw exception;

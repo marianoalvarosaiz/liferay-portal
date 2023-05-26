@@ -320,6 +320,8 @@ public class RedirectNotFoundEntryLocalServiceTest {
 					if (_insertBefore) {
 						_insertBefore = false;
 
+						System.out.println("_insertBefore: " + _insertBefore);
+
 						_addOrUpdateRedirectNotFoundEntry("url");
 					}
 				}
