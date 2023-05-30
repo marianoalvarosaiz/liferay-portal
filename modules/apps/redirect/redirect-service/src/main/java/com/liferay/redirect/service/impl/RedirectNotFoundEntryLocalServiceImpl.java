@@ -62,8 +62,19 @@ public class RedirectNotFoundEntryLocalServiceImpl
 			redirectNotFoundEntry.setCompanyId(group.getCompanyId());
 			redirectNotFoundEntry.setUrl(url);
 
-			redirectNotFoundEntry = redirectNotFoundEntryPersistence.update(
-				redirectNotFoundEntry);
+			try {
+				redirectNotFoundEntry = redirectNotFoundEntryPersistence.update(
+					redirectNotFoundEntry);
+			}
+			catch (Exception exception) {
+				redirectNotFoundEntry =
+					redirectNotFoundEntryPersistence.fetchByG_U(
+						group.getGroupId(), url);
+
+				if (redirectNotFoundEntry == null) {
+					throw exception;
+				}
+			}
 		}
 
 		_viewCountManager.incrementViewCount(
