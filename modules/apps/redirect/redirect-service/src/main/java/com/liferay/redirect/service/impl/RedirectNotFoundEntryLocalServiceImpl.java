@@ -50,9 +50,17 @@ public class RedirectNotFoundEntryLocalServiceImpl
 	public RedirectNotFoundEntry addOrUpdateRedirectNotFoundEntry(
 		Group group, String url) {
 
-		RedirectNotFoundEntry redirectNotFoundEntry =
-			redirectNotFoundEntryPersistence.fetchByG_U(
+		RedirectNotFoundEntry redirectNotFoundEntry = null;
+
+		try {
+			redirectNotFoundEntry = redirectNotFoundEntryPersistence.fetchByG_U(
 				group.getGroupId(), url);
+		}
+		catch (Exception exception) {
+			System.out.println("Third exception: " + exception.getMessage());
+
+			throw exception;
+		}
 
 		if (redirectNotFoundEntry == null) {
 			redirectNotFoundEntry = redirectNotFoundEntryPersistence.create(
@@ -67,6 +75,9 @@ public class RedirectNotFoundEntryLocalServiceImpl
 					redirectNotFoundEntry);
 			}
 			catch (Exception exception) {
+				System.out.println(
+					"Second exception: " + exception.getMessage());
+
 				redirectNotFoundEntry =
 					redirectNotFoundEntryPersistence.fetchByG_U(
 						group.getGroupId(), url);
