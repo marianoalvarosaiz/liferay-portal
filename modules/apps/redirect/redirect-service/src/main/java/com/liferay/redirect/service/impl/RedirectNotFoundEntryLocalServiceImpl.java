@@ -50,39 +50,47 @@ public class RedirectNotFoundEntryLocalServiceImpl
 	public RedirectNotFoundEntry addOrUpdateRedirectNotFoundEntry(
 		Group group, String url) {
 
-		RedirectNotFoundEntry redirectNotFoundEntry =
-			redirectNotFoundEntryPersistence.fetchByG_U(
-				group.getGroupId(), url);
+		try {
+			RedirectNotFoundEntry redirectNotFoundEntry =
+				redirectNotFoundEntryPersistence.fetchByG_U(
+					group.getGroupId(), url);
 
-		if (redirectNotFoundEntry == null) {
-			redirectNotFoundEntry = redirectNotFoundEntryPersistence.create(
-				counterLocalService.increment());
+			if (redirectNotFoundEntry == null) {
+				redirectNotFoundEntry = redirectNotFoundEntryPersistence.create(
+					counterLocalService.increment());
 
-			redirectNotFoundEntry.setGroupId(group.getGroupId());
-			redirectNotFoundEntry.setCompanyId(group.getCompanyId());
-			redirectNotFoundEntry.setUrl(url);
+				redirectNotFoundEntry.setGroupId(group.getGroupId());
+				redirectNotFoundEntry.setCompanyId(group.getCompanyId());
+				redirectNotFoundEntry.setUrl(url);
 
-			try {
-				redirectNotFoundEntry = redirectNotFoundEntryPersistence.update(
-					redirectNotFoundEntry);
-			}
-			catch (Exception exception) {
-				redirectNotFoundEntry =
-					redirectNotFoundEntryPersistence.fetchByG_U(
-						group.getGroupId(), url);
+				try {
+					redirectNotFoundEntry =
+						redirectNotFoundEntryPersistence.update(
+							redirectNotFoundEntry);
+				}
+				catch (Exception exception) {
+					redirectNotFoundEntry =
+						redirectNotFoundEntryPersistence.fetchByG_U(
+							group.getGroupId(), url);
 
-				if (redirectNotFoundEntry == null) {
-					throw exception;
+					if (redirectNotFoundEntry == null) {
+						throw exception;
+					}
 				}
 			}
+
+			_viewCountManager.incrementViewCount(
+				redirectNotFoundEntry.getCompanyId(),
+				_portal.getClassNameId(RedirectNotFoundEntry.class),
+				redirectNotFoundEntry.getRedirectNotFoundEntryId(), 1);
+
+			return redirectNotFoundEntry;
+		}
+		catch (Exception exception) {
+			System.out.println("Exception: " + exception.getMessage());
 		}
 
-		_viewCountManager.incrementViewCount(
-			redirectNotFoundEntry.getCompanyId(),
-			_portal.getClassNameId(RedirectNotFoundEntry.class),
-			redirectNotFoundEntry.getRedirectNotFoundEntryId(), 1);
-
-		return redirectNotFoundEntry;
+		return null;
 	}
 
 	@Override
