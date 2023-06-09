@@ -21,6 +21,7 @@ import com.liferay.petra.function.UnsafeRunnable;
 import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.configuration.persistence.listener.ConfigurationModelListener;
 import com.liferay.portal.kernel.audit.AuditMessage;
 import com.liferay.portal.kernel.audit.AuditRouter;
 import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
@@ -66,6 +67,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
@@ -74,6 +76,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.runtime.ServiceComponentRuntime;
+import org.osgi.service.component.runtime.dto.ComponentDescriptionDTO;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
@@ -82,9 +86,11 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
  */
 @Component(
 	configurationPid = "com.liferay.portal.scheduler.internal.configuration.SchedulerEngineHelperConfiguration",
-	enabled = false, service = SchedulerEngineHelper.class
+	enabled = false, property = "model.class.name=*",
+	service = {ConfigurationModelListener.class, SchedulerEngineHelper.class}
 )
-public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
+public class SchedulerEngineHelperImpl
+	implements ConfigurationModelListener, SchedulerEngineHelper {
 
 	@Override
 	public void addScriptingJob(
@@ -252,6 +258,23 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		}
 
 		return jobState.getTriggerDate(SchedulerEngine.START_TIME);
+	}
+
+	@Override
+	public void onAfterSave(String pid, Dictionary<String, Object> properties) {
+		Class<?> componentClass = _factoryPidComponentConfigurations.get(pid);
+
+		if (componentClass == null) {
+			return;
+		}
+
+		ComponentDescriptionDTO componentDescriptionDTO =
+			_serviceComponentRuntime.getComponentDescriptionDTO(
+				FrameworkUtil.getBundle(componentClass),
+				componentClass.getName());
+
+		_serviceComponentRuntime.disableComponent(componentDescriptionDTO);
+		_serviceComponentRuntime.enableComponent(componentDescriptionDTO);
 	}
 
 	@Override
@@ -453,6 +476,8 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 
 	private final Set<ServiceRegistration<Destination>>
 		_destinationServiceRegistrations = new HashSet<>();
+	private final Map<String, Class<?>> _factoryPidComponentConfigurations =
+		new ConcurrentHashMap<>();
 
 	@Reference
 	private JSONFactory _jsonFactory;
@@ -473,6 +498,9 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 		_schedulerEngineHelperConfiguration;
 	private ServiceTracker<SchedulerJobConfiguration, SchedulerJobConfiguration>
 		_schedulerJobConfigurationServiceTracker;
+
+	@Reference
+	private ServiceComponentRuntime _serviceComponentRuntime;
 
 	@Reference
 	private TriggerFactory _triggerFactory;
@@ -593,6 +621,14 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 							schedulerJobConfiguration.getDestinationName()
 						).build()));
 
+				String factoryPid = (String)serviceReference.getProperty(
+					"factoryPid");
+
+				if (factoryPid != null) {
+					_factoryPidComponentConfigurations.put(
+						factoryPid, schedulerJobConfiguration.getClass());
+				}
+
 				return schedulerJobConfiguration;
 			}
 			catch (SchedulerException schedulerException) {
@@ -642,6 +678,14 @@ public class SchedulerEngineHelperImpl implements SchedulerEngineHelper {
 						schedulerJobConfiguration.getName());
 
 			messageListenerServiceRegistration.unregister();
+
+			String factoryPid = (String)serviceReference.getProperty(
+				"factoryPid");
+
+			if (factoryPid != null) {
+				_factoryPidComponentConfigurations.put(
+					factoryPid, schedulerJobConfiguration.getClass());
+			}
 		}
 
 	}
