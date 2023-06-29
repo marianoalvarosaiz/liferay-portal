@@ -16,7 +16,6 @@ package com.liferay.portal.language;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoaderUtil;
@@ -196,7 +195,7 @@ public class LanguageResources {
 				CompanyThreadLocal.getCompanyId();
 
 			try {
-				CompanyThreadLocal.setCompanyId(CompanyConstants.SYSTEM);
+				CompanyThreadLocal.setCompanyId(companyThreadLocalCompanyId);
 
 				Locale priorityLocale = LanguageUtil.getLocale(
 					locale.getLanguage());
