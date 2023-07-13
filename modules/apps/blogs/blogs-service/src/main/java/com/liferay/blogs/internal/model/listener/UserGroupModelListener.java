@@ -25,7 +25,8 @@ import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.UserGroupLocalService;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -67,14 +68,16 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 			long userId, long userGroupId)
 		throws PortalException {
 
-		List<Group> userGroupGroups = _groupLocalService.getUserGroupGroups(
+		long[] userGroupGroupIds = _userGroupLocalService.getGroupPrimaryKeys(
 			userGroupId);
 
-		userGroupGroups.removeAll(
+		Set<Group> userGroups = new HashSet<>(
 			_groupLocalService.getUserGroups(userId, true));
 
-		for (Group group : userGroupGroups) {
-			_blogsEntryLocalService.unsubscribe(userId, group.getGroupId());
+		for (long groupId : userGroupGroupIds) {
+			if (!userGroups.contains(groupId)) {
+				_blogsEntryLocalService.unsubscribe(userId, groupId);
+			}
 		}
 	}
 
