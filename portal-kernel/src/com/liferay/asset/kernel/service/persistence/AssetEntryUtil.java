@@ -1932,9 +1932,10 @@ public class AssetEntryUtil {
 	 *
 	 * @param pk the primary key of the asset entry
 	 * @param assetTagPK the primary key of the asset tag
+	 * @return <code>true</code> if the association between the asset entry and the asset tag is added; <code>false</code> if it was already added
 	 */
-	public static void addAssetTag(long pk, long assetTagPK) {
-		getPersistence().addAssetTag(pk, assetTagPK);
+	public static boolean addAssetTag(long pk, long assetTagPK) {
+		return getPersistence().addAssetTag(pk, assetTagPK);
 	}
 
 	/**
@@ -1942,11 +1943,12 @@ public class AssetEntryUtil {
 	 *
 	 * @param pk the primary key of the asset entry
 	 * @param assetTag the asset tag
+	 * @return <code>true</code> if the association between the asset entry and the asset tag is added; <code>false</code> if it was already added
 	 */
-	public static void addAssetTag(
+	public static boolean addAssetTag(
 		long pk, com.liferay.asset.kernel.model.AssetTag assetTag) {
 
-		getPersistence().addAssetTag(pk, assetTag);
+		return getPersistence().addAssetTag(pk, assetTag);
 	}
 
 	/**
@@ -1954,9 +1956,10 @@ public class AssetEntryUtil {
 	 *
 	 * @param pk the primary key of the asset entry
 	 * @param assetTagPKs the primary keys of the asset tags
+	 * @return <code>true</code> if at least an association between the asset entry and the asset tags is added; <code>false</code> if all were already added
 	 */
-	public static void addAssetTags(long pk, long[] assetTagPKs) {
-		getPersistence().addAssetTags(pk, assetTagPKs);
+	public static boolean addAssetTags(long pk, long[] assetTagPKs) {
+		return getPersistence().addAssetTags(pk, assetTagPKs);
 	}
 
 	/**
@@ -1964,11 +1967,12 @@ public class AssetEntryUtil {
 	 *
 	 * @param pk the primary key of the asset entry
 	 * @param assetTags the asset tags
+	 * @return <code>true</code> if at least an association between the asset entry and the asset tags is added; <code>false</code> if all were already added
 	 */
-	public static void addAssetTags(
+	public static boolean addAssetTags(
 		long pk, List<com.liferay.asset.kernel.model.AssetTag> assetTags) {
 
-		getPersistence().addAssetTags(pk, assetTags);
+		return getPersistence().addAssetTags(pk, assetTags);
 	}
 
 	/**

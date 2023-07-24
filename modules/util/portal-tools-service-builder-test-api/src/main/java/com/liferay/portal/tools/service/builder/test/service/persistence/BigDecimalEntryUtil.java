@@ -911,9 +911,10 @@ public class BigDecimalEntryUtil {
 	 *
 	 * @param pk the primary key of the big decimal entry
 	 * @param lvEntryPK the primary key of the lv entry
+	 * @return <code>true</code> if the association between the big decimal entry and the lv entry is added; <code>false</code> if it was already added
 	 */
-	public static void addLVEntry(long pk, long lvEntryPK) {
-		getPersistence().addLVEntry(pk, lvEntryPK);
+	public static boolean addLVEntry(long pk, long lvEntryPK) {
+		return getPersistence().addLVEntry(pk, lvEntryPK);
 	}
 
 	/**
@@ -921,12 +922,13 @@ public class BigDecimalEntryUtil {
 	 *
 	 * @param pk the primary key of the big decimal entry
 	 * @param lvEntry the lv entry
+	 * @return <code>true</code> if the association between the big decimal entry and the lv entry is added; <code>false</code> if it was already added
 	 */
-	public static void addLVEntry(
+	public static boolean addLVEntry(
 		long pk,
 		com.liferay.portal.tools.service.builder.test.model.LVEntry lvEntry) {
 
-		getPersistence().addLVEntry(pk, lvEntry);
+		return getPersistence().addLVEntry(pk, lvEntry);
 	}
 
 	/**
@@ -934,9 +936,10 @@ public class BigDecimalEntryUtil {
 	 *
 	 * @param pk the primary key of the big decimal entry
 	 * @param lvEntryPKs the primary keys of the lv entries
+	 * @return <code>true</code> if at least an association between the big decimal entry and the lv entries is added; <code>false</code> if all were already added
 	 */
-	public static void addLVEntries(long pk, long[] lvEntryPKs) {
-		getPersistence().addLVEntries(pk, lvEntryPKs);
+	public static boolean addLVEntries(long pk, long[] lvEntryPKs) {
+		return getPersistence().addLVEntries(pk, lvEntryPKs);
 	}
 
 	/**
@@ -944,13 +947,14 @@ public class BigDecimalEntryUtil {
 	 *
 	 * @param pk the primary key of the big decimal entry
 	 * @param lvEntries the lv entries
+	 * @return <code>true</code> if at least an association between the big decimal entry and the lv entries is added; <code>false</code> if all were already added
 	 */
-	public static void addLVEntries(
+	public static boolean addLVEntries(
 		long pk,
 		List<com.liferay.portal.tools.service.builder.test.model.LVEntry>
 			lvEntries) {
 
-		getPersistence().addLVEntries(pk, lvEntries);
+		return getPersistence().addLVEntries(pk, lvEntries);
 	}
 
 	/**
