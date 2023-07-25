@@ -109,10 +109,13 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 *
 	 * @param groupId the primary key of the group
 	 * @param userGroupId the primary key of the user group
+	 * @return <code>true</code> if the association between the ${groupId} and ${userGroupId} is added; <code>false</code> if it was already added
 	 */
 	@Override
-	public void addGroupUserGroup(long groupId, long userGroupId) {
-		super.addGroupUserGroup(groupId, userGroupId);
+	public boolean addGroupUserGroup(long groupId, long userGroupId) {
+		if (!super.addGroupUserGroup(groupId, userGroupId)) {
+			return false;
+		}
 
 		try {
 			reindexUsers(userGroupId);
@@ -120,6 +123,8 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		catch (PortalException portalException) {
 			throw new SystemException(portalException);
 		}
+
+		return true;
 	}
 
 	/**
@@ -127,17 +132,11 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 *
 	 * @param groupId the primary key of the group
 	 * @param userGroup the user group
+	 * @return <code>true</code> if the association between the ${groupId} and ${userGroup} is added; <code>false</code> if it was already added
 	 */
 	@Override
-	public void addGroupUserGroup(long groupId, UserGroup userGroup) {
-		super.addGroupUserGroup(groupId, userGroup);
-
-		try {
-			reindexUsers(userGroup);
-		}
-		catch (PortalException portalException) {
-			throw new SystemException(portalException);
-		}
+	public boolean addGroupUserGroup(long groupId, UserGroup userGroup) {
+		return addGroupUserGroup(groupId, userGroup.getUserGroupId());
 	}
 
 	/**
@@ -145,10 +144,15 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 *
 	 * @param groupId the primary key of the group
 	 * @param userGroups the user groups
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${userGroups} is added; <code>false</code> if all were already added
 	 */
 	@Override
-	public void addGroupUserGroups(long groupId, List<UserGroup> userGroups) {
-		super.addGroupUserGroups(groupId, userGroups);
+	public boolean addGroupUserGroups(
+		long groupId, List<UserGroup> userGroups) {
+
+		if (!super.addGroupUserGroups(groupId, userGroups)) {
+			return false;
+		}
 
 		try {
 			reindexUsers(userGroups);
@@ -156,6 +160,8 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		catch (PortalException portalException) {
 			throw new SystemException(portalException);
 		}
+
+		return true;
 	}
 
 	/**
@@ -163,10 +169,13 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 *
 	 * @param groupId the primary key of the group
 	 * @param userGroupIds the primary keys of the user groups
+	 * @return <code>true</code> if at least an association between the ${groupId} and the ${userGroupIds} is added; <code>false</code> if all were already added
 	 */
 	@Override
-	public void addGroupUserGroups(long groupId, long[] userGroupIds) {
-		super.addGroupUserGroups(groupId, userGroupIds);
+	public boolean addGroupUserGroups(long groupId, long[] userGroupIds) {
+		if (!super.addGroupUserGroups(groupId, userGroupIds)) {
+			return false;
+		}
 
 		try {
 			reindexUsers(userGroupIds);
@@ -174,6 +183,8 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		catch (PortalException portalException) {
 			throw new SystemException(portalException);
 		}
+
+		return true;
 	}
 
 	@Override
@@ -200,8 +211,10 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void addTeamUserGroup(long teamId, UserGroup userGroup) {
-		super.addTeamUserGroup(teamId, userGroup);
+	public boolean addTeamUserGroup(long teamId, UserGroup userGroup) {
+		if (!super.addTeamUserGroup(teamId, userGroup)) {
+			return false;
+		}
 
 		try {
 			reindexUsers(userGroup);
@@ -209,11 +222,15 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		catch (PortalException portalException) {
 			throw new SystemException(portalException);
 		}
+
+		return true;
 	}
 
 	@Override
-	public void addTeamUserGroups(long teamId, long[] userGroupIds) {
-		super.addTeamUserGroups(teamId, userGroupIds);
+	public boolean addTeamUserGroups(long teamId, long[] userGroupIds) {
+		if (!super.addTeamUserGroups(teamId, userGroupIds)) {
+			return false;
+		}
 
 		try {
 			reindexUsers(userGroupIds);
@@ -221,6 +238,8 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		catch (PortalException portalException) {
 			throw new SystemException(portalException);
 		}
+
+		return true;
 	}
 
 	/**
@@ -299,43 +318,53 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void addUserUserGroup(long userId, long userGroupId)
+	public boolean addUserUserGroup(long userId, long userGroupId)
 		throws PortalException {
 
-		super.addUserUserGroup(userId, userGroupId);
+		if (!super.addUserUserGroup(userId, userGroupId)) {
+			return false;
+		}
 
 		reindexUserGroup(getUserGroup(userGroupId));
+
+		return true;
 	}
 
 	@Override
-	public void addUserUserGroup(long userId, UserGroup userGroup)
+	public boolean addUserUserGroup(long userId, UserGroup userGroup)
 		throws PortalException {
 
-		super.addUserUserGroup(userId, userGroup);
-
-		reindexUserGroup(userGroup);
+		return addUserUserGroup(userId, userGroup.getUserGroupId());
 	}
 
 	@Override
-	public void addUserUserGroups(long userId, List<UserGroup> userGroups)
+	public boolean addUserUserGroups(long userId, List<UserGroup> userGroups)
 		throws PortalException {
 
-		super.addUserUserGroups(userId, userGroups);
+		if (!super.addUserUserGroups(userId, userGroups)) {
+			return false;
+		}
 
 		for (UserGroup userGroup : userGroups) {
 			reindexUserGroup(userGroup);
 		}
+
+		return true;
 	}
 
 	@Override
-	public void addUserUserGroups(long userId, long[] userGroupIds)
+	public boolean addUserUserGroups(long userId, long[] userGroupIds)
 		throws PortalException {
 
-		super.addUserUserGroups(userId, userGroupIds);
+		if (!super.addUserUserGroups(userId, userGroupIds)) {
+			return false;
+		}
 
 		for (long userGroupId : userGroupIds) {
 			reindexUserGroup(getUserGroup(userGroupId));
 		}
+
+		return true;
 	}
 
 	/**
