@@ -101,7 +101,15 @@ public abstract class BaseEhcachePortalCacheManager<K extends Serializable, V>
 
 	@Override
 	public PortalCache<K, V> fetchPortalCache(String portalCacheName) {
-		return _portalCaches.get(portalCacheName);
+		String cacheName = portalCacheName;
+
+		int indexOf = portalCacheName.indexOf("_SHARDED_SEPARATOR_");
+
+		if (indexOf != -1) {
+			cacheName = portalCacheName.substring(0, indexOf);
+		}
+
+		return _portalCaches.get(cacheName);
 	}
 
 	public CacheManager getEhcacheManager() {
