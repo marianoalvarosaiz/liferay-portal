@@ -9,16 +9,28 @@ import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
 import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.change.tracking.sql.CTSQLModeThreadLocal;
+import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBManagerUtil;
+import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.change.tracking.CTModel;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.background.task.ReindexStatusMessageSenderUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
+
+import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
@@ -26,6 +38,12 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class IndexableActionableDynamicQuery
 	extends DefaultActionableDynamicQuery {
+
+	public IndexableActionableDynamicQuery() {
+		if (_databaseInMaxParameters == 0) {
+			_initializeDatabaseInMaxParameters();
+		}
+	}
 
 	public void addDocuments(Document... documents) throws PortalException {
 		if (ArrayUtil.isEmpty(documents)) {
@@ -48,6 +66,17 @@ public class IndexableActionableDynamicQuery
 		}
 	}
 
+	public void findBy(String columnName, Collection<Long> values) {
+		_columnName = columnName;
+		_values = ListUtil.fromCollection(values);
+
+		if (_values.size() <= _databaseInMaxParameters) {
+			setAddCriteriaMethod(
+				dynamicQuery -> dynamicQuery.add(
+					RestrictionsFactoryUtil.in(_columnName, values)));
+		}
+	}
+
 	@Override
 	public void performActions() throws PortalException {
 		if (BackgroundTaskThreadLocal.hasBackgroundTask()) {
@@ -55,7 +84,14 @@ public class IndexableActionableDynamicQuery
 		}
 
 		try {
-			super.performActions();
+			if ((_values == null) ||
+				(_values.size() <= _databaseInMaxParameters)) {
+
+				super.performActions();
+			}
+			else {
+				_performActions();
+			}
 		}
 		finally {
 			_count = _total;
@@ -149,16 +185,75 @@ public class IndexableActionableDynamicQuery
 			modelClass.getName(), _count + documentIntervalCount, _total);
 	}
 
+	private void _initializeDatabaseInMaxParameters() {
+		DB db = DBManagerUtil.getDB();
+
+		DBType dbType = db.getDBType();
+
+		_databaseInMaxParameters = GetterUtil.getInteger(
+			PropsUtil.get(
+				PropsKeys.DATABASE_IN_MAX_PARAMETERS,
+				new Filter(dbType.getName())),
+			Integer.MAX_VALUE);
+	}
+
+	private void _performActions() throws PortalException {
+		int size = _values.size();
+
+		int start = 0;
+		int end = _databaseInMaxParameters;
+
+		while (start < size) {
+			Class<?> clazz = baseLocalService.getClass();
+
+			IndexableActionableDynamicQuery indexableActionableDynamicQuery =
+				null;
+
+			try {
+				Method method = clazz.getMethod(
+					"getIndexableActionableDynamicQuery");
+
+				indexableActionableDynamicQuery =
+					(IndexableActionableDynamicQuery)method.invoke(
+						baseLocalService);
+			}
+			catch (Exception exception) {
+				throw new SystemException(exception);
+			}
+
+			List<Long> partition = ListUtil.subList(_values, start, end);
+
+			indexableActionableDynamicQuery.setAddCriteriaMethod(
+				dynamicQuery -> dynamicQuery.add(
+					RestrictionsFactoryUtil.in(_columnName, partition)));
+
+			indexableActionableDynamicQuery.setCompanyId(getCompanyId());
+			indexableActionableDynamicQuery.setPerformActionMethod(
+				getPerformActionMethod());
+
+			indexableActionableDynamicQuery.performActions();
+
+			_count += indexableActionableDynamicQuery._count;
+			_total += indexableActionableDynamicQuery._total;
+
+			end += _databaseInMaxParameters;
+			start += _databaseInMaxParameters;
+		}
+	}
+
 	private static final long _STATUS_INTERVAL = 1000;
 
+	private static int _databaseInMaxParameters;
 	private static volatile IndexWriterHelper _indexWriterHelperProxy =
 		ServiceProxyFactory.newServiceTrackedInstance(
 			IndexWriterHelper.class, IndexableActionableDynamicQuery.class,
 			"_indexWriterHelperProxy", false);
 
+	private String _columnName;
 	private long _count;
 	private Collection<Document> _documents = new ArrayList<>();
 	private IndexWriterHelper _indexWriterHelper = _indexWriterHelperProxy;
 	private long _total;
+	private List<Long> _values;
 
 }

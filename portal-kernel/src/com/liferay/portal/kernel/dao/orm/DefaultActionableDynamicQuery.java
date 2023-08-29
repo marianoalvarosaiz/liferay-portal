@@ -123,9 +123,9 @@ public class DefaultActionableDynamicQuery implements ActionableDynamicQuery {
 
 	@Override
 	public void setBaseLocalService(BaseLocalService baseLocalService) {
-		_baseLocalService = baseLocalService;
+		this.baseLocalService = baseLocalService;
 
-		Class<?> clazz = _baseLocalService.getClass();
+		Class<?> clazz = baseLocalService.getClass();
 
 		try {
 			_dynamicQueryMethod = clazz.getMethod(
@@ -330,7 +330,7 @@ public class DefaultActionableDynamicQuery implements ActionableDynamicQuery {
 		throws PortalException {
 
 		try {
-			return dynamicQueryMethod.invoke(_baseLocalService, arguments);
+			return dynamicQueryMethod.invoke(baseLocalService, arguments);
 		}
 		catch (InvocationTargetException invocationTargetException) {
 			Throwable throwable = invocationTargetException.getCause();
@@ -379,6 +379,8 @@ public class DefaultActionableDynamicQuery implements ActionableDynamicQuery {
 		}
 	}
 
+	protected BaseLocalService baseLocalService;
+
 	private static volatile PortalExecutorManager _portalExecutorManager =
 		ServiceProxyFactory.newServiceTrackedInstance(
 			PortalExecutorManager.class, DefaultActionableDynamicQuery.class,
@@ -386,7 +388,6 @@ public class DefaultActionableDynamicQuery implements ActionableDynamicQuery {
 
 	private AddCriteriaMethod _addCriteriaMethod;
 	private AddOrderCriteriaMethod _addOrderCriteriaMethod;
-	private BaseLocalService _baseLocalService;
 	private ClassLoader _classLoader;
 	private long _companyId;
 	private Method _dynamicQueryCountMethod;
