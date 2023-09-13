@@ -103,11 +103,14 @@ public class DefaultMessageBus implements MessageBus {
 
 	@Override
 	public void shutdown() {
+		_log.error("Shutdown is called");
 		shutdown(false);
 	}
 
 	@Override
 	public synchronized void shutdown(boolean force) {
+		_log.error("Shutdown is called closing each destination");
+
 		for (Destination destination : _destinations.values()) {
 			destination.close(force);
 		}
@@ -136,6 +139,8 @@ public class DefaultMessageBus implements MessageBus {
 
 		shutdown(true);
 
+		_log.error("deactivating each destination");
+
 		for (Destination destination : _destinations.values()) {
 			destination.destroy();
 		}
@@ -155,6 +160,8 @@ public class DefaultMessageBus implements MessageBus {
 		String destinationName = MapUtil.getString(
 			properties, "destination.name");
 
+		_log.error("New destination is going to be added: " + destinationName);
+
 		_addDestination(destination);
 
 		DestinationWorkerConfiguration destinationWorkerConfiguration =
@@ -166,6 +173,9 @@ public class DefaultMessageBus implements MessageBus {
 	protected synchronized void unregisterDestination(
 		Destination destination, Map<String, Object> properties) {
 
+		_log.error(
+			"New destination is going to be removed: " + destination.getName());
+
 		_removeDestination(destination.getName());
 	}
 
@@ -175,6 +185,10 @@ public class DefaultMessageBus implements MessageBus {
 		destination.open();
 
 		_destinations.put(destination.getName(), destination);
+
+		_log.error("oldDestination: " + oldDestination);
+		_log.error("destination: " + destination);
+		_log.error("equals: " + destination.equals(oldDestination));
 
 		if (oldDestination != null) {
 			oldDestination.destroy();
