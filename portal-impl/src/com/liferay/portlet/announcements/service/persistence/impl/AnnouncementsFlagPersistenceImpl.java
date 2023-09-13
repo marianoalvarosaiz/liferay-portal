@@ -2246,6 +2246,8 @@ public class AnnouncementsFlagPersistenceImpl
 		AnnouncementsFlagUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(AnnouncementsFlagImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(AnnouncementsFlagImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ANNOUNCEMENTSFLAG =

@@ -2618,6 +2618,8 @@ public class LayoutSEOSitePersistenceImpl
 		LayoutSEOSiteUtil.setPersistence(null);
 
 		entityCache.removeCache(LayoutSEOSiteImpl.class.getName());
+
+		finderCache.removeAllCaches(LayoutSEOSiteImpl.class.getName());
 	}
 
 	@Override

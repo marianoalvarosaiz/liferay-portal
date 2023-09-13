@@ -3546,6 +3546,8 @@ public class DEDataListViewPersistenceImpl
 		DEDataListViewUtil.setPersistence(null);
 
 		entityCache.removeCache(DEDataListViewImpl.class.getName());
+
+		finderCache.removeAllCaches(DEDataListViewImpl.class.getName());
 	}
 
 	@Override

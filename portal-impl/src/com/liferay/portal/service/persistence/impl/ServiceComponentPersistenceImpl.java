@@ -1473,6 +1473,8 @@ public class ServiceComponentPersistenceImpl
 		ServiceComponentUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ServiceComponentImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ServiceComponentImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SERVICECOMPONENT =

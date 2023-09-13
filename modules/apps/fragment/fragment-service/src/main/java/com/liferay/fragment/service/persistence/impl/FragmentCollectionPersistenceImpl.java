@@ -4439,6 +4439,8 @@ public class FragmentCollectionPersistenceImpl
 		FragmentCollectionUtil.setPersistence(null);
 
 		entityCache.removeCache(FragmentCollectionImpl.class.getName());
+
+		finderCache.removeAllCaches(FragmentCollectionImpl.class.getName());
 	}
 
 	@Override

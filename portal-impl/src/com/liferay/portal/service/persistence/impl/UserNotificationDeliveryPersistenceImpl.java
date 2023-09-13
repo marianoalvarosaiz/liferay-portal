@@ -1540,6 +1540,9 @@ public class UserNotificationDeliveryPersistenceImpl
 
 		EntityCacheUtil.removeCache(
 			UserNotificationDeliveryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			UserNotificationDeliveryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_USERNOTIFICATIONDELIVERY =

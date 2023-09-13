@@ -1917,6 +1917,8 @@ public class CTPreferencesPersistenceImpl
 		CTPreferencesUtil.setPersistence(null);
 
 		entityCache.removeCache(CTPreferencesImpl.class.getName());
+
+		finderCache.removeAllCaches(CTPreferencesImpl.class.getName());
 	}
 
 	@Override

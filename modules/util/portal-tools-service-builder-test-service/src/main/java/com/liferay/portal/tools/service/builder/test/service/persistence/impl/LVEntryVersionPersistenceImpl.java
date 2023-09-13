@@ -7058,6 +7058,8 @@ public class LVEntryVersionPersistenceImpl
 
 		entityCache.removeCache(LVEntryVersionImpl.class.getName());
 
+		finderCache.removeAllCaches(LVEntryVersionImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("BigDecimalEntries_LVEntries");
 	}
 

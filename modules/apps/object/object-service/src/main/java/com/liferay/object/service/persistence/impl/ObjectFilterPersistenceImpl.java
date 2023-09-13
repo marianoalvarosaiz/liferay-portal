@@ -2320,6 +2320,8 @@ public class ObjectFilterPersistenceImpl
 		ObjectFilterUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectFilterImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectFilterImpl.class.getName());
 	}
 
 	@Override

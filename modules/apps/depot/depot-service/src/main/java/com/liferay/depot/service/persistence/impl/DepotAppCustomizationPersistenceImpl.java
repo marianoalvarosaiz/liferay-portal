@@ -1717,6 +1717,8 @@ public class DepotAppCustomizationPersistenceImpl
 		DepotAppCustomizationUtil.setPersistence(null);
 
 		entityCache.removeCache(DepotAppCustomizationImpl.class.getName());
+
+		finderCache.removeAllCaches(DepotAppCustomizationImpl.class.getName());
 	}
 
 	@Override

@@ -5174,6 +5174,8 @@ public class CPSpecificationOptionPersistenceImpl
 		CPSpecificationOptionUtil.setPersistence(null);
 
 		entityCache.removeCache(CPSpecificationOptionImpl.class.getName());
+
+		finderCache.removeAllCaches(CPSpecificationOptionImpl.class.getName());
 	}
 
 	@Override

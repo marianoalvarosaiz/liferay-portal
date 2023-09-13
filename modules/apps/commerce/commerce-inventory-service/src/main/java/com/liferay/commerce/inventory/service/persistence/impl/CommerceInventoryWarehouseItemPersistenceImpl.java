@@ -4407,6 +4407,9 @@ public class CommerceInventoryWarehouseItemPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceInventoryWarehouseItemImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceInventoryWarehouseItemImpl.class.getName());
 	}
 
 	@Override

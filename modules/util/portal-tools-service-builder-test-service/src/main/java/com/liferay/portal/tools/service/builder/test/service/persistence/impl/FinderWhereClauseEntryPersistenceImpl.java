@@ -1182,6 +1182,8 @@ public class FinderWhereClauseEntryPersistenceImpl
 		FinderWhereClauseEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(FinderWhereClauseEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(FinderWhereClauseEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

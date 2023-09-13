@@ -10912,6 +10912,8 @@ public class OrganizationPersistenceImpl
 
 		EntityCacheUtil.removeCache(OrganizationImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(OrganizationImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("Groups_Orgs");
 		TableMapperFactory.removeTableMapper("Users_Orgs");
 	}

@@ -1812,6 +1812,8 @@ public class FVSCustomEntryPersistenceImpl
 		FVSCustomEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(FVSCustomEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(FVSCustomEntryImpl.class.getName());
 	}
 
 	@Override

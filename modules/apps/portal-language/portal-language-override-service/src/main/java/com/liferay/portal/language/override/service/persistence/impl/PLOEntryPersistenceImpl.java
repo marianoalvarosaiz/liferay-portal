@@ -2703,6 +2703,8 @@ public class PLOEntryPersistenceImpl
 		PLOEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(PLOEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(PLOEntryImpl.class.getName());
 	}
 
 	@Override

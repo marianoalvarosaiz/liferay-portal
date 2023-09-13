@@ -6108,6 +6108,8 @@ public class SharingEntryPersistenceImpl
 		SharingEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(SharingEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(SharingEntryImpl.class.getName());
 	}
 
 	@Override

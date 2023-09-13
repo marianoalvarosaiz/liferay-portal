@@ -1919,6 +1919,8 @@ public class CommerceInventoryAuditPersistenceImpl
 		CommerceInventoryAuditUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceInventoryAuditImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceInventoryAuditImpl.class.getName());
 	}
 
 	@Override

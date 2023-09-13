@@ -7930,6 +7930,8 @@ public class AccountGroupPersistenceImpl
 		AccountGroupUtil.setPersistence(null);
 
 		entityCache.removeCache(AccountGroupImpl.class.getName());
+
+		finderCache.removeAllCaches(AccountGroupImpl.class.getName());
 	}
 
 	@Override

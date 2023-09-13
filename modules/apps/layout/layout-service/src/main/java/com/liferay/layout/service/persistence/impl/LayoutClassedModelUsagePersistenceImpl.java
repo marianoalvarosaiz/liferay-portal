@@ -7441,6 +7441,9 @@ public class LayoutClassedModelUsagePersistenceImpl
 		LayoutClassedModelUsageUtil.setPersistence(null);
 
 		entityCache.removeCache(LayoutClassedModelUsageImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			LayoutClassedModelUsageImpl.class.getName());
 	}
 
 	@Override

@@ -1725,6 +1725,8 @@ public class DispatchLogPersistenceImpl
 		DispatchLogUtil.setPersistence(null);
 
 		entityCache.removeCache(DispatchLogImpl.class.getName());
+
+		finderCache.removeAllCaches(DispatchLogImpl.class.getName());
 	}
 
 	@Override

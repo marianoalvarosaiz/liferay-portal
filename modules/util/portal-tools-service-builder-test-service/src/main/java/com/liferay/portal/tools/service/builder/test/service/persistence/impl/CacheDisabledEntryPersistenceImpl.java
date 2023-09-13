@@ -856,6 +856,9 @@ public class CacheDisabledEntryPersistenceImpl
 		CacheDisabledEntryUtil.setPersistence(null);
 
 		dummyEntityCache.removeCache(CacheDisabledEntryImpl.class.getName());
+
+		dummyFinderCache.removeAllCaches(
+			CacheDisabledEntryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_CACHEDISABLEDENTRY =

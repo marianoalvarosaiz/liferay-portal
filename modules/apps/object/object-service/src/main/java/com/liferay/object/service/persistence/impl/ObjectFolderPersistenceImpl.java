@@ -4169,6 +4169,8 @@ public class ObjectFolderPersistenceImpl
 		ObjectFolderUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectFolderImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectFolderImpl.class.getName());
 	}
 
 	@Override

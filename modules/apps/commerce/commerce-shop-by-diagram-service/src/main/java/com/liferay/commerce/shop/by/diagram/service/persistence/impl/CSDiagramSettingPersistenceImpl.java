@@ -2342,6 +2342,8 @@ public class CSDiagramSettingPersistenceImpl
 		CSDiagramSettingUtil.setPersistence(null);
 
 		entityCache.removeCache(CSDiagramSettingImpl.class.getName());
+
+		finderCache.removeAllCaches(CSDiagramSettingImpl.class.getName());
 	}
 
 	@Override

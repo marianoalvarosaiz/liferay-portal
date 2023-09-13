@@ -2313,6 +2313,9 @@ public class CommerceTaxFixedRateAddressRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceTaxFixedRateAddressRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceTaxFixedRateAddressRelImpl.class.getName());
 	}
 
 	@Override

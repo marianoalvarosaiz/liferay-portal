@@ -3450,6 +3450,8 @@ public class ObjectStateTransitionPersistenceImpl
 		ObjectStateTransitionUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectStateTransitionImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectStateTransitionImpl.class.getName());
 	}
 
 	@Override

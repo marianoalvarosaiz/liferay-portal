@@ -3842,6 +3842,8 @@ public class AssetDisplayPageEntryPersistenceImpl
 		AssetDisplayPageEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(AssetDisplayPageEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(AssetDisplayPageEntryImpl.class.getName());
 	}
 
 	@Override

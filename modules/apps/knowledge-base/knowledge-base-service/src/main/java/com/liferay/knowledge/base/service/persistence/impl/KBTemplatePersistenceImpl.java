@@ -3287,6 +3287,8 @@ public class KBTemplatePersistenceImpl
 		KBTemplateUtil.setPersistence(null);
 
 		entityCache.removeCache(KBTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(KBTemplateImpl.class.getName());
 	}
 
 	@Override

@@ -835,6 +835,8 @@ public class ClassNamePersistenceImpl
 		ClassNameUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ClassNameImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ClassNameImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_CLASSNAME =

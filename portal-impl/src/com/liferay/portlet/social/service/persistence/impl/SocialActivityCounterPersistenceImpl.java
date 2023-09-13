@@ -3529,6 +3529,9 @@ public class SocialActivityCounterPersistenceImpl
 		SocialActivityCounterUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SocialActivityCounterImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			SocialActivityCounterImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALACTIVITYCOUNTER =

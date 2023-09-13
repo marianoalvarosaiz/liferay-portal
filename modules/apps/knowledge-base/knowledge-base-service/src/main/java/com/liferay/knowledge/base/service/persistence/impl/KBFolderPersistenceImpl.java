@@ -4867,6 +4867,8 @@ public class KBFolderPersistenceImpl
 		KBFolderUtil.setPersistence(null);
 
 		entityCache.removeCache(KBFolderImpl.class.getName());
+
+		finderCache.removeAllCaches(KBFolderImpl.class.getName());
 	}
 
 	@Override

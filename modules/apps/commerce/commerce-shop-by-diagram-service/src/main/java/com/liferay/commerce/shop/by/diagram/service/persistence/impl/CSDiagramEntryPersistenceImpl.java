@@ -2788,6 +2788,8 @@ public class CSDiagramEntryPersistenceImpl
 		CSDiagramEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CSDiagramEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CSDiagramEntryImpl.class.getName());
 	}
 
 	@Override

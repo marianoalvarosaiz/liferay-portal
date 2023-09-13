@@ -3620,6 +3620,8 @@ public class DDLRecordVersionPersistenceImpl
 		DDLRecordVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(DDLRecordVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(DDLRecordVersionImpl.class.getName());
 	}
 
 	@Override

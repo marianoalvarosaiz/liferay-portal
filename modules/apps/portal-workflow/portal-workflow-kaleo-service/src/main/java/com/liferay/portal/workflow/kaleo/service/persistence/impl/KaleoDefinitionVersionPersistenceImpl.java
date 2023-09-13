@@ -2438,6 +2438,8 @@ public class KaleoDefinitionVersionPersistenceImpl
 		KaleoDefinitionVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoDefinitionVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoDefinitionVersionImpl.class.getName());
 	}
 
 	@Override

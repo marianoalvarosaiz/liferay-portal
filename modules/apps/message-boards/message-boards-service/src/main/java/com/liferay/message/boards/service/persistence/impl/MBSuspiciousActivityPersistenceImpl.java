@@ -4074,6 +4074,8 @@ public class MBSuspiciousActivityPersistenceImpl
 		MBSuspiciousActivityUtil.setPersistence(null);
 
 		entityCache.removeCache(MBSuspiciousActivityImpl.class.getName());
+
+		finderCache.removeAllCaches(MBSuspiciousActivityImpl.class.getName());
 	}
 
 	@Override

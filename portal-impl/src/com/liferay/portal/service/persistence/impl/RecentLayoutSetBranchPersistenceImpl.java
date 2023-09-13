@@ -2453,6 +2453,9 @@ public class RecentLayoutSetBranchPersistenceImpl
 		RecentLayoutSetBranchUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RecentLayoutSetBranchImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			RecentLayoutSetBranchImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RECENTLAYOUTSETBRANCH =

@@ -11680,6 +11680,8 @@ public class RolePersistenceImpl
 
 		EntityCacheUtil.removeCache(RoleImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(RoleImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("Groups_Roles");
 		TableMapperFactory.removeTableMapper("Users_Roles");
 	}

@@ -2261,6 +2261,8 @@ public class DDMStructureLinkPersistenceImpl
 		DDMStructureLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMStructureLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMStructureLinkImpl.class.getName());
 	}
 
 	@Override

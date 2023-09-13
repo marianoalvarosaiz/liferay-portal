@@ -8309,6 +8309,8 @@ public class CPDefinitionPersistenceImpl
 		CPDefinitionUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionImpl.class.getName());
+
+		finderCache.removeAllCaches(CPDefinitionImpl.class.getName());
 	}
 
 	@Override

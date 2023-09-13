@@ -3655,6 +3655,9 @@ public class PortalPreferenceValuePersistenceImpl
 		PortalPreferenceValueUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PortalPreferenceValueImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			PortalPreferenceValueImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PORTALPREFERENCEVALUE =

@@ -5114,6 +5114,9 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 
 		entityCache.removeCache(
 			LayoutPageTemplateCollectionImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			LayoutPageTemplateCollectionImpl.class.getName());
 	}
 
 	@Override

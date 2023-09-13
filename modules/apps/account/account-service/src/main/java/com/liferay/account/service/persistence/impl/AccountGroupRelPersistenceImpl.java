@@ -2591,6 +2591,8 @@ public class AccountGroupRelPersistenceImpl
 		AccountGroupRelUtil.setPersistence(null);
 
 		entityCache.removeCache(AccountGroupRelImpl.class.getName());
+
+		finderCache.removeAllCaches(AccountGroupRelImpl.class.getName());
 	}
 
 	@Override

@@ -4967,6 +4967,8 @@ public class EmailAddressPersistenceImpl
 		EmailAddressUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(EmailAddressImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(EmailAddressImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_EMAILADDRESS =

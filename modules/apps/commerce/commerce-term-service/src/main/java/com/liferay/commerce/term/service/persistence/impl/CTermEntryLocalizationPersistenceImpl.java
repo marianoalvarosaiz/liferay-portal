@@ -1514,6 +1514,8 @@ public class CTermEntryLocalizationPersistenceImpl
 		CTermEntryLocalizationUtil.setPersistence(null);
 
 		entityCache.removeCache(CTermEntryLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(CTermEntryLocalizationImpl.class.getName());
 	}
 
 	@Override

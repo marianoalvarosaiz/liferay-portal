@@ -3205,6 +3205,8 @@ public class KaleoProcessPersistenceImpl
 		KaleoProcessUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoProcessImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoProcessImpl.class.getName());
 	}
 
 	@Override

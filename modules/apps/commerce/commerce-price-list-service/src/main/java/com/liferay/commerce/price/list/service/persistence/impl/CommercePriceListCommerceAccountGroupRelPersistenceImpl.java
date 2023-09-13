@@ -3177,6 +3177,9 @@ public class CommercePriceListCommerceAccountGroupRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommercePriceListCommerceAccountGroupRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePriceListCommerceAccountGroupRelImpl.class.getName());
 	}
 
 	@Override

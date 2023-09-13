@@ -7105,6 +7105,8 @@ public class LVEntryPersistenceImpl
 
 		entityCache.removeCache(LVEntryImpl.class.getName());
 
+		finderCache.removeAllCaches(LVEntryImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("BigDecimalEntries_LVEntries");
 	}
 

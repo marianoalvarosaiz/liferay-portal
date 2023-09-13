@@ -2348,6 +2348,8 @@ public class ObjectLayoutBoxPersistenceImpl
 		ObjectLayoutBoxUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectLayoutBoxImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectLayoutBoxImpl.class.getName());
 	}
 
 	@Override

@@ -2502,6 +2502,8 @@ public class VersionedEntryVersionPersistenceImpl
 		VersionedEntryVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(VersionedEntryVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(VersionedEntryVersionImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

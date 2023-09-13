@@ -2923,6 +2923,8 @@ public class SegmentsEntryRelPersistenceImpl
 		SegmentsEntryRelUtil.setPersistence(null);
 
 		entityCache.removeCache(SegmentsEntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(SegmentsEntryRelImpl.class.getName());
 	}
 
 	@Override

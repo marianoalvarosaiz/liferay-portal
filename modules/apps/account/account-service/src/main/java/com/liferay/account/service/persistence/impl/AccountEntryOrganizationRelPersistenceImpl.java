@@ -2005,6 +2005,9 @@ public class AccountEntryOrganizationRelPersistenceImpl
 
 		entityCache.removeCache(
 			AccountEntryOrganizationRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			AccountEntryOrganizationRelImpl.class.getName());
 	}
 
 	@Override

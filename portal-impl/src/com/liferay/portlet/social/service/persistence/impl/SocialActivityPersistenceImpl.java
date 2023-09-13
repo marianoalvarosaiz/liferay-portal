@@ -6786,6 +6786,8 @@ public class SocialActivityPersistenceImpl
 		SocialActivityUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SocialActivityImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(SocialActivityImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALACTIVITY =

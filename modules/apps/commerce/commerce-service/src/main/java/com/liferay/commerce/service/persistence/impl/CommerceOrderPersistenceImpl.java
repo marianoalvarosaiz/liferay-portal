@@ -10836,6 +10836,8 @@ public class CommerceOrderPersistenceImpl
 		CommerceOrderUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceOrderImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceOrderImpl.class.getName());
 	}
 
 	@Override

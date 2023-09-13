@@ -9498,6 +9498,8 @@ public class BackgroundTaskPersistenceImpl
 		BackgroundTaskUtil.setPersistence(null);
 
 		entityCache.removeCache(BackgroundTaskImpl.class.getName());
+
+		finderCache.removeAllCaches(BackgroundTaskImpl.class.getName());
 	}
 
 	@Override

@@ -3333,6 +3333,8 @@ public class KaleoNotificationPersistenceImpl
 		KaleoNotificationUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoNotificationImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoNotificationImpl.class.getName());
 	}
 
 	@Override

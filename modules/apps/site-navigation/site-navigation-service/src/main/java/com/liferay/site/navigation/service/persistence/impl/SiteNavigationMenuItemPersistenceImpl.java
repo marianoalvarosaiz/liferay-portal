@@ -5679,6 +5679,8 @@ public class SiteNavigationMenuItemPersistenceImpl
 		SiteNavigationMenuItemUtil.setPersistence(null);
 
 		entityCache.removeCache(SiteNavigationMenuItemImpl.class.getName());
+
+		finderCache.removeAllCaches(SiteNavigationMenuItemImpl.class.getName());
 	}
 
 	@Override

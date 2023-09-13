@@ -4188,6 +4188,8 @@ public class CPOptionCategoryPersistenceImpl
 		CPOptionCategoryUtil.setPersistence(null);
 
 		entityCache.removeCache(CPOptionCategoryImpl.class.getName());
+
+		finderCache.removeAllCaches(CPOptionCategoryImpl.class.getName());
 	}
 
 	@Override

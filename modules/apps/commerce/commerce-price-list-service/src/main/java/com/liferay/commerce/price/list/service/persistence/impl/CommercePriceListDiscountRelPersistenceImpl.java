@@ -3009,6 +3009,9 @@ public class CommercePriceListDiscountRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommercePriceListDiscountRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePriceListDiscountRelImpl.class.getName());
 	}
 
 	@Override

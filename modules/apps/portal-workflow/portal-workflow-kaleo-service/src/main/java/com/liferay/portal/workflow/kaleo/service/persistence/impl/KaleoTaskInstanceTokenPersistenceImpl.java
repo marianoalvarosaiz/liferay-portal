@@ -4681,6 +4681,8 @@ public class KaleoTaskInstanceTokenPersistenceImpl
 		KaleoTaskInstanceTokenUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTaskInstanceTokenImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoTaskInstanceTokenImpl.class.getName());
 	}
 
 	@Override

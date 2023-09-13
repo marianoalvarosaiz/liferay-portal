@@ -2301,6 +2301,8 @@ public class DDMTemplateVersionPersistenceImpl
 		DDMTemplateVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMTemplateVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMTemplateVersionImpl.class.getName());
 	}
 
 	@Override

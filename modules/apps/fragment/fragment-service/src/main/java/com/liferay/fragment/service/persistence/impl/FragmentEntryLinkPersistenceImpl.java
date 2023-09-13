@@ -14528,6 +14528,8 @@ public class FragmentEntryLinkPersistenceImpl
 		FragmentEntryLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(FragmentEntryLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(FragmentEntryLinkImpl.class.getName());
 	}
 
 	@Override

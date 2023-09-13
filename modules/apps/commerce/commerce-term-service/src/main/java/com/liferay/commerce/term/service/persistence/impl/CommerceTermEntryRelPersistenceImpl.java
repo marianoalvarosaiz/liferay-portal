@@ -2051,6 +2051,8 @@ public class CommerceTermEntryRelPersistenceImpl
 		CommerceTermEntryRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceTermEntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceTermEntryRelImpl.class.getName());
 	}
 
 	@Override

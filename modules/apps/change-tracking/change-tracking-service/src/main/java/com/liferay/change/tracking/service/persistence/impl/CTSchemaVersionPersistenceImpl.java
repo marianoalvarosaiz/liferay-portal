@@ -1128,6 +1128,8 @@ public class CTSchemaVersionPersistenceImpl
 		CTSchemaVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(CTSchemaVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(CTSchemaVersionImpl.class.getName());
 	}
 
 	@Override

@@ -2045,6 +2045,8 @@ public class CommerceShippingMethodPersistenceImpl
 		CommerceShippingMethodUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceShippingMethodImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceShippingMethodImpl.class.getName());
 	}
 
 	@Override

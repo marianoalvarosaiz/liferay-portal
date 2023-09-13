@@ -2916,6 +2916,8 @@ public class AssetCategoryPropertyPersistenceImpl
 		AssetCategoryPropertyUtil.setPersistence(null);
 
 		entityCache.removeCache(AssetCategoryPropertyImpl.class.getName());
+
+		finderCache.removeAllCaches(AssetCategoryPropertyImpl.class.getName());
 	}
 
 	@Override

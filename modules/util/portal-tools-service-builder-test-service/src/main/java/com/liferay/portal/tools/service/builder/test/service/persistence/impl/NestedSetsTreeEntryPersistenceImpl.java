@@ -968,6 +968,8 @@ public class NestedSetsTreeEntryPersistenceImpl
 		NestedSetsTreeEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(NestedSetsTreeEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(NestedSetsTreeEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

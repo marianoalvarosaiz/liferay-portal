@@ -27532,6 +27532,9 @@ public class LayoutPageTemplateEntryPersistenceImpl
 		LayoutPageTemplateEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(LayoutPageTemplateEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			LayoutPageTemplateEntryImpl.class.getName());
 	}
 
 	@Override

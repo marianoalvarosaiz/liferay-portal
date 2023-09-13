@@ -2130,6 +2130,8 @@ public class CTAutoResolutionInfoPersistenceImpl
 		CTAutoResolutionInfoUtil.setPersistence(null);
 
 		entityCache.removeCache(CTAutoResolutionInfoImpl.class.getName());
+
+		finderCache.removeAllCaches(CTAutoResolutionInfoImpl.class.getName());
 	}
 
 	@Override

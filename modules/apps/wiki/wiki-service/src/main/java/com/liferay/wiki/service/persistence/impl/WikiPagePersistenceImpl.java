@@ -25721,6 +25721,8 @@ public class WikiPagePersistenceImpl
 		WikiPageUtil.setPersistence(null);
 
 		entityCache.removeCache(WikiPageImpl.class.getName());
+
+		finderCache.removeAllCaches(WikiPageImpl.class.getName());
 	}
 
 	@Override

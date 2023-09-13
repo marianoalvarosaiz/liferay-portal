@@ -14365,6 +14365,8 @@ public class MBThreadPersistenceImpl
 		MBThreadUtil.setPersistence(null);
 
 		entityCache.removeCache(MBThreadImpl.class.getName());
+
+		finderCache.removeAllCaches(MBThreadImpl.class.getName());
 	}
 
 	@Override

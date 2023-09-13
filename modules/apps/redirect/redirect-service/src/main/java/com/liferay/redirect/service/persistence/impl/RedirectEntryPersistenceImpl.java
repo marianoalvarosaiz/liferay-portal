@@ -4337,6 +4337,8 @@ public class RedirectEntryPersistenceImpl
 		RedirectEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(RedirectEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(RedirectEntryImpl.class.getName());
 	}
 
 	@Override

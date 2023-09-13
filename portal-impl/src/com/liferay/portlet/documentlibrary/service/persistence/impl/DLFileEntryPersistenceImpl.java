@@ -16412,6 +16412,8 @@ public class DLFileEntryPersistenceImpl
 		DLFileEntryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(DLFileEntryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(DLFileEntryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_DLFILEENTRY =

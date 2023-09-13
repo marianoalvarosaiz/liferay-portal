@@ -2408,6 +2408,8 @@ public class FaroProjectPersistenceImpl
 		FaroProjectUtil.setPersistence(null);
 
 		entityCache.removeCache(FaroProjectImpl.class.getName());
+
+		finderCache.removeAllCaches(FaroProjectImpl.class.getName());
 	}
 
 	@Override

@@ -4385,6 +4385,9 @@ public class DDMDataProviderInstancePersistenceImpl
 		DDMDataProviderInstanceUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMDataProviderInstanceImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			DDMDataProviderInstanceImpl.class.getName());
 	}
 
 	@Override

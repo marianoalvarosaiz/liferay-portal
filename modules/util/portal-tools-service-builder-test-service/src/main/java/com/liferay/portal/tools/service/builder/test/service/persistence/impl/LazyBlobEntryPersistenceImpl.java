@@ -1449,6 +1449,8 @@ public class LazyBlobEntryPersistenceImpl
 		LazyBlobEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(LazyBlobEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(LazyBlobEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

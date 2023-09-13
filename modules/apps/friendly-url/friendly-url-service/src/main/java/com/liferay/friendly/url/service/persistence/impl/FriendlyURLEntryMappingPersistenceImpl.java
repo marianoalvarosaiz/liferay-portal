@@ -1153,6 +1153,9 @@ public class FriendlyURLEntryMappingPersistenceImpl
 		FriendlyURLEntryMappingUtil.setPersistence(null);
 
 		entityCache.removeCache(FriendlyURLEntryMappingImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			FriendlyURLEntryMappingImpl.class.getName());
 	}
 
 	@Override

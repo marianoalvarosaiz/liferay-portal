@@ -5198,6 +5198,8 @@ public class OAuth2ApplicationPersistenceImpl
 		OAuth2ApplicationUtil.setPersistence(null);
 
 		entityCache.removeCache(OAuth2ApplicationImpl.class.getName());
+
+		finderCache.removeAllCaches(OAuth2ApplicationImpl.class.getName());
 	}
 
 	@Override

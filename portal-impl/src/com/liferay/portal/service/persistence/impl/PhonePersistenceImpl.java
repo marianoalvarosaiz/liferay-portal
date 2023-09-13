@@ -4929,6 +4929,8 @@ public class PhonePersistenceImpl
 		PhoneUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PhoneImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PhoneImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PHONE =

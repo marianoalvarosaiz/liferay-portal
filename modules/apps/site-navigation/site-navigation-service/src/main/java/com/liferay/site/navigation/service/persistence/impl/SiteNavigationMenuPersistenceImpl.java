@@ -8213,6 +8213,8 @@ public class SiteNavigationMenuPersistenceImpl
 		SiteNavigationMenuUtil.setPersistence(null);
 
 		entityCache.removeCache(SiteNavigationMenuImpl.class.getName());
+
+		finderCache.removeAllCaches(SiteNavigationMenuImpl.class.getName());
 	}
 
 	@Override

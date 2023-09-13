@@ -4544,6 +4544,8 @@ public class DepotEntryGroupRelPersistenceImpl
 		DepotEntryGroupRelUtil.setPersistence(null);
 
 		entityCache.removeCache(DepotEntryGroupRelImpl.class.getName());
+
+		finderCache.removeAllCaches(DepotEntryGroupRelImpl.class.getName());
 	}
 
 	@Override

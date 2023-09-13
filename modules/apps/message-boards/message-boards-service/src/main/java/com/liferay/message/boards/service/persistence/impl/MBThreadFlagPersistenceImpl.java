@@ -3683,6 +3683,8 @@ public class MBThreadFlagPersistenceImpl
 		MBThreadFlagUtil.setPersistence(null);
 
 		entityCache.removeCache(MBThreadFlagImpl.class.getName());
+
+		finderCache.removeAllCaches(MBThreadFlagImpl.class.getName());
 	}
 
 	@Override

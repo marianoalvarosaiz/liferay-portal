@@ -1480,6 +1480,9 @@ public class LocalizedEntryLocalizationPersistenceImpl
 		LocalizedEntryLocalizationUtil.setPersistence(null);
 
 		entityCache.removeCache(LocalizedEntryLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			LocalizedEntryLocalizationImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

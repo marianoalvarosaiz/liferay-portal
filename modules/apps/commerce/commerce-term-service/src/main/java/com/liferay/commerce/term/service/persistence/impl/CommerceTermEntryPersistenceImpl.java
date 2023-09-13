@@ -8775,6 +8775,8 @@ public class CommerceTermEntryPersistenceImpl
 		CommerceTermEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceTermEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceTermEntryImpl.class.getName());
 	}
 
 	@Override

@@ -4872,6 +4872,8 @@ public class CommerceShipmentPersistenceImpl
 		CommerceShipmentUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceShipmentImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceShipmentImpl.class.getName());
 	}
 
 	@Override

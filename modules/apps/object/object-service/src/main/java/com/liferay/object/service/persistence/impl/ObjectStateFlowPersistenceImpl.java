@@ -2060,6 +2060,8 @@ public class ObjectStateFlowPersistenceImpl
 		ObjectStateFlowUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectStateFlowImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectStateFlowImpl.class.getName());
 	}
 
 	@Override

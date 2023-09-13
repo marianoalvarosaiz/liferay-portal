@@ -6546,6 +6546,8 @@ public class LayoutUtilityPageEntryPersistenceImpl
 		LayoutUtilityPageEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(LayoutUtilityPageEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(LayoutUtilityPageEntryImpl.class.getName());
 	}
 
 	@Override

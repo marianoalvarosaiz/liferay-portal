@@ -6460,6 +6460,8 @@ public class AssetEntryPersistenceImpl
 
 		EntityCacheUtil.removeCache(AssetEntryImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(AssetEntryImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("AssetEntries_AssetTags");
 	}
 

@@ -2818,6 +2818,8 @@ public class MembershipRequestPersistenceImpl
 		MembershipRequestUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(MembershipRequestImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(MembershipRequestImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_MEMBERSHIPREQUEST =

@@ -6691,6 +6691,9 @@ public class DEDataDefinitionFieldLinkPersistenceImpl
 		DEDataDefinitionFieldLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(DEDataDefinitionFieldLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			DEDataDefinitionFieldLinkImpl.class.getName());
 	}
 
 	@Override

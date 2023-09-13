@@ -6406,6 +6406,8 @@ public class LayoutFriendlyURLPersistenceImpl
 		LayoutFriendlyURLUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(LayoutFriendlyURLImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(LayoutFriendlyURLImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LAYOUTFRIENDLYURL =

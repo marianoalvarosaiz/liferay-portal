@@ -3782,6 +3782,8 @@ public class CPOptionValuePersistenceImpl
 		CPOptionValueUtil.setPersistence(null);
 
 		entityCache.removeCache(CPOptionValueImpl.class.getName());
+
+		finderCache.removeAllCaches(CPOptionValueImpl.class.getName());
 	}
 
 	@Override

@@ -2476,6 +2476,9 @@ public class RecentLayoutRevisionPersistenceImpl
 		RecentLayoutRevisionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RecentLayoutRevisionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			RecentLayoutRevisionImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RECENTLAYOUTREVISION =

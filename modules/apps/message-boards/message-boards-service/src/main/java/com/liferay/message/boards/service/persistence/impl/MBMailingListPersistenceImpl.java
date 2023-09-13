@@ -3189,6 +3189,8 @@ public class MBMailingListPersistenceImpl
 		MBMailingListUtil.setPersistence(null);
 
 		entityCache.removeCache(MBMailingListImpl.class.getName());
+
+		finderCache.removeAllCaches(MBMailingListImpl.class.getName());
 	}
 
 	@Override

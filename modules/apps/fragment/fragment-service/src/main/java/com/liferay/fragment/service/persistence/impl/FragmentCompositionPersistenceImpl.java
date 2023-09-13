@@ -6379,6 +6379,8 @@ public class FragmentCompositionPersistenceImpl
 		FragmentCompositionUtil.setPersistence(null);
 
 		entityCache.removeCache(FragmentCompositionImpl.class.getName());
+
+		finderCache.removeAllCaches(FragmentCompositionImpl.class.getName());
 	}
 
 	@Override

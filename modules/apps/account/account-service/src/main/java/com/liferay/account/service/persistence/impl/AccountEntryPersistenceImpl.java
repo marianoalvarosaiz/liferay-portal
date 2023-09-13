@@ -5870,6 +5870,8 @@ public class AccountEntryPersistenceImpl
 		AccountEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(AccountEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(AccountEntryImpl.class.getName());
 	}
 
 	@Override

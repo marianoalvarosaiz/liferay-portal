@@ -1985,6 +1985,8 @@ public class COREntryRelPersistenceImpl
 		COREntryRelUtil.setPersistence(null);
 
 		entityCache.removeCache(COREntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(COREntryRelImpl.class.getName());
 	}
 
 	@Override

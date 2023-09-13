@@ -1791,6 +1791,9 @@ public class CPDefinitionLocalizationPersistenceImpl
 		CPDefinitionLocalizationUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPDefinitionLocalizationImpl.class.getName());
 	}
 
 	@Override

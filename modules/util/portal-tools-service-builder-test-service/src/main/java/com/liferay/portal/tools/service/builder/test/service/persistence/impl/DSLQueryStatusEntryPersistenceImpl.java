@@ -579,6 +579,8 @@ public class DSLQueryStatusEntryPersistenceImpl
 		DSLQueryStatusEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(DSLQueryStatusEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(DSLQueryStatusEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

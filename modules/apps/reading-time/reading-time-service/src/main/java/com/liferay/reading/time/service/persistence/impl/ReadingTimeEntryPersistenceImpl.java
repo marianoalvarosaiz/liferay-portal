@@ -2694,6 +2694,8 @@ public class ReadingTimeEntryPersistenceImpl
 		ReadingTimeEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ReadingTimeEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ReadingTimeEntryImpl.class.getName());
 	}
 
 	@Override

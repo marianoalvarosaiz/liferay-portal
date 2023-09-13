@@ -2230,6 +2230,8 @@ public class SegmentsEntryRolePersistenceImpl
 		SegmentsEntryRoleUtil.setPersistence(null);
 
 		entityCache.removeCache(SegmentsEntryRoleImpl.class.getName());
+
+		finderCache.removeAllCaches(SegmentsEntryRoleImpl.class.getName());
 	}
 
 	@Override

@@ -1499,6 +1499,8 @@ public class RedirectNotFoundEntryPersistenceImpl
 		RedirectNotFoundEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(RedirectNotFoundEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(RedirectNotFoundEntryImpl.class.getName());
 	}
 
 	@Override

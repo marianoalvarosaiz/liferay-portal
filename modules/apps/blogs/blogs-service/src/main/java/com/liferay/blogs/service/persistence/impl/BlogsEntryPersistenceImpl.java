@@ -23073,6 +23073,8 @@ public class BlogsEntryPersistenceImpl
 		BlogsEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(BlogsEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(BlogsEntryImpl.class.getName());
 	}
 
 	@Override

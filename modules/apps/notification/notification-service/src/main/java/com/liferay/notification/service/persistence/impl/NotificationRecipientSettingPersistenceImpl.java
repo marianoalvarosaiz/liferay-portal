@@ -2754,6 +2754,9 @@ public class NotificationRecipientSettingPersistenceImpl
 
 		entityCache.removeCache(
 			NotificationRecipientSettingImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			NotificationRecipientSettingImpl.class.getName());
 	}
 
 	@Override

@@ -6136,6 +6136,8 @@ public class KBCommentPersistenceImpl
 		KBCommentUtil.setPersistence(null);
 
 		entityCache.removeCache(KBCommentImpl.class.getName());
+
+		finderCache.removeAllCaches(KBCommentImpl.class.getName());
 	}
 
 	@Override

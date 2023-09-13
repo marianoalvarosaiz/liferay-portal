@@ -1326,6 +1326,8 @@ public class DLSyncEventPersistenceImpl
 		DLSyncEventUtil.setPersistence(null);
 
 		entityCache.removeCache(DLSyncEventImpl.class.getName());
+
+		finderCache.removeAllCaches(DLSyncEventImpl.class.getName());
 	}
 
 	@Override

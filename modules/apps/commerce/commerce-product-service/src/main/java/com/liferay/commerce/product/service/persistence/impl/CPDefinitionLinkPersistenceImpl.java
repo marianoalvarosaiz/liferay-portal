@@ -8720,6 +8720,8 @@ public class CPDefinitionLinkPersistenceImpl
 		CPDefinitionLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(CPDefinitionLinkImpl.class.getName());
 	}
 
 	@Override

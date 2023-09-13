@@ -2738,6 +2738,8 @@ public class ContactPersistenceImpl
 		ContactUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ContactImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ContactImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_CONTACT =

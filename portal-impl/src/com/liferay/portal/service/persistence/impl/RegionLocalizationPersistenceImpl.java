@@ -1425,6 +1425,8 @@ public class RegionLocalizationPersistenceImpl
 		RegionLocalizationUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RegionLocalizationImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(RegionLocalizationImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_REGIONLOCALIZATION =

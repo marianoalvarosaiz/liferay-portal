@@ -1540,6 +1540,9 @@ public class CommerceShippingFixedOptionPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceShippingFixedOptionImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceShippingFixedOptionImpl.class.getName());
 	}
 
 	@Override

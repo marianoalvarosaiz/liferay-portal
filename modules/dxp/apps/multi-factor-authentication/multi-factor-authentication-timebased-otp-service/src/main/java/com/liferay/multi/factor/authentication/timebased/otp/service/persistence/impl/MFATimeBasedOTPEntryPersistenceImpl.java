@@ -880,6 +880,8 @@ public class MFATimeBasedOTPEntryPersistenceImpl
 		MFATimeBasedOTPEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(MFATimeBasedOTPEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(MFATimeBasedOTPEntryImpl.class.getName());
 	}
 
 	@Override

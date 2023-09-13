@@ -7712,6 +7712,8 @@ public class DispatchTriggerPersistenceImpl
 		DispatchTriggerUtil.setPersistence(null);
 
 		entityCache.removeCache(DispatchTriggerImpl.class.getName());
+
+		finderCache.removeAllCaches(DispatchTriggerImpl.class.getName());
 	}
 
 	@Override

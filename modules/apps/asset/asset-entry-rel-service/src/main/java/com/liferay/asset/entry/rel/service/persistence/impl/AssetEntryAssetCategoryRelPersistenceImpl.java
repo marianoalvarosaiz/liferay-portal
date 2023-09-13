@@ -2286,6 +2286,9 @@ public class AssetEntryAssetCategoryRelPersistenceImpl
 		AssetEntryAssetCategoryRelUtil.setPersistence(null);
 
 		entityCache.removeCache(AssetEntryAssetCategoryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			AssetEntryAssetCategoryRelImpl.class.getName());
 	}
 
 	@Override

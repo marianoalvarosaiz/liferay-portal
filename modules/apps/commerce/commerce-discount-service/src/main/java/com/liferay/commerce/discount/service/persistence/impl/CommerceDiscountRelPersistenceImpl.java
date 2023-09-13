@@ -2311,6 +2311,8 @@ public class CommerceDiscountRelPersistenceImpl
 		CommerceDiscountRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceDiscountRelImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceDiscountRelImpl.class.getName());
 	}
 
 	@Override

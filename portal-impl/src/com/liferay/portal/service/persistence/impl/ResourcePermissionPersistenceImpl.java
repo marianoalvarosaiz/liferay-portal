@@ -8070,6 +8070,8 @@ public class ResourcePermissionPersistenceImpl
 		ResourcePermissionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ResourcePermissionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ResourcePermissionImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RESOURCEPERMISSION =

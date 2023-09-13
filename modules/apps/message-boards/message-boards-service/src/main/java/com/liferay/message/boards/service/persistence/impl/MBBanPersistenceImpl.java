@@ -4159,6 +4159,8 @@ public class MBBanPersistenceImpl
 		MBBanUtil.setPersistence(null);
 
 		entityCache.removeCache(MBBanImpl.class.getName());
+
+		finderCache.removeAllCaches(MBBanImpl.class.getName());
 	}
 
 	@Override

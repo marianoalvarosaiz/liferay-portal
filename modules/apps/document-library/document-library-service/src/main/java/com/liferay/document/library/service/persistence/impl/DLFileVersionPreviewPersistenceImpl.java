@@ -2542,6 +2542,8 @@ public class DLFileVersionPreviewPersistenceImpl
 		DLFileVersionPreviewUtil.setPersistence(null);
 
 		entityCache.removeCache(DLFileVersionPreviewImpl.class.getName());
+
+		finderCache.removeAllCaches(DLFileVersionPreviewImpl.class.getName());
 	}
 
 	@Override

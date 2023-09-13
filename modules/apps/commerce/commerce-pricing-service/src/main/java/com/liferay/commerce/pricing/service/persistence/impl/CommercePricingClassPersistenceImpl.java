@@ -4267,6 +4267,8 @@ public class CommercePricingClassPersistenceImpl
 		CommercePricingClassUtil.setPersistence(null);
 
 		entityCache.removeCache(CommercePricingClassImpl.class.getName());
+
+		finderCache.removeAllCaches(CommercePricingClassImpl.class.getName());
 	}
 
 	@Override

@@ -575,6 +575,8 @@ public class RSVEntryPersistenceImpl
 		RSVEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(RSVEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(RSVEntryImpl.class.getName());
 	}
 
 	@Override

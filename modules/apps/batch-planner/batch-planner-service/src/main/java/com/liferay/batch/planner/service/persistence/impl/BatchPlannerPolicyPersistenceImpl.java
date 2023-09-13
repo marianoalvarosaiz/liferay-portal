@@ -1466,6 +1466,8 @@ public class BatchPlannerPolicyPersistenceImpl
 		BatchPlannerPolicyUtil.setPersistence(null);
 
 		entityCache.removeCache(BatchPlannerPolicyImpl.class.getName());
+
+		finderCache.removeAllCaches(BatchPlannerPolicyImpl.class.getName());
 	}
 
 	@Override

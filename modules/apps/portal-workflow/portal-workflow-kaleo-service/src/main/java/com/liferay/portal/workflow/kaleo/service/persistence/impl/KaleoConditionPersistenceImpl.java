@@ -2226,6 +2226,8 @@ public class KaleoConditionPersistenceImpl
 		KaleoConditionUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoConditionImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoConditionImpl.class.getName());
 	}
 
 	@Override

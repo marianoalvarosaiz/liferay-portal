@@ -2202,6 +2202,8 @@ public class TrashVersionPersistenceImpl
 		TrashVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(TrashVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(TrashVersionImpl.class.getName());
 	}
 
 	@Override

@@ -791,6 +791,8 @@ public class CacheMissEntryPersistenceImpl
 		CacheMissEntryUtil.setPersistence(null);
 
 		dummyEntityCache.removeCache(CacheMissEntryImpl.class.getName());
+
+		dummyFinderCache.removeAllCaches(CacheMissEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = CTPersistenceHelper.class)

@@ -3454,6 +3454,8 @@ public class VirtualHostPersistenceImpl
 		VirtualHostUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(VirtualHostImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(VirtualHostImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_VIRTUALHOST =

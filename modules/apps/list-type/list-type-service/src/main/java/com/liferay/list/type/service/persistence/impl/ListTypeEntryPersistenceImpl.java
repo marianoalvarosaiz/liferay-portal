@@ -3632,6 +3632,8 @@ public class ListTypeEntryPersistenceImpl
 		ListTypeEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ListTypeEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ListTypeEntryImpl.class.getName());
 	}
 
 	@Override

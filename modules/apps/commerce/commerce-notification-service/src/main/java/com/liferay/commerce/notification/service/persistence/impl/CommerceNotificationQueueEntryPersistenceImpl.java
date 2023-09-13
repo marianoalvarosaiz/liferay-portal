@@ -3553,6 +3553,9 @@ public class CommerceNotificationQueueEntryPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceNotificationQueueEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceNotificationQueueEntryImpl.class.getName());
 	}
 
 	@Override

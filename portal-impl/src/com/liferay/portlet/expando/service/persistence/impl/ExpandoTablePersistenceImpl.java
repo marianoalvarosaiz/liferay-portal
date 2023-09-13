@@ -1729,6 +1729,8 @@ public class ExpandoTablePersistenceImpl
 		ExpandoTableUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ExpandoTableImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ExpandoTableImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_EXPANDOTABLE =

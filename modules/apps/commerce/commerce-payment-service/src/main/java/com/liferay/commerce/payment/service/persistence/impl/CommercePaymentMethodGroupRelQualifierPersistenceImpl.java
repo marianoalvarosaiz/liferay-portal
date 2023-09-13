@@ -2250,6 +2250,9 @@ public class CommercePaymentMethodGroupRelQualifierPersistenceImpl
 
 		entityCache.removeCache(
 			CommercePaymentMethodGroupRelQualifierImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePaymentMethodGroupRelQualifierImpl.class.getName());
 	}
 
 	@Override

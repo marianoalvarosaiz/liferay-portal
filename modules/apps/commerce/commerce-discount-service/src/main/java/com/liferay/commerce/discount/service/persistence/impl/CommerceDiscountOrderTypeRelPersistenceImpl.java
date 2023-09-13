@@ -3234,6 +3234,9 @@ public class CommerceDiscountOrderTypeRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceDiscountOrderTypeRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceDiscountOrderTypeRelImpl.class.getName());
 	}
 
 	@Override

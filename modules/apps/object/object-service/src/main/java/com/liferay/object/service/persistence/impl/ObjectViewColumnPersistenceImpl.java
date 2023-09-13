@@ -2949,6 +2949,8 @@ public class ObjectViewColumnPersistenceImpl
 		ObjectViewColumnUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectViewColumnImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectViewColumnImpl.class.getName());
 	}
 
 	@Override

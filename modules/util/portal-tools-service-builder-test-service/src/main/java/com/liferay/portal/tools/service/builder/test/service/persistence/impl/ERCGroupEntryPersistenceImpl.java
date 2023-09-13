@@ -2359,6 +2359,8 @@ public class ERCGroupEntryPersistenceImpl
 		ERCGroupEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ERCGroupEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ERCGroupEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

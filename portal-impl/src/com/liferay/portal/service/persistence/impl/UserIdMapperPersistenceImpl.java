@@ -1695,6 +1695,8 @@ public class UserIdMapperPersistenceImpl
 		UserIdMapperUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(UserIdMapperImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(UserIdMapperImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_USERIDMAPPER =

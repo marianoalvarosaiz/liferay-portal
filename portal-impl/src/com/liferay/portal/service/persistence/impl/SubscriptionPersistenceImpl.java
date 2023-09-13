@@ -3517,6 +3517,8 @@ public class SubscriptionPersistenceImpl
 		SubscriptionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SubscriptionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(SubscriptionImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SUBSCRIPTION =

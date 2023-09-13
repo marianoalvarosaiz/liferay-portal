@@ -3466,6 +3466,9 @@ public class CPDefinitionGroupedEntryPersistenceImpl
 		CPDefinitionGroupedEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionGroupedEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPDefinitionGroupedEntryImpl.class.getName());
 	}
 
 	@Override

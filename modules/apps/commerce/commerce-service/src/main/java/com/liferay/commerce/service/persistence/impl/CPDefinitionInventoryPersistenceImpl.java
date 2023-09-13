@@ -2690,6 +2690,8 @@ public class CPDefinitionInventoryPersistenceImpl
 		CPDefinitionInventoryUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionInventoryImpl.class.getName());
+
+		finderCache.removeAllCaches(CPDefinitionInventoryImpl.class.getName());
 	}
 
 	@Override

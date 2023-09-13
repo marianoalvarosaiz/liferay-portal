@@ -4380,6 +4380,8 @@ public class CalendarPersistenceImpl
 		CalendarUtil.setPersistence(null);
 
 		entityCache.removeCache(CalendarImpl.class.getName());
+
+		finderCache.removeAllCaches(CalendarImpl.class.getName());
 	}
 
 	@Override

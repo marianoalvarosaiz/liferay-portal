@@ -1129,6 +1129,8 @@ public class AuditEventPersistenceImpl
 		AuditEventUtil.setPersistence(null);
 
 		entityCache.removeCache(AuditEventImpl.class.getName());
+
+		finderCache.removeAllCaches(AuditEventImpl.class.getName());
 	}
 
 	@Override

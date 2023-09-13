@@ -2021,6 +2021,8 @@ public class OAuth2ScopeGrantPersistenceImpl
 
 		entityCache.removeCache(OAuth2ScopeGrantImpl.class.getName());
 
+		finderCache.removeAllCaches(OAuth2ScopeGrantImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper(
 			"OA2Auths_OA2ScopeGrants#oAuth2ScopeGrantId");
 	}

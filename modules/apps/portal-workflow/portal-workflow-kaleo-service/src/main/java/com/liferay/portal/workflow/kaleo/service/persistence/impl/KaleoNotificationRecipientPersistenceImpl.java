@@ -2597,6 +2597,9 @@ public class KaleoNotificationRecipientPersistenceImpl
 		KaleoNotificationRecipientUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoNotificationRecipientImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			KaleoNotificationRecipientImpl.class.getName());
 	}
 
 	@Override

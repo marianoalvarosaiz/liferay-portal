@@ -12926,6 +12926,8 @@ public class MBCategoryPersistenceImpl
 		MBCategoryUtil.setPersistence(null);
 
 		entityCache.removeCache(MBCategoryImpl.class.getName());
+
+		finderCache.removeAllCaches(MBCategoryImpl.class.getName());
 	}
 
 	@Override

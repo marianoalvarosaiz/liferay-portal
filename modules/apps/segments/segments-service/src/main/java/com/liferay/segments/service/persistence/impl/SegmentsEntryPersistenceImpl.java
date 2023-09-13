@@ -11790,6 +11790,8 @@ public class SegmentsEntryPersistenceImpl
 		SegmentsEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(SegmentsEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(SegmentsEntryImpl.class.getName());
 	}
 
 	@Override

@@ -3410,6 +3410,8 @@ public class DDMFieldPersistenceImpl
 		DDMFieldUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMFieldImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMFieldImpl.class.getName());
 	}
 
 	@Override

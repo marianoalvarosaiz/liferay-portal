@@ -22950,6 +22950,8 @@ public class MBMessagePersistenceImpl
 		MBMessageUtil.setPersistence(null);
 
 		entityCache.removeCache(MBMessageImpl.class.getName());
+
+		finderCache.removeAllCaches(MBMessageImpl.class.getName());
 	}
 
 	@Override

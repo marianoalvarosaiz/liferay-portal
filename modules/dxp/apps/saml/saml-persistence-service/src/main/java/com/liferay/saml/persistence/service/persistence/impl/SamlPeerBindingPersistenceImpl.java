@@ -1988,6 +1988,8 @@ public class SamlPeerBindingPersistenceImpl
 		SamlPeerBindingUtil.setPersistence(null);
 
 		entityCache.removeCache(SamlPeerBindingImpl.class.getName());
+
+		finderCache.removeAllCaches(SamlPeerBindingImpl.class.getName());
 	}
 
 	@Override

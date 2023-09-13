@@ -2948,6 +2948,8 @@ public class CPTaxCategoryPersistenceImpl
 		CPTaxCategoryUtil.setPersistence(null);
 
 		entityCache.removeCache(CPTaxCategoryImpl.class.getName());
+
+		finderCache.removeAllCaches(CPTaxCategoryImpl.class.getName());
 	}
 
 	@Override

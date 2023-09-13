@@ -6357,6 +6357,8 @@ public class CommerceTierPriceEntryPersistenceImpl
 		CommerceTierPriceEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceTierPriceEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceTierPriceEntryImpl.class.getName());
 	}
 
 	@Override

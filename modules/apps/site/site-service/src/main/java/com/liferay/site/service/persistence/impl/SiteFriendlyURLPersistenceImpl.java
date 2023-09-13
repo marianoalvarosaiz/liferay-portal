@@ -3579,6 +3579,8 @@ public class SiteFriendlyURLPersistenceImpl
 		SiteFriendlyURLUtil.setPersistence(null);
 
 		entityCache.removeCache(SiteFriendlyURLImpl.class.getName());
+
+		finderCache.removeAllCaches(SiteFriendlyURLImpl.class.getName());
 	}
 
 	@Override

@@ -2097,6 +2097,8 @@ public class ERCCompanyEntryPersistenceImpl
 		ERCCompanyEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ERCCompanyEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ERCCompanyEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

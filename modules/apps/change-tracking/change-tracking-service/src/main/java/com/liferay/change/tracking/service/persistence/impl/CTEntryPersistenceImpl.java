@@ -2886,6 +2886,8 @@ public class CTEntryPersistenceImpl
 		CTEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CTEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CTEntryImpl.class.getName());
 	}
 
 	@Override

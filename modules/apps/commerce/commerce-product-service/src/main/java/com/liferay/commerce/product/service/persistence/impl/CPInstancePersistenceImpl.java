@@ -9244,6 +9244,8 @@ public class CPInstancePersistenceImpl
 		CPInstanceUtil.setPersistence(null);
 
 		entityCache.removeCache(CPInstanceImpl.class.getName());
+
+		finderCache.removeAllCaches(CPInstanceImpl.class.getName());
 	}
 
 	@Override

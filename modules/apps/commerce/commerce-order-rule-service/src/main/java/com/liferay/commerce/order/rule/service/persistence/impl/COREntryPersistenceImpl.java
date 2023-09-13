@@ -8010,6 +8010,8 @@ public class COREntryPersistenceImpl
 		COREntryUtil.setPersistence(null);
 
 		entityCache.removeCache(COREntryImpl.class.getName());
+
+		finderCache.removeAllCaches(COREntryImpl.class.getName());
 	}
 
 	@Override

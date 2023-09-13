@@ -5155,6 +5155,9 @@ public class CommerceMLForecastAlertEntryPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceMLForecastAlertEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceMLForecastAlertEntryImpl.class.getName());
 	}
 
 	@Override

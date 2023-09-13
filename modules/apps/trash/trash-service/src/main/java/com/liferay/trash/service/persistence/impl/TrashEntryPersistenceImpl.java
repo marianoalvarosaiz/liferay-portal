@@ -3337,6 +3337,8 @@ public class TrashEntryPersistenceImpl
 		TrashEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(TrashEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(TrashEntryImpl.class.getName());
 	}
 
 	@Override

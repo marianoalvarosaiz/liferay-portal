@@ -1651,6 +1651,8 @@ public class CTCommentPersistenceImpl
 		CTCommentUtil.setPersistence(null);
 
 		entityCache.removeCache(CTCommentImpl.class.getName());
+
+		finderCache.removeAllCaches(CTCommentImpl.class.getName());
 	}
 
 	@Override

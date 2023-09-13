@@ -6773,6 +6773,8 @@ public class CPDisplayLayoutPersistenceImpl
 		CPDisplayLayoutUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDisplayLayoutImpl.class.getName());
+
+		finderCache.removeAllCaches(CPDisplayLayoutImpl.class.getName());
 	}
 
 	@Override

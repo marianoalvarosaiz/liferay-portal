@@ -2911,6 +2911,8 @@ public class AnalyticsAssociationPersistenceImpl
 		AnalyticsAssociationUtil.setPersistence(null);
 
 		entityCache.removeCache(AnalyticsAssociationImpl.class.getName());
+
+		finderCache.removeAllCaches(AnalyticsAssociationImpl.class.getName());
 	}
 
 	@Override

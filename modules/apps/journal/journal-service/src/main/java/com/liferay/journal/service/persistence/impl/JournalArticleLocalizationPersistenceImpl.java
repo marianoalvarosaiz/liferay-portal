@@ -2775,6 +2775,9 @@ public class JournalArticleLocalizationPersistenceImpl
 		JournalArticleLocalizationUtil.setPersistence(null);
 
 		entityCache.removeCache(JournalArticleLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			JournalArticleLocalizationImpl.class.getName());
 	}
 
 	@Override

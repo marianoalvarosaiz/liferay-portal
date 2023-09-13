@@ -2875,6 +2875,8 @@ public class ObjectLayoutTabPersistenceImpl
 		ObjectLayoutTabUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectLayoutTabImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectLayoutTabImpl.class.getName());
 	}
 
 	@Override

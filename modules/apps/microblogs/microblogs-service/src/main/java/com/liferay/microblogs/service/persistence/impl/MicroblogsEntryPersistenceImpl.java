@@ -14015,6 +14015,8 @@ public class MicroblogsEntryPersistenceImpl
 		MicroblogsEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(MicroblogsEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(MicroblogsEntryImpl.class.getName());
 	}
 
 	@Override

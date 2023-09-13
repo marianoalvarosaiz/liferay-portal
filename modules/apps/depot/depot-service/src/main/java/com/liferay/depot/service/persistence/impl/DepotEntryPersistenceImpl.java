@@ -2286,6 +2286,8 @@ public class DepotEntryPersistenceImpl
 		DepotEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(DepotEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(DepotEntryImpl.class.getName());
 	}
 
 	@Override

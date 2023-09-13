@@ -4429,6 +4429,8 @@ public class CPOptionPersistenceImpl
 		CPOptionUtil.setPersistence(null);
 
 		entityCache.removeCache(CPOptionImpl.class.getName());
+
+		finderCache.removeAllCaches(CPOptionImpl.class.getName());
 	}
 
 	@Override

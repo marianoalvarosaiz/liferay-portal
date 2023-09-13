@@ -6203,6 +6203,9 @@ public class CPDefinitionOptionValueRelPersistenceImpl
 		CPDefinitionOptionValueRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionOptionValueRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPDefinitionOptionValueRelImpl.class.getName());
 	}
 
 	@Override

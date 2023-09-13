@@ -3126,6 +3126,8 @@ public class KaleoTransitionPersistenceImpl
 		KaleoTransitionUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTransitionImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoTransitionImpl.class.getName());
 	}
 
 	@Override

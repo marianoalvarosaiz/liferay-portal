@@ -1619,6 +1619,9 @@ public class CommercePaymentEntryAuditPersistenceImpl
 		CommercePaymentEntryAuditUtil.setPersistence(null);
 
 		entityCache.removeCache(CommercePaymentEntryAuditImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePaymentEntryAuditImpl.class.getName());
 	}
 
 	@Override

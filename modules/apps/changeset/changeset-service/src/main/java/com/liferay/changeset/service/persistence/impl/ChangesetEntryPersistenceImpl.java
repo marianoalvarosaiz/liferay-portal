@@ -3617,6 +3617,8 @@ public class ChangesetEntryPersistenceImpl
 		ChangesetEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ChangesetEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ChangesetEntryImpl.class.getName());
 	}
 
 	@Override

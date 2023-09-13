@@ -4675,6 +4675,9 @@ public class ClientExtensionEntryRelPersistenceImpl
 		ClientExtensionEntryRelUtil.setPersistence(null);
 
 		entityCache.removeCache(ClientExtensionEntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			ClientExtensionEntryRelImpl.class.getName());
 	}
 
 	@Override

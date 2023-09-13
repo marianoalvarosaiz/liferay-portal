@@ -6121,6 +6121,8 @@ public class CommerceCatalogPersistenceImpl
 		CommerceCatalogUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceCatalogImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceCatalogImpl.class.getName());
 	}
 
 	@Override

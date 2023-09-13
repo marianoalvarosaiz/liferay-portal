@@ -886,6 +886,8 @@ public class ReleasePersistenceImpl
 		ReleaseUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ReleaseImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ReleaseImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RELEASE_ =

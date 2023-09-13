@@ -3008,6 +3008,8 @@ public class FriendlyURLEntryPersistenceImpl
 		FriendlyURLEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(FriendlyURLEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(FriendlyURLEntryImpl.class.getName());
 	}
 
 	@Override

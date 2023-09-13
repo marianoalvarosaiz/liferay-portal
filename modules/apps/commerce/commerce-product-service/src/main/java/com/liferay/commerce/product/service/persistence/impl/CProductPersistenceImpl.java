@@ -3198,6 +3198,8 @@ public class CProductPersistenceImpl
 		CProductUtil.setPersistence(null);
 
 		entityCache.removeCache(CProductImpl.class.getName());
+
+		finderCache.removeAllCaches(CProductImpl.class.getName());
 	}
 
 	@Override

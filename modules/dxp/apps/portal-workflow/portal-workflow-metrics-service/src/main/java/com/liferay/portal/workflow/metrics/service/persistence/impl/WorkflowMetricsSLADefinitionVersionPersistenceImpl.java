@@ -3157,6 +3157,9 @@ public class WorkflowMetricsSLADefinitionVersionPersistenceImpl
 
 		entityCache.removeCache(
 			WorkflowMetricsSLADefinitionVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			WorkflowMetricsSLADefinitionVersionImpl.class.getName());
 	}
 
 	@Override

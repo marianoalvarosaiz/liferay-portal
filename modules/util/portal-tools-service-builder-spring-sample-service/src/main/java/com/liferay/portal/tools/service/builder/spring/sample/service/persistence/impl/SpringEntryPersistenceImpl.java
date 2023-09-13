@@ -2291,6 +2291,8 @@ public class SpringEntryPersistenceImpl
 		SpringEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(SpringEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(SpringEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

@@ -3287,6 +3287,9 @@ public class LayoutPageTemplateStructurePersistenceImpl
 
 		entityCache.removeCache(
 			LayoutPageTemplateStructureImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			LayoutPageTemplateStructureImpl.class.getName());
 	}
 
 	@Override

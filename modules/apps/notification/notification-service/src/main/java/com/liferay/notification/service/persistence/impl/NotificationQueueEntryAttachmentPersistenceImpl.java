@@ -1254,6 +1254,9 @@ public class NotificationQueueEntryAttachmentPersistenceImpl
 
 		entityCache.removeCache(
 			NotificationQueueEntryAttachmentImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			NotificationQueueEntryAttachmentImpl.class.getName());
 	}
 
 	@Override

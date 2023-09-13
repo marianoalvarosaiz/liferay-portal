@@ -11421,6 +11421,8 @@ public class DDMStructurePersistenceImpl
 		DDMStructureUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMStructureImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMStructureImpl.class.getName());
 	}
 
 	@Override

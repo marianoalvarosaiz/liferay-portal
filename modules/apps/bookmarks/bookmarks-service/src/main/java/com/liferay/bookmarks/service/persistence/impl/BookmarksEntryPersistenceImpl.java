@@ -13301,6 +13301,8 @@ public class BookmarksEntryPersistenceImpl
 		BookmarksEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(BookmarksEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(BookmarksEntryImpl.class.getName());
 	}
 
 	@Override

@@ -3019,6 +3019,9 @@ public class CommercePriceListOrderTypeRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommercePriceListOrderTypeRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePriceListOrderTypeRelImpl.class.getName());
 	}
 
 	@Override

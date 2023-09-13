@@ -2720,6 +2720,8 @@ public class TicketPersistenceImpl
 		TicketUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(TicketImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(TicketImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_TICKET =

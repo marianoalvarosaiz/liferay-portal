@@ -4118,6 +4118,8 @@ public class PasswordPolicyPersistenceImpl
 		PasswordPolicyUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PasswordPolicyImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PasswordPolicyImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PASSWORDPOLICY =

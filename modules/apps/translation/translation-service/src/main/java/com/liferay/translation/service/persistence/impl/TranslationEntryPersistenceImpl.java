@@ -3307,6 +3307,8 @@ public class TranslationEntryPersistenceImpl
 		TranslationEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(TranslationEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(TranslationEntryImpl.class.getName());
 	}
 
 	@Override

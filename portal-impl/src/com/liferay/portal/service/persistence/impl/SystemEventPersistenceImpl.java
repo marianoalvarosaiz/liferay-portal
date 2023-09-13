@@ -3227,6 +3227,8 @@ public class SystemEventPersistenceImpl
 		SystemEventUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SystemEventImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(SystemEventImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SYSTEMEVENT =

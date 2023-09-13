@@ -3065,6 +3065,8 @@ public class AppPersistenceImpl
 		AppUtil.setPersistence(null);
 
 		entityCache.removeCache(AppImpl.class.getName());
+
+		finderCache.removeAllCaches(AppImpl.class.getName());
 	}
 
 	@Override

@@ -1516,6 +1516,8 @@ public class SamlSpMessagePersistenceImpl
 		SamlSpMessageUtil.setPersistence(null);
 
 		entityCache.removeCache(SamlSpMessageImpl.class.getName());
+
+		finderCache.removeAllCaches(SamlSpMessageImpl.class.getName());
 	}
 
 	@Override

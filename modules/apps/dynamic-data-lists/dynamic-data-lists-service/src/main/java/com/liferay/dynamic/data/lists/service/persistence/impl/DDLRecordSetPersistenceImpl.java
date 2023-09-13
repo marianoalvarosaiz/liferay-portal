@@ -4875,6 +4875,8 @@ public class DDLRecordSetPersistenceImpl
 		DDLRecordSetUtil.setPersistence(null);
 
 		entityCache.removeCache(DDLRecordSetImpl.class.getName());
+
+		finderCache.removeAllCaches(DDLRecordSetImpl.class.getName());
 	}
 
 	@Override

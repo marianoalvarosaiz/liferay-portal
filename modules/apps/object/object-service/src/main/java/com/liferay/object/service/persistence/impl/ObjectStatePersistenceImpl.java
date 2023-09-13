@@ -3125,6 +3125,8 @@ public class ObjectStatePersistenceImpl
 		ObjectStateUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectStateImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectStateImpl.class.getName());
 	}
 
 	@Override

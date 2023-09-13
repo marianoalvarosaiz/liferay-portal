@@ -4463,6 +4463,8 @@ public class FaroNotificationPersistenceImpl
 		FaroNotificationUtil.setPersistence(null);
 
 		entityCache.removeCache(FaroNotificationImpl.class.getName());
+
+		finderCache.removeAllCaches(FaroNotificationImpl.class.getName());
 	}
 
 	@Override

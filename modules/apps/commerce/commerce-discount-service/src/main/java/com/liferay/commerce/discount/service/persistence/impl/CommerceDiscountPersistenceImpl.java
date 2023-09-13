@@ -8526,6 +8526,8 @@ public class CommerceDiscountPersistenceImpl
 		CommerceDiscountUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceDiscountImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceDiscountImpl.class.getName());
 	}
 
 	@Override

@@ -1498,6 +1498,9 @@ public class NotificationTemplateAttachmentPersistenceImpl
 
 		entityCache.removeCache(
 			NotificationTemplateAttachmentImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			NotificationTemplateAttachmentImpl.class.getName());
 	}
 
 	@Override

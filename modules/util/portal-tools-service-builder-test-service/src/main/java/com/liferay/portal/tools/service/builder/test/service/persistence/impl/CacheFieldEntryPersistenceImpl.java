@@ -1119,6 +1119,8 @@ public class CacheFieldEntryPersistenceImpl
 		CacheFieldEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CacheFieldEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CacheFieldEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

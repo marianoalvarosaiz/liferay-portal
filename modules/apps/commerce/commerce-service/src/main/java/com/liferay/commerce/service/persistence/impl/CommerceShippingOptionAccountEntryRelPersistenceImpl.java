@@ -2752,6 +2752,9 @@ public class CommerceShippingOptionAccountEntryRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceShippingOptionAccountEntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceShippingOptionAccountEntryRelImpl.class.getName());
 	}
 
 	@Override

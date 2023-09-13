@@ -4770,6 +4770,8 @@ public class SAPEntryPersistenceImpl
 		SAPEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(SAPEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(SAPEntryImpl.class.getName());
 	}
 
 	@Override

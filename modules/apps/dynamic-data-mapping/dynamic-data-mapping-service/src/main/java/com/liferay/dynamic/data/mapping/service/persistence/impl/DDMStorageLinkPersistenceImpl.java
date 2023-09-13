@@ -3723,6 +3723,8 @@ public class DDMStorageLinkPersistenceImpl
 		DDMStorageLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMStorageLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMStorageLinkImpl.class.getName());
 	}
 
 	@Override

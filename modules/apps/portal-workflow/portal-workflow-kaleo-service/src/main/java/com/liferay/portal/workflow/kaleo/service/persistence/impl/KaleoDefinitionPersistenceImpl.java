@@ -4287,6 +4287,8 @@ public class KaleoDefinitionPersistenceImpl
 		KaleoDefinitionUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoDefinitionImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoDefinitionImpl.class.getName());
 	}
 
 	@Override

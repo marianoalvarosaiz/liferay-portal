@@ -5933,6 +5933,8 @@ public class ExpandoValuePersistenceImpl
 		ExpandoValueUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ExpandoValueImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ExpandoValueImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_EXPANDOVALUE =

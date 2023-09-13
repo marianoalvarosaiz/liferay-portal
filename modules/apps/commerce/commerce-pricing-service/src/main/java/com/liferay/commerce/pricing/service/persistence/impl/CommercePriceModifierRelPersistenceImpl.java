@@ -2965,6 +2965,9 @@ public class CommercePriceModifierRelPersistenceImpl
 		CommercePriceModifierRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CommercePriceModifierRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePriceModifierRelImpl.class.getName());
 	}
 
 	@Override

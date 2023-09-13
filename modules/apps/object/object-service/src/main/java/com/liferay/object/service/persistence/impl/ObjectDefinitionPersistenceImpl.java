@@ -11489,6 +11489,8 @@ public class ObjectDefinitionPersistenceImpl
 		ObjectDefinitionUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectDefinitionImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectDefinitionImpl.class.getName());
 	}
 
 	@Override

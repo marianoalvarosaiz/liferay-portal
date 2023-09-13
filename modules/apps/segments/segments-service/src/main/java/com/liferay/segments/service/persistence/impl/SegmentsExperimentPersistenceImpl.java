@@ -4549,6 +4549,8 @@ public class SegmentsExperimentPersistenceImpl
 		SegmentsExperimentUtil.setPersistence(null);
 
 		entityCache.removeCache(SegmentsExperimentImpl.class.getName());
+
+		finderCache.removeAllCaches(SegmentsExperimentImpl.class.getName());
 	}
 
 	@Override

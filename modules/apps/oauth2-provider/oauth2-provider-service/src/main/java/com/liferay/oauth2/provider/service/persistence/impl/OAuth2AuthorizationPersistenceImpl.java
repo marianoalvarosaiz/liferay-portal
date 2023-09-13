@@ -3878,6 +3878,8 @@ public class OAuth2AuthorizationPersistenceImpl
 
 		entityCache.removeCache(OAuth2AuthorizationImpl.class.getName());
 
+		finderCache.removeAllCaches(OAuth2AuthorizationImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper(
 			"OA2Auths_OA2ScopeGrants#oAuth2AuthorizationId");
 	}

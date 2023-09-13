@@ -1763,6 +1763,9 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 
 		entityCache.removeCache(
 			OAuth2ApplicationScopeAliasesImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			OAuth2ApplicationScopeAliasesImpl.class.getName());
 	}
 
 	@Override

@@ -2212,6 +2212,8 @@ public class PortletItemPersistenceImpl
 		PortletItemUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PortletItemImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PortletItemImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PORTLETITEM =

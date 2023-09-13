@@ -13710,6 +13710,8 @@ public class CommercePriceListPersistenceImpl
 		CommercePriceListUtil.setPersistence(null);
 
 		entityCache.removeCache(CommercePriceListImpl.class.getName());
+
+		finderCache.removeAllCaches(CommercePriceListImpl.class.getName());
 	}
 
 	@Override

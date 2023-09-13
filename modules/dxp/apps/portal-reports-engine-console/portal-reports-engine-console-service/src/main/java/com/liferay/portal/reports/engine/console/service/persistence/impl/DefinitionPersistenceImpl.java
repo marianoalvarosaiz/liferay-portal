@@ -3470,6 +3470,8 @@ public class DefinitionPersistenceImpl
 		DefinitionUtil.setPersistence(null);
 
 		entityCache.removeCache(DefinitionImpl.class.getName());
+
+		finderCache.removeAllCaches(DefinitionImpl.class.getName());
 	}
 
 	@Override

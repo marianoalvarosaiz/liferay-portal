@@ -866,6 +866,9 @@ public class NullConvertibleEntryPersistenceImpl
 		NullConvertibleEntryUtil.setPersistence(null);
 
 		dummyEntityCache.removeCache(NullConvertibleEntryImpl.class.getName());
+
+		dummyFinderCache.removeAllCaches(
+			NullConvertibleEntryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_NULLCONVERTIBLEENTRY =

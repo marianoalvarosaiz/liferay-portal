@@ -6749,6 +6749,8 @@ public class SocialRelationPersistenceImpl
 		SocialRelationUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SocialRelationImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(SocialRelationImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALRELATION =

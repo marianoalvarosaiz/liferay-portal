@@ -7873,6 +7873,8 @@ public class CPAttachmentFileEntryPersistenceImpl
 		CPAttachmentFileEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CPAttachmentFileEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CPAttachmentFileEntryImpl.class.getName());
 	}
 
 	@Override

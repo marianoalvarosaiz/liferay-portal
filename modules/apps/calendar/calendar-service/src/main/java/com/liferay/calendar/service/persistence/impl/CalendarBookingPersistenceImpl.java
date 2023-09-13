@@ -6637,6 +6637,8 @@ public class CalendarBookingPersistenceImpl
 		CalendarBookingUtil.setPersistence(null);
 
 		entityCache.removeCache(CalendarBookingImpl.class.getName());
+
+		finderCache.removeAllCaches(CalendarBookingImpl.class.getName());
 	}
 
 	@Override

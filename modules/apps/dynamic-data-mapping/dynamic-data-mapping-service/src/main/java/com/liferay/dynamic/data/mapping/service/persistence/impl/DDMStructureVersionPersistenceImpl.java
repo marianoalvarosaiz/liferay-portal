@@ -2331,6 +2331,8 @@ public class DDMStructureVersionPersistenceImpl
 		DDMStructureVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMStructureVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMStructureVersionImpl.class.getName());
 	}
 
 	@Override

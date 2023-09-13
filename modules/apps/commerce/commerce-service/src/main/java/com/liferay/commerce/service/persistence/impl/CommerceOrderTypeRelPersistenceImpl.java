@@ -3558,6 +3558,8 @@ public class CommerceOrderTypeRelPersistenceImpl
 		CommerceOrderTypeRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceOrderTypeRelImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceOrderTypeRelImpl.class.getName());
 	}
 
 	@Override

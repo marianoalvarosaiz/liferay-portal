@@ -5473,6 +5473,9 @@ public class CPInstanceUnitOfMeasurePersistenceImpl
 		CPInstanceUnitOfMeasureUtil.setPersistence(null);
 
 		entityCache.removeCache(CPInstanceUnitOfMeasureImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPInstanceUnitOfMeasureImpl.class.getName());
 	}
 
 	@Override

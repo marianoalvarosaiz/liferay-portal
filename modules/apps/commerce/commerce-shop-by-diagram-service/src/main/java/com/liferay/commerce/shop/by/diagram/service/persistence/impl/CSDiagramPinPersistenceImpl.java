@@ -1399,6 +1399,8 @@ public class CSDiagramPinPersistenceImpl
 		CSDiagramPinUtil.setPersistence(null);
 
 		entityCache.removeCache(CSDiagramPinImpl.class.getName());
+
+		finderCache.removeAllCaches(CSDiagramPinImpl.class.getName());
 	}
 
 	@Override

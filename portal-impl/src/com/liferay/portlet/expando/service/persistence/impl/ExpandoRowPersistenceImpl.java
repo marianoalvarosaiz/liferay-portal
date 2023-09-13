@@ -2164,6 +2164,8 @@ public class ExpandoRowPersistenceImpl
 		ExpandoRowUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ExpandoRowImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ExpandoRowImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_EXPANDOROW =

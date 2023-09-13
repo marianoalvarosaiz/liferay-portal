@@ -5494,6 +5494,9 @@ public class CommerceInventoryReplenishmentItemPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceInventoryReplenishmentItemImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceInventoryReplenishmentItemImpl.class.getName());
 	}
 
 	@Override

@@ -3622,6 +3622,8 @@ public class RegionPersistenceImpl
 		RegionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RegionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(RegionImpl.class.getName());
 	}
 
 	@BeanReference(type = RegionLocalizationPersistence.class)

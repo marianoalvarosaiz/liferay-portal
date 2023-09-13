@@ -3351,6 +3351,8 @@ public class KaleoTaskAssignmentPersistenceImpl
 		KaleoTaskAssignmentUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTaskAssignmentImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoTaskAssignmentImpl.class.getName());
 	}
 
 	@Override

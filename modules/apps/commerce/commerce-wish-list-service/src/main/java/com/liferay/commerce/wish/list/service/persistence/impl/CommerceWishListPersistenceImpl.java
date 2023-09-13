@@ -4880,6 +4880,8 @@ public class CommerceWishListPersistenceImpl
 		CommerceWishListUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceWishListImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceWishListImpl.class.getName());
 	}
 
 	@Override

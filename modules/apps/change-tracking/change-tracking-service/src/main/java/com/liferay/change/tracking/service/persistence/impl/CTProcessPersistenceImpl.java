@@ -2212,6 +2212,8 @@ public class CTProcessPersistenceImpl
 		CTProcessUtil.setPersistence(null);
 
 		entityCache.removeCache(CTProcessImpl.class.getName());
+
+		finderCache.removeAllCaches(CTProcessImpl.class.getName());
 	}
 
 	@Override

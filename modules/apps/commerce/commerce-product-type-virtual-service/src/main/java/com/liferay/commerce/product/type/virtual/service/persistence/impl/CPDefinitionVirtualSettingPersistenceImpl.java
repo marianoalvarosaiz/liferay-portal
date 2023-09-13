@@ -2422,6 +2422,9 @@ public class CPDefinitionVirtualSettingPersistenceImpl
 		CPDefinitionVirtualSettingUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionVirtualSettingImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPDefinitionVirtualSettingImpl.class.getName());
 	}
 
 	@Override

@@ -3414,6 +3414,8 @@ public class DDMContentPersistenceImpl
 		DDMContentUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMContentImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMContentImpl.class.getName());
 	}
 
 	@Override

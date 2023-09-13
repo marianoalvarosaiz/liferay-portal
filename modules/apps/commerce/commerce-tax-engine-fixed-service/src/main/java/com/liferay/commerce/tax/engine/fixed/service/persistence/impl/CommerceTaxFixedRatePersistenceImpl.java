@@ -1982,6 +1982,8 @@ public class CommerceTaxFixedRatePersistenceImpl
 		CommerceTaxFixedRateUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceTaxFixedRateImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceTaxFixedRateImpl.class.getName());
 	}
 
 	@Override

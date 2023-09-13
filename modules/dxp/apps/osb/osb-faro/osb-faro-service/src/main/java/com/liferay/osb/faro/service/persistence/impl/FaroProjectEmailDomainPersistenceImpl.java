@@ -1686,6 +1686,8 @@ public class FaroProjectEmailDomainPersistenceImpl
 		FaroProjectEmailDomainUtil.setPersistence(null);
 
 		entityCache.removeCache(FaroProjectEmailDomainImpl.class.getName());
+
+		finderCache.removeAllCaches(FaroProjectEmailDomainImpl.class.getName());
 	}
 
 	@Override

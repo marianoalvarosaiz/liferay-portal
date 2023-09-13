@@ -3570,6 +3570,8 @@ public class JournalFeedPersistenceImpl
 		JournalFeedUtil.setPersistence(null);
 
 		entityCache.removeCache(JournalFeedImpl.class.getName());
+
+		finderCache.removeAllCaches(JournalFeedImpl.class.getName());
 	}
 
 	@Override

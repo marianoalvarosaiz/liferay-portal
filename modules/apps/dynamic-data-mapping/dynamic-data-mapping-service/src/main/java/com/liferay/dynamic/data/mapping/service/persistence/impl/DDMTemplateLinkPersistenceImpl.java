@@ -1648,6 +1648,8 @@ public class DDMTemplateLinkPersistenceImpl
 		DDMTemplateLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMTemplateLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMTemplateLinkImpl.class.getName());
 	}
 
 	@Override

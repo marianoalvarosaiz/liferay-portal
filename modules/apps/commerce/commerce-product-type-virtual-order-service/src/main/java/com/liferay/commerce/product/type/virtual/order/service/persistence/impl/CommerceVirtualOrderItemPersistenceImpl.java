@@ -2383,6 +2383,9 @@ public class CommerceVirtualOrderItemPersistenceImpl
 		CommerceVirtualOrderItemUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceVirtualOrderItemImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceVirtualOrderItemImpl.class.getName());
 	}
 
 	@Override

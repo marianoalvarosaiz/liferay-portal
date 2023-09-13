@@ -7407,6 +7407,8 @@ public class CommercePriceEntryPersistenceImpl
 		CommercePriceEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CommercePriceEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CommercePriceEntryImpl.class.getName());
 	}
 
 	@Override

@@ -3419,6 +3419,8 @@ public class CommerceQualifierEntryPersistenceImpl
 		CommerceQualifierEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceQualifierEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceQualifierEntryImpl.class.getName());
 	}
 
 	@Override

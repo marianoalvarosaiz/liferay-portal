@@ -20783,6 +20783,8 @@ public class LayoutPersistenceImpl
 		LayoutUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(LayoutImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(LayoutImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LAYOUT =

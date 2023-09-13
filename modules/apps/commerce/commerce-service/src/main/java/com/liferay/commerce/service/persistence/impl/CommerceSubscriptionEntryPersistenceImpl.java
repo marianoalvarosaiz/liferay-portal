@@ -5483,6 +5483,9 @@ public class CommerceSubscriptionEntryPersistenceImpl
 		CommerceSubscriptionEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceSubscriptionEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceSubscriptionEntryImpl.class.getName());
 	}
 
 	@Override

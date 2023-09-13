@@ -8883,6 +8883,8 @@ public class JournalFolderPersistenceImpl
 		JournalFolderUtil.setPersistence(null);
 
 		entityCache.removeCache(JournalFolderImpl.class.getName());
+
+		finderCache.removeAllCaches(JournalFolderImpl.class.getName());
 	}
 
 	@Override

@@ -4042,6 +4042,8 @@ public class ObjectActionPersistenceImpl
 		ObjectActionUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectActionImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectActionImpl.class.getName());
 	}
 
 	@Override

@@ -1830,6 +1830,9 @@ public class PushNotificationsDevicePersistenceImpl
 		PushNotificationsDeviceUtil.setPersistence(null);
 
 		entityCache.removeCache(PushNotificationsDeviceImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			PushNotificationsDeviceImpl.class.getName());
 	}
 
 	@Override

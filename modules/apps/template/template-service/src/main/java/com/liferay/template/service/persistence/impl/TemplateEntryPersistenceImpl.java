@@ -5188,6 +5188,8 @@ public class TemplateEntryPersistenceImpl
 		TemplateEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(TemplateEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(TemplateEntryImpl.class.getName());
 	}
 
 	@Override

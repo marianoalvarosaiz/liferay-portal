@@ -3514,6 +3514,8 @@ public class CommerceOrderNotePersistenceImpl
 		CommerceOrderNoteUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceOrderNoteImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceOrderNoteImpl.class.getName());
 	}
 
 	@Override

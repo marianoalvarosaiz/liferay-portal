@@ -1160,6 +1160,8 @@ public class ContactsCardTemplatePersistenceImpl
 		ContactsCardTemplateUtil.setPersistence(null);
 
 		entityCache.removeCache(ContactsCardTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(ContactsCardTemplateImpl.class.getName());
 	}
 
 	@Override

@@ -3852,6 +3852,8 @@ public class OAuthClientEntryPersistenceImpl
 		OAuthClientEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(OAuthClientEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(OAuthClientEntryImpl.class.getName());
 	}
 
 	@Override

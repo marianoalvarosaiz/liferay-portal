@@ -4035,6 +4035,8 @@ public class ModulePersistenceImpl
 		ModuleUtil.setPersistence(null);
 
 		entityCache.removeCache(ModuleImpl.class.getName());
+
+		finderCache.removeAllCaches(ModuleImpl.class.getName());
 	}
 
 	@Override

@@ -5671,6 +5671,8 @@ public class CountryPersistenceImpl
 		CountryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(CountryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(CountryImpl.class.getName());
 	}
 
 	@BeanReference(type = CountryLocalizationPersistence.class)

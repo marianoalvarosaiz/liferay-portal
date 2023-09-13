@@ -2291,6 +2291,8 @@ public class MemberRequestPersistenceImpl
 		MemberRequestUtil.setPersistence(null);
 
 		entityCache.removeCache(MemberRequestImpl.class.getName());
+
+		finderCache.removeAllCaches(MemberRequestImpl.class.getName());
 	}
 
 	@Override

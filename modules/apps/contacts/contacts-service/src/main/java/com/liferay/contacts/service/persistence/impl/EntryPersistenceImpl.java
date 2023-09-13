@@ -1413,6 +1413,8 @@ public class EntryPersistenceImpl
 		EntryUtil.setPersistence(null);
 
 		entityCache.removeCache(EntryImpl.class.getName());
+
+		finderCache.removeAllCaches(EntryImpl.class.getName());
 	}
 
 	@Override

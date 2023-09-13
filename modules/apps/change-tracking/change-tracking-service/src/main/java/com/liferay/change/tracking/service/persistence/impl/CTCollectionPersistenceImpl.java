@@ -6241,6 +6241,8 @@ public class CTCollectionPersistenceImpl
 		CTCollectionUtil.setPersistence(null);
 
 		entityCache.removeCache(CTCollectionImpl.class.getName());
+
+		finderCache.removeAllCaches(CTCollectionImpl.class.getName());
 	}
 
 	@Override

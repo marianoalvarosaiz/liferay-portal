@@ -1184,6 +1184,8 @@ public class CommerceOrderPaymentPersistenceImpl
 		CommerceOrderPaymentUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceOrderPaymentImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceOrderPaymentImpl.class.getName());
 	}
 
 	@Override

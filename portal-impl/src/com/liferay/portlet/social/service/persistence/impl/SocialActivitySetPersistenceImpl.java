@@ -4468,6 +4468,8 @@ public class SocialActivitySetPersistenceImpl
 		SocialActivitySetUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SocialActivitySetImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(SocialActivitySetImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALACTIVITYSET =

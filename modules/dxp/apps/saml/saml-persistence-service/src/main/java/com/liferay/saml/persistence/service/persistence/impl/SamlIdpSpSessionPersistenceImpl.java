@@ -1717,6 +1717,8 @@ public class SamlIdpSpSessionPersistenceImpl
 		SamlIdpSpSessionUtil.setPersistence(null);
 
 		entityCache.removeCache(SamlIdpSpSessionImpl.class.getName());
+
+		finderCache.removeAllCaches(SamlIdpSpSessionImpl.class.getName());
 	}
 
 	@Override

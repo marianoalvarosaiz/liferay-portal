@@ -7434,6 +7434,8 @@ public class DLFileVersionPersistenceImpl
 		DLFileVersionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(DLFileVersionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(DLFileVersionImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_DLFILEVERSION =

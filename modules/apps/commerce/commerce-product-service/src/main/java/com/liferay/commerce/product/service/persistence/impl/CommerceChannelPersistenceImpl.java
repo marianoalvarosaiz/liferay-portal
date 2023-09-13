@@ -5407,6 +5407,8 @@ public class CommerceChannelPersistenceImpl
 		CommerceChannelUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceChannelImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceChannelImpl.class.getName());
 	}
 
 	@Override

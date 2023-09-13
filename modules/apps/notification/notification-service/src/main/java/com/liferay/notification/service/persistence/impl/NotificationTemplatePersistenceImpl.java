@@ -3047,6 +3047,8 @@ public class NotificationTemplatePersistenceImpl
 		NotificationTemplateUtil.setPersistence(null);
 
 		entityCache.removeCache(NotificationTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(NotificationTemplateImpl.class.getName());
 	}
 
 	@Override

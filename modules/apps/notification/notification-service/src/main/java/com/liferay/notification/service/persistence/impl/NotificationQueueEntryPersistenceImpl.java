@@ -3638,6 +3638,8 @@ public class NotificationQueueEntryPersistenceImpl
 		NotificationQueueEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(NotificationQueueEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(NotificationQueueEntryImpl.class.getName());
 	}
 
 	@Override

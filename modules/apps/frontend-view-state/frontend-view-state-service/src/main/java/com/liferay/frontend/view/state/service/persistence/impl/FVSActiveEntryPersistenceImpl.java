@@ -2196,6 +2196,8 @@ public class FVSActiveEntryPersistenceImpl
 		FVSActiveEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(FVSActiveEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(FVSActiveEntryImpl.class.getName());
 	}
 
 	@Override

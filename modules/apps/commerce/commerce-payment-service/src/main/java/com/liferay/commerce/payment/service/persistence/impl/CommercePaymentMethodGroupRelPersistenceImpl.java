@@ -2894,6 +2894,9 @@ public class CommercePaymentMethodGroupRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommercePaymentMethodGroupRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePaymentMethodGroupRelImpl.class.getName());
 	}
 
 	@Override

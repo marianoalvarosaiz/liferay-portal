@@ -1507,6 +1507,8 @@ public class CTRemotePersistenceImpl
 		CTRemoteUtil.setPersistence(null);
 
 		entityCache.removeCache(CTRemoteImpl.class.getName());
+
+		finderCache.removeAllCaches(CTRemoteImpl.class.getName());
 	}
 
 	@Override

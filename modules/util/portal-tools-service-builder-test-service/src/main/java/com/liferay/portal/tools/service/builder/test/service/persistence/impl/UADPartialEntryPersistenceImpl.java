@@ -572,6 +572,8 @@ public class UADPartialEntryPersistenceImpl
 		UADPartialEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(UADPartialEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(UADPartialEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

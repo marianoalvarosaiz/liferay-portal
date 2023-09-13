@@ -3277,6 +3277,8 @@ public class BatchEngineExportTaskPersistenceImpl
 		BatchEngineExportTaskUtil.setPersistence(null);
 
 		entityCache.removeCache(BatchEngineExportTaskImpl.class.getName());
+
+		finderCache.removeAllCaches(BatchEngineExportTaskImpl.class.getName());
 	}
 
 	@Override

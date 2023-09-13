@@ -3464,6 +3464,9 @@ public class ExportImportConfigurationPersistenceImpl
 
 		EntityCacheUtil.removeCache(
 			ExportImportConfigurationImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			ExportImportConfigurationImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_EXPORTIMPORTCONFIGURATION =

@@ -9056,6 +9056,8 @@ public class StyleBookEntryPersistenceImpl
 		StyleBookEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(StyleBookEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(StyleBookEntryImpl.class.getName());
 	}
 
 	@Override

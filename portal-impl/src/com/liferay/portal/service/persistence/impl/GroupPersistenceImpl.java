@@ -16652,6 +16652,8 @@ public class GroupPersistenceImpl
 
 		EntityCacheUtil.removeCache(GroupImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(GroupImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("Groups_Orgs");
 		TableMapperFactory.removeTableMapper("Groups_Roles");
 		TableMapperFactory.removeTableMapper("Groups_UserGroups");

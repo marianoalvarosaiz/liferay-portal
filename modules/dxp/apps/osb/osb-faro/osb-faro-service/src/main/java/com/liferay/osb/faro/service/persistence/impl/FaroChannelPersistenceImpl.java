@@ -2470,6 +2470,8 @@ public class FaroChannelPersistenceImpl
 		FaroChannelUtil.setPersistence(null);
 
 		entityCache.removeCache(FaroChannelImpl.class.getName());
+
+		finderCache.removeAllCaches(FaroChannelImpl.class.getName());
 	}
 
 	@Override

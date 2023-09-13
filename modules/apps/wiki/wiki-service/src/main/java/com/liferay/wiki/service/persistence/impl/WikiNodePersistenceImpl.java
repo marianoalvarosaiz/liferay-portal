@@ -5919,6 +5919,8 @@ public class WikiNodePersistenceImpl
 		WikiNodeUtil.setPersistence(null);
 
 		entityCache.removeCache(WikiNodeImpl.class.getName());
+
+		finderCache.removeAllCaches(WikiNodeImpl.class.getName());
 	}
 
 	@Override

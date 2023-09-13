@@ -1471,6 +1471,8 @@ public class PluginSettingPersistenceImpl
 		PluginSettingUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PluginSettingImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PluginSettingImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PLUGINSETTING =

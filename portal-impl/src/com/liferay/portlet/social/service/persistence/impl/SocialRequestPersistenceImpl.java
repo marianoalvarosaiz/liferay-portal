@@ -7462,6 +7462,8 @@ public class SocialRequestPersistenceImpl
 		SocialRequestUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SocialRequestImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(SocialRequestImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALREQUEST =

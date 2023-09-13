@@ -1526,6 +1526,8 @@ public class SamlSpAuthRequestPersistenceImpl
 		SamlSpAuthRequestUtil.setPersistence(null);
 
 		entityCache.removeCache(SamlSpAuthRequestImpl.class.getName());
+
+		finderCache.removeAllCaches(SamlSpAuthRequestImpl.class.getName());
 	}
 
 	@Override

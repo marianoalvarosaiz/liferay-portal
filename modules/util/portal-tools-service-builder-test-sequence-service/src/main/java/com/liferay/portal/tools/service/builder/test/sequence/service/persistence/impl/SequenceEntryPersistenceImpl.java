@@ -1781,6 +1781,8 @@ public class SequenceEntryPersistenceImpl
 		SequenceEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(SequenceEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(SequenceEntryImpl.class.getName());
 	}
 
 	@Override

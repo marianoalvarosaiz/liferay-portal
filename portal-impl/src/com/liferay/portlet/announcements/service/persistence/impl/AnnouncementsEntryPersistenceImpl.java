@@ -9021,6 +9021,8 @@ public class AnnouncementsEntryPersistenceImpl
 		AnnouncementsEntryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(AnnouncementsEntryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(AnnouncementsEntryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ANNOUNCEMENTSENTRY =

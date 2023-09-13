@@ -1431,6 +1431,9 @@ public class CountryLocalizationPersistenceImpl
 		CountryLocalizationUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(CountryLocalizationImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			CountryLocalizationImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_COUNTRYLOCALIZATION =

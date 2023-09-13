@@ -5198,6 +5198,9 @@ public class CommerceNotificationTemplatePersistenceImpl
 
 		entityCache.removeCache(
 			CommerceNotificationTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceNotificationTemplateImpl.class.getName());
 	}
 
 	@Override

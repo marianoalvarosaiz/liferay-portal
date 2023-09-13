@@ -4605,6 +4605,8 @@ public class WebsitePersistenceImpl
 		WebsiteUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(WebsiteImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(WebsiteImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_WEBSITE =

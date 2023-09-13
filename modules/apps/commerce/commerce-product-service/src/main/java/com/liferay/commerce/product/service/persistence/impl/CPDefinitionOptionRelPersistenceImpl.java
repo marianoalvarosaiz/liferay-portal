@@ -5808,6 +5808,8 @@ public class CPDefinitionOptionRelPersistenceImpl
 		CPDefinitionOptionRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDefinitionOptionRelImpl.class.getName());
+
+		finderCache.removeAllCaches(CPDefinitionOptionRelImpl.class.getName());
 	}
 
 	@Override

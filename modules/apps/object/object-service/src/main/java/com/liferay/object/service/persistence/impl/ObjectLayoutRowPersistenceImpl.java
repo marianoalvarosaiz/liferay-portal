@@ -2347,6 +2347,8 @@ public class ObjectLayoutRowPersistenceImpl
 		ObjectLayoutRowUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectLayoutRowImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectLayoutRowImpl.class.getName());
 	}
 
 	@Override

@@ -17677,6 +17677,8 @@ public class FragmentEntryVersionPersistenceImpl
 		FragmentEntryVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(FragmentEntryVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(FragmentEntryVersionImpl.class.getName());
 	}
 
 	@Override

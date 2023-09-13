@@ -2802,6 +2802,8 @@ public class OpenIdConnectSessionPersistenceImpl
 		OpenIdConnectSessionUtil.setPersistence(null);
 
 		entityCache.removeCache(OpenIdConnectSessionImpl.class.getName());
+
+		finderCache.removeAllCaches(OpenIdConnectSessionImpl.class.getName());
 	}
 
 	@Override

@@ -906,6 +906,9 @@ public class RenameFinderColumnEntryPersistenceImpl
 		RenameFinderColumnEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(RenameFinderColumnEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			RenameFinderColumnEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

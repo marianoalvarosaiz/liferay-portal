@@ -13346,6 +13346,8 @@ public class AssetCategoryPersistenceImpl
 		AssetCategoryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(AssetCategoryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(AssetCategoryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ASSETCATEGORY =

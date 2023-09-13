@@ -2642,6 +2642,8 @@ public class ObjectFieldSettingPersistenceImpl
 		ObjectFieldSettingUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectFieldSettingImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectFieldSettingImpl.class.getName());
 	}
 
 	@Override

@@ -3162,6 +3162,8 @@ public class LockPersistenceImpl
 		LockUtil.setPersistence(null);
 
 		entityCache.removeCache(LockImpl.class.getName());
+
+		finderCache.removeAllCaches(LockImpl.class.getName());
 	}
 
 	@Override

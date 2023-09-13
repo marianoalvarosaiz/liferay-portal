@@ -2573,6 +2573,8 @@ public class ExpandoColumnPersistenceImpl
 		ExpandoColumnUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ExpandoColumnImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ExpandoColumnImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_EXPANDOCOLUMN =

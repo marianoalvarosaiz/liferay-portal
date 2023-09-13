@@ -7560,6 +7560,8 @@ public class AssetVocabularyPersistenceImpl
 		AssetVocabularyUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(AssetVocabularyImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(AssetVocabularyImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ASSETVOCABULARY =

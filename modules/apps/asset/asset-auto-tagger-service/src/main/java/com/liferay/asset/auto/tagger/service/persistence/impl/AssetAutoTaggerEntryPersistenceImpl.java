@@ -2253,6 +2253,8 @@ public class AssetAutoTaggerEntryPersistenceImpl
 		AssetAutoTaggerEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(AssetAutoTaggerEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(AssetAutoTaggerEntryImpl.class.getName());
 	}
 
 	@Override

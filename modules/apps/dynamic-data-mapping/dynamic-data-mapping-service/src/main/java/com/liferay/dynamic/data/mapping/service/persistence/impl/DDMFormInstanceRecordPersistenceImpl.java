@@ -4721,6 +4721,8 @@ public class DDMFormInstanceRecordPersistenceImpl
 		DDMFormInstanceRecordUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMFormInstanceRecordImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMFormInstanceRecordImpl.class.getName());
 	}
 
 	@Override

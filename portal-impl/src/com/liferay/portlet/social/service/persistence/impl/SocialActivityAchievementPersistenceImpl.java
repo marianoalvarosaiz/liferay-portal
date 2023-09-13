@@ -4169,6 +4169,9 @@ public class SocialActivityAchievementPersistenceImpl
 
 		EntityCacheUtil.removeCache(
 			SocialActivityAchievementImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			SocialActivityAchievementImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALACTIVITYACHIEVEMENT =

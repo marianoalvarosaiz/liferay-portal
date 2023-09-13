@@ -7371,6 +7371,8 @@ public class CalendarResourcePersistenceImpl
 		CalendarResourceUtil.setPersistence(null);
 
 		entityCache.removeCache(CalendarResourceImpl.class.getName());
+
+		finderCache.removeAllCaches(CalendarResourceImpl.class.getName());
 	}
 
 	@Override

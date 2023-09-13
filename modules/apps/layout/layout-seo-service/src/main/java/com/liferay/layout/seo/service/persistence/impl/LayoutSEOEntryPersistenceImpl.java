@@ -2700,6 +2700,8 @@ public class LayoutSEOEntryPersistenceImpl
 		LayoutSEOEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(LayoutSEOEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(LayoutSEOEntryImpl.class.getName());
 	}
 
 	@Override

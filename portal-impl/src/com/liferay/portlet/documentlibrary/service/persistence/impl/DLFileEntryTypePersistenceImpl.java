@@ -4711,6 +4711,8 @@ public class DLFileEntryTypePersistenceImpl
 
 		EntityCacheUtil.removeCache(DLFileEntryTypeImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(DLFileEntryTypeImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("DLFileEntryTypes_DLFolders");
 	}
 

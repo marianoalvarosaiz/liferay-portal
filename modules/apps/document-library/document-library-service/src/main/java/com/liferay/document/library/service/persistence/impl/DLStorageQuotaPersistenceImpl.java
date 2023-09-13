@@ -831,6 +831,8 @@ public class DLStorageQuotaPersistenceImpl
 		DLStorageQuotaUtil.setPersistence(null);
 
 		entityCache.removeCache(DLStorageQuotaImpl.class.getName());
+
+		finderCache.removeAllCaches(DLStorageQuotaImpl.class.getName());
 	}
 
 	@Override

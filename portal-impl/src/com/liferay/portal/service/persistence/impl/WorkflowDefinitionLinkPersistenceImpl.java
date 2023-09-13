@@ -4449,6 +4449,9 @@ public class WorkflowDefinitionLinkPersistenceImpl
 		WorkflowDefinitionLinkUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(WorkflowDefinitionLinkImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			WorkflowDefinitionLinkImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_WORKFLOWDEFINITIONLINK =

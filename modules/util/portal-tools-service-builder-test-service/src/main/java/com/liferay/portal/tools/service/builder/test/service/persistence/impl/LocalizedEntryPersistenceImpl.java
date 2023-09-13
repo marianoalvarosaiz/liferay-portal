@@ -574,6 +574,8 @@ public class LocalizedEntryPersistenceImpl
 		LocalizedEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(LocalizedEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(LocalizedEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

@@ -6218,6 +6218,8 @@ public class JournalContentSearchPersistenceImpl
 		JournalContentSearchUtil.setPersistence(null);
 
 		entityCache.removeCache(JournalContentSearchImpl.class.getName());
+
+		finderCache.removeAllCaches(JournalContentSearchImpl.class.getName());
 	}
 
 	@Override

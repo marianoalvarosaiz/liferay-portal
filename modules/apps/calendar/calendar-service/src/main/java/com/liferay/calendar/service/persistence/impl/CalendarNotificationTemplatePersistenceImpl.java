@@ -3440,6 +3440,9 @@ public class CalendarNotificationTemplatePersistenceImpl
 
 		entityCache.removeCache(
 			CalendarNotificationTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CalendarNotificationTemplateImpl.class.getName());
 	}
 
 	@Override

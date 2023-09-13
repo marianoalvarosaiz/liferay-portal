@@ -3911,6 +3911,8 @@ public class AssetLinkPersistenceImpl
 		AssetLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(AssetLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(AssetLinkImpl.class.getName());
 	}
 
 	@Override

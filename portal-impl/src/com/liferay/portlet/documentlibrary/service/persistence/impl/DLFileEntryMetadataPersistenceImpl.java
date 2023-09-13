@@ -3432,6 +3432,9 @@ public class DLFileEntryMetadataPersistenceImpl
 		DLFileEntryMetadataUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(DLFileEntryMetadataImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			DLFileEntryMetadataImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_DLFILEENTRYMETADATA =

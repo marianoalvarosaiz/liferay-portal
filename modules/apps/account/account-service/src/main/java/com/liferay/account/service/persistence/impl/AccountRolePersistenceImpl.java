@@ -4544,6 +4544,8 @@ public class AccountRolePersistenceImpl
 		AccountRoleUtil.setPersistence(null);
 
 		entityCache.removeCache(AccountRoleImpl.class.getName());
+
+		finderCache.removeAllCaches(AccountRoleImpl.class.getName());
 	}
 
 	@Override

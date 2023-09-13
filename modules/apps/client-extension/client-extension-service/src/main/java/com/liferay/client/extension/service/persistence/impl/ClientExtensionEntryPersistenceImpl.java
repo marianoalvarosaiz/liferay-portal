@@ -5375,6 +5375,8 @@ public class ClientExtensionEntryPersistenceImpl
 		ClientExtensionEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ClientExtensionEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ClientExtensionEntryImpl.class.getName());
 	}
 
 	@Override

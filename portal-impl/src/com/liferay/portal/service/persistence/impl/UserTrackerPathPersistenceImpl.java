@@ -1138,6 +1138,8 @@ public class UserTrackerPathPersistenceImpl
 		UserTrackerPathUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(UserTrackerPathImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(UserTrackerPathImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_USERTRACKERPATH =

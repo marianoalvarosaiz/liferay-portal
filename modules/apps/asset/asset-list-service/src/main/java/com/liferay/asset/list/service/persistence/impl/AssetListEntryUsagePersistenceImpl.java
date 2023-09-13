@@ -6666,6 +6666,8 @@ public class AssetListEntryUsagePersistenceImpl
 		AssetListEntryUsageUtil.setPersistence(null);
 
 		entityCache.removeCache(AssetListEntryUsageImpl.class.getName());
+
+		finderCache.removeAllCaches(AssetListEntryUsageImpl.class.getName());
 	}
 
 	@Override

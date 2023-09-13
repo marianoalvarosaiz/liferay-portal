@@ -12479,6 +12479,9 @@ public class UserNotificationEventPersistenceImpl
 		UserNotificationEventUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(UserNotificationEventImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			UserNotificationEventImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_USERNOTIFICATIONEVENT =

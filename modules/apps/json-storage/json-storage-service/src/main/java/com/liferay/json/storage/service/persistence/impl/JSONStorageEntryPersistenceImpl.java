@@ -3323,6 +3323,8 @@ public class JSONStorageEntryPersistenceImpl
 		JSONStorageEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(JSONStorageEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(JSONStorageEntryImpl.class.getName());
 	}
 
 	@Override

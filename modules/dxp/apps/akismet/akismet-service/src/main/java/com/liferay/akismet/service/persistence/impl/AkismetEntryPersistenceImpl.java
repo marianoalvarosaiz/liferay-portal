@@ -1442,6 +1442,8 @@ public class AkismetEntryPersistenceImpl
 		AkismetEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(AkismetEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(AkismetEntryImpl.class.getName());
 	}
 
 	@Override

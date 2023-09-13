@@ -3567,6 +3567,8 @@ public class LayoutLocalizationPersistenceImpl
 		LayoutLocalizationUtil.setPersistence(null);
 
 		entityCache.removeCache(LayoutLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(LayoutLocalizationImpl.class.getName());
 	}
 
 	@Override

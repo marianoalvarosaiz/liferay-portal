@@ -11460,6 +11460,8 @@ public class UserPersistenceImpl
 
 		EntityCacheUtil.removeCache(UserImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(UserImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("Users_Groups");
 		TableMapperFactory.removeTableMapper("Users_Orgs");
 		TableMapperFactory.removeTableMapper("Users_Roles");

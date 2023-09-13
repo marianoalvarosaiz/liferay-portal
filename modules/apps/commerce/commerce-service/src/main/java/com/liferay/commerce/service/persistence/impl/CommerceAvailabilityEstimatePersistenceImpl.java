@@ -2416,6 +2416,9 @@ public class CommerceAvailabilityEstimatePersistenceImpl
 
 		entityCache.removeCache(
 			CommerceAvailabilityEstimateImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceAvailabilityEstimateImpl.class.getName());
 	}
 
 	@Override

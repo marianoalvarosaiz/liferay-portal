@@ -7524,6 +7524,8 @@ public class BookmarksFolderPersistenceImpl
 		BookmarksFolderUtil.setPersistence(null);
 
 		entityCache.removeCache(BookmarksFolderImpl.class.getName());
+
+		finderCache.removeAllCaches(BookmarksFolderImpl.class.getName());
 	}
 
 	@Override

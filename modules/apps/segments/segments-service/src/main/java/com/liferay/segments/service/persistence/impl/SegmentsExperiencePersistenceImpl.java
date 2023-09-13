@@ -11358,6 +11358,8 @@ public class SegmentsExperiencePersistenceImpl
 		SegmentsExperienceUtil.setPersistence(null);
 
 		entityCache.removeCache(SegmentsExperienceImpl.class.getName());
+
+		finderCache.removeAllCaches(SegmentsExperienceImpl.class.getName());
 	}
 
 	@Override

@@ -1426,6 +1426,8 @@ public class KaleoProcessLinkPersistenceImpl
 		KaleoProcessLinkUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoProcessLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoProcessLinkImpl.class.getName());
 	}
 
 	@Override

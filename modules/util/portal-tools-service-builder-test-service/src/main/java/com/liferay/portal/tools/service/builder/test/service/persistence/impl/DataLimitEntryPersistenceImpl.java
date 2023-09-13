@@ -623,6 +623,8 @@ public class DataLimitEntryPersistenceImpl
 		DataLimitEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(DataLimitEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(DataLimitEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

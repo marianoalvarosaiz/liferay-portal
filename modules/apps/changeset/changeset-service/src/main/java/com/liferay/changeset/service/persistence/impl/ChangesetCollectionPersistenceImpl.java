@@ -3133,6 +3133,8 @@ public class ChangesetCollectionPersistenceImpl
 		ChangesetCollectionUtil.setPersistence(null);
 
 		entityCache.removeCache(ChangesetCollectionImpl.class.getName());
+
+		finderCache.removeAllCaches(ChangesetCollectionImpl.class.getName());
 	}
 
 	@Override

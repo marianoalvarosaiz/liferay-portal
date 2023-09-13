@@ -829,6 +829,8 @@ public class CompanyInfoPersistenceImpl
 		CompanyInfoUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(CompanyInfoImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(CompanyInfoImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_COMPANYINFO =

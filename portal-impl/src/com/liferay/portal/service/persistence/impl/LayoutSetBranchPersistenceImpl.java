@@ -3860,6 +3860,8 @@ public class LayoutSetBranchPersistenceImpl
 		LayoutSetBranchUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(LayoutSetBranchImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(LayoutSetBranchImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LAYOUTSETBRANCH =

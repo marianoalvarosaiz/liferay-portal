@@ -1200,6 +1200,8 @@ public class CommerceDiscountRulePersistenceImpl
 		CommerceDiscountRuleUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceDiscountRuleImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceDiscountRuleImpl.class.getName());
 	}
 
 	@Override

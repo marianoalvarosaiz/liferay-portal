@@ -1385,6 +1385,8 @@ public class PortletPersistenceImpl
 		PortletUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PortletImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PortletImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PORTLET =

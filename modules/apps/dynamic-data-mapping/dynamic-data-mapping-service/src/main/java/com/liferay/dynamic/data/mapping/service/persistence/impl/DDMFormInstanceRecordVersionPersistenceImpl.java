@@ -4343,6 +4343,9 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 		entityCache.removeCache(
 			DDMFormInstanceRecordVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			DDMFormInstanceRecordVersionImpl.class.getName());
 	}
 
 	@Override

@@ -5374,6 +5374,8 @@ public class DDMStructureLayoutPersistenceImpl
 		DDMStructureLayoutUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMStructureLayoutImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMStructureLayoutImpl.class.getName());
 	}
 
 	@Override

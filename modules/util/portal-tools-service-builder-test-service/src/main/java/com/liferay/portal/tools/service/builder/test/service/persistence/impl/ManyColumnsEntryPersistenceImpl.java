@@ -572,6 +572,8 @@ public class ManyColumnsEntryPersistenceImpl
 		ManyColumnsEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ManyColumnsEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ManyColumnsEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

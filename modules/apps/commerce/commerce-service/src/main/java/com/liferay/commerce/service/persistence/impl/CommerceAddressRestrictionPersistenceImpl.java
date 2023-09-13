@@ -2061,6 +2061,9 @@ public class CommerceAddressRestrictionPersistenceImpl
 		CommerceAddressRestrictionUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceAddressRestrictionImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceAddressRestrictionImpl.class.getName());
 	}
 
 	@Override

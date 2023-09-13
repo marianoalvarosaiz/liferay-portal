@@ -4435,6 +4435,8 @@ public class KaleoLogPersistenceImpl
 		KaleoLogUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoLogImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoLogImpl.class.getName());
 	}
 
 	@Override

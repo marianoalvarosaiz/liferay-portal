@@ -1210,6 +1210,9 @@ public class DLOpenerFileEntryReferencePersistenceImpl
 		DLOpenerFileEntryReferenceUtil.setPersistence(null);
 
 		entityCache.removeCache(DLOpenerFileEntryReferenceImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			DLOpenerFileEntryReferenceImpl.class.getName());
 	}
 
 	@Override

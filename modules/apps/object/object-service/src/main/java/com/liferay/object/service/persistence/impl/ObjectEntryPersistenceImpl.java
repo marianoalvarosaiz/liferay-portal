@@ -5533,6 +5533,8 @@ public class ObjectEntryPersistenceImpl
 		ObjectEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectEntryImpl.class.getName());
 	}
 
 	@Override

@@ -2992,6 +2992,9 @@ public class KaleoTimerInstanceTokenPersistenceImpl
 		KaleoTimerInstanceTokenUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTimerInstanceTokenImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			KaleoTimerInstanceTokenImpl.class.getName());
 	}
 
 	@Override

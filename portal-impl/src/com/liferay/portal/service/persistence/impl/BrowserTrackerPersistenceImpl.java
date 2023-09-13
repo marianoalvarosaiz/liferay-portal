@@ -819,6 +819,8 @@ public class BrowserTrackerPersistenceImpl
 		BrowserTrackerUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(BrowserTrackerImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(BrowserTrackerImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_BROWSERTRACKER =

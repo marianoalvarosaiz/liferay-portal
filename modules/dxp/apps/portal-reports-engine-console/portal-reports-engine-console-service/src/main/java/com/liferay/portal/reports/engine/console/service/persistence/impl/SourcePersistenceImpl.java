@@ -3440,6 +3440,8 @@ public class SourcePersistenceImpl
 		SourceUtil.setPersistence(null);
 
 		entityCache.removeCache(SourceImpl.class.getName());
+
+		finderCache.removeAllCaches(SourceImpl.class.getName());
 	}
 
 	@Override

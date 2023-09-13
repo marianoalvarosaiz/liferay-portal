@@ -4778,6 +4778,9 @@ public class AssetListEntrySegmentsEntryRelPersistenceImpl
 
 		entityCache.removeCache(
 			AssetListEntrySegmentsEntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			AssetListEntrySegmentsEntryRelImpl.class.getName());
 	}
 
 	@Override

@@ -2769,6 +2769,9 @@ public class CommerceNotificationAttachmentPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceNotificationAttachmentImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceNotificationAttachmentImpl.class.getName());
 	}
 
 	@Override

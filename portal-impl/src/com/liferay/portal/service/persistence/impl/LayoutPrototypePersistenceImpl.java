@@ -4842,6 +4842,8 @@ public class LayoutPrototypePersistenceImpl
 		LayoutPrototypeUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(LayoutPrototypeImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(LayoutPrototypeImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LAYOUTPROTOTYPE =

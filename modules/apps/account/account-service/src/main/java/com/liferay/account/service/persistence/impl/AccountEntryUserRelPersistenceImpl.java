@@ -1952,6 +1952,8 @@ public class AccountEntryUserRelPersistenceImpl
 		AccountEntryUserRelUtil.setPersistence(null);
 
 		entityCache.removeCache(AccountEntryUserRelImpl.class.getName());
+
+		finderCache.removeAllCaches(AccountEntryUserRelImpl.class.getName());
 	}
 
 	@Override

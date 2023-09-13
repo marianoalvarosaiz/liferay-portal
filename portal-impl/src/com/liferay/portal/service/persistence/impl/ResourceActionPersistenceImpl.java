@@ -1452,6 +1452,8 @@ public class ResourceActionPersistenceImpl
 		ResourceActionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ResourceActionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ResourceActionImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RESOURCEACTION =

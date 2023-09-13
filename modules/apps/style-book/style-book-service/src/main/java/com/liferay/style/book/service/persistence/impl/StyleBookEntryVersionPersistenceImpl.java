@@ -9778,6 +9778,8 @@ public class StyleBookEntryVersionPersistenceImpl
 		StyleBookEntryVersionUtil.setPersistence(null);
 
 		entityCache.removeCache(StyleBookEntryVersionImpl.class.getName());
+
+		finderCache.removeAllCaches(StyleBookEntryVersionImpl.class.getName());
 	}
 
 	@Override

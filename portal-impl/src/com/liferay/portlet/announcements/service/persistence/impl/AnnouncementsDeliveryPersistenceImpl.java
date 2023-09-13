@@ -1962,6 +1962,9 @@ public class AnnouncementsDeliveryPersistenceImpl
 		AnnouncementsDeliveryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(AnnouncementsDeliveryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			AnnouncementsDeliveryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ANNOUNCEMENTSDELIVERY =

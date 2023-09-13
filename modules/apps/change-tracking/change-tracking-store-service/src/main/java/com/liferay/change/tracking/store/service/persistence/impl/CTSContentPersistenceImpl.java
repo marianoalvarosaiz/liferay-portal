@@ -3444,6 +3444,8 @@ public class CTSContentPersistenceImpl
 		CTSContentUtil.setPersistence(null);
 
 		entityCache.removeCache(CTSContentImpl.class.getName());
+
+		finderCache.removeAllCaches(CTSContentImpl.class.getName());
 	}
 
 	@Override

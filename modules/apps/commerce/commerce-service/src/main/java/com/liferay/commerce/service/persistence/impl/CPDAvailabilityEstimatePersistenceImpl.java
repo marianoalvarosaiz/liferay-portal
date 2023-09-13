@@ -2654,6 +2654,9 @@ public class CPDAvailabilityEstimatePersistenceImpl
 		CPDAvailabilityEstimateUtil.setPersistence(null);
 
 		entityCache.removeCache(CPDAvailabilityEstimateImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPDAvailabilityEstimateImpl.class.getName());
 	}
 
 	@Override

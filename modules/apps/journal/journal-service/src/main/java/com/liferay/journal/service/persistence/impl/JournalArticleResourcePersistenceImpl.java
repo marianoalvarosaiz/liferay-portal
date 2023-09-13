@@ -3237,6 +3237,8 @@ public class JournalArticleResourcePersistenceImpl
 		JournalArticleResourceUtil.setPersistence(null);
 
 		entityCache.removeCache(JournalArticleResourceImpl.class.getName());
+
+		finderCache.removeAllCaches(JournalArticleResourceImpl.class.getName());
 	}
 
 	@Override

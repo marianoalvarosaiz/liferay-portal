@@ -1142,6 +1142,8 @@ public class PasswordTrackerPersistenceImpl
 		PasswordTrackerUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PasswordTrackerImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PasswordTrackerImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PASSWORDTRACKER =

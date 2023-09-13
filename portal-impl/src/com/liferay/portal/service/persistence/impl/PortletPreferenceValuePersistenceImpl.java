@@ -3813,6 +3813,9 @@ public class PortletPreferenceValuePersistenceImpl
 		PortletPreferenceValueUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PortletPreferenceValueImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			PortletPreferenceValueImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PORTLETPREFERENCEVALUE =

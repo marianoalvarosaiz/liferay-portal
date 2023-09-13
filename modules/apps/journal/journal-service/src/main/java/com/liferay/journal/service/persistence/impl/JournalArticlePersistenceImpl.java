@@ -35209,6 +35209,8 @@ public class JournalArticlePersistenceImpl
 		JournalArticleUtil.setPersistence(null);
 
 		entityCache.removeCache(JournalArticleImpl.class.getName());
+
+		finderCache.removeAllCaches(JournalArticleImpl.class.getName());
 	}
 
 	@Override

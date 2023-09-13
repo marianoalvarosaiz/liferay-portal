@@ -574,6 +574,8 @@ public class TestEntityPersistenceImpl
 		TestEntityUtil.setPersistence(null);
 
 		entityCache.removeCache(TestEntityImpl.class.getName());
+
+		finderCache.removeAllCaches(TestEntityImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

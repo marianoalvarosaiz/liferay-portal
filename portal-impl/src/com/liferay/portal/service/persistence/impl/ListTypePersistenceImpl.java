@@ -1447,6 +1447,8 @@ public class ListTypePersistenceImpl
 		ListTypeUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ListTypeImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ListTypeImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LISTTYPE =

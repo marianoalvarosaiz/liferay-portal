@@ -2979,6 +2979,8 @@ public class ObjectViewSortColumnPersistenceImpl
 		ObjectViewSortColumnUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectViewSortColumnImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectViewSortColumnImpl.class.getName());
 	}
 
 	@Override

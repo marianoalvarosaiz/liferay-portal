@@ -1480,6 +1480,8 @@ public class SamlSpIdpConnectionPersistenceImpl
 		SamlSpIdpConnectionUtil.setPersistence(null);
 
 		entityCache.removeCache(SamlSpIdpConnectionImpl.class.getName());
+
+		finderCache.removeAllCaches(SamlSpIdpConnectionImpl.class.getName());
 	}
 
 	@Override

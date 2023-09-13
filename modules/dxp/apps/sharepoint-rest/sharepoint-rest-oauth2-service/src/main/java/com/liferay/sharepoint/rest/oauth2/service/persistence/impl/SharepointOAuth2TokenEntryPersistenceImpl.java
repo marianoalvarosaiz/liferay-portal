@@ -1483,6 +1483,9 @@ public class SharepointOAuth2TokenEntryPersistenceImpl
 		SharepointOAuth2TokenEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(SharepointOAuth2TokenEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			SharepointOAuth2TokenEntryImpl.class.getName());
 	}
 
 	@Override

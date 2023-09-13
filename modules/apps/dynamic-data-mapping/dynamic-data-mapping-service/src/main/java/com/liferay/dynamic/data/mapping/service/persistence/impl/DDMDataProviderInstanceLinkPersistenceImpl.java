@@ -2288,6 +2288,9 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 		entityCache.removeCache(
 			DDMDataProviderInstanceLinkImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			DDMDataProviderInstanceLinkImpl.class.getName());
 	}
 
 	@Override

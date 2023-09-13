@@ -8661,6 +8661,8 @@ public class LayoutRevisionPersistenceImpl
 		LayoutRevisionUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(LayoutRevisionImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(LayoutRevisionImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LAYOUTREVISION =

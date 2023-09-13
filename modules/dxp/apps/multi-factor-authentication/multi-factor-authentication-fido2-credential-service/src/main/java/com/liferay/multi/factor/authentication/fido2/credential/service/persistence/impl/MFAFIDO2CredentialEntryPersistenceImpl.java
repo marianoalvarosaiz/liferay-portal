@@ -1980,6 +1980,9 @@ public class MFAFIDO2CredentialEntryPersistenceImpl
 		MFAFIDO2CredentialEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(MFAFIDO2CredentialEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			MFAFIDO2CredentialEntryImpl.class.getName());
 	}
 
 	@Override

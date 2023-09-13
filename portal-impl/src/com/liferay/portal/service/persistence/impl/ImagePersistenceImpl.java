@@ -1335,6 +1335,8 @@ public class ImagePersistenceImpl
 		ImageUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(ImageImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(ImageImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_IMAGE =

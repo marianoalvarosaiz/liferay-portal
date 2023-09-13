@@ -1177,6 +1177,8 @@ public class DDMFormInstanceReportPersistenceImpl
 		DDMFormInstanceReportUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMFormInstanceReportImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMFormInstanceReportImpl.class.getName());
 	}
 
 	@Override

@@ -5453,6 +5453,8 @@ public class AMImageEntryPersistenceImpl
 		AMImageEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(AMImageEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(AMImageEntryImpl.class.getName());
 	}
 
 	@Override

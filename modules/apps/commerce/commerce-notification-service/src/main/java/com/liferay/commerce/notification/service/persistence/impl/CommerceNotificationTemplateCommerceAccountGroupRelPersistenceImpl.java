@@ -2266,6 +2266,10 @@ public class CommerceNotificationTemplateCommerceAccountGroupRelPersistenceImpl
 		entityCache.removeCache(
 			CommerceNotificationTemplateCommerceAccountGroupRelImpl.class.
 				getName());
+
+		finderCache.removeAllCaches(
+			CommerceNotificationTemplateCommerceAccountGroupRelImpl.class.
+				getName());
 	}
 
 	@Override

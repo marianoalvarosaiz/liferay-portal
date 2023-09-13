@@ -1397,6 +1397,8 @@ public class AnalyticsMessagePersistenceImpl
 		AnalyticsMessageUtil.setPersistence(null);
 
 		entityCache.removeCache(AnalyticsMessageImpl.class.getName());
+
+		finderCache.removeAllCaches(AnalyticsMessageImpl.class.getName());
 	}
 
 	@Override

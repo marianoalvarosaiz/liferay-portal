@@ -7225,6 +7225,9 @@ public class CommerceInventoryWarehousePersistenceImpl
 		CommerceInventoryWarehouseUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceInventoryWarehouseImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceInventoryWarehouseImpl.class.getName());
 	}
 
 	@Override

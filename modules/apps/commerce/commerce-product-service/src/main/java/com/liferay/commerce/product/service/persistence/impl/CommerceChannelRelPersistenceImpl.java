@@ -2322,6 +2322,8 @@ public class CommerceChannelRelPersistenceImpl
 		CommerceChannelRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceChannelRelImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceChannelRelImpl.class.getName());
 	}
 
 	@Override

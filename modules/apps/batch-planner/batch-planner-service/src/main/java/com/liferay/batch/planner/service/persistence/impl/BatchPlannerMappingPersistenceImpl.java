@@ -1553,6 +1553,8 @@ public class BatchPlannerMappingPersistenceImpl
 		BatchPlannerMappingUtil.setPersistence(null);
 
 		entityCache.removeCache(BatchPlannerMappingImpl.class.getName());
+
+		finderCache.removeAllCaches(BatchPlannerMappingImpl.class.getName());
 	}
 
 	@Override

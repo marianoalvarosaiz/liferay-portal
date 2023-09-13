@@ -2783,6 +2783,9 @@ public class OAuthClientASLocalMetadataPersistenceImpl
 		OAuthClientASLocalMetadataUtil.setPersistence(null);
 
 		entityCache.removeCache(OAuthClientASLocalMetadataImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			OAuthClientASLocalMetadataImpl.class.getName());
 	}
 
 	@Override

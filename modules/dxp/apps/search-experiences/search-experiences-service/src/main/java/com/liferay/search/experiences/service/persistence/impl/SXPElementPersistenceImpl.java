@@ -6793,6 +6793,8 @@ public class SXPElementPersistenceImpl
 		SXPElementUtil.setPersistence(null);
 
 		entityCache.removeCache(SXPElementImpl.class.getName());
+
+		finderCache.removeAllCaches(SXPElementImpl.class.getName());
 	}
 
 	@Override

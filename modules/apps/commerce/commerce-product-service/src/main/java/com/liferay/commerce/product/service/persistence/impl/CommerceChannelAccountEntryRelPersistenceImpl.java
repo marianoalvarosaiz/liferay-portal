@@ -5542,6 +5542,9 @@ public class CommerceChannelAccountEntryRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceChannelAccountEntryRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceChannelAccountEntryRelImpl.class.getName());
 	}
 
 	@Override

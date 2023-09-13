@@ -2543,6 +2543,9 @@ public class CommerceInventoryBookedQuantityPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceInventoryBookedQuantityImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceInventoryBookedQuantityImpl.class.getName());
 	}
 
 	@Override

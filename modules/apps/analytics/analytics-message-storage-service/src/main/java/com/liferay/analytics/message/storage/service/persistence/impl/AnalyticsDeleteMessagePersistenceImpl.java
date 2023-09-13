@@ -2042,6 +2042,8 @@ public class AnalyticsDeleteMessagePersistenceImpl
 		AnalyticsDeleteMessageUtil.setPersistence(null);
 
 		entityCache.removeCache(AnalyticsDeleteMessageImpl.class.getName());
+
+		finderCache.removeAllCaches(AnalyticsDeleteMessageImpl.class.getName());
 	}
 
 	@Override

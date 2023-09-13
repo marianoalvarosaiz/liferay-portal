@@ -859,6 +859,8 @@ public class MFAEmailOTPEntryPersistenceImpl
 		MFAEmailOTPEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(MFAEmailOTPEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(MFAEmailOTPEntryImpl.class.getName());
 	}
 
 	@Override

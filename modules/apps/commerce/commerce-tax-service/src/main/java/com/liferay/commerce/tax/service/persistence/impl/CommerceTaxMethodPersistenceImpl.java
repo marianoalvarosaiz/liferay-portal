@@ -2013,6 +2013,8 @@ public class CommerceTaxMethodPersistenceImpl
 		CommerceTaxMethodUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceTaxMethodImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceTaxMethodImpl.class.getName());
 	}
 
 	@Override

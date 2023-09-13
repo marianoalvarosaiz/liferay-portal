@@ -4808,6 +4808,9 @@ public class CPInstanceOptionValueRelPersistenceImpl
 		CPInstanceOptionValueRelUtil.setPersistence(null);
 
 		entityCache.removeCache(CPInstanceOptionValueRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPInstanceOptionValueRelImpl.class.getName());
 	}
 
 	@Override

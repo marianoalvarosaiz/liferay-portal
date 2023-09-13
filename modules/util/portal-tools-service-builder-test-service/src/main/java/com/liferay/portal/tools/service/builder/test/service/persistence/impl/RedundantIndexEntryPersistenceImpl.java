@@ -889,6 +889,8 @@ public class RedundantIndexEntryPersistenceImpl
 		RedundantIndexEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(RedundantIndexEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(RedundantIndexEntryImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

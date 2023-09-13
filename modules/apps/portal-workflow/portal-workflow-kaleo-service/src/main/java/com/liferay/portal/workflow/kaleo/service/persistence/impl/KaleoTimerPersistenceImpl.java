@@ -2161,6 +2161,8 @@ public class KaleoTimerPersistenceImpl
 		KaleoTimerUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTimerImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoTimerImpl.class.getName());
 	}
 
 	@Override

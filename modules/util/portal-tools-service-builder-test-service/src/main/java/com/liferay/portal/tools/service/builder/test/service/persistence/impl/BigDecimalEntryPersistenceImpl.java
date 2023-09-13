@@ -2632,6 +2632,8 @@ public class BigDecimalEntryPersistenceImpl
 
 		entityCache.removeCache(BigDecimalEntryImpl.class.getName());
 
+		finderCache.removeAllCaches(BigDecimalEntryImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("BigDecimalEntries_LVEntries");
 	}
 

@@ -2175,6 +2175,9 @@ public class WorkflowInstanceLinkPersistenceImpl
 		WorkflowInstanceLinkUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(WorkflowInstanceLinkImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			WorkflowInstanceLinkImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_WORKFLOWINSTANCELINK =

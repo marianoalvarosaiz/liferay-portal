@@ -1366,6 +1366,8 @@ public class CompanyPersistenceImpl
 		CompanyUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(CompanyImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(CompanyImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_COMPANY =

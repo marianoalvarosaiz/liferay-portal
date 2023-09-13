@@ -2164,6 +2164,9 @@ public class CommerceInventoryWarehouseRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceInventoryWarehouseRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceInventoryWarehouseRelImpl.class.getName());
 	}
 
 	@Override

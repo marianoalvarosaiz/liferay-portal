@@ -1730,6 +1730,8 @@ public class ContactsLayoutTemplatePersistenceImpl
 		ContactsLayoutTemplateUtil.setPersistence(null);
 
 		entityCache.removeCache(ContactsLayoutTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(ContactsLayoutTemplateImpl.class.getName());
 	}
 
 	@Override

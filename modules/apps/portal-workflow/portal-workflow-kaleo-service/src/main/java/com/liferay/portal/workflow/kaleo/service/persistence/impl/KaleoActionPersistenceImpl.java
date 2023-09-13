@@ -4741,6 +4741,8 @@ public class KaleoActionPersistenceImpl
 		KaleoActionUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoActionImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoActionImpl.class.getName());
 	}
 
 	@Override

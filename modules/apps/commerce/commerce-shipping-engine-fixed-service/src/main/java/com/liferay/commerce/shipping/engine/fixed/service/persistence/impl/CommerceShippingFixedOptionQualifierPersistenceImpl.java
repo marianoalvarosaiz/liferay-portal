@@ -2242,6 +2242,9 @@ public class CommerceShippingFixedOptionQualifierPersistenceImpl
 
 		entityCache.removeCache(
 			CommerceShippingFixedOptionQualifierImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceShippingFixedOptionQualifierImpl.class.getName());
 	}
 
 	@Override

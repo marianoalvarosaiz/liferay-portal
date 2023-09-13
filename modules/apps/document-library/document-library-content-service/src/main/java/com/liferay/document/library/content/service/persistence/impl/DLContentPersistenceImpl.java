@@ -3108,6 +3108,8 @@ public class DLContentPersistenceImpl
 		DLContentUtil.setPersistence(null);
 
 		entityCache.removeCache(DLContentImpl.class.getName());
+
+		finderCache.removeAllCaches(DLContentImpl.class.getName());
 	}
 
 	@Override

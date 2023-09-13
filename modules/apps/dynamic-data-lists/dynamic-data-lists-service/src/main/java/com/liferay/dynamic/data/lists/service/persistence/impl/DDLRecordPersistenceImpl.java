@@ -5223,6 +5223,8 @@ public class DDLRecordPersistenceImpl
 		DDLRecordUtil.setPersistence(null);
 
 		entityCache.removeCache(DDLRecordImpl.class.getName());
+
+		finderCache.removeAllCaches(DDLRecordImpl.class.getName());
 	}
 
 	@Override

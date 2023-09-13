@@ -2202,6 +2202,8 @@ public class KaleoTaskPersistenceImpl
 		KaleoTaskUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTaskImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoTaskImpl.class.getName());
 	}
 
 	@Override

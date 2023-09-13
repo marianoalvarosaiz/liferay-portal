@@ -5645,6 +5645,9 @@ public class KaleoTaskAssignmentInstancePersistenceImpl
 
 		entityCache.removeCache(
 			KaleoTaskAssignmentInstanceImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			KaleoTaskAssignmentInstanceImpl.class.getName());
 	}
 
 	@Override

@@ -869,6 +869,8 @@ public class WebDAVPropsPersistenceImpl
 		WebDAVPropsUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(WebDAVPropsImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(WebDAVPropsImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_WEBDAVPROPS =

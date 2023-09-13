@@ -2892,6 +2892,8 @@ public class ObjectLayoutColumnPersistenceImpl
 		ObjectLayoutColumnUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectLayoutColumnImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectLayoutColumnImpl.class.getName());
 	}
 
 	@Override

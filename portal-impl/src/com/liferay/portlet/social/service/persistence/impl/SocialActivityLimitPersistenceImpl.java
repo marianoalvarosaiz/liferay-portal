@@ -2935,6 +2935,9 @@ public class SocialActivityLimitPersistenceImpl
 		SocialActivityLimitUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(SocialActivityLimitImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(
+			SocialActivityLimitImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_SOCIALACTIVITYLIMIT =

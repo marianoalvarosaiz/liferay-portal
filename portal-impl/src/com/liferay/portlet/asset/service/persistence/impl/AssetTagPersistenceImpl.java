@@ -5544,6 +5544,8 @@ public class AssetTagPersistenceImpl
 
 		EntityCacheUtil.removeCache(AssetTagImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(AssetTagImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("AssetEntries_AssetTags");
 	}
 

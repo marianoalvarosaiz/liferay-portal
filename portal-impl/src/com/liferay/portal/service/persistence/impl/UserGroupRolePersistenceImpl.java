@@ -3851,6 +3851,8 @@ public class UserGroupRolePersistenceImpl
 		UserGroupRoleUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(UserGroupRoleImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(UserGroupRoleImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_USERGROUPROLE =

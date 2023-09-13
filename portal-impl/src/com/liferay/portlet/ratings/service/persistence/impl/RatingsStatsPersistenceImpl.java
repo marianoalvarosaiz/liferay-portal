@@ -1508,6 +1508,8 @@ public class RatingsStatsPersistenceImpl
 		RatingsStatsUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RatingsStatsImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(RatingsStatsImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RATINGSSTATS =

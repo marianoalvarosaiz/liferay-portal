@@ -4778,6 +4778,8 @@ public class CPMeasurementUnitPersistenceImpl
 		CPMeasurementUnitUtil.setPersistence(null);
 
 		entityCache.removeCache(CPMeasurementUnitImpl.class.getName());
+
+		finderCache.removeAllCaches(CPMeasurementUnitImpl.class.getName());
 	}
 
 	@Override

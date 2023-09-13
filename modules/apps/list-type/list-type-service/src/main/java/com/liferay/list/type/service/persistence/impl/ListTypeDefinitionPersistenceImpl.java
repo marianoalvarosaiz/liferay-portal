@@ -3032,6 +3032,8 @@ public class ListTypeDefinitionPersistenceImpl
 		ListTypeDefinitionUtil.setPersistence(null);
 
 		entityCache.removeCache(ListTypeDefinitionImpl.class.getName());
+
+		finderCache.removeAllCaches(ListTypeDefinitionImpl.class.getName());
 	}
 
 	@Override

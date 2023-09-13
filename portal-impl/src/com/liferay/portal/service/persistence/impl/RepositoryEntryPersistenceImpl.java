@@ -3223,6 +3223,8 @@ public class RepositoryEntryPersistenceImpl
 		RepositoryEntryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RepositoryEntryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(RepositoryEntryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_REPOSITORYENTRY =

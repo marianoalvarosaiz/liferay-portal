@@ -1486,6 +1486,8 @@ public class SamlIdpSsoSessionPersistenceImpl
 		SamlIdpSsoSessionUtil.setPersistence(null);
 
 		entityCache.removeCache(SamlIdpSsoSessionImpl.class.getName());
+
+		finderCache.removeAllCaches(SamlIdpSsoSessionImpl.class.getName());
 	}
 
 	@Override

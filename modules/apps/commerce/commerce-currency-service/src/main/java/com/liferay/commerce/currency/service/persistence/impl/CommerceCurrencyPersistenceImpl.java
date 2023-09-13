@@ -4344,6 +4344,8 @@ public class CommerceCurrencyPersistenceImpl
 		CommerceCurrencyUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceCurrencyImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceCurrencyImpl.class.getName());
 	}
 
 	@Override

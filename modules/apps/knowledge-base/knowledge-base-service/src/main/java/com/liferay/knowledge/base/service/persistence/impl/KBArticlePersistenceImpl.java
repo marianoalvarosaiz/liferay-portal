@@ -37834,6 +37834,8 @@ public class KBArticlePersistenceImpl
 		KBArticleUtil.setPersistence(null);
 
 		entityCache.removeCache(KBArticleImpl.class.getName());
+
+		finderCache.removeAllCaches(KBArticleImpl.class.getName());
 	}
 
 	@Override

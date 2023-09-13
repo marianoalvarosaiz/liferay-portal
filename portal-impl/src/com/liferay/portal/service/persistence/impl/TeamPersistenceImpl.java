@@ -4710,6 +4710,8 @@ public class TeamPersistenceImpl
 
 		EntityCacheUtil.removeCache(TeamImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(TeamImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("Users_Teams");
 		TableMapperFactory.removeTableMapper("UserGroups_Teams");
 	}

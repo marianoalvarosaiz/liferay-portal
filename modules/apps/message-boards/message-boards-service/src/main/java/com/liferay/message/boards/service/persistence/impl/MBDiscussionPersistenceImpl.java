@@ -2880,6 +2880,8 @@ public class MBDiscussionPersistenceImpl
 		MBDiscussionUtil.setPersistence(null);
 
 		entityCache.removeCache(MBDiscussionImpl.class.getName());
+
+		finderCache.removeAllCaches(MBDiscussionImpl.class.getName());
 	}
 
 	@Override

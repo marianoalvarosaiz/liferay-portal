@@ -3022,6 +3022,9 @@ public class CommerceDiscountUsageEntryPersistenceImpl
 		CommerceDiscountUsageEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceDiscountUsageEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommerceDiscountUsageEntryImpl.class.getName());
 	}
 
 	@Override

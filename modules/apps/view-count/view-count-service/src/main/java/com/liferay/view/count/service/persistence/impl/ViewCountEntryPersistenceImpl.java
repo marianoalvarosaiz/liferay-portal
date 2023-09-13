@@ -591,6 +591,8 @@ public class ViewCountEntryPersistenceImpl
 		ViewCountEntryUtil.setPersistence(null);
 
 		entityCache.removeCache(ViewCountEntryImpl.class.getName());
+
+		finderCache.removeAllCaches(ViewCountEntryImpl.class.getName());
 	}
 
 	@Override

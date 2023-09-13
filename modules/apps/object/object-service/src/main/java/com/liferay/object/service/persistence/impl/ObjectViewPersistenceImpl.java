@@ -2900,6 +2900,8 @@ public class ObjectViewPersistenceImpl
 		ObjectViewUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectViewImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectViewImpl.class.getName());
 	}
 
 	@Override

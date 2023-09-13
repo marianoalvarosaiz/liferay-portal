@@ -3555,6 +3555,8 @@ public class ObjectValidationRulePersistenceImpl
 		ObjectValidationRuleUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectValidationRuleImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectValidationRuleImpl.class.getName());
 	}
 
 	@Override

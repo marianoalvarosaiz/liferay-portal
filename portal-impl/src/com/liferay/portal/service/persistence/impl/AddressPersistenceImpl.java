@@ -8009,6 +8009,8 @@ public class AddressPersistenceImpl
 		AddressUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(AddressImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(AddressImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ADDRESS =

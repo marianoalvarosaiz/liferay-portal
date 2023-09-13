@@ -3176,6 +3176,8 @@ public class LayoutSetPersistenceImpl
 		LayoutSetUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(LayoutSetImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(LayoutSetImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_LAYOUTSET =

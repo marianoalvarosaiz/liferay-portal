@@ -9290,6 +9290,8 @@ public class ObjectRelationshipPersistenceImpl
 		ObjectRelationshipUtil.setPersistence(null);
 
 		entityCache.removeCache(ObjectRelationshipImpl.class.getName());
+
+		finderCache.removeAllCaches(ObjectRelationshipImpl.class.getName());
 	}
 
 	@Override

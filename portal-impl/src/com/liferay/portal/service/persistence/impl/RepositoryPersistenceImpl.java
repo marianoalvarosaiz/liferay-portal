@@ -3240,6 +3240,8 @@ public class RepositoryPersistenceImpl
 		RepositoryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RepositoryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(RepositoryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_REPOSITORY =

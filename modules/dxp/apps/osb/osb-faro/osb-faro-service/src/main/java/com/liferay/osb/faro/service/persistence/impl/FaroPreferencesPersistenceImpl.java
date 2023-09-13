@@ -1375,6 +1375,8 @@ public class FaroPreferencesPersistenceImpl
 		FaroPreferencesUtil.setPersistence(null);
 
 		entityCache.removeCache(FaroPreferencesImpl.class.getName());
+
+		finderCache.removeAllCaches(FaroPreferencesImpl.class.getName());
 	}
 
 	@Override

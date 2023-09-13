@@ -874,6 +874,8 @@ public class PortalPreferencesPersistenceImpl
 		PortalPreferencesUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PortalPreferencesImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PortalPreferencesImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PORTALPREFERENCES =

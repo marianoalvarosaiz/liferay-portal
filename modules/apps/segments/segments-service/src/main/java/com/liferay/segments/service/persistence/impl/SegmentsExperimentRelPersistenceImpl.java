@@ -2301,6 +2301,8 @@ public class SegmentsExperimentRelPersistenceImpl
 		SegmentsExperimentRelUtil.setPersistence(null);
 
 		entityCache.removeCache(SegmentsExperimentRelImpl.class.getName());
+
+		finderCache.removeAllCaches(SegmentsExperimentRelImpl.class.getName());
 	}
 
 	@Override

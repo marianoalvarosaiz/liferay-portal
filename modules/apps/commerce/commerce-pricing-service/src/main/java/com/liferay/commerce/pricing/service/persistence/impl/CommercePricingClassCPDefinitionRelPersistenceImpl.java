@@ -2431,6 +2431,9 @@ public class CommercePricingClassCPDefinitionRelPersistenceImpl
 
 		entityCache.removeCache(
 			CommercePricingClassCPDefinitionRelImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CommercePricingClassCPDefinitionRelImpl.class.getName());
 	}
 
 	@Override

@@ -4330,6 +4330,9 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 		entityCache.removeCache(
 			FriendlyURLEntryLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			FriendlyURLEntryLocalizationImpl.class.getName());
 	}
 
 	@Override

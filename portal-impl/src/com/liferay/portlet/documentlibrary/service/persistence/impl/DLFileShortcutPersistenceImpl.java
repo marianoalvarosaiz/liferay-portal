@@ -7133,6 +7133,8 @@ public class DLFileShortcutPersistenceImpl
 		DLFileShortcutUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(DLFileShortcutImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(DLFileShortcutImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_DLFILESHORTCUT =

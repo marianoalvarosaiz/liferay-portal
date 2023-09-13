@@ -3360,6 +3360,8 @@ public class KaleoTaskFormPersistenceImpl
 		KaleoTaskFormUtil.setPersistence(null);
 
 		entityCache.removeCache(KaleoTaskFormImpl.class.getName());
+
+		finderCache.removeAllCaches(KaleoTaskFormImpl.class.getName());
 	}
 
 	@Override

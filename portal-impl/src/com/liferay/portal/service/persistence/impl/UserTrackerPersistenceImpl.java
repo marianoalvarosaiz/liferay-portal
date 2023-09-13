@@ -2188,6 +2188,8 @@ public class UserTrackerPersistenceImpl
 		UserTrackerUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(UserTrackerImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(UserTrackerImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_USERTRACKER =

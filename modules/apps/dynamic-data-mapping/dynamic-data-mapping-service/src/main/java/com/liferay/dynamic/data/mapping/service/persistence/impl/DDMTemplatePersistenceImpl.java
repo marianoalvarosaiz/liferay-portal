@@ -13341,6 +13341,8 @@ public class DDMTemplatePersistenceImpl
 		DDMTemplateUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMTemplateImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMTemplateImpl.class.getName());
 	}
 
 	@Override

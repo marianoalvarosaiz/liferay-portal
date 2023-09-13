@@ -1646,6 +1646,8 @@ public class LVEntryLocalizationPersistenceImpl
 		LVEntryLocalizationUtil.setPersistence(null);
 
 		entityCache.removeCache(LVEntryLocalizationImpl.class.getName());
+
+		finderCache.removeAllCaches(LVEntryLocalizationImpl.class.getName());
 	}
 
 	@ServiceReference(type = EntityCache.class)

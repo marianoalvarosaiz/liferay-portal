@@ -8086,6 +8086,8 @@ public class UserGroupPersistenceImpl
 
 		EntityCacheUtil.removeCache(UserGroupImpl.class.getName());
 
+		FinderCacheUtil.removeAllCaches(UserGroupImpl.class.getName());
+
 		TableMapperFactory.removeTableMapper("Groups_UserGroups");
 		TableMapperFactory.removeTableMapper("UserGroups_Teams");
 		TableMapperFactory.removeTableMapper("Users_UserGroups");

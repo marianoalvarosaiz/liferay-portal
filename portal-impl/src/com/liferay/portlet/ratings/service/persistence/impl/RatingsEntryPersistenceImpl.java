@@ -3960,6 +3960,8 @@ public class RatingsEntryPersistenceImpl
 		RatingsEntryUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(RatingsEntryImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(RatingsEntryImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_RATINGSENTRY =

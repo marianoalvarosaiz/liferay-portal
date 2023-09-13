@@ -4375,6 +4375,8 @@ public class SubscriptionPersistenceImpl
 		SubscriptionUtil.setPersistence(null);
 
 		entityCache.removeCache(SubscriptionImpl.class.getName());
+
+		finderCache.removeAllCaches(SubscriptionImpl.class.getName());
 	}
 
 	@Override

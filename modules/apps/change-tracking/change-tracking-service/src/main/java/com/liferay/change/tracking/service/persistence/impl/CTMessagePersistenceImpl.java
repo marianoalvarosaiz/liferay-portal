@@ -1113,6 +1113,8 @@ public class CTMessagePersistenceImpl
 		CTMessageUtil.setPersistence(null);
 
 		entityCache.removeCache(CTMessageImpl.class.getName());
+
+		finderCache.removeAllCaches(CTMessageImpl.class.getName());
 	}
 
 	@Override

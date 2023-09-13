@@ -3815,6 +3815,8 @@ public class CommerceWishListItemPersistenceImpl
 		CommerceWishListItemUtil.setPersistence(null);
 
 		entityCache.removeCache(CommerceWishListItemImpl.class.getName());
+
+		finderCache.removeAllCaches(CommerceWishListItemImpl.class.getName());
 	}
 
 	@Override

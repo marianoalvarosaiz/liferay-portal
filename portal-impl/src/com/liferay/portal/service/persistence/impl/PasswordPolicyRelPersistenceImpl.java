@@ -1390,6 +1390,8 @@ public class PasswordPolicyRelPersistenceImpl
 		PasswordPolicyRelUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(PasswordPolicyRelImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(PasswordPolicyRelImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_PASSWORDPOLICYREL =

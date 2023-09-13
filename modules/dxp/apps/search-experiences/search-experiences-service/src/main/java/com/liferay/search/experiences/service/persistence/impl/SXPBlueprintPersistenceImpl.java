@@ -3912,6 +3912,8 @@ public class SXPBlueprintPersistenceImpl
 		SXPBlueprintUtil.setPersistence(null);
 
 		entityCache.removeCache(SXPBlueprintImpl.class.getName());
+
+		finderCache.removeAllCaches(SXPBlueprintImpl.class.getName());
 	}
 
 	@Override

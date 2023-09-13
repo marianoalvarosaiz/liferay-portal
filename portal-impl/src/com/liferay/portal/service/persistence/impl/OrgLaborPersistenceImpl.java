@@ -1102,6 +1102,8 @@ public class OrgLaborPersistenceImpl
 		OrgLaborUtil.setPersistence(null);
 
 		EntityCacheUtil.removeCache(OrgLaborImpl.class.getName());
+
+		FinderCacheUtil.removeAllCaches(OrgLaborImpl.class.getName());
 	}
 
 	private static final String _SQL_SELECT_ORGLABOR =

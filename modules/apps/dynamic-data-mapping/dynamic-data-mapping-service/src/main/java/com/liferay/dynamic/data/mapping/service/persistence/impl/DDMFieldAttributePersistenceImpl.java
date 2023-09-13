@@ -4001,6 +4001,8 @@ public class DDMFieldAttributePersistenceImpl
 		DDMFieldAttributeUtil.setPersistence(null);
 
 		entityCache.removeCache(DDMFieldAttributeImpl.class.getName());
+
+		finderCache.removeAllCaches(DDMFieldAttributeImpl.class.getName());
 	}
 
 	@Override

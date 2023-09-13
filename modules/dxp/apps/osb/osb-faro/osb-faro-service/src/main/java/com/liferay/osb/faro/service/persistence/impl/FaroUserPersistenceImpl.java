@@ -4145,6 +4145,8 @@ public class FaroUserPersistenceImpl
 		FaroUserUtil.setPersistence(null);
 
 		entityCache.removeCache(FaroUserImpl.class.getName());
+
+		finderCache.removeAllCaches(FaroUserImpl.class.getName());
 	}
 
 	@Override

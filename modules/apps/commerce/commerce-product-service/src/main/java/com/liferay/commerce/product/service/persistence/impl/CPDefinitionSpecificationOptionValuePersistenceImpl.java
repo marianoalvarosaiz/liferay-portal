@@ -6416,6 +6416,9 @@ public class CPDefinitionSpecificationOptionValuePersistenceImpl
 
 		entityCache.removeCache(
 			CPDefinitionSpecificationOptionValueImpl.class.getName());
+
+		finderCache.removeAllCaches(
+			CPDefinitionSpecificationOptionValueImpl.class.getName());
 	}
 
 	@Override
