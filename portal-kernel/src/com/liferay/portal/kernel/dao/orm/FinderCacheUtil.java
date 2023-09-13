@@ -50,6 +50,10 @@ public class FinderCacheUtil {
 		_finderCache.putResult(finderPath, args, result);
 	}
 
+	public static void removeAllCaches(String className) {
+		_finderCache.removeAllCaches(className);
+	}
+
 	public static void removeCache(String className) {
 		_finderCache.removeCache(className);
 	}

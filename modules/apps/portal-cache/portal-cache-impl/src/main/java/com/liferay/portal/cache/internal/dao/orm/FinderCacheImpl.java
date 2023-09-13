@@ -336,6 +336,34 @@ public class FinderCacheImpl
 			_getPortalCache(finderPath.getCacheName()), cacheKey, cacheValue);
 	}
 
+	@Override
+	public void removeAllCaches(String cacheName) {
+		removeCache(cacheName);
+		removeCache(_getCacheNameWithPagination(cacheName));
+		removeCache(_getCacheNameWithoutPagination(cacheName));
+
+		String tableName = null;
+
+		ArgumentsResolverHolder argumentsResolverHolder =
+			_serviceTrackerMap.getService(cacheName);
+
+		if (argumentsResolverHolder == null) {
+			tableName = cacheName;
+		}
+		else {
+			tableName = argumentsResolverHolder.getTableName();
+		}
+
+		Set<String> dslQueryCacheNames = _dslQueryCacheNamesMap.remove(
+			tableName);
+
+		if (dslQueryCacheNames != null) {
+			for (String dslQueryCacheName : dslQueryCacheNames) {
+				removeCache(dslQueryCacheName);
+			}
+		}
+	}
+
 	public void removeByEntityCache(String className, BaseModel<?> baseModel) {
 		ArgumentsResolverHolder argumentsResolverHolder =
 			_serviceTrackerMap.getService(className);
@@ -377,33 +405,6 @@ public class FinderCacheImpl
 		_multiVMPool.removePortalCache(groupKey);
 
 		_finderPathsMap.remove(className);
-	}
-
-	public void removeCacheByEntityCache(String cacheName) {
-		removeCache(cacheName);
-		removeCache(_getCacheNameWithPagination(cacheName));
-		removeCache(_getCacheNameWithoutPagination(cacheName));
-
-		String tableName = null;
-
-		ArgumentsResolverHolder argumentsResolverHolder =
-			_serviceTrackerMap.getService(cacheName);
-
-		if (argumentsResolverHolder == null) {
-			tableName = cacheName;
-		}
-		else {
-			tableName = argumentsResolverHolder.getTableName();
-		}
-
-		Set<String> dslQueryCacheNames = _dslQueryCacheNamesMap.remove(
-			tableName);
-
-		if (dslQueryCacheNames != null) {
-			for (String dslQueryCacheName : dslQueryCacheNames) {
-				removeCache(dslQueryCacheName);
-			}
-		}
 	}
 
 	@Override

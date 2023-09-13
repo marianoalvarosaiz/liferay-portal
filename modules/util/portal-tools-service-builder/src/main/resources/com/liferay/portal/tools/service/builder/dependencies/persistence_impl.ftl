@@ -2912,6 +2912,8 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 		${entityCache}.removeCache(${entity.name}Impl.class.getName());
 
+		${finderCache}.removeAllCaches(${entity.name}Impl.class.getName());
+
 		<#if serviceBuilder.isVersionGTE_7_3_0() && serviceBuilder.isVersionLTE_7_3_0()>
 			_argumentsResolverServiceRegistration.unregister();
 
