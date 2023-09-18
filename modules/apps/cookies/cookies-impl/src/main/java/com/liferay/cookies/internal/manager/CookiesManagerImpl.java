@@ -30,7 +30,9 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -180,7 +182,14 @@ public class CookiesManagerImpl implements CookiesManager {
 		if (httpServletRequest != null) {
 			Map<String, Cookie> cookiesMap = _getCookiesMap(httpServletRequest);
 
-			cookiesMap.put(StringUtil.toUpperCase(cookie.getName()), cookie);
+			String upperCaseCookieName = StringUtil.toUpperCase(
+				cookie.getName());
+
+			cookiesMap.put(upperCaseCookieName, cookie);
+
+			Set<String> addedCookies = _getAddedCookies(httpServletRequest);
+
+			addedCookies.add(upperCaseCookieName);
 		}
 
 		if (_log.isWarnEnabled() &&
@@ -198,6 +207,39 @@ public class CookiesManagerImpl implements CookiesManager {
 		_knownCookies.put(cookie.getName(), consentType);
 
 		return true;
+	}
+
+	@Override
+	public boolean addOrUpdateCookie(
+		int consentType, Cookie cookie, HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
+
+		Set<String> addedCookies = _getAddedCookies(httpServletRequest);
+
+		if (addedCookies.contains(StringUtil.toUpperCase(cookie.getName()))) {
+			Map<String, Cookie> cookiesMap = _getCookiesMap(httpServletRequest);
+
+			Cookie oldCookie = cookiesMap.get(
+				StringUtil.toUpperCase(cookie.getName()));
+
+			oldCookie.setComment(cookie.getComment());
+
+			if (oldCookie.getDomain() != null) {
+				oldCookie.setDomain(cookie.getDomain());
+			}
+
+			oldCookie.setHttpOnly(cookie.isHttpOnly());
+			oldCookie.setMaxAge(cookie.getMaxAge());
+			oldCookie.setPath(cookie.getPath());
+			oldCookie.setValue(cookie.getValue());
+			oldCookie.setVersion(cookie.getVersion());
+
+			return true;
+		}
+
+		return addCookie(
+			consentType, cookie, httpServletRequest, httpServletResponse,
+			_portal.isSecure(httpServletRequest));
 	}
 
 	@Override
@@ -227,9 +269,12 @@ public class CookiesManagerImpl implements CookiesManager {
 
 		Map<String, Cookie> cookiesMap = _getCookiesMap(httpServletRequest);
 
+		Set<String> addedCookies = _getAddedCookies(httpServletRequest);
+
 		for (String cookieName : cookieNames) {
-			Cookie cookie = cookiesMap.remove(
-				StringUtil.toUpperCase(cookieName));
+			String upperCaseName = StringUtil.toUpperCase(cookieName);
+
+			Cookie cookie = cookiesMap.remove(upperCaseName);
 
 			if (cookie == null) {
 				continue;
@@ -243,7 +288,9 @@ public class CookiesManagerImpl implements CookiesManager {
 			cookie.setPath(StringPool.SLASH);
 			cookie.setValue(StringPool.BLANK);
 
-			httpServletResponse.addCookie(cookie);
+			if (!addedCookies.contains(upperCaseName)) {
+				httpServletResponse.addCookie(cookie);
+			}
 		}
 
 		return true;
@@ -486,6 +533,28 @@ public class CookiesManagerImpl implements CookiesManager {
 		}
 
 		return false;
+	}
+
+	private Set<String> _getAddedCookies(
+		HttpServletRequest httpServletRequest) {
+
+		if (httpServletRequest == null) {
+			return Collections.emptySet();
+		}
+
+		Set<String> cookiesAdded = (Set<String>)httpServletRequest.getAttribute(
+			CookiesManagerImpl.class.getName() + ".added");
+
+		if (cookiesAdded != null) {
+			return cookiesAdded;
+		}
+
+		cookiesAdded = new HashSet<>();
+
+		httpServletRequest.setAttribute(
+			CookiesManagerImpl.class.getName() + ".added", cookiesAdded);
+
+		return cookiesAdded;
 	}
 
 	private Map<String, Cookie> _getCookiesMap(

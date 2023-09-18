@@ -34,6 +34,10 @@ public interface CookiesManager {
 		int consentType, Cookie cookie, HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse, boolean secure);
 
+	public boolean addOrUpdateCookie(
+		int consentType, Cookie cookie, HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse);
+
 	public boolean addSupportCookie(
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse);

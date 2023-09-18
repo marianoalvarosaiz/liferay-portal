@@ -49,6 +49,14 @@ public class CookiesManagerUtil {
 			secure);
 	}
 
+	public static boolean addOrUpdateCookie(
+		int consentType, Cookie cookie, HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
+
+		return _cookiesManager.addOrUpdateCookie(
+			consentType, cookie, httpServletRequest, httpServletResponse);
+	}
+
 	public static boolean addSupportCookie(
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse) {
