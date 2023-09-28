@@ -41,7 +41,7 @@ public class UserBulkReindexer implements BulkReindexer {
 
 	@Override
 	public void reindex(long companyId, Collection<Long> classPKs) {
-		if (classPKs.size() <= _databaseInMaxParameters) {
+		if (classPKs.size() <= _databaseMaxParameters) {
 			_reindex(companyId, classPKs);
 
 			return;
@@ -50,13 +50,13 @@ public class UserBulkReindexer implements BulkReindexer {
 		List<Long> classPKsList = ListUtil.fromCollection(classPKs);
 
 		int start = 0;
-		int end = _databaseInMaxParameters;
+		int end = _databaseMaxParameters;
 
 		while (start < classPKsList.size()) {
 			_reindex(companyId, ListUtil.subList(classPKsList, start, end));
 
-			end += _databaseInMaxParameters;
-			start += _databaseInMaxParameters;
+			end += _databaseMaxParameters;
+			start += _databaseMaxParameters;
 		}
 	}
 
@@ -67,7 +67,7 @@ public class UserBulkReindexer implements BulkReindexer {
 		DBType dbType = db.getDBType();
 
 		if (dbType == DBType.SQLSERVER) {
-			_databaseInMaxParameters = GetterUtil.getInteger(
+			_databaseMaxParameters = GetterUtil.getInteger(
 				PropsUtil.get(
 					PropsKeys.DATABASE_MAX_PARAMETERS,
 					new Filter(dbType.getName())),
@@ -119,6 +119,6 @@ public class UserBulkReindexer implements BulkReindexer {
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserBulkReindexer.class);
 
-	private int _databaseInMaxParameters = Integer.MAX_VALUE;
+	private int _databaseMaxParameters = Integer.MAX_VALUE;
 
 }
