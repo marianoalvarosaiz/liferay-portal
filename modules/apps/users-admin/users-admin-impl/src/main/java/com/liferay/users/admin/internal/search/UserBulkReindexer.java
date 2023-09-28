@@ -41,7 +41,9 @@ public class UserBulkReindexer implements BulkReindexer {
 
 	@Override
 	public void reindex(long companyId, Collection<Long> classPKs) {
-		if (classPKs.size() <= _databaseMaxParameters) {
+		int size = classPKs.size();
+
+		if (size <= _databaseMaxParameters) {
 			_reindex(companyId, classPKs);
 
 			return;
@@ -52,7 +54,7 @@ public class UserBulkReindexer implements BulkReindexer {
 		int start = 0;
 		int end = _databaseMaxParameters;
 
-		while (start < classPKsList.size()) {
+		while (start < size) {
 			_reindex(companyId, ListUtil.subList(classPKsList, start, end));
 
 			end += _databaseMaxParameters;
