@@ -74,15 +74,7 @@ public class AntivirusAsyncFileStoreSchedulerJobConfiguration
 
 	@Override
 	public TriggerConfiguration getTriggerConfiguration() {
-		TriggerConfiguration triggerConfiguration =
-			TriggerConfiguration.createTriggerConfiguration(
-				_antivirusAsyncConfiguration.retryCronExpression());
-
-		triggerConfiguration.setStartDate(
-			new Date(
-				System.currentTimeMillis() + TimeUnit.SECOND.toMillis(30)));
-
-		return triggerConfiguration;
+		return _triggerConfiguration;
 	}
 
 	public void scan(String rootDirAbsolutePathString) {
@@ -98,6 +90,13 @@ public class AntivirusAsyncFileStoreSchedulerJobConfiguration
 	protected void activate(Map<String, Object> properties) {
 		_antivirusAsyncConfiguration = ConfigurableUtil.createConfigurable(
 			AntivirusAsyncConfiguration.class, properties);
+
+		_triggerConfiguration = TriggerConfiguration.createTriggerConfiguration(
+			_antivirusAsyncConfiguration.retryCronExpression());
+
+		_triggerConfiguration.setStartDate(
+			new Date(
+				System.currentTimeMillis() + TimeUnit.SECOND.toMillis(30)));
 	}
 
 	private void _scan(String rootDirAbsolutePathString) throws IOException {
@@ -270,5 +269,7 @@ public class AntivirusAsyncFileStoreSchedulerJobConfiguration
 
 	@Reference(target = "(rootDir=*)")
 	private ServiceReference<Store> _storeServiceReference;
+
+	private TriggerConfiguration _triggerConfiguration;
 
 }
