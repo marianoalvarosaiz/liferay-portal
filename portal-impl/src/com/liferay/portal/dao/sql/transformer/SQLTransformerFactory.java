@@ -6,6 +6,7 @@
 package com.liferay.portal.dao.sql.transformer;
 
 import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 
 /**
@@ -15,7 +16,7 @@ import com.liferay.portal.kernel.dao.db.DBType;
 public class SQLTransformerFactory {
 
 	public static SQLTransformer getSQLTransformer(DB db) {
-		DBType dbType = db.getDBType();
+		DBType dbType = DBManagerUtil.getDBType();
 
 		SQLTransformerLogic sqlTransformerLogic = null;
 

@@ -7,7 +7,7 @@ package com.liferay.portal.service.persistence.impl;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.dao.orm.CustomSQLParam;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
@@ -389,11 +389,9 @@ public class UserFinderImpl extends UserFinderBaseImpl implements UserFinder {
 
 			StringBundler sb = null;
 
-			DB db = getDB();
-
 			boolean sybase = false;
 
-			if (db.getDBType() == DBType.SYBASE) {
+			if (DBManagerUtil.getDBType() == DBType.SYBASE) {
 				sybase = true;
 
 				sb = new StringBundler((paramsList.size() * 7) + 1);
