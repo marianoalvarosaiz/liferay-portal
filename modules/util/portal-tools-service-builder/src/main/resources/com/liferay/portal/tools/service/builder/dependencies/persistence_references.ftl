@@ -34,4 +34,13 @@
 	)
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		super.setSessionFactory(sessionFactory);
+
+		<#if !serviceBuilder.isVersionGTE_7_1_0()>
+			DBType dbType = DBManagerUtil.getDBType(sessionFactory.getDialect());
+
+			_databaseInMaxParameters = GetterUtil.getInteger(
+				PropsUtil.get(
+					"database.in.max.parameters",
+					new Filter(dbType.getName())));
+		</#if>
 	}
