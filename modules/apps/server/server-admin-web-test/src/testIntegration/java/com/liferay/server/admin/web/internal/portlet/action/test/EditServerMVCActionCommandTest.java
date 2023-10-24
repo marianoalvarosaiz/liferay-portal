@@ -67,13 +67,10 @@ public class EditServerMVCActionCommandTest {
 
 		LayoutRevision layoutRevision = _getLayoutRevision();
 
-		_portletPreferences =
-			_portletPreferencesLocalService.addPortletPreferences(
-				TestPropsValues.getCompanyId(), TestPropsValues.getUserId(), 0,
-				layoutRevision.getLayoutRevisionId(),
-				RandomTestUtil.randomString(), null, StringPool.BLANK);
-
-		Assert.assertNotNull(_portletPreferences);
+		_portletPreferences = _addPortletPreferences(
+			TestPropsValues.getUserId(), 0,
+			layoutRevision.getLayoutRevisionId(),
+			RandomTestUtil.randomString());
 
 		ReflectionTestUtil.invoke(
 			_mvcActionCommand, "_cleanUpLayoutRevisionPortletPreferences",
@@ -101,13 +98,9 @@ public class EditServerMVCActionCommandTest {
 		layoutRevision = _layoutRevisionLocalService.updateLayoutRevision(
 			layoutRevision);
 
-		PortletPreferences portletPreferences =
-			_portletPreferencesLocalService.addPortletPreferences(
-				TestPropsValues.getCompanyId(), TestPropsValues.getUserId(), 0,
-				layoutRevision.getLayoutRevisionId(), portletId, null,
-				StringPool.BLANK);
-
-		Assert.assertNotNull(portletPreferences);
+		_portletPreferences = _addPortletPreferences(
+			TestPropsValues.getUserId(), 0,
+			layoutRevision.getLayoutRevisionId(), portletId);
 
 		Layout layout = _layoutLocalService.getLayout(layoutRevision.getPlid());
 
@@ -124,7 +117,7 @@ public class EditServerMVCActionCommandTest {
 
 		Assert.assertNotNull(
 			_portletPreferencesLocalService.fetchPortletPreferences(
-				portletPreferences.getPortletPreferencesId()));
+				_portletPreferences.getPortletPreferencesId()));
 	}
 
 	@Test
@@ -133,15 +126,11 @@ public class EditServerMVCActionCommandTest {
 
 		LayoutRevision layoutRevision = _getLayoutRevision();
 
-		_portletPreferences =
-			_portletPreferencesLocalService.addPortletPreferences(
-				TestPropsValues.getCompanyId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-				layoutRevision.getLayoutRevisionId(),
-				RandomTestUtil.randomString(), null, StringPool.BLANK);
-
-		Assert.assertNotNull(_portletPreferences);
+		_portletPreferences = _addPortletPreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+			layoutRevision.getLayoutRevisionId(),
+			RandomTestUtil.randomString());
 
 		ReflectionTestUtil.invoke(
 			_mvcActionCommand, "_cleanUpOrphanedPortletPreferences",
@@ -156,14 +145,10 @@ public class EditServerMVCActionCommandTest {
 	public void testCleanUpOrphanedPortletPreferencesWithoutLayoutRevision()
 		throws Exception {
 
-		_portletPreferences =
-			_portletPreferencesLocalService.addPortletPreferences(
-				TestPropsValues.getCompanyId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
-				RandomTestUtil.randomString(), null, StringPool.BLANK);
-
-		Assert.assertNotNull(_portletPreferences);
+		_portletPreferences = _addPortletPreferences(
+			PortletKeys.PREFS_OWNER_ID_DEFAULT,
+			PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
+			RandomTestUtil.randomString());
 
 		ReflectionTestUtil.invoke(
 			_mvcActionCommand, "_cleanUpOrphanedPortletPreferences",
@@ -172,6 +157,15 @@ public class EditServerMVCActionCommandTest {
 		Assert.assertNull(
 			_portletPreferencesLocalService.fetchPortletPreferences(
 				_portletPreferences.getPortletPreferencesId()));
+	}
+
+	private PortletPreferences _addPortletPreferences(
+			long ownerId, int ownerType, long plid, String portletId)
+		throws Exception {
+
+		return _portletPreferencesLocalService.addPortletPreferences(
+			TestPropsValues.getCompanyId(), ownerId, ownerType, plid, portletId,
+			null, StringPool.BLANK);
 	}
 
 	private LayoutRevision _getLayoutRevision() throws Exception {
@@ -210,7 +204,6 @@ public class EditServerMVCActionCommandTest {
 	@Inject(filter = "mvc.command.name=/server_admin/edit_server")
 	private MVCActionCommand _mvcActionCommand;
 
-	@DeleteAfterTestRun
 	private PortletPreferences _portletPreferences;
 
 	@Inject
