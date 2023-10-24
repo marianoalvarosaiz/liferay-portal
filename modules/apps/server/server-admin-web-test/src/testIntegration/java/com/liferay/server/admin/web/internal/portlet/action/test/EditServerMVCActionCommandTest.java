@@ -37,6 +37,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,6 +53,13 @@ public class EditServerMVCActionCommandTest {
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
+
+	@Before
+	public void setUp() throws Exception {
+		_group = GroupTestUtil.addGroup();
+
+		_layout = LayoutTestUtil.addTypePortletLayout(_group, false);
+	}
 
 	@Test
 	public void testCleanUpLayoutRevisionPortletPreferencesWithOrphanedPortletPreferences()
@@ -148,15 +156,11 @@ public class EditServerMVCActionCommandTest {
 	public void testCleanUpOrphanedPortletPreferencesWithoutLayoutRevision()
 		throws Exception {
 
-		_group = GroupTestUtil.addGroup();
-
-		Layout layout = LayoutTestUtil.addTypePortletLayout(_group, false);
-
 		_portletPreferences =
 			_portletPreferencesLocalService.addPortletPreferences(
 				TestPropsValues.getCompanyId(),
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _layout.getPlid(),
 				RandomTestUtil.randomString(), null, StringPool.BLANK);
 
 		Assert.assertNotNull(_portletPreferences);
@@ -171,10 +175,6 @@ public class EditServerMVCActionCommandTest {
 	}
 
 	private LayoutRevision _getLayoutRevision() throws Exception {
-		_group = GroupTestUtil.addGroup();
-
-		Layout layout = LayoutTestUtil.addTypePortletLayout(_group, false);
-
 		LayoutSetBranch layoutSetBranch =
 			_layoutSetBranchLocalService.addLayoutSetBranch(
 				TestPropsValues.getUserId(), _group.getGroupId(), false,
@@ -183,15 +183,17 @@ public class EditServerMVCActionCommandTest {
 
 		LayoutBranch layoutBranch =
 			_layoutBranchLocalService.getMasterLayoutBranch(
-				layoutSetBranch.getLayoutSetBranchId(), layout.getPlid());
+				layoutSetBranch.getLayoutSetBranchId(), _layout.getPlid());
 
 		return _layoutRevisionLocalService.getLayoutRevision(
 			layoutSetBranch.getLayoutSetBranchId(),
-			layoutBranch.getLayoutBranchId(), layout.getPlid());
+			layoutBranch.getLayoutBranchId(), _layout.getPlid());
 	}
 
 	@DeleteAfterTestRun
 	private Group _group;
+
+	private Layout _layout;
 
 	@Inject
 	private LayoutBranchLocalService _layoutBranchLocalService;
