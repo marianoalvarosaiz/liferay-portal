@@ -54,7 +54,9 @@ public class EditServerMVCActionCommandTest {
 		new LiferayIntegrationTestRule();
 
 	@Test
-	public void testCleanUpLayoutRevisionPortletPreferences() throws Exception {
+	public void testCleanUpLayoutRevisionPortletPreferencesWithOrphanedPortletPreferences()
+		throws Exception {
+
 		LayoutRevision layoutRevision = _getLayoutRevision();
 
 		_portletPreferences =
@@ -75,56 +77,9 @@ public class EditServerMVCActionCommandTest {
 	}
 
 	@Test
-	public void testCleanUpOrphanedPortletPreferences() throws Exception {
-		_group = GroupTestUtil.addGroup();
-
-		Layout layout = LayoutTestUtil.addTypePortletLayout(_group, false);
-
-		_portletPreferences =
-			_portletPreferencesLocalService.addPortletPreferences(
-				TestPropsValues.getCompanyId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
-				RandomTestUtil.randomString(), null, StringPool.BLANK);
-
-		Assert.assertNotNull(_portletPreferences);
-
-		ReflectionTestUtil.invoke(
-			_mvcActionCommand, "_cleanUpOrphanedPortletPreferences",
-			new Class<?>[0]);
-
-		Assert.assertNull(
-			_portletPreferencesLocalService.fetchPortletPreferences(
-				_portletPreferences.getPortletPreferencesId()));
-	}
-
-	@Test
-	public void testCleanUpOrphanedPortletPreferencesWithLayoutRevisions()
+	public void testCleanUpLayoutRevisionPortletPreferencesWithProperedPortletPreferences()
 		throws Exception {
 
-		LayoutRevision layoutRevision = _getLayoutRevision();
-
-		_portletPreferences =
-			_portletPreferencesLocalService.addPortletPreferences(
-				TestPropsValues.getCompanyId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-				layoutRevision.getLayoutRevisionId(),
-				RandomTestUtil.randomString(), null, StringPool.BLANK);
-
-		Assert.assertNotNull(_portletPreferences);
-
-		ReflectionTestUtil.invoke(
-			_mvcActionCommand, "_cleanUpOrphanedPortletPreferences",
-			new Class<?>[0]);
-
-		Assert.assertNotNull(
-			_portletPreferencesLocalService.fetchPortletPreferences(
-				_portletPreferences.getPortletPreferencesId()));
-	}
-
-	@Test
-	public void testCleanUpProperPortletPreferences() throws Exception {
 		LayoutRevision layoutRevision = _getLayoutRevision();
 
 		String portletId = PortletIdCodec.encode(
@@ -162,6 +117,57 @@ public class EditServerMVCActionCommandTest {
 		Assert.assertNotNull(
 			_portletPreferencesLocalService.fetchPortletPreferences(
 				portletPreferences.getPortletPreferencesId()));
+	}
+
+	@Test
+	public void testCleanUpOrphanedPortletPreferencesWithLayoutRevision()
+		throws Exception {
+
+		LayoutRevision layoutRevision = _getLayoutRevision();
+
+		_portletPreferences =
+			_portletPreferencesLocalService.addPortletPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+				layoutRevision.getLayoutRevisionId(),
+				RandomTestUtil.randomString(), null, StringPool.BLANK);
+
+		Assert.assertNotNull(_portletPreferences);
+
+		ReflectionTestUtil.invoke(
+			_mvcActionCommand, "_cleanUpOrphanedPortletPreferences",
+			new Class<?>[0]);
+
+		Assert.assertNotNull(
+			_portletPreferencesLocalService.fetchPortletPreferences(
+				_portletPreferences.getPortletPreferencesId()));
+	}
+
+	@Test
+	public void testCleanUpOrphanedPortletPreferencesWithoutLayoutRevision()
+		throws Exception {
+
+		_group = GroupTestUtil.addGroup();
+
+		Layout layout = LayoutTestUtil.addTypePortletLayout(_group, false);
+
+		_portletPreferences =
+			_portletPreferencesLocalService.addPortletPreferences(
+				TestPropsValues.getCompanyId(),
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
+				RandomTestUtil.randomString(), null, StringPool.BLANK);
+
+		Assert.assertNotNull(_portletPreferences);
+
+		ReflectionTestUtil.invoke(
+			_mvcActionCommand, "_cleanUpOrphanedPortletPreferences",
+			new Class<?>[0]);
+
+		Assert.assertNull(
+			_portletPreferencesLocalService.fetchPortletPreferences(
+				_portletPreferences.getPortletPreferencesId()));
 	}
 
 	private LayoutRevision _getLayoutRevision() throws Exception {
