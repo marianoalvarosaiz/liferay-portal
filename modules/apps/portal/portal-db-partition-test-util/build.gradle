@@ -4,6 +4,7 @@ dependencies {
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.test", version: "default"
 	compileOnly group: "org.springframework", name: "spring-beans", version: "5.2.24.RELEASE"
 	compileOnly group: "org.springframework", name: "spring-jdbc", version: "5.2.24.RELEASE"
+	compileOnly project(":core:petra:petra-function")
 	compileOnly project(":core:petra:petra-lang")
 	compileOnly project(":core:petra:petra-string")
 }
