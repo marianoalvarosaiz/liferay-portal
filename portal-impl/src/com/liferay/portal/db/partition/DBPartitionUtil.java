@@ -164,7 +164,7 @@ public class DBPartitionUtil {
 		return companyId;
 	}
 
-	public static boolean removeDBPartition(long companyId)
+	public static boolean migrateDBPartition(long companyId)
 		throws PortalException {
 
 		if (!DBPartition.isPartitionEnabled() ||
@@ -173,8 +173,16 @@ public class DBPartitionUtil {
 			return false;
 		}
 
-		if (_DATABASE_PARTITION_MIGRATE_ENABLED) {
-			return _migrateDBPartition(companyId);
+		return _migrateDBPartition(companyId);
+	}
+
+	public static boolean removeDBPartition(long companyId)
+		throws PortalException {
+
+		if (!DBPartition.isPartitionEnabled() ||
+			(companyId == _defaultCompanyId)) {
+
+			return false;
 		}
 
 		return _dropDBPartition(companyId);
@@ -767,10 +775,6 @@ public class DBPartitionUtil {
 
 		};
 	}
-
-	private static final boolean _DATABASE_PARTITION_MIGRATE_ENABLED =
-		GetterUtil.getBoolean(
-			PropsUtil.get("database.partition.migrate.enabled"));
 
 	private static final String _DATABASE_PARTITION_SCHEMA_NAME_PREFIX =
 		GetterUtil.get(
