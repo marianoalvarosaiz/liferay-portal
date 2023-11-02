@@ -1256,24 +1256,6 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		Company company = companyPersistence.findByPrimaryKey(companyId);
 
-		if (DBPartition.isPartitionEnabled()) {
-			_clearCompanyCache(companyId, true);
-			_clearVirtualHostCache(companyId);
-
-			TransactionCommitCallbackUtil.registerCallback(
-				() -> {
-					PortalInstances.removeCompany(company.getCompanyId());
-
-					unregisterCompany(company);
-
-					return null;
-				});
-
-			DBPartitionUtil.migrateDBPartition(companyId);
-
-			return company;
-		}
-
 		preunregisterCompany(company);
 
 		companyPersistence.remove(company);
