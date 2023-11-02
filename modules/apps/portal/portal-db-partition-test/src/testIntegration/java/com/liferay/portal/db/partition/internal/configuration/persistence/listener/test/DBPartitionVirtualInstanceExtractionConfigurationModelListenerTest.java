@@ -6,7 +6,13 @@
 package com.liferay.portal.db.partition.internal.configuration.persistence.listener.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.test.rule.Inject;
 
+import java.util.Objects;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,6 +29,45 @@ public class DBPartitionVirtualInstanceExtractionConfigurationModelListenerTest
 	}
 
 	@Test
+	public void testCompanyMigration() throws Exception {
+		String toBeMigratedCompanyWebId = "Test" + COMPANY_IDS[0];
+
+		try (AutoCloseable autoCloseable = swapCompanyLocalService(
+				(proxy, method, args) -> {
+					if (Objects.equals(
+							method.getName(), "doExportPartitionCompany")) {
+
+						if (GetterUtil.getLong(args[0]) != COMPANY_IDS[0]) {
+							Assert.fail(
+								"Should only be called on: " + COMPANY_IDS[0]);
+						}
+
+						_calledDoExportPartitionCompanyMethod = true;
+					}
+					else if (Objects.equals(
+								method.getName(), "getCompanyByWebId")) {
+
+						if (Objects.equals(args[0], toBeMigratedCompanyWebId)) {
+							return _companyLocalService.createCompany(
+								COMPANY_IDS[0]);
+						}
+
+						Assert.fail(
+							"Should only be called on: " +
+								toBeMigratedCompanyWebId);
+					}
+
+					return null;
+				})) {
+
+			deployConfiguration(
+				_PID, "webId=T\"" + toBeMigratedCompanyWebId + "\"\n");
+
+			Assert.assertTrue(_calledDoExportPartitionCompanyMethod);
+		}
+	}
+
+	@Test
 	public void testConfigurationIsDeletedAfterDeploy() throws Exception {
 		testConfigurationIsDeletedAfterDeploy(_PID, "webId=T\"testWebId\"\n");
 	}
@@ -30,5 +75,10 @@ public class DBPartitionVirtualInstanceExtractionConfigurationModelListenerTest
 	private static final String _PID =
 		"com.liferay.portal.db.partition.internal.configuration." +
 			"DBPartitionVirtualInstanceExtractionConfiguration";
+
+	private boolean _calledDoExportPartitionCompanyMethod;
+
+	@Inject
+	private CompanyLocalService _companyLocalService;
 
 }
