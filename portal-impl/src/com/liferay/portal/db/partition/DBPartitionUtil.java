@@ -71,8 +71,8 @@ public class DBPartitionUtil {
 			InfrastructureUtil.getDataSource());
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
-				_dbPartitionSQL.getCreateSchemaSQL(
-					connection, _getSchemaName(companyId)))) {
+				_dbPartitionSQL.getCreatePartitionSQL(
+					connection, _getPartitionName(companyId)))) {
 
 			preparedStatement.executeUpdate();
 
@@ -99,20 +99,20 @@ public class DBPartitionUtil {
 
 						statement.executeUpdate(
 							_dbPartitionSQL.getCreateViewSQL(
-								_defaultSchemaName, _getSchemaName(companyId),
-								tableName));
+								_defaultPartitionName,
+								_getPartitionName(companyId), tableName));
 					}
 					else {
 						statement.executeUpdate(
 							_dbPartitionSQL.getCreateTableSQL(
-								_defaultSchemaName, _getSchemaName(companyId),
-								tableName));
+								_defaultPartitionName,
+								_getPartitionName(companyId), tableName));
 
 						if (dbInspector.isPartitionedControlTable(tableName)) {
 							statement.executeUpdate(
 								_dbPartitionSQL.getCopyDataSQL(
-									_defaultSchemaName,
-									_getSchemaName(companyId), tableName,
+									_defaultPartitionName,
+									_getPartitionName(companyId), tableName,
 									StringPool.BLANK));
 						}
 					}
@@ -232,16 +232,17 @@ public class DBPartitionUtil {
 		try (Statement statement = connection.createStatement()) {
 			statement.execute(
 				_dbPartitionSQL.getDropViewSQL(
-					_getSchemaName(companyId), viewName));
+					_getPartitionName(companyId), viewName));
 
 			statement.execute(
 				_dbPartitionSQL.getCreateTableSQL(
-					_defaultSchemaName, _getSchemaName(companyId), viewName));
+					_defaultPartitionName, _getPartitionName(companyId),
+					viewName));
 
 			statement.executeUpdate(
 				_dbPartitionSQL.getCopyDataSQL(
-					_defaultSchemaName, _getSchemaName(companyId), viewName,
-					StringPool.BLANK));
+					_defaultPartitionName, _getPartitionName(companyId),
+					viewName, StringPool.BLANK));
 		}
 	}
 
@@ -292,7 +293,8 @@ public class DBPartitionUtil {
 		}
 
 		try (Connection connection = dataSource.getConnection()) {
-			_defaultSchemaName = _dbPartitionSQL.getPartitionName(connection);
+			_defaultPartitionName = _dbPartitionSQL.getDefaultPartitionName(
+				connection);
 		}
 
 		return new DataSourceWrapper(dataSource) {
@@ -313,13 +315,13 @@ public class DBPartitionUtil {
 	}
 
 	private static void _deleteCompanyData(
-			long companyId, String tableName, String schemaName,
+			long companyId, String tableName, String fromPartitionName,
 			Statement statement)
 		throws Exception {
 
 		statement.executeUpdate(
 			StringBundler.concat(
-				"delete from ", schemaName, StringPool.PERIOD, tableName,
+				"delete from ", fromPartitionName, StringPool.PERIOD, tableName,
 				" where companyId = ", companyId));
 	}
 
@@ -335,7 +337,7 @@ public class DBPartitionUtil {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 
 			try (ResultSet resultSet = databaseMetaData.getTables(
-					_defaultSchemaName, dbInspector.getSchema(), null,
+					_defaultPartitionName, dbInspector.getSchema(), null,
 					new String[] {"TABLE"});
 				Statement statement = connection.createStatement()) {
 
@@ -348,15 +350,15 @@ public class DBPartitionUtil {
 
 						statement.executeUpdate(
 							StringBundler.concat(
-								"delete from ", _defaultSchemaName,
+								"delete from ", _defaultPartitionName,
 								StringPool.PERIOD, tableName,
 								" where companyId = ", companyId));
 					}
 				}
 
 				statement.executeUpdate(
-					_dbPartitionSQL.getDropSchemaSQL(
-						_getSchemaName(companyId)));
+					_dbPartitionSQL.getDropPartitionSQL(
+						_getPartitionName(companyId)));
 			}
 		}
 		catch (Exception exception) {
@@ -380,7 +382,7 @@ public class DBPartitionUtil {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 
 			try (ResultSet resultSet = databaseMetaData.getTables(
-					_defaultSchemaName, dbInspector.getSchema(), null,
+					_defaultPartitionName, dbInspector.getSchema(), null,
 					new String[] {"TABLE"});
 				Statement statement = connection.createStatement()) {
 
@@ -414,9 +416,9 @@ public class DBPartitionUtil {
 			catch (Exception exception2) {
 				throw new PortalException(
 					StringBundler.concat(
-						"Unable to roll back the extraction of database ",
-						"partition. Recover a backup of the database schema ",
-						_getSchemaName(companyId), "."),
+						"Unable to rollback the extraction of database ",
+						"partition. Recover a backup of the database ",
+						"partition ", _getPartitionName(companyId), "."),
 					exception2);
 			}
 
@@ -435,22 +437,23 @@ public class DBPartitionUtil {
 
 		statement.executeUpdate(
 			_dbPartitionSQL.getDropViewSQL(
-				_getSchemaName(companyId), tableName));
+				_getPartitionName(companyId), tableName));
 
 		statement.executeUpdate(
 			_dbPartitionSQL.getCreateTableSQL(
-				_defaultSchemaName, _getSchemaName(companyId), tableName));
+				_defaultPartitionName, _getPartitionName(companyId),
+				tableName));
 
 		if (dbInspector.hasColumn(tableName, "companyId")) {
 			_moveCompanyData(
-				companyId, _defaultSchemaName, _getSchemaName(companyId),
+				companyId, _defaultPartitionName, _getPartitionName(companyId),
 				tableName, statement);
 		}
 		else {
 			statement.executeUpdate(
 				_dbPartitionSQL.getCopyDataSQL(
-					_defaultSchemaName, _getSchemaName(companyId), tableName,
-					StringPool.BLANK));
+					_defaultPartitionName, _getPartitionName(companyId),
+					tableName, StringPool.BLANK));
 		}
 	}
 
@@ -561,7 +564,7 @@ public class DBPartitionUtil {
 
 			@Override
 			public String getCatalog() throws SQLException {
-				return _getSchemaName(CompanyThreadLocal.getCompanyId());
+				return _getPartitionName(CompanyThreadLocal.getCompanyId());
 			}
 
 			@Override
@@ -630,14 +633,14 @@ public class DBPartitionUtil {
 			private void _setPartition() throws SQLException {
 				long companyId = CompanyThreadLocal.getCompanyId();
 
-				String schemaName = _getSchemaName(companyId);
+				String partitionName = _getPartitionName(companyId);
 
-				_dbPartitionSQL.setPartition(connection, schemaName);
+				_dbPartitionSQL.setPartition(connection, partitionName);
 
 				if (_log.isDebugEnabled()) {
 					_log.debug(
 						StringBundler.concat(
-							"Using database schema ", schemaName,
+							"Using database partition ", partitionName,
 							" and company ", companyId));
 				}
 			}
@@ -645,11 +648,11 @@ public class DBPartitionUtil {
 		};
 	}
 
-	private static String _getSchemaName(long companyId) {
+	private static String _getPartitionName(long companyId) {
 		if ((companyId == CompanyConstants.SYSTEM) ||
 			(companyId == _defaultCompanyId)) {
 
-			return _defaultSchemaName;
+			return _defaultPartitionName;
 		}
 
 		return _DATABASE_PARTITION_SCHEMA_NAME_PREFIX + companyId;
@@ -669,7 +672,7 @@ public class DBPartitionUtil {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 
 			try (ResultSet resultSet = databaseMetaData.getTables(
-					_defaultSchemaName, dbInspector.getSchema(), null,
+					_defaultPartitionName, dbInspector.getSchema(), null,
 					new String[] {"TABLE"})) {
 
 				while (resultSet.next()) {
@@ -681,8 +684,8 @@ public class DBPartitionUtil {
 						if (dbInspector.hasColumn(tableName, "companyId")) {
 							statement.executeUpdate(
 								_dbPartitionSQL.getCopyDataSQL(
-									_getSchemaName(companyId),
-									_defaultSchemaName, tableName,
+									_getPartitionName(companyId),
+									_defaultPartitionName, tableName,
 									" where companyId = " + companyId));
 
 							companyIdControlTableNames.add(tableName);
@@ -690,12 +693,12 @@ public class DBPartitionUtil {
 
 						statement.executeUpdate(
 							_dbPartitionSQL.getDropTableSQL(
-								_getSchemaName(companyId), tableName));
+								_getPartitionName(companyId), tableName));
 
 						statement.executeUpdate(
 							_dbPartitionSQL.getCreateViewSQL(
-								_defaultSchemaName, _getSchemaName(companyId),
-								tableName));
+								_defaultPartitionName,
+								_getPartitionName(companyId), tableName));
 					}
 				}
 			}
@@ -706,7 +709,7 @@ public class DBPartitionUtil {
 						companyIdControlTableNames) {
 
 					_deleteCompanyData(
-						companyId, companyIdControlTable, _defaultSchemaName,
+						companyId, companyIdControlTable, _defaultPartitionName,
 						statement);
 				}
 			}
@@ -724,7 +727,7 @@ public class DBPartitionUtil {
 				StringBundler.concat(
 					"Unable to roll back the insertion of database partition. ",
 					"Recover a backup of the database schema ",
-					_getSchemaName(companyId), "."),
+					_getPartitionName(companyId), "."),
 				exception1);
 		}
 
@@ -754,15 +757,16 @@ public class DBPartitionUtil {
 	}
 
 	private static void _moveCompanyData(
-			long companyId, String fromSchemaName, String toSchemaName,
+			long companyId, String fromPartitionName, String toPartitionName,
 			String tableName, Statement statement)
 		throws Exception {
 
-		_dbPartitionSQL.getCopyDataSQL(
-			_defaultSchemaName, toSchemaName, tableName,
-			" where companyId = " + companyId);
+		statement.executeUpdate(
+			_dbPartitionSQL.getCopyDataSQL(
+				_defaultPartitionName, toPartitionName, tableName,
+				" where companyId = " + companyId));
 
-		_deleteCompanyData(companyId, tableName, fromSchemaName, statement);
+		_deleteCompanyData(companyId, tableName, fromPartitionName, statement);
 	}
 
 	private static void _restoreTable(
@@ -772,17 +776,18 @@ public class DBPartitionUtil {
 
 		if (dbInspector.hasColumn(tableName, "companyId")) {
 			_moveCompanyData(
-				companyId, _getSchemaName(companyId), _defaultSchemaName,
+				companyId, _getPartitionName(companyId), _defaultPartitionName,
 				tableName, statement);
 		}
 
 		statement.executeUpdate(
 			_dbPartitionSQL.getDropTableSQL(
-				_getSchemaName(companyId), tableName));
+				_getPartitionName(companyId), tableName));
 
 		statement.executeUpdate(
 			_dbPartitionSQL.getCreateViewSQL(
-				_defaultSchemaName, _getSchemaName(companyId), tableName));
+				_defaultPartitionName, _getPartitionName(companyId),
+				tableName));
 	}
 
 	private static Statement _wrapStatement(Statement statement) {
@@ -831,8 +836,8 @@ public class DBPartitionUtil {
 
 						super.execute(
 							_dbPartitionSQL.getCreateViewSQL(
-								_defaultSchemaName, _getSchemaName(companyId),
-								tableName));
+								_defaultPartitionName,
+								_getPartitionName(companyId), tableName));
 					}
 
 					return returnValue;
@@ -860,6 +865,6 @@ public class DBPartitionUtil {
 	private static final List<Long> _companyIds = new CopyOnWriteArrayList<>();
 	private static DBPartitionSQL _dbPartitionSQL;
 	private static volatile long _defaultCompanyId;
-	private static String _defaultSchemaName;
+	private static String _defaultPartitionName;
 
 }
