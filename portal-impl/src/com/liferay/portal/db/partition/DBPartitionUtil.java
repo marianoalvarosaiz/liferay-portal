@@ -13,9 +13,9 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.dao.jdbc.util.ConnectionWrapper;
 import com.liferay.portal.dao.jdbc.util.DataSourceWrapper;
 import com.liferay.portal.dao.jdbc.util.StatementWrapper;
-import com.liferay.portal.db.partition.sql.DBPartitionMySQL;
-import com.liferay.portal.db.partition.sql.DBPartitionPostgreSQL;
-import com.liferay.portal.db.partition.sql.DBPartitionSQL;
+import com.liferay.portal.db.partition.sql.DBPartitionDB;
+import com.liferay.portal.db.partition.sql.DBPartitionMySQLDB;
+import com.liferay.portal.db.partition.sql.DBPartitionPostgreSQLDB;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -74,7 +74,7 @@ public class DBPartitionUtil {
 		boolean autoCommit = _executeCallable(connection::getAutoCommit);
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
-				_dbPartitionSQL.getCreatePartitionSQL(
+				_dbPartitionDB.getCreatePartitionSQL(
 					connection, _getPartitionName(companyId)))) {
 
 			connection.setAutoCommit(false);
@@ -109,7 +109,7 @@ public class DBPartitionUtil {
 					}
 					else {
 						statement.executeUpdate(
-							_dbPartitionSQL.getCreateTableSQL(
+							_dbPartitionDB.getCreateTableSQL(
 								_defaultPartitionName,
 								_getPartitionName(companyId), tableName));
 
@@ -256,7 +256,7 @@ public class DBPartitionUtil {
 				_getDropViewSQL(_getPartitionName(companyId), viewName));
 
 			statement.execute(
-				_dbPartitionSQL.getCreateTableSQL(
+				_dbPartitionDB.getCreateTableSQL(
 					_defaultPartitionName, _getPartitionName(companyId),
 					viewName));
 
@@ -307,14 +307,14 @@ public class DBPartitionUtil {
 		}
 
 		if (db.getDBType() == DBType.MYSQL) {
-			_dbPartitionSQL = new DBPartitionMySQL();
+			_dbPartitionDB = new DBPartitionMySQLDB();
 		}
 		else if (db.getDBType() == DBType.POSTGRESQL) {
-			_dbPartitionSQL = new DBPartitionPostgreSQL();
+			_dbPartitionDB = new DBPartitionPostgreSQLDB();
 		}
 
 		try (Connection connection = dataSource.getConnection()) {
-			_defaultPartitionName = _dbPartitionSQL.getDefaultPartitionName(
+			_defaultPartitionName = _dbPartitionDB.getDefaultPartitionName(
 				connection);
 		}
 
@@ -470,7 +470,7 @@ public class DBPartitionUtil {
 			_getDropViewSQL(_getPartitionName(companyId), tableName));
 
 		statement.executeUpdate(
-			_dbPartitionSQL.getCreateTableSQL(
+			_dbPartitionDB.getCreateTableSQL(
 				_defaultPartitionName, _getPartitionName(companyId),
 				tableName));
 
@@ -594,14 +594,14 @@ public class DBPartitionUtil {
 
 			@Override
 			public String getCatalog() throws SQLException {
-				return _dbPartitionSQL.getCatalog(
+				return _dbPartitionDB.getCatalog(
 					connection,
 					_getPartitionName(CompanyThreadLocal.getCompanyId()));
 			}
 
 			@Override
 			public String getSchema() {
-				return _dbPartitionSQL.getSchema(
+				return _dbPartitionDB.getSchema(
 					connection,
 					_getPartitionName(CompanyThreadLocal.getCompanyId()));
 			}
@@ -674,7 +674,7 @@ public class DBPartitionUtil {
 
 				String partitionName = _getPartitionName(companyId);
 
-				_dbPartitionSQL.setPartition(connection, partitionName);
+				_dbPartitionDB.setPartition(connection, partitionName);
 
 				if (_log.isDebugEnabled()) {
 					_log.debug(
@@ -939,7 +939,7 @@ public class DBPartitionUtil {
 		DBPartitionUtil.class);
 
 	private static final List<Long> _companyIds = new CopyOnWriteArrayList<>();
-	private static DBPartitionSQL _dbPartitionSQL;
+	private static DBPartitionDB _dbPartitionDB;
 	private static volatile long _defaultCompanyId;
 	private static String _defaultPartitionName;
 
