@@ -46,6 +46,7 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,9 +71,13 @@ public class DBPartitionUtil {
 		Connection connection = CurrentConnectionUtil.getConnection(
 			InfrastructureUtil.getDataSource());
 
+		boolean autoCommit = _executeCallable(connection::getAutoCommit);
+
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				_dbPartitionSQL.getCreateSchemaSQL(
 					connection, _getSchemaName(companyId)))) {
+
+			connection.setAutoCommit(false);
 
 			preparedStatement.executeUpdate();
 
@@ -122,7 +127,22 @@ public class DBPartitionUtil {
 			connection.commit();
 		}
 		catch (Exception exception) {
+			_executeCallable(
+				() -> {
+					connection.rollback();
+
+					return null;
+				});
+
 			throw new PortalException(exception);
+		}
+		finally {
+			_executeCallable(
+				() -> {
+					connection.setAutoCommit(autoCommit);
+
+					return null;
+				});
 		}
 
 		_companyIds.add(companyId);
@@ -367,6 +387,17 @@ public class DBPartitionUtil {
 		}
 
 		_companyIds.remove(companyId);
+	}
+
+	private static <R> R _executeCallable(Callable<R> callable)
+		throws PortalException {
+
+		try {
+			return callable.call();
+		}
+		catch (Exception exception) {
+			throw new PortalException(exception);
+		}
 	}
 
 	private static void _extractDBPartition(long companyId)
