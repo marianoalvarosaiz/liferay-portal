@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -486,6 +487,9 @@ public class ConfigurationPersistenceManager
 		ConfigurationHandler.write(unsyncByteArrayOutputStream, dictionary);
 
 		String configuration = unsyncByteArrayOutputStream.toString();
+
+		_log.error("Store configuration");
+		_log.error("Company: " + CompanyThreadLocal.getCompanyId());
 
 		try (Connection connection = _dataSource.getConnection()) {
 			if (_dictionaries.containsKey(pid)) {

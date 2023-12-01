@@ -647,12 +647,10 @@ public class DBPartitionUtil {
 
 				connection.setCatalog(schemaName);
 
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						StringBundler.concat(
-							"Using database schema ", schemaName,
-							" and company ", companyId));
-				}
+				_log.error(
+					StringBundler.concat(
+						"Using database schema ", schemaName, " and company ",
+						companyId));
 			}
 
 		};

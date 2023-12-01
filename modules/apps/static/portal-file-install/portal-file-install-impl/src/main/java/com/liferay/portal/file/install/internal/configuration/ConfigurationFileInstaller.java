@@ -185,7 +185,12 @@ public class ConfigurationFileInstaller implements FileInstaller {
 					}
 				}
 
-				configuration.updateIfDifferent(dictionary);
+				boolean updated = configuration.updateIfDifferent(dictionary);
+
+				_log.error(
+					"Configuration file: " + currentFileName + "is Updated?" +
+						updated);
+				_log.error("Company: " + CompanyThreadLocal.getCompanyId());
 
 				if (!file.canWrite()) {
 					try {

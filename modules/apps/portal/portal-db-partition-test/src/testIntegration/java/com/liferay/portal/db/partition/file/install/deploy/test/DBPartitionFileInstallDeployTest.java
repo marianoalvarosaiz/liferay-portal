@@ -182,7 +182,13 @@ public class DBPartitionFileInstallDeployTest extends BaseDBPartitionTestCase {
 								expectedValue, StringPool.QUOTE)));
 				}
 				else {
-					Assert.assertFalse(resultSet.next());
+					boolean next = resultSet.next();
+
+					Assert.assertFalse(
+						"failed in: " + currentCompanyId + " default: " +
+							_companyId + " test : " +
+								(next ? resultSet.getString(1) : ""),
+						next);
 				}
 			});
 	}
