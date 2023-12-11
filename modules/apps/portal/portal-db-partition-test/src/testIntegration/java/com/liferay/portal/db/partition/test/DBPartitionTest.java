@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.model.DefaultModelHintsImpl;
 import com.liferay.portal.model.impl.ClassNameImpl;
@@ -34,6 +35,7 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.util.PortalInstances;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -44,6 +46,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
+
+import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -374,21 +378,11 @@ public class DBPartitionTest extends BaseDBPartitionTestCase {
 				null, null);
 		}
 		catch (Exception exception) {
-			try (Connection connection = DataAccess.getConnection();
-				PreparedStatement preparedStatement =
-					connection.prepareStatement(
-						StringBundler.concat(
-							"select schema_name from ",
-							"information_schema.schemata where schema_name = '",
-							_DB_PARTITION_SCHEMA_NAME_PREFIX + companyId, "'"));
-				ResultSet resultSet = preparedStatement.executeQuery()) {
-
-				orphanedDBPartition = resultSet.next();
-
-				Assert.assertFalse(
-					"The database partition was not removed",
-					orphanedDBPartition);
-			}
+			orphanedDBPartition = _hasSchema(
+				_DB_PARTITION_SCHEMA_NAME_PREFIX + companyId);
+			Assert.assertFalse(
+				"The database partition was not removed",
+				_hasSchema(_DB_PARTITION_SCHEMA_NAME_PREFIX + companyId));
 		}
 		finally {
 			if (orphanedDBPartition) {
@@ -399,19 +393,25 @@ public class DBPartitionTest extends BaseDBPartitionTestCase {
 
 	@Test
 	public void testUpdateIndexes() throws Exception {
+		DataSource dataSource = InfrastructureUtil.getDataSource();
+
 		try {
 			DBPartitionUtil.forEachCompanyId(
 				companyId -> {
 					createAndPopulateTable(TEST_TABLE_NAME);
 
 					Assert.assertFalse(
+						"Index does exist",
 						dbInspector.hasIndex(TEST_TABLE_NAME, TEST_INDEX_NAME));
 
-					db.updateIndexes(
-						connection, getCreateTableSQL(TEST_TABLE_NAME),
-						getCreateIndexSQL(TEST_TABLE_NAME), true);
+					try (Connection connection = dataSource.getConnection()) {
+						db.updateIndexes(
+							connection, getCreateTableSQL(TEST_TABLE_NAME),
+							getCreateIndexSQL(TEST_TABLE_NAME), true);
+					}
 
 					Assert.assertTrue(
+						"Index does not exist",
 						dbInspector.hasIndex(TEST_TABLE_NAME, TEST_INDEX_NAME));
 				});
 		}
@@ -459,6 +459,18 @@ public class DBPartitionTest extends BaseDBPartitionTestCase {
 
 	@Inject
 	protected static FinderCache finderCache;
+
+	private boolean _hasSchema(String schemaName) throws Exception {
+		try (Connection connection = DataAccess.getConnection()) {
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+
+			try (ResultSet resultSet = databaseMetaData.getSchemas(
+					dbInspector.getCatalog(), schemaName)) {
+
+				return resultSet.next();
+			}
+		}
+	}
 
 	private static final String _CLASS_NAME_VALUE = "class.name.test";
 

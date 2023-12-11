@@ -46,7 +46,6 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -71,13 +70,9 @@ public class DBPartitionUtil {
 		Connection connection = CurrentConnectionUtil.getConnection(
 			InfrastructureUtil.getDataSource());
 
-		boolean autoCommit = _executeCallable(connection::getAutoCommit);
-
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				_dbPartitionDB.getCreatePartitionSQL(
 					connection, _getPartitionName(companyId)))) {
-
-			connection.setAutoCommit(false);
 
 			preparedStatement.executeUpdate();
 
@@ -123,26 +118,9 @@ public class DBPartitionUtil {
 					}
 				}
 			}
-
-			connection.commit();
 		}
 		catch (Exception exception) {
-			_executeCallable(
-				() -> {
-					connection.rollback();
-
-					return null;
-				});
-
 			throw new PortalException(exception);
-		}
-		finally {
-			_executeCallable(
-				() -> {
-					connection.setAutoCommit(autoCommit);
-
-					return null;
-				});
 		}
 
 		_companyIds.add(companyId);
@@ -378,7 +356,8 @@ public class DBPartitionUtil {
 				}
 
 				statement.executeUpdate(
-					_getDropPartitionSQL(_getPartitionName(companyId)));
+					_dbPartitionDB.getDropPartitionSQL(
+						_getPartitionName(companyId)));
 			}
 		}
 		catch (Exception exception) {
@@ -387,17 +366,6 @@ public class DBPartitionUtil {
 		}
 
 		_companyIds.remove(companyId);
-	}
-
-	private static <R> R _executeCallable(Callable<R> callable)
-		throws PortalException {
-
-		try {
-			return callable.call();
-		}
-		catch (Exception exception) {
-			throw new PortalException(exception);
-		}
 	}
 
 	private static void _extractDBPartition(long companyId)
@@ -706,16 +674,12 @@ public class DBPartitionUtil {
 			StringPool.PERIOD, viewName);
 	}
 
-	private static String _getDropPartitionSQL(String partitionName) {
-		return "drop schema " + partitionName;
-	}
-
 	private static String _getDropTableSQL(
 		String partitionName, String tableName) {
 
 		return StringBundler.concat(
 			"drop table if exists ", partitionName, StringPool.PERIOD,
-			tableName);
+			tableName, " cascade");
 	}
 
 	private static String _getDropViewSQL(
@@ -879,8 +843,7 @@ public class DBPartitionUtil {
 
 				if ((StringUtil.startsWith(lowerCaseSQL, "alter table") &&
 					 _isSkip(connection, query[2])) ||
-					((StringUtil.startsWith(lowerCaseSQL, "create index") ||
-					  StringUtil.startsWith(lowerCaseSQL, "drop index")) &&
+					(StringUtil.startsWith(lowerCaseSQL, "create index") &&
 					 _isSkip(connection, query[4])) ||
 					(StringUtil.startsWith(
 						lowerCaseSQL, "create unique index") &&
@@ -888,12 +851,26 @@ public class DBPartitionUtil {
 
 					return 0;
 				}
+				else if (StringUtil.startsWith(lowerCaseSQL, "drop index")) {
+					if ((query.length >= 5) && _isSkip(connection, query[4])) {
+						return 0;
+					}
+					else if (query.length <= 4) {
+						sql = StringUtil.replace(
+							sql, "drop index ", "drop index if exists ");
 
-				int returnValue = super.executeUpdate(sql);
+						sql = StringUtil.replace(
+							sql, "DROP INDEX ", "DROP INDEX IF EXISTS ");
+					}
+				}
 
 				if (!StringUtil.startsWith(lowerCaseSQL, "alter table")) {
-					return returnValue;
+					return super.executeUpdate(sql);
 				}
+
+				sql = _dbPartitionDB.getSafeAlterTable(sql);
+
+				int returnValue = super.executeUpdate(sql);
 
 				try {
 					DBInspector dbInspector = new DBInspector(connection);
