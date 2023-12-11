@@ -853,11 +853,13 @@ public class DBPartitionUtil {
 					return 0;
 				}
 
-				int returnValue = super.executeUpdate(sql);
-
 				if (!StringUtil.startsWith(lowerCaseSQL, "alter table")) {
-					return returnValue;
+					return super.executeUpdate(sql);
 				}
+
+				sql = _dbPartitionDB.getSafeAlterTable(sql);
+
+				int returnValue = super.executeUpdate(sql);
 
 				try {
 					DBInspector dbInspector = new DBInspector(connection);
