@@ -91,6 +91,10 @@ public class CompanyThreadLocal {
 		return companyId;
 	}
 
+	public static boolean isInitializingCompanyId() {
+		return _initializingCompanyId.get();
+	}
+
 	public static boolean isInitializingPortalInstance() {
 		return _initializingPortalInstance.get();
 	}
@@ -144,6 +148,8 @@ public class CompanyThreadLocal {
 
 	public static SafeCloseable setInitializingCompanyIdWithSafeCloseable(
 		long companyId) {
+
+		_initializingCompanyId.setWithSafeCloseable(true);
 
 		if (companyId > 0) {
 			return _companyId.setWithSafeCloseable(companyId);
@@ -243,6 +249,10 @@ public class CompanyThreadLocal {
 		CompanyThreadLocal.class);
 
 	private static final CentralizedThreadLocal<Long> _companyId;
+	private static final CentralizedThreadLocal<Boolean>
+		_initializingCompanyId = new CentralizedThreadLocal<>(
+			CompanyThreadLocal.class + "._initializingCompanyId",
+			() -> Boolean.FALSE);
 	private static final CentralizedThreadLocal<Boolean>
 		_initializingPortalInstance = new CentralizedThreadLocal<>(
 			CompanyThreadLocal.class + "._initializingPortalInstance",
