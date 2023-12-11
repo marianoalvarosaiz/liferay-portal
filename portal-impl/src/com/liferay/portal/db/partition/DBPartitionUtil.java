@@ -118,8 +118,6 @@ public class DBPartitionUtil {
 					}
 				}
 			}
-
-			connection.commit();
 		}
 		catch (Exception exception) {
 			throw new PortalException(exception);
