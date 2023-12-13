@@ -91,10 +91,6 @@ public class CompanyThreadLocal {
 		return companyId;
 	}
 
-	public static boolean isInitializingCompanyId() {
-		return _initializingCompanyId.get();
-	}
-
 	public static boolean isInitializingPortalInstance() {
 		return _initializingPortalInstance.get();
 	}

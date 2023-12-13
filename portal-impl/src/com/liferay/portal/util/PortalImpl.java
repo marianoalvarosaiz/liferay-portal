@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.cookies.constants.CookiesConstants;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
-import com.liferay.portal.kernel.db.partition.DBPartition;
 import com.liferay.portal.kernel.encryptor.EncryptorUtil;
 import com.liferay.portal.kernel.exception.ImageTypeException;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
@@ -1702,22 +1701,12 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public long getClassNameId(String value) {
-		boolean forceDatabaseQuery = false;
-
-		if (DBPartition.isPartitionEnabled() &&
-			CompanyThreadLocal.isInitializingCompanyId()) {
-
-			forceDatabaseQuery = true;
-		}
-
-		if (!StartupHelperUtil.isUpgrading() && !forceDatabaseQuery) {
+		if (!StartupHelperUtil.isUpgrading()) {
 			return ClassNameLocalServiceUtil.getClassNameId(value);
 		}
 
 		try (Connection connection = DataAccess.getConnection()) {
-			if (PortalUpgradeProcess.isInLatestSchemaVersion(connection) &&
-				!forceDatabaseQuery) {
-
+			if (PortalUpgradeProcess.isInLatestSchemaVersion(connection)) {
 				return ClassNameLocalServiceUtil.getClassNameId(value);
 			}
 
