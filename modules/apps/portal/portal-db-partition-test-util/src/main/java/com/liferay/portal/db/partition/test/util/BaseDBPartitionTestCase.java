@@ -549,7 +549,7 @@ public abstract class BaseDBPartitionTestCase {
 	}
 
 	private static final String _DATABASE_PARTITION_SCHEMA_NAME_PREFIX =
-		"lpartitiontest_";
+		"lparttest_";
 
 	private static final DataSource _currentDataSource =
 		ReflectionTestUtil.getFieldValue(DBInitUtil.class, "_dataSource");
