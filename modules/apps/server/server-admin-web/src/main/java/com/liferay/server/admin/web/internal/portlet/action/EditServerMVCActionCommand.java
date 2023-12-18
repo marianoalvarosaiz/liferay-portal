@@ -162,7 +162,7 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 
 		if (!permissionChecker.isOmniadmin() &&
 			(!permissionChecker.isCompanyAdmin() ||
-			 !cmd.equals("updateMail"))) {
+			 (!cmd.equals("updateMail") && !cmd.equals("resetMail")))) {
 
 			SessionErrors.add(
 				actionRequest,
@@ -247,6 +247,9 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 		}
 		else if (cmd.equals("gc")) {
 			_gc();
+		}
+		else if (cmd.equals("resetMail")) {
+			_resetMail(portletPreferences);
 		}
 		else if (cmd.equals("runScript")) {
 			_runScript(actionRequest, actionResponse);
@@ -622,6 +625,32 @@ public class EditServerMVCActionCommand extends BaseMVCActionCommand {
 		Runtime runtime = Runtime.getRuntime();
 
 		runtime.gc();
+	}
+
+	private void _resetMail(PortletPreferences portletPreferences)
+		throws Exception {
+
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL);
+		portletPreferences.reset(
+			PropsKeys.MAIL_SESSION_MAIL_ADVANCED_PROPERTIES);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_POP3_HOST);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_POP3_PASSWORD);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_POP3_PORT);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_POP3_USER);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_SMTP_HOST);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_SMTP_PASSWORD);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_SMTP_PORT);
+		portletPreferences.reset(
+			PropsKeys.MAIL_SESSION_MAIL_SMTP_STARTTLS_ENABLE);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_SMTP_USER);
+		portletPreferences.reset(PropsKeys.MAIL_SESSION_MAIL_STORE_PROTOCOL);
+		portletPreferences.reset(
+			PropsKeys.MAIL_SESSION_MAIL_TRANSPORT_PROTOCOL);
+		portletPreferences.reset(PropsKeys.POP_SERVER_NOTIFICATIONS_ENABLED);
+
+		portletPreferences.store();
+
+		_mailService.clearSession();
 	}
 
 	private void _runScript(
