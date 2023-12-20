@@ -117,7 +117,7 @@ public abstract class BaseDBPartitionTestCase {
 	protected static void createUniqueIndex(String tableName) throws Exception {
 		db.runSQL(
 			StringBundler.concat(
-				"create unique index ", TEST_INDEX_NAME, " on ", tableName,
+				"create unique index ", TEST_INDEX_NAME, " on  ", tableName,
 				" (testColumn)"));
 	}
 
