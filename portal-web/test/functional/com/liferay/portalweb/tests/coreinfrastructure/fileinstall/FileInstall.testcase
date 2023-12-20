@@ -178,13 +178,13 @@ definition {
 			WHERE configurationId LIKE 'com.liferay.portal.security.auth.verifier.internal.tunnel.configuration.TunnelAuthVerifierConfiguration%';
 		''';
 
-		var originalCount = SQL.executeSQLStatement(sqlStatement = ${mysqlStatement});
+		var originalCount = SQL.executeMySQLStatement(mysqlStatement = ${mysqlStatement});
 
 		Portlet.shutdownServer();
 
 		Portlet.startServer(keepOsGiState = "true");
 
-		var actualCount = SQL.executeSQLStatement(sqlStatement = ${mysqlStatement});
+		var actualCount = SQL.executeMySQLStatement(mysqlStatement = ${mysqlStatement});
 
 		if (${originalCount} != ${actualCount}) {
 			fail("Expected MYSQL entries='${originalCount}', after restarting portal MYSQL entries='${actualCount}'");
