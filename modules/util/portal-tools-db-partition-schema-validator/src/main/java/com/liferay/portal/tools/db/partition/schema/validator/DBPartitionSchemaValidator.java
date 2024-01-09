@@ -48,9 +48,18 @@ public class DBPartitionSchemaValidator {
 
 		CommandLine commandLine = commandLineParser.parse(options, args);
 
+		_dbType = commandLine.getOptionValue("db-type");
+		_dbType = _dbType.toLowerCase();
+
+		String jdbcURL = _MYSQL_DEFAULT_JDBC_URL;
+
+		if (_dbType.equals("postgresql")) {
+			jdbcURL = _POSTGRESQL_DEFAULT_JDBC_URL;
+		}
+
 		_schemaName = commandLine.getOptionValue("db-schema");
 
-		String jdbcURL = _DEFAULT_JDBC_URL.replace("db-schema", _schemaName);
+		jdbcURL = jdbcURL.replace("db-schema", _schemaName);
 
 		if (commandLine.hasOption("jdbc-url")) {
 			jdbcURL = commandLine.getOptionValue("jdbc-url");
@@ -87,6 +96,14 @@ public class DBPartitionSchemaValidator {
 				_connection.close();
 			}
 		}
+	}
+
+	private static String _getCatalog(String schemaName) throws SQLException {
+		if (_dbType.equals("mysql")) {
+			return schemaName;
+		}
+
+		return _connection.getCatalog();
 	}
 
 	private static List<Long> _getCompanyIds() throws Exception {
@@ -147,11 +164,21 @@ public class DBPartitionSchemaValidator {
 		options.addRequiredOption(
 			"d", "db-schema", true, "Set the default database schema name.");
 		options.addRequiredOption(
+			"t", "db-type", true, "Set database type [mysql, postgresql].");
+		options.addRequiredOption(
 			"p", "password", true, "Set database user password.");
 		options.addRequiredOption(
 			"u", "user", true, "Set the database user name.");
 
 		return options;
+	}
+
+	private static String _getSchema(String schemaName) throws SQLException {
+		if (_dbType.equals("postgresql")) {
+			return schemaName;
+		}
+
+		return _connection.getSchema();
 	}
 
 	private static boolean _hasColumn(
@@ -161,7 +188,8 @@ public class DBPartitionSchemaValidator {
 		DatabaseMetaData databaseMetaData = _connection.getMetaData();
 
 		try (ResultSet resultSet = databaseMetaData.getColumns(
-				schemaName, schemaName, tableName, columnName)) {
+				_getCatalog(schemaName), _getSchema(schemaName), tableName,
+				columnName)) {
 
 			if (!resultSet.next()) {
 				return false;
@@ -181,7 +209,8 @@ public class DBPartitionSchemaValidator {
 		DatabaseMetaData databaseMetaData = _connection.getMetaData();
 
 		try (ResultSet resultSet = databaseMetaData.getTables(
-				schemaName, schemaName, null, new String[] {"TABLE"})) {
+				_getCatalog(schemaName), _getSchema(schemaName), null,
+				new String[] {"TABLE"})) {
 
 			boolean validSchema = true;
 
@@ -222,15 +251,19 @@ public class DBPartitionSchemaValidator {
 		}
 	}
 
-	private static final String _DEFAULT_JDBC_URL =
+	private static final String _MYSQL_DEFAULT_JDBC_URL =
 		"jdbc:mysql://localhost/db-schema?characterEncoding=UTF-8&" +
 			"dontTrackOpenResources=true&holdResultsOpenOverStatementClose=" +
 				"true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=" +
 					"true";
 
+	private static final String _POSTGRESQL_DEFAULT_JDBC_URL =
+		"jdbc:postgresql://localhost:5432/db-schema?reWriteBatchedInserts=true";
+
 	private static Connection _connection;
 	private static final Set<String> _controlTableNames = new HashSet<>(
 		Arrays.asList("Company", "VirtualHost"));
+	private static String _dbType;
 	private static boolean _debug;
 	private static String _schemaName;
 	private static String _schemaPrefix = "lpartition_";
