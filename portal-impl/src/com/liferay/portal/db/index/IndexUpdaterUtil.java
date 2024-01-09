@@ -142,7 +142,7 @@ public class IndexUpdaterUtil {
 
 	public static void updatePortalIndexes() {
 		LoggingTimer loggingTimer = new LoggingTimer(
-			"Updating database indexes for portal");
+			"Updating portal database indexes");
 
 		try {
 			_addUpdateIndexesFutures(
