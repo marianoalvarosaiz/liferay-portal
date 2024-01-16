@@ -108,7 +108,7 @@ public class DBPartitionUtil {
 							_getCompanyIds(), tableName)) {
 
 						statement.executeUpdate(
-							_getCreateViewSQL(
+							_dbPartitionDB.getCreateViewSQL(
 								_defaultPartitionName,
 								_getPartitionName(companyId), tableName));
 					}
@@ -132,6 +132,18 @@ public class DBPartitionUtil {
 			connection.commit();
 		}
 		catch (Exception exception) {
+			if (!_dbPartitionDB.isTransactionAbortedOnFailure()) {
+				try (Statement statement = connection.createStatement()) {
+					statement.executeUpdate(
+						_dbPartitionDB.getDropPartitionSQL(
+							_getPartitionName(companyId)));
+				}
+				catch (SQLException sqlException) {
+					throw new PortalException(
+						"Unable to rollback schema creation", sqlException);
+				}
+			}
+
 			throw new PortalException(exception);
 		}
 		finally {
@@ -263,7 +275,8 @@ public class DBPartitionUtil {
 
 		try (Statement statement = connection.createStatement()) {
 			statement.execute(
-				_getDropViewSQL(_getPartitionName(companyId), viewName));
+				_dbPartitionDB.getDropViewSQL(
+					_getPartitionName(companyId), viewName));
 
 			statement.execute(
 				_dbPartitionDB.getCreateTableSQL(
@@ -362,8 +375,6 @@ public class DBPartitionUtil {
 		Connection connection = CurrentConnectionUtil.getConnection(
 			InfrastructureUtil.getDataSource());
 
-		boolean autoCommit = _executeCallable(connection::getAutoCommit);
-
 		DBInspector dbInspector = new DBInspector(connection);
 
 		try {
@@ -375,8 +386,6 @@ public class DBPartitionUtil {
 					_dbPartitionDB.getSchema(connection, _defaultPartitionName),
 					null, new String[] {"TABLE"});
 				Statement statement = connection.createStatement()) {
-
-				connection.setAutoCommit(false);
 
 				while (resultSet.next()) {
 					String tableName = resultSet.getString("TABLE_NAME");
@@ -397,19 +406,9 @@ public class DBPartitionUtil {
 					_dbPartitionDB.getDropPartitionSQL(
 						_getPartitionName(companyId)));
 			}
-
-			connection.commit();
 		}
 		catch (Exception exception) {
 			throw new PortalException(exception);
-		}
-		finally {
-			_executeCallable(
-				() -> {
-					connection.setAutoCommit(autoCommit);
-
-					return null;
-				});
 		}
 
 		_companyIds.remove(companyId);
@@ -433,14 +432,10 @@ public class DBPartitionUtil {
 			InfrastructureUtil.getDataSource());
 		List<String> controlTableNames = new ArrayList<>();
 
-		boolean autoCommit = _executeCallable(connection::getAutoCommit);
-
 		DBInspector dbInspector = new DBInspector(connection);
 
 		try {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
-
-			connection.setAutoCommit(false);
 
 			try (ResultSet resultSet = databaseMetaData.getTables(
 					_dbPartitionDB.getCatalog(
@@ -461,8 +456,6 @@ public class DBPartitionUtil {
 							companyId, tableName, statement, dbInspector);
 					}
 				}
-
-				connection.commit();
 			}
 		}
 		catch (Exception exception1) {
@@ -479,8 +472,6 @@ public class DBPartitionUtil {
 							companyId, tableName, statement, dbInspector);
 					}
 				}
-
-				connection.commit();
 			}
 			catch (Exception exception2) {
 				throw new PortalException(
@@ -495,14 +486,6 @@ public class DBPartitionUtil {
 				"Removal of database partition extraction was rolled back",
 				exception1);
 		}
-		finally {
-			_executeCallable(
-				() -> {
-					connection.setAutoCommit(autoCommit);
-
-					return null;
-				});
-		}
 
 		_companyIds.remove(companyId);
 	}
@@ -513,7 +496,8 @@ public class DBPartitionUtil {
 		throws Exception {
 
 		statement.executeUpdate(
-			_getDropViewSQL(_getPartitionName(companyId), tableName));
+			_dbPartitionDB.getDropViewSQL(
+				_getPartitionName(companyId), tableName));
 
 		statement.executeUpdate(
 			_dbPartitionDB.getCreateTableSQL(
@@ -743,30 +727,6 @@ public class DBPartitionUtil {
 			whereClause);
 	}
 
-	private static String _getCreateViewSQL(
-		String fromPartitionName, String toPartitionName, String viewName) {
-
-		return StringBundler.concat(
-			"create or replace view ", toPartitionName, StringPool.PERIOD,
-			viewName, " as select * from ", fromPartitionName,
-			StringPool.PERIOD, viewName);
-	}
-
-	private static String _getDropTableSQL(
-		String partitionName, String tableName) {
-
-		return StringBundler.concat(
-			"drop table if exists ", partitionName, StringPool.PERIOD,
-			tableName, " cascade");
-	}
-
-	private static String _getDropViewSQL(
-		String partitionName, String viewName) {
-
-		return StringBundler.concat(
-			"drop view if exists ", partitionName, StringPool.PERIOD, viewName);
-	}
-
 	private static String _getPartitionName(long companyId) {
 		if ((companyId == CompanyConstants.SYSTEM) ||
 			(companyId == _defaultCompanyId)) {
@@ -817,11 +777,11 @@ public class DBPartitionUtil {
 						}
 
 						statement.executeUpdate(
-							_getDropTableSQL(
+							_dbPartitionDB.getDropTableSQL(
 								_getPartitionName(companyId), tableName));
 
 						statement.executeUpdate(
-							_getCreateViewSQL(
+							_dbPartitionDB.getCreateViewSQL(
 								_defaultPartitionName,
 								_getPartitionName(companyId), tableName));
 					}
@@ -831,6 +791,10 @@ public class DBPartitionUtil {
 			}
 		}
 		catch (Exception exception1) {
+			if (_dbPartitionDB.isTransactionAbortedOnFailure()) {
+				throw new PortalException(exception1);
+			}
+
 			try (Statement statement = connection.createStatement()) {
 				for (String companyIdControlTable :
 						companyIdControlTableNames) {
@@ -918,10 +882,11 @@ public class DBPartitionUtil {
 		}
 
 		statement.executeUpdate(
-			_getDropTableSQL(_getPartitionName(companyId), tableName));
+			_dbPartitionDB.getDropTableSQL(
+				_getPartitionName(companyId), tableName));
 
 		statement.executeUpdate(
-			_getCreateViewSQL(
+			_dbPartitionDB.getCreateViewSQL(
 				_defaultPartitionName, _getPartitionName(companyId),
 				tableName));
 	}
@@ -984,7 +949,7 @@ public class DBPartitionUtil {
 						}
 
 						super.execute(
-							_getCreateViewSQL(
+							_dbPartitionDB.getCreateViewSQL(
 								_defaultPartitionName,
 								_getPartitionName(companyId), tableName));
 					}

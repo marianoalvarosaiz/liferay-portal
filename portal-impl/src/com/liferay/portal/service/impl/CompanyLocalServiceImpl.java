@@ -315,14 +315,24 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 					return updatedCompany;
 				});
 		}
-		catch (Exception exception) {
-			if (newDBPartitionAdded) {
-				DBPartitionUtil.removeDBPartition(companyId);
+		catch (Throwable throwable) {
+			try {
+				if (newDBPartitionAdded) {
+					long addedCompanyId = companyId;
+
+					_transactionAwareInvoke(
+						() -> {
+							DBPartitionUtil.removeDBPartition(addedCompanyId);
+
+							return null;
+						});
+				}
+			}
+			finally {
+				safeCloseable.close();
 			}
 
-			safeCloseable.close();
-
-			throw new PortalException(exception);
+			throw new PortalException(throwable);
 		}
 		finally {
 			TransactionCommitCallbackUtil.registerCallback(
@@ -348,10 +358,10 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				"Company ID " + companyId + " is the default company ID");
 		}
 
+		DBPartitionUtil.insertDBPartition(companyId);
+
 		SafeCloseable safeCloseable = CompanyThreadLocal.setWithSafeCloseable(
 			companyId);
-
-		DBPartitionUtil.insertDBPartition(companyId);
 
 		try {
 			return _transactionAwareInvoke(
@@ -413,12 +423,20 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 					return company;
 				});
 		}
-		catch (PortalException portalException) {
-			extractDBPartitionCompany(companyId);
+		catch (Throwable throwable) {
+			try {
+				_transactionAwareInvoke(
+					() -> {
+						extractDBPartitionCompany(companyId);
 
-			safeCloseable.close();
+						return null;
+					});
+			}
+			finally {
+				safeCloseable.close();
+			}
 
-			throw portalException;
+			throw new PortalException(throwable);
 		}
 		finally {
 			TransactionCommitCallbackUtil.registerCallback(
@@ -550,6 +568,11 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				});
 
 			DBPartitionUtil.extractDBPartition(companyId);
+		}
+		catch (Throwable throwable) {
+			safeCloseable1.close();
+
+			throw new PortalException(throwable);
 		}
 		finally {
 			TransactionCommitCallbackUtil.registerCallback(

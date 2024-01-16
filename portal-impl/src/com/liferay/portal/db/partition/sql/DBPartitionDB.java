@@ -1,10 +1,12 @@
 /**
- * SPDX-FileCopyrightText: (c) 2023 Liferay, Inc. https://liferay.com
+ * SPDX-FileCopyrightText: (c) 2024 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
 package com.liferay.portal.db.partition.sql;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.db.DBInspector;
 
 import java.sql.Connection;
@@ -31,10 +33,34 @@ public interface DBPartitionDB {
 	public String getCreateTableSQL(
 		String fromPartitionName, String toPartitionName, String tableName);
 
+	public default String getCreateViewSQL(
+		String fromPartitionName, String toPartitionName, String viewName) {
+
+		return StringBundler.concat(
+			"create or replace view ", toPartitionName, StringPool.PERIOD,
+			viewName, " as select * from ", fromPartitionName,
+			StringPool.PERIOD, viewName);
+	}
+
 	public String getDefaultPartitionName(Connection connection)
 		throws SQLException;
 
 	public String getDropPartitionSQL(String partitionName);
+
+	public default String getDropTableSQL(
+		String partitionName, String tableName) {
+
+		return StringBundler.concat(
+			"drop table if exists ", partitionName, StringPool.PERIOD,
+			tableName, " cascade");
+	}
+
+	public default String getDropViewSQL(
+		String partitionName, String viewName) {
+
+		return StringBundler.concat(
+			"drop view if exists ", partitionName, StringPool.PERIOD, viewName);
+	}
 
 	public default String getSafeAlterTable(String alterTableSQL) {
 		return alterTableSQL;
