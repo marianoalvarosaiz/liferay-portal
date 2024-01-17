@@ -87,7 +87,7 @@ public class CompanyLocalServiceDBPartitionTest
 
 	@Test
 	public void testAddCompany() throws Exception {
-		int schemasSize = _getSchemasSize();
+		int schemasSize = _getSchemasAndCatalogsSize();
 
 		_company = CompanyTestUtil.addCompany();
 
@@ -95,13 +95,13 @@ public class CompanyLocalServiceDBPartitionTest
 			ArrayUtil.contains(
 				PortalInstances.getCompanyIdsBySQL(), _company.getCompanyId()));
 
-		Assert.assertEquals(schemasSize + 1, _getSchemasSize());
+		Assert.assertEquals(schemasSize + 1, _getSchemasAndCatalogsSize());
 	}
 
 	@Test
 	public void testAddCompanyWhenAddDBPartitionFails() throws Exception {
 		long[] companyIds = PortalInstances.getCompanyIdsBySQL();
-		int schemasSize = _getSchemasSize();
+		int schemasSize = _getSchemasAndCatalogsSize();
 
 		try (AutoCloseable autoCloseable =
 				ReflectionTestUtil.setFieldValueWithAutoCloseable(
@@ -128,14 +128,14 @@ public class CompanyLocalServiceDBPartitionTest
 		catch (Exception exception) {
 			Assert.assertArrayEquals(
 				companyIds, PortalInstances.getCompanyIdsBySQL());
-			Assert.assertEquals(schemasSize, _getSchemasSize());
+			Assert.assertEquals(schemasSize, _getSchemasAndCatalogsSize());
 		}
 	}
 
 	@Test
 	public void testAddCompanyWhenCompanyCreationFails() throws Exception {
 		long[] companyIds = PortalInstances.getCompanyIdsBySQL();
-		int schemasSize = _getSchemasSize();
+		int schemasSize = _getSchemasAndCatalogsSize();
 
 		long companyId = RandomTestUtil.randomLong();
 		String webId = "test.com";
@@ -160,7 +160,7 @@ public class CompanyLocalServiceDBPartitionTest
 		catch (Exception exception) {
 			Assert.assertArrayEquals(
 				companyIds, PortalInstances.getCompanyIdsBySQL());
-			Assert.assertEquals(schemasSize, _getSchemasSize());
+			Assert.assertEquals(schemasSize, _getSchemasAndCatalogsSize());
 		}
 	}
 
@@ -483,21 +483,27 @@ public class CompanyLocalServiceDBPartitionTest
 		return objectNames;
 	}
 
-	private int _getSchemasSize() throws SQLException {
-		Set<String> schemaNames = new HashSet<>();
+	private int _getSchemasAndCatalogsSize() throws SQLException {
+		Set<String> schemaAndCatalogNames = new HashSet<>();
 
 		DatabaseMetaData databaseMetaData = connection.getMetaData();
 
 		try (ResultSet resultSet = databaseMetaData.getSchemas()) {
 			while (resultSet.next()) {
-				schemaNames.add(resultSet.getString("TABLE_SCHEM"));
-				schemaNames.add(resultSet.getString("TABLE_CATALOG"));
+				schemaAndCatalogNames.add(resultSet.getString("TABLE_SCHEM"));
+				schemaAndCatalogNames.add(resultSet.getString("TABLE_CATALOG"));
 			}
 		}
 
-		schemaNames.remove(null);
+		try (ResultSet resultSet = databaseMetaData.getCatalogs()) {
+			while (resultSet.next()) {
+				schemaAndCatalogNames.add(resultSet.getString("TABLE_CAT"));
+			}
+		}
 
-		return schemaNames.size();
+		schemaAndCatalogNames.remove(null);
+
+		return schemaAndCatalogNames.size();
 	}
 
 	private int _getTablesCount(long companyId) throws Exception {
