@@ -43,26 +43,54 @@ exit 0
 				<then>
 					<property name="custom.database.url" value="localhost:3307" />
 				</then>
+				<elseif>
+					<equals arg1="${database.host}" arg2="localhost_postgresql" />
+					<then>
+						<property name="custom.database.url" value="localhost:5433" />
+					</then>
+				</elseif>
 				<else>
 					<property name="custom.database.url" value="${database.host}" />
 				</else>
 			</if>
 
-			<exec dir="${liferay.home}/tools/portal-tools-db-partition-virtual-instance-migrator" executable="/bin/bash" failonerror="false" output="db-partition-virtual-instance-migrator.log">
-				<arg value="${liferay.home}/tools/portal-tools-db-partition-virtual-instance-migrator/db_partition_virtual_instance_migrator.sh" />
-				<arg value="-s" />
-				<arg value="jdbc:mysql://${custom.database.url}/${database.schema.source.name}?characterEncoding=UTF-8&amp;dontTrackOpenResources=true&amp;holdResultsOpenOverStatementClose=true&amp;serverTimezone=GMT&amp;useFastDateParsing=false&amp;useUnicode=true" />
-				<arg value="-su" />
-				<arg value="${database.mysql.username}" />
-				<arg value="-sp" />
-				<arg value="${database.schema.source.password}" />
-				<arg value="-t" />
-				<arg value="jdbc:mysql://${custom.database.url}/${database.schema.target.name}?characterEncoding=UTF-8&amp;dontTrackOpenResources=true&amp;holdResultsOpenOverStatementClose=true&amp;serverTimezone=GMT&amp;useFastDateParsing=false&amp;useUnicode=true" />
-				<arg value="-tu" />
-				<arg value="${database.mysql.username}" />
-				<arg value="-tp" />
-				<arg value="${database.schema.target.password}" />
-			</exec>
+			<if>
+				<equals arg1="${database.type}" arg2="mysql" />
+				<then>
+					<exec dir="${liferay.home}/tools/portal-tools-db-partition-virtual-instance-migrator" executable="/bin/bash" failonerror="false" output="db-partition-virtual-instance-migrator.log">
+						<arg value="${liferay.home}/tools/portal-tools-db-partition-virtual-instance-migrator/db_partition_virtual_instance_migrator.sh" />
+						<arg value="-s" />
+						<arg value="jdbc:mysql://${custom.database.url}/${database.schema.source.name}?characterEncoding=UTF-8&amp;dontTrackOpenResources=true&amp;holdResultsOpenOverStatementClose=true&amp;serverTimezone=GMT&amp;useFastDateParsing=false&amp;useUnicode=true" />
+						<arg value="-su" />
+						<arg value="${database.mysql.username}" />
+						<arg value="-sp" />
+						<arg value="${database.schema.source.password}" />
+						<arg value="-t" />
+						<arg value="jdbc:mysql://${custom.database.url}/${database.schema.target.name}?characterEncoding=UTF-8&amp;dontTrackOpenResources=true&amp;holdResultsOpenOverStatementClose=true&amp;serverTimezone=GMT&amp;useFastDateParsing=false&amp;useUnicode=true" />
+						<arg value="-tu" />
+						<arg value="${database.mysql.username}" />
+						<arg value="-tp" />
+						<arg value="${database.schema.target.password}" />
+					</exec>
+				</then>
+				<else>
+					<exec dir="${liferay.home}/tools/portal-tools-db-partition-virtual-instance-migrator" executable="/bin/bash" failonerror="false" output="db-partition-virtual-instance-migrator.log">
+						<arg value="${liferay.home}/tools/portal-tools-db-partition-virtual-instance-migrator/db_partition_virtual_instance_migrator.sh" />
+						<arg value="-s" />
+						<arg value="jdbc:postgresql://${custom.database.url}/${database.schema.source.name}?reWriteBatchedInserts=true" />
+						<arg value="-su" />
+						<arg value="${database.postgresql.username}" />
+						<arg value="-sp" />
+						<arg value="${database.schema.source.password}" />
+						<arg value="-t" />
+						<arg value="jdbc:postgresql://${custom.database.url}/${database.schema.target.name}?reWriteBatchedInserts=true" />
+						<arg value="-tu" />
+						<arg value="${database.postgresql.username}" />
+						<arg value="-tp" />
+						<arg value="${database.schema.target.password}" />
+					</exec>
+				</else>
+			</if>
 		</sequential>
 	</macrodef>
 

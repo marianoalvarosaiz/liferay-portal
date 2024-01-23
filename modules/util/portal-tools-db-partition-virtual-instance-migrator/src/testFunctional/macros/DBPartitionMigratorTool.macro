@@ -21,7 +21,16 @@ definition {
 
 	@summary = "Create and configure the target schema"
 	macro prepareTargetSchema() {
-		SQL.executeSQLStatement(sqlStatement = "CREATE DATABASE lportal_target character set utf8;");
+		var databaseType = PropsUtil.get("database.type");
+
+		if (${databaseType} == "mysql") {
+			var sqlStatement = "CREATE DATABASE lportal_target character set utf8;";
+		}
+		else if (${databaseType} == "postgresql") {
+			var sqlStatement = "CREATE DATABASE lportal_target ENCODING 'utf8';";
+		}
+
+		SQL.executeSQLStatement(sqlStatement = ${sqlStatement});
 
 		var liferayPortalWeb = PropsUtil.get("liferay.app.server.classes.portal.dir");
 
