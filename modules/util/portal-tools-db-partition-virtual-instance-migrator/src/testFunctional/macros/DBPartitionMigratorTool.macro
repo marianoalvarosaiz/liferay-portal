@@ -24,13 +24,17 @@ definition {
 		var databaseType = PropsUtil.get("database.type");
 
 		if (${databaseType} == "mysql") {
+			var autoCommit = "false";
 			var sqlStatement = "CREATE DATABASE lportal_target character set utf8;";
 		}
 		else if (${databaseType} == "postgresql") {
+			var autoCommit = "true";
 			var sqlStatement = "CREATE DATABASE lportal_target ENCODING 'utf8';";
 		}
 
-		SQL.executeSQLStatement(sqlStatement = ${sqlStatement});
+		SQL.executeSettingAutoCommitSQLStatement(
+			autoCommit = ${autoCommit},
+			sqlStatement = ${sqlStatement});
 
 		var liferayPortalWeb = PropsUtil.get("liferay.app.server.classes.portal.dir");
 
