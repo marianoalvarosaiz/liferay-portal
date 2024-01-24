@@ -3,7 +3,7 @@ definition {
 
 	property app.server.types = "tomcat";
 	property ci.retries.disabled = "true";
-	property database.types = "mysql";
+	property database.types = "mysql, postgresql";
 	property liferay.online.properties = "true";
 	property osgi.modules.includes = "portal-tools-db-partition-virtual-instance-migrator";
 	property portal.release = "true";
