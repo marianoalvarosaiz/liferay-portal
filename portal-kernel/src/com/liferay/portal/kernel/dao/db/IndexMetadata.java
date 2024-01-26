@@ -152,8 +152,7 @@ public class IndexMetadata extends Index implements Comparable<IndexMetadata> {
 				return count2.compareTo(count1);
 			});
 
-		indexName = IndexMetadataFactoryUtil.createIndexName(
-			getTableName(), _columnNames);
+		indexName = regenerateIndexName();
 	}
 
 	public Boolean redundantTo(IndexMetadata indexMetadata) {
@@ -194,6 +193,11 @@ public class IndexMetadata extends Index implements Comparable<IndexMetadata> {
 		}
 
 		return !redundant;
+	}
+
+	public String regenerateIndexName() {
+		return IndexMetadataFactoryUtil.createIndexName(
+			getTableName(), _columnNames);
 	}
 
 	@Override
