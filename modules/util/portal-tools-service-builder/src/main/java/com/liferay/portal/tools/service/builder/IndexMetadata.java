@@ -29,6 +29,8 @@ public class IndexMetadata implements Comparable<IndexMetadata> {
 		_unique = unique;
 		_tableName = tableName;
 		_columnNames = columnNames;
+
+		_dbColumnNames = _trimColumnNames(columnNames);
 	}
 
 	@Override
@@ -67,9 +69,17 @@ public class IndexMetadata implements Comparable<IndexMetadata> {
 	}
 
 	public String getCreateSQL(int[] columnSizes) {
+		if (ArrayUtil.isEmpty(columnSizes)) {
+			return _getOriginalCreateSQL();
+		}
+
 		return IndexSQLUtil.getCreateSQL(
-			_unique, _tableName, _columnNames, columnSizes,
+			_unique, _tableName, _dbColumnNames, columnSizes,
 			IndexSQLUtil.INDEX_NAME_PREFIX);
+	}
+
+	public String[] getDBColumnNames() {
+		return _dbColumnNames;
 	}
 
 	public String getTableName() {
@@ -101,6 +111,8 @@ public class IndexMetadata implements Comparable<IndexMetadata> {
 
 				return count2.compareTo(count1);
 			});
+
+		_dbColumnNames = _trimColumnNames(_columnNames);
 	}
 
 	public Boolean redundantTo(IndexMetadata indexMetadata) {
@@ -143,11 +155,38 @@ public class IndexMetadata implements Comparable<IndexMetadata> {
 		return !redundant;
 	}
 
+	private String _getOriginalCreateSQL() {
+		return IndexSQLUtil.getCreateSQL(
+			_unique, _tableName, _columnNames, null,
+			IndexSQLUtil.INDEX_NAME_PREFIX);
+	}
+
 	private int _hash(int seed, Object value) {
 		return (seed * 11) + ((value == null) ? 0 : value.hashCode());
 	}
 
+	private String _trimColumnName(String columnName) {
+		int index = columnName.indexOf("[$COLUMN_LENGTH:");
+
+		if (index > 0) {
+			columnName = columnName.substring(0, index);
+		}
+
+		return columnName;
+	}
+
+	private String[] _trimColumnNames(String[] columnNames) {
+		String[] trimmedColumnNames = columnNames.clone();
+
+		for (int i = 0; i < trimmedColumnNames.length; i++) {
+			trimmedColumnNames[i] = _trimColumnName(trimmedColumnNames[i]);
+		}
+
+		return trimmedColumnNames;
+	}
+
 	private final String[] _columnNames;
+	private String[] _dbColumnNames;
 	private final String _tableName;
 	private final boolean _unique;
 
