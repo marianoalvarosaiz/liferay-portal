@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,8 @@ public class DB2DB extends BaseDB {
 			Connection connection, String tableName, String oldColumnName,
 			String newColumnDefinition)
 		throws Exception {
+		
+		_log.error("Going to change name of column: " + oldColumnName + "with new definition: " + newColumnDefinition);
 
 		List<IndexMetadata> indexMetadatas = dropIndexes(
 			connection, tableName, oldColumnName);
@@ -101,6 +104,10 @@ public class DB2DB extends BaseDB {
 		}
 
 		if (!newIndexMetadatas.isEmpty()) {
+			for(IndexMetadata indexMetadata : newIndexMetadatas) {
+				_log.error("New index: " + indexMetadata.getIndexName() + " and columns: " + Arrays.toString(indexMetadata.getColumnNames()));
+			}
+			
 			addIndexes(connection, newIndexMetadatas);
 		}
 	}
@@ -110,6 +117,8 @@ public class DB2DB extends BaseDB {
 			Connection connection, String tableName, String columnName,
 			String newColumnType)
 		throws Exception {
+		
+		_log.error("Going to change type of column: " + columnName + "with type: " + newColumnType);
 
 		DBInspector dbInspector = new DBInspector(connection);
 
@@ -160,6 +169,12 @@ public class DB2DB extends BaseDB {
 
 			List<IndexMetadata> indexMetadatas = dropIndexes(
 				connection, tableName, columnName);
+			
+			_log.error("Current indexes: ");
+			
+			for(IndexMetadata indexMetadata : indexMetadatas) {
+				_log.error("Index: " + indexMetadata.getIndexName() + " and columns: " + Arrays.toString(indexMetadata.getColumnNames()));
+			}
 
 			String[] primaryKeyColumnNames = getPrimaryKeyColumnNames(
 				connection, tableName);
