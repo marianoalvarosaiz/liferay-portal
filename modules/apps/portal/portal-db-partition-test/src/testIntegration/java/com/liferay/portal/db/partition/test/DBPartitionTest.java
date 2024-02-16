@@ -423,8 +423,6 @@ public class DBPartitionTest extends BaseDBPartitionTestCase {
 	@Inject
 	private ClassNameLocalService _classNameLocalService;
 
-	@Inject
-	private CompanyLocalService _companyLocalService;
 	private class ClassNameModelHints extends DefaultModelHintsImpl {
 
 		@Override
