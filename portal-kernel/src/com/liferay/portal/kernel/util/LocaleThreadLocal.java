@@ -6,6 +6,7 @@
 package com.liferay.portal.kernel.util;
 
 import com.liferay.petra.lang.CentralizedThreadLocal;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 
@@ -32,6 +33,21 @@ public class LocaleThreadLocal {
 		_defaultLocale.remove();
 	}
 
+	public static SafeCloseable removeDefaultLocaleWithSafeCloseable() {
+		SafeCloseable safeCloseable = () -> {
+		};
+
+		if (_initializedDefaultLocale.get()) {
+			Locale defaultLocale = _defaultLocale.get();
+
+			safeCloseable = () -> _defaultLocale.set(defaultLocale);
+		}
+
+		_defaultLocale.remove();
+
+		return safeCloseable;
+	}
+
 	public static void setDefaultLocale(Locale locale) {
 		_defaultLocale.set(locale);
 	}
@@ -45,7 +61,7 @@ public class LocaleThreadLocal {
 	}
 
 	private static final ThreadLocal<Locale> _defaultLocale =
-		new CentralizedThreadLocal<>(
+		new CentralizedThreadLocal<Locale>(
 			LocaleThreadLocal.class + "._defaultLocale",
 			() -> {
 				User guestUser = CompanyThreadLocal.fetchGuestUser();
@@ -55,8 +71,28 @@ public class LocaleThreadLocal {
 				}
 
 				return guestUser.getLocale();
-			});
+			}) {
 
+			@Override
+			public void remove() {
+				_initializedDefaultLocale.set(Boolean.FALSE);
+
+				super.remove();
+			}
+
+			@Override
+			public void set(Locale locale) {
+				_initializedDefaultLocale.set(Boolean.TRUE);
+
+				super.set(locale);
+			}
+
+		};
+
+	private static final ThreadLocal<Boolean> _initializedDefaultLocale =
+		new CentralizedThreadLocal<>(
+			LocaleThreadLocal.class + ".initializedDefaultLocale",
+			() -> Boolean.FALSE);
 	private static final ThreadLocal<Locale> _siteDefaultLocale =
 		new CentralizedThreadLocal<>(
 			LocaleThreadLocal.class + "._siteDefaultLocale");
