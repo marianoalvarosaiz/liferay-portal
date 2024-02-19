@@ -6,6 +6,7 @@
 package com.liferay.portal.kernel.util;
 
 import com.liferay.petra.lang.CentralizedThreadLocal;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 
@@ -28,6 +29,10 @@ public class TimeZoneThreadLocal {
 		_defaultTimeZone.remove();
 	}
 
+	public static SafeCloseable removeDefaultTimeZoneWithSafeCloseable() {
+		return _defaultTimeZone.removeDefaultTimeZoneWithSafeCloseable();
+	}
+
 	public static void setDefaultTimeZone(TimeZone timeZone) {
 		_defaultTimeZone.set(timeZone);
 	}
@@ -36,21 +41,48 @@ public class TimeZoneThreadLocal {
 		_themeDisplayTimeZone.set(timeZone);
 	}
 
-	private static final ThreadLocal<TimeZone> _defaultTimeZone =
-		new CentralizedThreadLocal<>(
-			TimeZoneThreadLocal.class + "._defaultTimeZone",
-			() -> {
-				User guestUser = CompanyThreadLocal.fetchGuestUser();
-
-				if (guestUser == null) {
-					return null;
-				}
-
-				return guestUser.getTimeZone();
-			});
-
+	private static final LazyCentralizedThreadLocal _defaultTimeZone =
+		new LazyCentralizedThreadLocal();
 	private static final ThreadLocal<TimeZone> _themeDisplayTimeZone =
 		new CentralizedThreadLocal<>(
 			TimeZoneThreadLocal.class + "._themeDisplayTimeZone");
+
+	private static class LazyCentralizedThreadLocal
+		extends CentralizedThreadLocal<TimeZone> {
+
+		public LazyCentralizedThreadLocal() {
+			super(
+				TimeZoneThreadLocal.class + "._defaultTimeZone",
+				() -> {
+					User guestUser = CompanyThreadLocal.fetchGuestUser();
+
+					if (guestUser == null) {
+						return null;
+					}
+
+					return guestUser.getTimeZone();
+				});
+		}
+
+		public SafeCloseable removeDefaultTimeZoneWithSafeCloseable() {
+			SafeCloseable safeCloseable = () -> {
+			};
+
+			ThreadLocalMap threadLocalMap = getThreadLocalMap();
+
+			Entry entry = threadLocalMap.getEntry(this);
+
+			if (entry != null) {
+				TimeZone timeZone = _defaultTimeZone.get();
+
+				safeCloseable = () -> _defaultTimeZone.set(timeZone);
+			}
+
+			_defaultTimeZone.remove();
+
+			return safeCloseable;
+		}
+
+	}
 
 }
