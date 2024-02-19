@@ -6,6 +6,7 @@
 package com.liferay.portal.kernel.util;
 
 import com.liferay.petra.lang.CentralizedThreadLocal;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 
@@ -32,6 +33,10 @@ public class LocaleThreadLocal {
 		_defaultLocale.remove();
 	}
 
+	public static SafeCloseable removeDefaultLocaleWithSafeCloseable() {
+		return _defaultLocale.removeDefaultLocaleWithSafeCloseable();
+	}
+
 	public static void setDefaultLocale(Locale locale) {
 		_defaultLocale.set(locale);
 	}
@@ -44,24 +49,51 @@ public class LocaleThreadLocal {
 		_themeDisplayLocale.set(locale);
 	}
 
-	private static final ThreadLocal<Locale> _defaultLocale =
-		new CentralizedThreadLocal<>(
-			LocaleThreadLocal.class + "._defaultLocale",
-			() -> {
-				User guestUser = CompanyThreadLocal.fetchGuestUser();
-
-				if (guestUser == null) {
-					return null;
-				}
-
-				return guestUser.getLocale();
-			});
-
+	private static final LazyCentralizedThreadLocal _defaultLocale =
+		new LazyCentralizedThreadLocal();
 	private static final ThreadLocal<Locale> _siteDefaultLocale =
 		new CentralizedThreadLocal<>(
 			LocaleThreadLocal.class + "._siteDefaultLocale");
 	private static final ThreadLocal<Locale> _themeDisplayLocale =
 		new CentralizedThreadLocal<>(
 			LocaleThreadLocal.class + "._themeDisplayLocale");
+
+	private static class LazyCentralizedThreadLocal
+		extends CentralizedThreadLocal<Locale> {
+
+		public LazyCentralizedThreadLocal() {
+			super(
+				LocaleThreadLocal.class + "._defaultLocale",
+				() -> {
+					User guestUser = CompanyThreadLocal.fetchGuestUser();
+
+					if (guestUser == null) {
+						return null;
+					}
+
+					return guestUser.getLocale();
+				});
+		}
+
+		public SafeCloseable removeDefaultLocaleWithSafeCloseable() {
+			SafeCloseable safeCloseable = () -> {
+			};
+
+			ThreadLocalMap threadLocalMap = getThreadLocalMap();
+
+			Entry entry = threadLocalMap.getEntry(this);
+
+			if (entry != null) {
+				Locale locale = _defaultLocale.get();
+
+				safeCloseable = () -> _defaultLocale.set(locale);
+			}
+
+			_defaultLocale.remove();
+
+			return safeCloseable;
+		}
+
+	}
 
 }
