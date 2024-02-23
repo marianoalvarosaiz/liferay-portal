@@ -257,6 +257,8 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 				finally {
 					bundleContext.ungetService(serviceReference);
 				}
+
+				bundleContext.ungetService(serviceReference);
 			});
 
 		_defaultCTCollectionHistoryProvider =
