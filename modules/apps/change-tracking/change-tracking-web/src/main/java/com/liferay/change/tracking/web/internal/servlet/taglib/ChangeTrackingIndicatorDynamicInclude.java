@@ -629,8 +629,6 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 		}
 
 		if ((className != null) && (classPK != 0)) {
-			long classNameId = _portal.getClassNameId(className);
-
 			CTCollectionHistoryProvider<?> ctCollectionHistoryProvider =
 				_serviceTrackerMap.getService(className);
 
@@ -638,6 +636,8 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 				ctCollectionHistoryProvider =
 					_defaultCTCollectionHistoryProvider;
 			}
+
+			long classNameId = _portal.getClassNameId(className);
 
 			List<CTCollection> ctCollections =
 				ctCollectionHistoryProvider.getCTCollections(
