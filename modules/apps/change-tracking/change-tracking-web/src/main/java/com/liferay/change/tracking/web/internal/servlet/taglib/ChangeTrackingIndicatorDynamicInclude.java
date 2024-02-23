@@ -29,7 +29,6 @@ import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
-import com.liferay.portal.db.partition.util.DBPartitionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -45,7 +44,6 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
@@ -245,18 +243,9 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 				CTCollectionHistoryProvider<?> ctCollectionHistoryProvider =
 					bundleContext.getService(serviceReference);
 
-				try {
-					DBPartitionUtil.forEachCompanyId(
-						companyId -> emitter.emit(
-							_classNameLocalService.getClassNameId(
-								ctCollectionHistoryProvider.getModelClass())));
-				}
-				catch (Exception exception) {
-					throw new RuntimeException(exception);
-				}
-				finally {
-					bundleContext.ungetService(serviceReference);
-				}
+				emitter.emit(
+					ctCollectionHistoryProvider.getModelClass(
+					).getName());
 
 				bundleContext.ungetService(serviceReference);
 			});
@@ -643,7 +632,7 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 			long classNameId = _portal.getClassNameId(className);
 
 			CTCollectionHistoryProvider<?> ctCollectionHistoryProvider =
-				_serviceTrackerMap.getService(classNameId);
+				_serviceTrackerMap.getService(className);
 
 			if (ctCollectionHistoryProvider == null) {
 				ctCollectionHistoryProvider =
@@ -716,9 +705,6 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 		ChangeTrackingIndicatorDynamicInclude.class);
 
 	@Reference
-	private ClassNameLocalService _classNameLocalService;
-
-	@Reference
 	private ConfigurationProvider _configurationProvider;
 
 	@Reference
@@ -754,7 +740,7 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 	@Reference
 	private ReactRenderer _reactRenderer;
 
-	private ServiceTrackerMap<Long, CTCollectionHistoryProvider<?>>
+	private ServiceTrackerMap<String, CTCollectionHistoryProvider<?>>
 		_serviceTrackerMap;
 
 	@Reference(
