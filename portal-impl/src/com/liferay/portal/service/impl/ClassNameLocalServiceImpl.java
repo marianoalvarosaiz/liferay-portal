@@ -111,10 +111,6 @@ public class ClassNameLocalServiceImpl
 					return classNameLocalService.addClassName(value);
 				}
 				catch (Throwable throwable) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(throwable);
-					}
-
 					return null;
 				}
 			});
