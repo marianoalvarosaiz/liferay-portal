@@ -540,6 +540,10 @@ definition {
 			}
 		}
 
+		task ("Delete indexes.sql file from portal-impl.jar") {
+			AntCommands.runCommand("modules/util/portal-tools-db-upgrade-client/src/testFunctional/ant/build-test-db-upgrade-client.xml", "delete-indexes-sql");
+		}
+
 		task ("Shutdown server and execute upgrade again") {
 			Portlet.shutdownServer();
 
