@@ -5,9 +5,7 @@
 
 package com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0;
 
-import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
-import com.liferay.expando.kernel.service.ExpandoTableLocalService;
-import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -20,27 +18,14 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.segments.constants.SegmentsEntryConstants;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.BrowseRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.CustomFieldRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.LanguageRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.LastLoginDateRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.OSRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.OrganizationMemberRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.PreviousVisitedSiteRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.RegularRoleRuleConverter;
 import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.RuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.SiteMemberRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.UserGroupMemberRuleConverter;
-import com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.util.UserLoggedRuleConverter;
 import com.liferay.segments.criteria.Criteria;
 import com.liferay.segments.criteria.CriteriaSerializer;
-import com.liferay.segments.criteria.contributor.SegmentsCriteriaContributor;
 import com.liferay.segments.service.SegmentsEntryLocalService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -50,54 +35,11 @@ import java.util.Map;
 public class ContentTargetingUpgradeProcess extends UpgradeProcess {
 
 	public ContentTargetingUpgradeProcess(
-		SegmentsCriteriaContributor contextSegmentsCriteriaContributor,
-		ExpandoColumnLocalService expandoColumnLocalService,
-		ExpandoTableLocalService expandoTableLocalService,
-		JSONFactory jsonFactory,
 		SegmentsEntryLocalService segmentsEntryLocalService,
-		SegmentsCriteriaContributor userOrganizationSegmentsCriteriaContributor,
-		SegmentsCriteriaContributor userSegmentsCriteriaContributor) {
+		ServiceTrackerMap<String, RuleConverter> serviceTrackerMap) {
 
 		_segmentsEntryLocalService = segmentsEntryLocalService;
-
-		_ruleConverters.put(
-			BrowseRuleConverter.RULE_CONVERTER_KEY,
-			new BrowseRuleConverter(contextSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			CustomFieldRuleConverter.RULE_CONVERTER_KEY,
-			new CustomFieldRuleConverter(
-				expandoColumnLocalService, expandoTableLocalService,
-				jsonFactory, userSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			LanguageRuleConverter.RULE_CONVERTER_KEY,
-			new LanguageRuleConverter(contextSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			LastLoginDateRuleConverter.RULE_CONVERTER_KEY,
-			new LastLoginDateRuleConverter(
-				contextSegmentsCriteriaContributor, jsonFactory));
-		_ruleConverters.put(
-			OrganizationMemberRuleConverter.RULE_CONVERTER_KEY,
-			new OrganizationMemberRuleConverter(
-				userOrganizationSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			OSRuleConverter.RULE_CONVERTER_KEY,
-			new OSRuleConverter(contextSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			PreviousVisitedSiteRuleConverter.RULE_CONVERTER_KEY,
-			new PreviousVisitedSiteRuleConverter(
-				contextSegmentsCriteriaContributor, jsonFactory));
-		_ruleConverters.put(
-			RegularRoleRuleConverter.RULE_CONVERTER_KEY,
-			new RegularRoleRuleConverter(userSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			SiteMemberRuleConverter.RULE_CONVERTER_KEY,
-			new SiteMemberRuleConverter(userSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			UserGroupMemberRuleConverter.RULE_CONVERTER_KEY,
-			new UserGroupMemberRuleConverter(userSegmentsCriteriaContributor));
-		_ruleConverters.put(
-			UserLoggedRuleConverter.RULE_CONVERTER_KEY,
-			new UserLoggedRuleConverter(contextSegmentsCriteriaContributor));
+		_serviceTrackerMap = serviceTrackerMap;
 	}
 
 	@Override
@@ -160,7 +102,8 @@ public class ContentTargetingUpgradeProcess extends UpgradeProcess {
 				while (resultSet.next()) {
 					String ruleKey = resultSet.getString("ruleKey");
 
-					RuleConverter ruleConverter = _ruleConverters.get(ruleKey);
+					RuleConverter ruleConverter = _serviceTrackerMap.getService(
+						ruleKey);
 
 					if (ruleConverter == null) {
 						if (_log.isWarnEnabled()) {
@@ -243,7 +186,7 @@ public class ContentTargetingUpgradeProcess extends UpgradeProcess {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ContentTargetingUpgradeProcess.class);
 
-	private final Map<String, RuleConverter> _ruleConverters = new HashMap<>();
 	private final SegmentsEntryLocalService _segmentsEntryLocalService;
+	private final ServiceTrackerMap<String, RuleConverter> _serviceTrackerMap;
 
 }

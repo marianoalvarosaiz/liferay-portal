@@ -8,19 +8,16 @@ package com.liferay.segments.content.targeting.upgrade.internal.upgrade.v1_0_0.u
 import com.liferay.segments.criteria.Criteria;
 import com.liferay.segments.criteria.contributor.SegmentsCriteriaContributor;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Eduardo García
  */
+@Component(
+	property = "rule.converter.key=OSRule", service = RuleConverter.class
+)
 public class OSRuleConverter implements RuleConverter {
-
-	public static final String RULE_CONVERTER_KEY = "OSRule";
-
-	public OSRuleConverter(
-		SegmentsCriteriaContributor contextSegmentsCriteriaContributor) {
-
-		_contextSegmentsCriteriaContributor =
-			contextSegmentsCriteriaContributor;
-	}
 
 	@Override
 	public void convert(
@@ -31,7 +28,7 @@ public class OSRuleConverter implements RuleConverter {
 			Criteria.Conjunction.AND);
 	}
 
-	private final SegmentsCriteriaContributor
-		_contextSegmentsCriteriaContributor;
+	@Reference(target = "(segments.criteria.contributor.key=context)")
+	private SegmentsCriteriaContributor _contextSegmentsCriteriaContributor;
 
 }
