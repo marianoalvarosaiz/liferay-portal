@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
@@ -33,6 +34,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.GroupNameComparator;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -40,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -195,16 +198,11 @@ public class GroupDisplayContext {
 	}
 
 	private long[] _getClassNameIds() {
-		if (_classNameIds != null) {
-			return _classNameIds;
-		}
-
-		_classNameIds = new long[] {
-			PortalUtil.getClassNameId(Group.class),
-			PortalUtil.getClassNameId(Organization.class)
-		};
-
-		return _classNameIds;
+		return _companyClassNameIds.computeIfAbsent(
+			CompanyThreadLocal.getCompanyId(),
+			key -> TransformUtil.transformToLongArray(
+				_classNames,
+				className -> PortalUtil.getClassNameId(className)));
 	}
 
 	private long _getCompanyId() {
@@ -263,9 +261,13 @@ public class GroupDisplayContext {
 	private static final Log _log = LogFactoryUtil.getLog(
 		GroupDisplayContext.class);
 
+	private static final List<String> _classNames = Arrays.asList(
+		Group.class.getName(), Organization.class.getName());
+
 	private final AnalyticsConfiguration _analyticsConfiguration;
 	private Map<String, String> _channelNames;
-	private long[] _classNameIds;
+	private final Map<Long, long[]> _companyClassNameIds =
+		new ConcurrentHashMap<>();
 	private String _keywords;
 	private final String _mvcRenderCommandName;
 	private String _orderByCol;

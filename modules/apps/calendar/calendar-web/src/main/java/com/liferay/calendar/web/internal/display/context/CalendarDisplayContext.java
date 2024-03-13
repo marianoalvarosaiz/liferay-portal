@@ -30,6 +30,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuil
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
+import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -43,6 +44,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalService;
@@ -63,8 +65,11 @@ import com.liferay.portal.kernel.util.comparator.UserScreenNameComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
@@ -592,16 +597,11 @@ public class CalendarDisplayContext {
 	}
 
 	private long[] _getClassNameIds() {
-		if (_classNameIds != null) {
-			return _classNameIds;
-		}
-
-		_classNameIds = new long[] {
-			PortalUtil.getClassNameId(Group.class),
-			PortalUtil.getClassNameId(Organization.class)
-		};
-
-		return _classNameIds;
+		return _companyClassNameIds.computeIfAbsent(
+			CompanyThreadLocal.getCompanyId(),
+			key -> TransformUtil.transformToLongArray(
+				_classNames,
+				className -> PortalUtil.getClassNameId(className)));
 	}
 
 	private List<DropdownItem> _getFilterActiveDropdownItems() {
@@ -741,12 +741,16 @@ public class CalendarDisplayContext {
 	private static final Log _log = LogFactoryUtil.getLog(
 		CalendarDisplayContext.class.getName());
 
+	private static final List<String> _classNames = Arrays.asList(
+		Group.class.getName(), Organization.class.getName());
+
 	private final CalendarBookingLocalService _calendarBookingLocalService;
 	private final CalendarBookingService _calendarBookingService;
 	private final CalendarLocalService _calendarLocalService;
 	private final CalendarResourceLocalService _calendarResourceLocalService;
 	private final CalendarService _calendarService;
-	private long[] _classNameIds;
+	private final Map<Long, long[]> _companyClassNameIds =
+		new ConcurrentHashMap<>();
 	private final GroupLocalService _groupLocalService;
 	private SearchContainer<Group> _groupSearchContainer;
 	private PortletURL _iteratorURL;

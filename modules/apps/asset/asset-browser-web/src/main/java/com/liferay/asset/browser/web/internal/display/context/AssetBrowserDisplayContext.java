@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -30,7 +31,9 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -233,18 +236,14 @@ public class AssetBrowserDisplayContext {
 	}
 
 	private long[] _getClassNameIds() {
-		if (_classNameIds != null) {
-			return _classNameIds;
-		}
+		return _companyClassNameIds.computeIfAbsent(
+			CompanyThreadLocal.getCompanyId(),
+			key -> {
+				AssetRendererFactory<?> assetRendererFactory =
+					getAssetRendererFactory();
 
-		AssetRendererFactory<?> assetRendererFactory =
-			getAssetRendererFactory();
-
-		if (assetRendererFactory != null) {
-			_classNameIds = new long[] {assetRendererFactory.getClassNameId()};
-		}
-
-		return _classNameIds;
+				return new long[] {assetRendererFactory.getClassNameId()};
+			});
 	}
 
 	private long[] _getFilterGroupIds() throws PortalException {
@@ -299,7 +298,8 @@ public class AssetBrowserDisplayContext {
 	private SearchContainer<AssetEntry> _assetEntrySearchContainer;
 	private final AssetHelper _assetHelper;
 	private AssetRendererFactory<?> _assetRendererFactory;
-	private long[] _classNameIds;
+	private final Map<Long, long[]> _companyClassNameIds =
+		new ConcurrentHashMap<>();
 	private long[] _filterGroupIds;
 	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;

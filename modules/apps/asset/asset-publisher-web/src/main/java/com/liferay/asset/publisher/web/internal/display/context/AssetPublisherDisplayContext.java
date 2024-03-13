@@ -73,6 +73,7 @@ import com.liferay.portal.configuration.module.configuration.ConfigurationProvid
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -92,6 +93,7 @@ import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -132,6 +134,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletPreferences;
@@ -663,15 +666,10 @@ public class AssetPublisherDisplayContext {
 	}
 
 	public long[] getAvailableClassNameIds() {
-		if (_availableClassNameIds != null) {
-			return _availableClassNameIds;
-		}
-
-		_availableClassNameIds =
-			AssetRendererFactoryRegistryUtil.getIndexableClassNameIds(
-				_themeDisplay.getCompanyId(), true);
-
-		return _availableClassNameIds;
+		return _companyAvailableClassNameIds.computeIfAbsent(
+			CompanyThreadLocal.getCompanyId(),
+			key -> AssetRendererFactoryRegistryUtil.getIndexableClassNameIds(
+				_themeDisplay.getCompanyId(), true));
 	}
 
 	public String getCategorySelectorURL() {
@@ -695,22 +693,24 @@ public class AssetPublisherDisplayContext {
 		).buildString();
 	}
 
-	public long[] getClassNameIds() throws Exception {
-		if (_classNameIds != null) {
-			return _classNameIds;
-		}
+	public long[] getClassNameIds() {
+		return _companyClassNameIds.computeIfAbsent(
+			CompanyThreadLocal.getCompanyId(),
+			key -> {
+				if (isSelectionStyleAssetList()) {
+					try {
+						AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
 
-		if (isSelectionStyleAssetList()) {
-			AssetEntryQuery assetEntryQuery = getAssetEntryQuery();
+						return assetEntryQuery.getClassNameIds();
+					}
+					catch (Exception exception) {
+						throw new SystemException(exception);
+					}
+				}
 
-			_classNameIds = assetEntryQuery.getClassNameIds();
-		}
-		else {
-			_classNameIds = _assetPublisherHelper.getClassNameIds(
-				_portletPreferences, getAvailableClassNameIds());
-		}
-
-		return _classNameIds;
+				return _assetPublisherHelper.getClassNameIds(
+					_portletPreferences, getAvailableClassNameIds());
+			});
 	}
 
 	public long[] getClassTypeIds() {
@@ -2474,9 +2474,11 @@ public class AssetPublisherDisplayContext {
 	private final AssetPublisherWebHelper _assetPublisherWebHelper;
 	private String _assetTagName;
 	private Map<String, Serializable> _attributes;
-	private long[] _availableClassNameIds;
-	private long[] _classNameIds;
 	private long[] _classTypeIds;
+	private final Map<Long, long[]> _companyAvailableClassNameIds =
+		new ConcurrentHashMap<>();
+	private final Map<Long, long[]> _companyClassNameIds =
+		new ConcurrentHashMap<>();
 	private String[] _compilerTagNames;
 	private String _ddmStructureDisplayFieldValue;
 	private String _ddmStructureFieldLabel;
