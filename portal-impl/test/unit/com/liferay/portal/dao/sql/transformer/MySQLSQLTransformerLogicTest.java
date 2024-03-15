@@ -110,11 +110,6 @@ public class MySQLSQLTransformerLogicTest
 	}
 
 	@Override
-	protected String getCastLongOriginalSQL() {
-		return "select CAST_LONG(foo) from Foo";
-	}
-
-	@Override
 	protected String getCastLongTransformedSQL() {
 		return "select foo from Foo";
 	}
