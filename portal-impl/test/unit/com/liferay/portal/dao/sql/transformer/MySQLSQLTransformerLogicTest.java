@@ -111,7 +111,7 @@ public class MySQLSQLTransformerLogicTest
 
 	@Override
 	protected String getCastLongTransformedSQL() {
-		return "select foo from Foo";
+		return "select 1 + (foo + 2) - (3 x 4) from Foo";
 	}
 
 	@Override
