@@ -328,6 +328,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		updatePasswordReset(defaultAdminUser.getUserId(), passwordReset);
 
+		userPersistence.flush();
+
 		return defaultAdminUser;
 	}
 
