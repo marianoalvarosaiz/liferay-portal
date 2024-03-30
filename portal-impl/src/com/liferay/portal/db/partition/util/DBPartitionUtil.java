@@ -109,7 +109,7 @@ public class DBPartitionUtil {
 
 						if (dbInspector.isPartitionedControlTable(tableName)) {
 							statement.executeUpdate(
-								_getCopyDataSQL(
+								_getCopyDataSQL(connection,
 									_defaultPartitionName,
 									_getPartitionName(companyId), tableName,
 									StringPool.BLANK));
@@ -163,7 +163,9 @@ public class DBPartitionUtil {
 			return false;
 		}
 
+		_log.info("Extract partition [START]");
 		_extractDBPartition(companyId);
+		_log.info("Extract partition [END]");
 
 		return true;
 	}
@@ -227,7 +229,9 @@ public class DBPartitionUtil {
 			return false;
 		}
 
+		_log.info("Insert partition [START]");
 		_insertDBPartition(companyId);
+		_log.info("Insert partition [END]");
 
 		return true;
 	}
@@ -268,7 +272,7 @@ public class DBPartitionUtil {
 
 			if (copyData) {
 				statement.executeUpdate(
-					_getCopyDataSQL(
+					_getCopyDataSQL(connection,
 						_defaultPartitionName, _getPartitionName(companyId),
 						viewName, StringPool.BLANK));
 			}
@@ -448,7 +452,7 @@ public class DBPartitionUtil {
 					if (dbInspector.isControlTable(tableName)) {
 						controlTableNames.add(tableName);
 
-						_extractTable(
+						_extractTable(connection,
 							companyId, tableName, statement, dbInspector);
 					}
 				}
@@ -464,7 +468,7 @@ public class DBPartitionUtil {
 			try (AutoCloseable autoCloseable = _disableAutoCommit(connection)) {
 				for (String tableName : controlTableNames) {
 					try (Statement statement = connection.createStatement()) {
-						_restoreView(
+						_restoreView(connection,
 							companyId, tableName, statement, dbInspector);
 					}
 				}
@@ -488,7 +492,7 @@ public class DBPartitionUtil {
 		_companyIds.remove(companyId);
 	}
 
-	private static void _extractTable(
+	private static void _extractTable(Connection connection,
 			long companyId, String tableName, Statement statement,
 			DBInspector dbInspector)
 		throws Exception {
@@ -503,18 +507,18 @@ public class DBPartitionUtil {
 				tableName));
 
 		if (dbInspector.hasColumn(tableName, "companyId")) {
-			_moveCompanyData(
+			_moveCompanyData(connection,
 				companyId, _defaultPartitionName, _getPartitionName(companyId),
 				tableName, statement);
 		}
 		else if (_isCopyableQuartzTable(tableName)) {
-			_moveData(
+			_moveData(connection,
 				_defaultPartitionName, _getPartitionName(companyId), tableName,
 				statement, _getQuartzWhereClauseSQL(companyId, tableName));
 		}
 		else {
 			statement.executeUpdate(
-				_getCopyDataSQL(
+				_getCopyDataSQL(connection,
 					_defaultPartitionName, _getPartitionName(companyId),
 					tableName, StringPool.BLANK));
 		}
@@ -720,10 +724,28 @@ public class DBPartitionUtil {
 		};
 	}
 
-	private static String _getCopyDataSQL(
+	private static String _getCopyDataSQL(Connection connection,
 		String fromPartitionName, String toPartitionName, String tableName,
 		String whereClause) {
+		
+		String sql = StringBundler.concat(
+				"insert into ", toPartitionName, StringPool.PERIOD, tableName,
+				" select * from ", fromPartitionName, StringPool.PERIOD, tableName,
+				whereClause);
+		
+		_log.info("SQL: " + sql + "from: " + fromPartitionName +  " to: " + toPartitionName);
+		
+			DBInspector dbInspector = new DBInspector(connection);
 
+		try {
+			try(ResultSet resultSet = dbInspector.getColumnsResultSet(tableName)){
+				_log.info("COLUMN_NAME: " + resultSet.getString("COLUMN_NAME"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return StringBundler.concat(
 			"insert into ", toPartitionName, StringPool.PERIOD, tableName,
 			" select * from ", fromPartitionName, StringPool.PERIOD, tableName,
@@ -782,7 +804,7 @@ public class DBPartitionUtil {
 
 					if (dbInspector.hasColumn(tableName, "companyId")) {
 						statement.executeUpdate(
-							_getCopyDataSQL(
+							_getCopyDataSQL(connection,
 								_getPartitionName(companyId),
 								_defaultPartitionName, tableName,
 								" where companyId = " + companyId));
@@ -791,7 +813,7 @@ public class DBPartitionUtil {
 					}
 					else if (_isCopyableQuartzTable(tableName)) {
 						statement.executeUpdate(
-							_getCopyDataSQL(
+							_getCopyDataSQL(connection,
 								_getPartitionName(companyId),
 								_defaultPartitionName, tableName,
 								_getQuartzWhereClauseSQL(
@@ -822,7 +844,7 @@ public class DBPartitionUtil {
 				DBInspector dbInspector = new DBInspector(connection);
 
 				for (String copiedTableName : copiedTableNames) {
-					_extractTable(
+					_extractTable(connection,
 						companyId, copiedTableName, statement, dbInspector);
 				}
 
@@ -892,40 +914,40 @@ public class DBPartitionUtil {
 		return false;
 	}
 
-	private static void _moveCompanyData(
+	private static void _moveCompanyData(Connection connection,
 			long companyId, String fromPartitionName, String toPartitionName,
 			String tableName, Statement statement)
 		throws Exception {
 
-		_moveData(
+		_moveData(connection,
 			fromPartitionName, toPartitionName, tableName, statement,
 			" where companyId = " + companyId);
 	}
 
-	private static void _moveData(
+	private static void _moveData(Connection connection,
 			String fromPartitionName, String toPartitionName, String tableName,
 			Statement statement, String whereClause)
 		throws Exception {
 
 		statement.executeUpdate(
-			_getCopyDataSQL(
+			_getCopyDataSQL(connection,
 				fromPartitionName, toPartitionName, tableName, whereClause));
 
 		_deleteData(tableName, fromPartitionName, statement, whereClause);
 	}
 
-	private static void _restoreView(
+	private static void _restoreView(Connection connection,
 			long companyId, String tableName, Statement statement,
 			DBInspector dbInspector)
 		throws Exception {
 
 		if (dbInspector.hasColumn(tableName, "companyId")) {
-			_moveCompanyData(
+			_moveCompanyData(connection,
 				companyId, _getPartitionName(companyId), _defaultPartitionName,
 				tableName, statement);
 		}
 		else if (_isCopyableQuartzTable(tableName)) {
-			_moveData(
+			_moveData(connection,
 				_getPartitionName(companyId), _defaultPartitionName, tableName,
 				statement, _getQuartzWhereClauseSQL(companyId, tableName));
 		}
