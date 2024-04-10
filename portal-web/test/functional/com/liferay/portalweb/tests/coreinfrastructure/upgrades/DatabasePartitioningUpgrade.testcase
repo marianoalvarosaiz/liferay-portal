@@ -129,6 +129,7 @@ definition {
 
 	@priority = 5
 	test ExtractAndAddDBPartitionCompaniesWithUpgradedDB {
+		property custom.properties = "script.management.configuration.enabled=true";
 		property data.archive.type = "data-archive-portal-partition";
 		property portal.version = "7.4.13.u33";
 		property test.assert.warning.exceptions = "false";
