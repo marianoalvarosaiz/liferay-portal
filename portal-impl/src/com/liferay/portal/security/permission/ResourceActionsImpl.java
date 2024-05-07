@@ -66,6 +66,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -1352,7 +1353,7 @@ public class ResourceActionsImpl implements ResourceActions {
 	private final Set<String> _organizationModelResources = new HashSet<>();
 	private final Set<String> _portalModelResources = new HashSet<>();
 	private final Map<String, String> _portletRootModelResources =
-		new HashMap<>();
+		new ConcurrentHashMap<>();
 	private final Map<String, ResourceActionsBag> _resourceActionsBags =
 		new HashMap<>();
 	private final Map<String, Set<String>> _resourceReferences =
