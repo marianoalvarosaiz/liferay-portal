@@ -935,7 +935,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 	}
 
 	private void _installBundlesFromDir(
-			String dirPath, Map<Long, Long> checksums,
+			String dirPath, Map<String, Long> checksums,
 			Set<String> fragmentHosts)
 		throws Exception {
 
@@ -962,7 +962,9 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 				Bundle bundle = bundleContext.installBundle(
 					location, inputStream);
 
-				checksums.put(bundle.getBundleId(), _calculateChecksum(file));
+				checksums.put(
+					bundle.getBundleId() + _CHECKSUM_SUFFIX,
+					_calculateChecksum(file));
 
 				if ((bundle.getState() != Bundle.INSTALLED) &&
 					(bundle.getState() != Bundle.RESOLVED)) {
@@ -1052,8 +1054,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		}
 	}
 
-	private Map<Long, Long> _installDynamicBundles() throws Exception {
-		Map<Long, Long> checksums = new HashMap<>();
+	private Map<String, Long> _installDynamicBundles() throws Exception {
+		Map<String, Long> checksums = new HashMap<>();
 
 		Set<String> fragmentHosts = new HashSet<>();
 
@@ -1302,24 +1304,19 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 	}
 
 	private void _registerDynamicBundles(
-			Map<Long, Long> checksums, BundleContext bundleContext)
+			Map<String, Long> checksums, BundleContext bundleContext)
 		throws Exception {
 
-		byte[] bytes = new byte[checksums.size() * 16];
+		byte[] data = new byte[8];
 
-		int index = 0;
+		for (Map.Entry<String, Long> entry : checksums.entrySet()) {
+			File file = bundleContext.getDataFile(entry.getKey());
 
-		for (Map.Entry<Long, Long> entry : checksums.entrySet()) {
-			BigEndianCodec.putLong(bytes, index, entry.getKey());
-			BigEndianCodec.putLong(bytes, index + 8, entry.getValue());
+			try (OutputStream outputStream = new FileOutputStream(file)) {
+				BigEndianCodec.putLong(data, 0, entry.getValue());
 
-			index += 16;
-		}
-
-		try (OutputStream outputStream = new FileOutputStream(
-				bundleContext.getDataFile("bundles.checksum"))) {
-
-			outputStream.write(bytes);
+				outputStream.write(data);
+			}
 		}
 	}
 
@@ -1690,7 +1687,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			_log.info("Starting dynamic bundles");
 		}
 
-		Map<Long, Long> dynamicBundleChecksums = _installDynamicBundles();
+		Map<String, Long> dynamicBundleChecksums = _installDynamicBundles();
 
 		FrameworkStartLevel frameworkStartLevel = _framework.adapt(
 			FrameworkStartLevel.class);
@@ -1826,6 +1823,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 					equinoxBaseDir, "\""));
 		}
 	}
+
+	private static final String _CHECKSUM_SUFFIX = ".checksum";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ModuleFrameworkImpl.class);
