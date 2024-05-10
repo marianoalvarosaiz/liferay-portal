@@ -510,6 +510,24 @@ definition {
 		}
 	}
 
+	@description = "This is a test for LPD-25509. Portal consecutive starts in Liferay Online"
+	@priority = 5
+	test VerifyConsecutiveStartsInLiferayOnline {
+		property portal.acceptance = "true";
+		property test.assert.warning.exceptions = "true";
+		property test.run.type = "single";
+
+		SignOut.signOut();
+
+		Portlet.shutdownServer();
+
+		Portlet.startServer(
+			deleteLiferayHome = "false",
+			keepOsGiState = "true");
+
+		User.loginPG();
+	}
+
 	@description = "This is a test for LPS-143786. Verify Remote Apps presence in Liferay Online"
 	@priority = 5
 	test VerifyRemoteAppsInLiferayOnline {
