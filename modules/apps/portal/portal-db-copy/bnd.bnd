@@ -1,0 +1,4 @@
+Bundle-Name: Liferay Portal DB Copy
+Bundle-SymbolicName: com.liferay.portal.db.copy
+Bundle-Version: 1.0.0
+-dsannotations-options: inherit
