@@ -5,6 +5,7 @@
 
 package com.liferay.portal.configuration.persistence.internal.upgrade.registry;
 
+import com.liferay.portal.configuration.persistence.internal.upgrade.schema.SchemaCreationUpgradeStep;
 import com.liferay.portal.configuration.persistence.internal.upgrade.v2_0_0.ConfigurationUpgradeProcess;
 import com.liferay.portal.kernel.upgrade.UpgradeProcessFactory;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
@@ -23,6 +24,9 @@ public class ConfigurationPersistenceUpgradeStepRegistrator
 	@Override
 	public void register(Registry registry) {
 		registry.registerInitialization();
+
+		registry.registerReleaseCreationUpgradeSteps(
+			new SchemaCreationUpgradeStep());
 
 		registry.register(
 			"0.0.1", "0.0.2",

@@ -10,6 +10,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.db.DBResourceUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -54,11 +55,25 @@ public class SchemaCreatorImpl implements SchemaCreator {
 								_bundle.getSymbolicName(), "#", companyId));
 					}
 
-					_create();
+					_create(_dataSource, _db);
 				});
 		}
 		catch (Exception exception) {
 			throw new UpgradeException(exception);
+		}
+	}
+
+	@Override
+	public void createOn(DataSource externalDataSource) throws PortalException {
+		try {
+			_create(
+				externalDataSource,
+				DBManagerUtil.getDB(
+					DialectDetector.getDialect(externalDataSource),
+					externalDataSource));
+		}
+		catch (UpgradeException upgradeException) {
+			throw new PortalException(upgradeException);
 		}
 	}
 
@@ -76,15 +91,15 @@ public class SchemaCreatorImpl implements SchemaCreator {
 			headers.get("Liferay-Require-SchemaVersion"), "1.0.0");
 	}
 
-	private void _create() throws UpgradeException {
+	private void _create(DataSource dataSource, DB db) throws UpgradeException {
 		String indexesSQL = DBResourceUtil.getModuleIndexesSQL(_bundle);
 		String sequencesSQL = DBResourceUtil.getModuleSequencesSQL(_bundle);
 		String tablesSQL = DBResourceUtil.getModuleTablesSQL(_bundle);
 
-		try (Connection connection = _dataSource.getConnection()) {
+		try (Connection connection = dataSource.getConnection()) {
 			if (tablesSQL != null) {
 				try {
-					_db.runSQLTemplateString(connection, tablesSQL, true);
+					db.runSQLTemplateString(connection, tablesSQL, true);
 				}
 				catch (Exception exception) {
 					throw new UpgradeException(
@@ -97,7 +112,7 @@ public class SchemaCreatorImpl implements SchemaCreator {
 
 			if (sequencesSQL != null) {
 				try {
-					_db.runSQLTemplateString(connection, sequencesSQL, true);
+					db.runSQLTemplateString(connection, sequencesSQL, true);
 				}
 				catch (Exception exception) {
 					throw new UpgradeException(
@@ -111,7 +126,7 @@ public class SchemaCreatorImpl implements SchemaCreator {
 
 			if (indexesSQL != null) {
 				try {
-					_db.runSQLTemplateString(connection, indexesSQL, true);
+					db.runSQLTemplateString(connection, indexesSQL, true);
 				}
 				catch (Exception exception) {
 					throw new UpgradeException(

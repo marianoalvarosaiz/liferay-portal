@@ -5,7 +5,10 @@
 
 package com.liferay.portal.upgrade.release;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
+
+import javax.sql.DataSource;
 
 /**
  * @author Shuyang Zhou
@@ -13,6 +16,8 @@ import com.liferay.portal.kernel.upgrade.UpgradeException;
 public interface SchemaCreator {
 
 	public void create() throws UpgradeException;
+
+	public void createOn(DataSource externalDataSource) throws PortalException;
 
 	public String getBundleSymbolicName();
 
