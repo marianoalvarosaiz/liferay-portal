@@ -1,0 +1,76 @@
+@component-name = "portal-database-partitioning"
+definition {
+
+	property app.server.types = "tomcat";
+	property ci.retries.disabled = "true";
+	property portal.release = "true";
+	property portal.upstream = "true";
+	property test.run.environment = "EE";
+	property testray.main.component.name = "Database Partitioning";
+	property timeout.explicit.wait = "180";
+
+	setUp {
+		TestCase.setUpPortalInstance();
+
+		User.firstLoginPG();
+	}
+
+	tearDown {
+		PortalInstances.tearDownCP();
+	}
+
+	@priority = 5
+	test CanCopyDatabaseFromMySQLToPostgreSQL {
+		property custom.properties = "virtual.hosts.valid.hosts=localhost,127.0.0.1";
+		property database.types = "mysql";
+		property test.assert.warning.exceptions = "true";
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		var targetJDBCDriverClassName = PropsUtil.get("database.postgresql.driver");
+		var targetJDBCURL = PropsUtil.get("database.postgresql.url");
+		var targetJDBCUserName = PropsUtil.get("database.postgresql.username");
+		var targetJDBCPassword = PropsUtil.get("database.postgresql.password");
+
+		task ("Deploy the config file to trigger the database copy") {
+			OSGiConfig.deployOSGiConfigFile(
+				osgiConfigFileName = "com.liferay.portal.db.copy.internal.configuration.DBCopyConfiguration.config",
+				osgiConfigs = "driverClassName=\"${targetJDBCDriverClassName}\",url=\"${targetJDBCURL}\",userName=\"${targetJDBCUserName}\",password=\"${targetJDBCPassword}\"");
+
+			OSGiConfig.waitForOSGiConfigDeleted();
+		}
+
+		task ("Assert that some relevant tables have been copied") {
+			SQL.executeSQLStatementOnTargetDatabase(
+				sqlStatement = "select * from Configuration_;",
+				targetDatabaseType = "postgresql");
+
+			SQL.executeSQLStatementOnTargetDatabase(
+				sqlStatement = "select * from JournalArticle;",
+				targetDatabaseType = "postgresql");
+
+			SQL.executeSQLStatementOnTargetDatabase(
+				sqlStatement = "select * from QUARTZ_CRON_TRIGGERS;",
+				targetDatabaseType = "postgresql");
+
+			SQL.executeSQLStatementOnTargetDatabase(
+				sqlStatement = "select * from User_;",
+				targetDatabaseType = "postgresql");
+		}
+
+		task ("Assert that some relevant indexes have been copied") {
+			SQL.hasSQLIndex(
+				indexName = "IX_31B74F51",
+				schemaName = "lportal");
+
+			SQL.hasSQLIndex(
+				indexName = "IX_D219AFDE",
+				schemaName = "lportal");
+
+			SQL.hasSQLIndex(
+				indexName = "IX_77D89D58",
+				schemaName = "lportal");
+		}
+	}
+
+}
