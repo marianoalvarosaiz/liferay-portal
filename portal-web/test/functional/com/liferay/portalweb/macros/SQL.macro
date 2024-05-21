@@ -55,7 +55,18 @@ definition {
 
 	@summary = "Execute ${sqlStatement}"
 	macro executeSQLStatement(sqlStatement = null) {
-		Variables.assertDefined(parameterList = ${sqlStatement});
+		var databaseType = PropsUtil.get("database.type");
+
+		var sqlResult = SQL.executeSQLStatementOnTargetDatabase(
+			sqlStatement = ${sqlStatement},
+			targetDatabaseType = ${databaseType});
+
+		return ${sqlResult};
+	}
+
+	@summary = "Execute ${sqlStatement} on a specific ${targetDatabaseType}"
+	macro executeSQLStatementOnTargetDatabase(sqlStatement = null, targetDatabaseType = null) {
+		Variables.assertDefined(parameterList = "${sqlStatement},${targetDatabaseType}");
 
 		var liferayHome = PropsUtil.get("liferay.home.dir.name");
 		var inputFile = "sqltemp.sql";
@@ -63,7 +74,7 @@ definition {
 
 		FileUtil.write("${liferayHome}/${inputFile}", ${sqlStatement});
 
-		AntCommands.runCommand("build-test.xml", "execute-sql -Dsql.input.file=${liferayHome}/${inputFile} -Dsql.output.file=${liferayHome}/${outputFile}");
+		AntCommands.runCommand("build-test.xml", "execute-sql-on-target-database -Dsql.input.file=${liferayHome}/${inputFile} -Dsql.output.file=${liferayHome}/${outputFile} -Dtargetdatabase.type=${targetDatabaseType}");
 
 		var output = FileUtil.read("${liferayHome}/${outputFile}");
 
