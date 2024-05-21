@@ -97,4 +97,22 @@ definition {
 		}
 	}
 
+	@summary = "Assert an index on a PostgreSQL or MySQL database"
+	macro hasSQLIndex(indexName = null, schemaName = null, targetDatabaseType = null) {
+		Variables.assertDefined(parameterList = "${indexName}, ${schemaName}");
+
+		var indexQuery = "SELECT COUNT(DISTINCT(index_name)) FROM information_schema.statistics WHERE index_schema = '${schemaName}' AND index_name = '${indexName}';";
+
+		var index = SQL.executeSQLStatementOnTargetDatabase(
+			sqlStatement = ${indexQuery},
+			targetDatabaseType = ${targetDatabaseType});
+
+		if (contains(${index}, 1)) {
+			return "true";
+		}
+		else {
+			return "false";
+		}
+	}
+
 }
