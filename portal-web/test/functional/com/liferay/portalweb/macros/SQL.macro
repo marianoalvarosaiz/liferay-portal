@@ -55,7 +55,18 @@ definition {
 
 	@summary = "Execute ${sqlStatement}"
 	macro executeSQLStatement(sqlStatement = null) {
-		Variables.assertDefined(parameterList = ${sqlStatement});
+		var databaseType = PropsUtil.get("database.type");
+
+		var sqlResult = SQL.executeSQLStatementOnTargetDatabase(
+			sqlStatement = ${sqlStatement},
+			targetDatabaseType = ${databaseType});
+
+		return ${sqlResult};
+	}
+
+	@summary = "Execute ${sqlStatement} on a specific ${targetDatabaseType}"
+	macro executeSQLStatementOnTargetDatabase(sqlStatement = null, targetDatabaseType = null) {
+		Variables.assertDefined(parameterList = "${sqlStatement},${targetDatabaseType}");
 
 		var liferayHome = PropsUtil.get("liferay.home.dir.name");
 		var inputFile = "sqltemp.sql";
@@ -63,7 +74,7 @@ definition {
 
 		FileUtil.write("${liferayHome}/${inputFile}", ${sqlStatement});
 
-		AntCommands.runCommand("build-test.xml", "execute-sql -Dsql.input.file=${liferayHome}/${inputFile} -Dsql.output.file=${liferayHome}/${outputFile}");
+		AntCommands.runCommand("build-test.xml", "execute-sql-on-target-database -Dsql.input.file=${liferayHome}/${inputFile} -Dsql.output.file=${liferayHome}/${outputFile} -Dtargetdatabase.type=${targetDatabaseType}");
 
 		var output = FileUtil.read("${liferayHome}/${outputFile}");
 
@@ -75,6 +86,22 @@ definition {
 		Variables.assertDefined(parameterList = ${indexName});
 
 		var indexQuery = "SELECT COUNT(DISTINCT(index_name)) FROM information_schema.statistics WHERE index_schema = database() AND index_name = '${indexName}';";
+
+		var index = SQL.executeSQLStatement(sqlStatement = ${indexQuery});
+
+		if (contains(${index}, 1)) {
+			return "true";
+		}
+		else {
+			return "false";
+		}
+	}
+
+	@summary = "Assert an index on a PostgreSQL or MySQL database"
+	macro hasSQLIndex(indexName = null, schemaName = null) {
+		Variables.assertDefined(parameterList = "${indexName}, ${schemaName}");
+
+		var indexQuery = "SELECT COUNT(DISTINCT(index_name)) FROM information_schema.statistics WHERE index_schema = '${schemaName}' AND index_name = '${indexName}';";
 
 		var index = SQL.executeSQLStatement(sqlStatement = ${indexQuery});
 
