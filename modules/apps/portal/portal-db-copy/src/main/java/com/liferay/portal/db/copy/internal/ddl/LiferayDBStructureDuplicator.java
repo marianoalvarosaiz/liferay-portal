@@ -5,16 +5,31 @@
 
 package com.liferay.portal.db.copy.internal.ddl;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.db.DBResourceUtil;
 import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
+import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
+import com.liferay.portal.kernel.util.InfrastructureUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.spring.hibernate.DialectDetector;
 import com.liferay.portal.upgrade.release.SchemaCreator;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -37,6 +52,162 @@ public class LiferayDBStructureDuplicator {
 		_copyPortal(targetDataSource);
 		_copyMiscellaneousSQL(targetDataSource);
 		_copyModules(targetDataSource);
+		System.out.println("Start: " + new Date());
+		_copyContent(targetDataSource);
+		System.out.println("End: " + new Date());
+	}
+
+	private void _copyContent(DataSource targetDataSource) throws Exception {
+		List<String> targetTables = new ArrayList<>();
+
+		try (Connection targetConnection = targetDataSource.getConnection()) {
+			DatabaseMetaData databaseMetaData = targetConnection.getMetaData();
+
+			DBInspector targetDBInspector = new DBInspector(targetConnection);
+
+			try (ResultSet resultSet = databaseMetaData.getTables(
+					targetDBInspector.getCatalog(),
+					targetDBInspector.getSchema(), null,
+					new String[] {"TABLE"})) {
+
+				while (resultSet.next()) {
+					targetTables.add(
+						targetDBInspector.normalizeName(
+							resultSet.getString("TABLE_NAME"),
+							databaseMetaData));
+				}
+			}
+		}
+
+		DataSource sourceDataSource = InfrastructureUtil.getDataSource();
+
+		try (Connection sourceConnection = sourceDataSource.getConnection();
+			Connection targetConnection = targetDataSource.getConnection()) {
+
+			DatabaseMetaData databaseMetaData = sourceConnection.getMetaData();
+
+			DBInspector sourceDBInspector = new DBInspector(sourceConnection);
+			DBInspector targetDBInspector = new DBInspector(targetConnection);
+
+			for (String tableName : targetTables) {
+				List<String> sourceTableColumns = new ArrayList<>();
+				List<Integer> tableTypes = new ArrayList<>();
+				List<String> targetTableColumns = new ArrayList<>();
+
+				try (ResultSet resultSet = databaseMetaData.getColumns(
+						sourceDBInspector.getCatalog(),
+						sourceDBInspector.getSchema(),
+						sourceDBInspector.normalizeName(tableName), null)) {
+
+					while (resultSet.next()) {
+						sourceTableColumns.add(
+							sourceDBInspector.normalizeName(
+								resultSet.getString("COLUMN_NAME")));
+						targetTableColumns.add(
+							targetDBInspector.normalizeName(
+								resultSet.getString("COLUMN_NAME")));
+						tableTypes.add(resultSet.getInt("DATA_TYPE"));
+					}
+				}
+
+				String selectSQL = StringBundler.concat(
+					"select ", StringUtil.merge(sourceTableColumns), " from ",
+					tableName);
+
+				String insertSQL = StringBundler.concat(
+					"insert into ", tableName, StringPool.OPEN_PARENTHESIS,
+					StringUtil.merge(targetTableColumns), ") values (",
+					StringUtil.merge(
+						Collections.nCopies(sourceTableColumns.size(), "?")),
+					StringPool.CLOSE_PARENTHESIS);
+
+				try (PreparedStatement preparedStatement1 =
+						sourceConnection.prepareStatement(selectSQL);
+					PreparedStatement preparedStatement2 =
+						AutoBatchPreparedStatementUtil.concurrentAutoBatch(
+							targetConnection, insertSQL);
+					ResultSet resultSet = preparedStatement1.executeQuery()) {
+
+					while (resultSet.next()) {
+						for (int i = 0; i < sourceTableColumns.size(); i++) {
+							String columnName = sourceTableColumns.get(i);
+							int index = i + 1;
+							int type = tableTypes.get(i);
+
+							if ((type == Types.BIGINT) ||
+								(type == Types.NUMERIC)) {
+
+								preparedStatement2.setLong(
+									index, resultSet.getLong(columnName));
+							}
+							else if ((type == Types.BOOLEAN) ||
+									 (type == Types.BIT)) {
+
+								preparedStatement2.setBoolean(
+									index, resultSet.getBoolean(columnName));
+							}
+							else if (type == Types.CLOB) {
+								preparedStatement2.setClob(
+									index, resultSet.getClob(columnName));
+							}
+							else if ((type == Types.LONGVARCHAR) ||
+									 (type == Types.VARCHAR)) {
+
+								preparedStatement2.setString(
+									index, resultSet.getString(columnName));
+							}
+							else if (type == Types.BLOB) {
+								preparedStatement2.setBlob(
+									index, resultSet.getBlob(columnName));
+							}
+							else if (type == Types.BINARY) {
+								preparedStatement2.setBytes(
+									index, resultSet.getBytes(columnName));
+							}
+							else if (type == Types.LONGVARBINARY) {
+								preparedStatement2.setBinaryStream(
+									index,
+									resultSet.getBinaryStream(columnName));
+							}
+							else if (type == Types.DECIMAL) {
+								preparedStatement2.setBigDecimal(
+									index, resultSet.getBigDecimal(columnName));
+							}
+							else if (type == Types.DOUBLE) {
+								preparedStatement2.setDouble(
+									index, resultSet.getDouble(columnName));
+							}
+							else if (type == Types.FLOAT) {
+								preparedStatement2.setFloat(
+									index, resultSet.getFloat(columnName));
+							}
+							else if (type == Types.INTEGER) {
+								preparedStatement2.setInt(
+									index, resultSet.getInt(columnName));
+							}
+							else if ((type == Types.SMALLINT) ||
+									 (type == Types.TINYINT)) {
+
+								preparedStatement2.setShort(
+									index, resultSet.getShort(columnName));
+							}
+							else if (type == Types.TIMESTAMP) {
+								preparedStatement2.setTimestamp(
+									index, resultSet.getTimestamp(columnName));
+							}
+							else {
+								throw new PortalException(
+									"Invalid type: " + type);
+							}
+						}
+
+						preparedStatement2.addBatch();
+					}
+
+					preparedStatement2.executeBatch();
+				}
+			}
+		}
 	}
 
 	private void _copyMiscellaneousSQL(DataSource targetDataSource)
