@@ -52,10 +52,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 /**
  * @author Alexander Chow
@@ -175,6 +179,26 @@ public abstract class BaseDB implements DB {
 		sb.append(columnType);
 
 		runSQL(connection, sb.toString());
+	}
+	
+	public void executeIndexes(DataSource dataSource) throws Exception {
+		flag = true;
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		
+		List<Future<?>> futures = new ArrayList<>();
+
+		for(String sql : _indexes) {
+			futures.add(executorService.submit(() ->  {
+				try (Connection connection = dataSource.getConnection()){
+					runSQLTemplateString(connection, sql, true);
+				} catch(Exception exception) {}
+			}));
+		}
+		
+		for (Future<?> future : futures) {
+			future.get();
+		}
 	}
 
 	@Override
@@ -654,7 +678,10 @@ public abstract class BaseDB implements DB {
 						sb.setIndex(0);
 
 						try {
-							if (!sql.equals("COMMIT_TRANSACTION;\n")) {
+							if (!flag && (sql.contains("CREATE INDEX") || sql.contains("CREATE UNIQUE INDEX") || sql.contains("create unique index") || sql.contains("create index"))) {
+								_indexes.add(sql);
+							}
+							else if (!sql.equals("COMMIT_TRANSACTION;\n")) {
 								runSQL(connection, sql);
 							}
 							else {
@@ -1644,6 +1671,8 @@ public abstract class BaseDB implements DB {
 	}
 
 	private final DBType _dbType;
+	private List<String> _indexes = new ArrayList<>();
+	private boolean flag;
 	private final int _majorVersion;
 	private final int _minorVersion;
 	private final Map<String, Integer> _sqlTypeDecimalDigits = new HashMap<>();
