@@ -70,11 +70,43 @@ definition {
 		return ${output};
 	}
 
+	@summary = "Assert an index on a MySQL or PostgreSQL database"
+	macro hasIndex(indexName = null) {
+		Variables.assertDefined(parameterList = ${indexName});
+
+		var databaseType = PropsUtil.get("database.type");
+
+		if (${databaseType} == "mysql") {
+			var hasIndex = SQL.hasMySQLIndex(indexName = ${indexName});
+		}
+		else if (${databaseType} == "postgresql") {
+			var hasIndex = SQL.hasPostgreSQLIndex(indexName = ${indexName});
+		}
+
+		return ${hasIndex};
+	}
+
 	@summary = "Assert an index on the MySQL database"
 	macro hasMySQLIndex(indexName = null) {
 		Variables.assertDefined(parameterList = ${indexName});
 
 		var indexQuery = "SELECT COUNT(DISTINCT(index_name)) FROM information_schema.statistics WHERE index_schema = database() AND index_name = '${indexName}';";
+
+		var index = SQL.executeSQLStatement(sqlStatement = ${indexQuery});
+
+		if (contains(${index}, 1)) {
+			return "true";
+		}
+		else {
+			return "false";
+		}
+	}
+
+	@summary = "Assert an index on the PostgreSQL database"
+	macro hasPostgreSQLIndex(indexName = null) {
+		Variables.assertDefined(parameterList = ${indexName});
+
+		var indexQuery = "SELECT COUNT(DISTINCT(indexname)) FROM pg_indexes WHERE schemaname = current_schema() AND indexname = lower('${indexName}');";
 
 		var index = SQL.executeSQLStatement(sqlStatement = ${indexQuery});
 
