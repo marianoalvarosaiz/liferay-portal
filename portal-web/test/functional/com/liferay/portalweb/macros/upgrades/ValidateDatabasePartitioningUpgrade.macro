@@ -1,5 +1,98 @@
 definition {
 
+	@summary = "Validates that Quartz indexes are created"
+	macro validateQuartzIndexes() {
+		var hasIndex = SQL.hasIndex(indexName = "IX_88328984");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_88328984 is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_779BCA37");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_779BCA37 is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_BE3835E5");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_BE3835E5 is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_4BD722BM");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_4BD722BM is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_339E078M");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_339E078M is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_5005E3AF");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_5005E3AF is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_BC2F03B0");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_BC2F03B0 is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_91CA7CCE");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_91CA7CCE is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_D219AFDE");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_D219AFDE is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_A85822A0");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_A85822A0 is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_8AA50BE1");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_8AA50BE1 is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_F2DD7C7E");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_F2DD7C7E is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_1F92813C");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_1F92813C is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_99108B6E");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_99108B6E is missing");
+		}
+
+		var hasIndex = SQL.hasIndex(indexName = "IX_CD7132D0");
+
+		if (${hasIndex} == "false") {
+			fail("Index IX_CD7132D0 is missing");
+		}
+	}
+
 	@summary = "Validates data persistence and that the basic portal functionalities are working correctly after an upgrade is executed with database partitioning enabled"
 	macro viewUpgradeDBPartition() {
 		SignOut.signOut();
