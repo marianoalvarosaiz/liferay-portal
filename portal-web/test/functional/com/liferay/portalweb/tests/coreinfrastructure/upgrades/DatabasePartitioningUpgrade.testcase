@@ -124,6 +124,8 @@ definition {
 
 		SearchAdministration.executeReindex();
 
+		ValidateDatabasePartitioningUpgrade.validateQuartzIndexes();
+
 		ValidateDatabasePartitioningUpgrade.viewUpgradeDBPartition();
 	}
 
