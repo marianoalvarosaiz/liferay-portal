@@ -9,6 +9,8 @@ import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactory;
 import com.liferay.portal.kernel.dao.db.DBType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 /**
@@ -17,16 +19,23 @@ import java.util.ServiceLoader;
 public class FakeDBFactory {
 
 	public static DB getDB(DBType dbType) {
-		ServiceLoader<DBFactory> serviceLoader = ServiceLoader.load(
-			DBFactory.class, DBFactory.class.getClassLoader());
+		return _dbs.computeIfAbsent(
+			dbType,
+			key -> {
+				ServiceLoader<DBFactory> serviceLoader = ServiceLoader.load(
+					DBFactory.class, DBFactory.class.getClassLoader());
 
-		for (DBFactory dbFactory : serviceLoader) {
-			if (dbFactory.getDBType() == dbType) {
-				return dbFactory.create(0, 0);
-			}
-		}
+				for (DBFactory dbFactory : serviceLoader) {
+					if (dbFactory.getDBType() == dbType) {
+						return dbFactory.create(0, 0);
+					}
+				}
 
-		throw new IllegalArgumentException("Illegal database type " + dbType);
+				throw new IllegalArgumentException(
+					"Illegal database type " + dbType);
+			});
 	}
+
+	private static final Map<DBType, DB> _dbs = new HashMap<>();
 
 }
