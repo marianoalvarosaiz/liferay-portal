@@ -10,6 +10,7 @@ import com.liferay.portal.db.schema.info.internal.test.helper.ConfigurationTestH
 import com.liferay.portal.db.schema.info.internal.test.util.ConfigurationValidationTestUtil;
 import com.liferay.portal.db.schema.info.internal.test.util.DatabaseValidationTestUtil;
 import com.liferay.portal.db.schema.info.internal.test.util.LoggingValidationTestUtil;
+import com.liferay.portal.db.schema.info.internal.test.util.ObjectsTestUtil;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -24,8 +25,10 @@ import java.io.File;
 import org.apache.felix.cm.PersistenceManager;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,6 +53,16 @@ public class DBSchemaDumpTest {
 
 		Assume.assumeTrue(
 			(dbType == DBType.MYSQL) || (dbType == DBType.POSTGRESQL));
+	}
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		ObjectsTestUtil.createObjectsData();
+	}
+
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+		ObjectsTestUtil.removeObjectsData();
 	}
 
 	@Before
