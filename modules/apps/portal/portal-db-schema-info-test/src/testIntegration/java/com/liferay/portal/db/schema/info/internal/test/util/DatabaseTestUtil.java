@@ -229,13 +229,15 @@ public class DatabaseTestUtil {
 
 					columns.add(
 						StringBundler.concat(
-							"Table Name: ", tableName, "Column Name: ",
-							resultSet.getString("COLUMN_NAME"), "Data Type: ",
-							resultSet.getInt("DATA_TYPE"), "Column Size: ",
-							resultSet.getInt("COLUMN_SIZE"), "Decimal Digits: ",
-							resultSet.getInt("DECIMAL_DIGITS"), "Is Nullable: ",
+							"Table Name: ", tableName, " Column Name: ",
+							resultSet.getString("COLUMN_NAME"), " Data Type: ",
+							resultSet.getInt("DATA_TYPE"), " Column Size: ",
+							resultSet.getInt("COLUMN_SIZE"),
+							" Decimal Digits: ",
+							resultSet.getInt("DECIMAL_DIGITS"),
+							" Is Nullable: ",
 							resultSet.getString("IS_NULLABLE"),
-							"Is AutoIncrement: ",
+							" Is AutoIncrement: ",
 							resultSet.getString("IS_AUTOINCREMENT")));
 				}
 			}
