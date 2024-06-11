@@ -8,11 +8,9 @@ package com.liferay.portal.db.schema.info.internal.test.util;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.db.DB;
-import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.dao.jdbc.DataSourceFactoryUtil;
-import com.liferay.portal.kernel.instance.PortalInstancePool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.util.PropsValues;
@@ -120,22 +118,12 @@ public class DatabaseTestUtil {
 		try (Connection connection = dataSource.getConnection()) {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 
-			DBInspector dbInspector = new DBInspector(connection);
-
 			try (ResultSet resultSet = databaseMetaData.getTables(
 					connection.getCatalog(), connection.getSchema(), null,
 					new String[] {"TABLE"})) {
 
 				while (resultSet.next()) {
 					String tableName = resultSet.getString("TABLE_NAME");
-
-					if (dbInspector.isObjectTable(
-							Collections.singletonList(
-								PortalInstancePool.getDefaultCompanyId()),
-							tableName)) {
-
-						continue;
-					}
 
 					indexes.addAll(
 						_getTableIndexes(connection, db, tableName, false));
@@ -210,26 +198,15 @@ public class DatabaseTestUtil {
 		try (Connection connection = dataSource.getConnection()) {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 
-			DBInspector dbInspector = new DBInspector(connection);
-
 			try (ResultSet resultSet = databaseMetaData.getColumns(
 					connection.getCatalog(), connection.getSchema(), null,
 					null)) {
 
 				while (resultSet.next()) {
-					String tableName = resultSet.getString("TABLE_NAME");
-
-					if (dbInspector.isObjectTable(
-							Collections.singletonList(
-								PortalInstancePool.getDefaultCompanyId()),
-							tableName)) {
-
-						continue;
-					}
-
 					columns.add(
 						StringBundler.concat(
-							"Table Name: ", tableName, " Column Name: ",
+							"Table Name: ", resultSet.getString("TABLE_NAME"),
+							" Column Name: ",
 							resultSet.getString("COLUMN_NAME"), " Data Type: ",
 							resultSet.getInt("DATA_TYPE"), " Column Size: ",
 							resultSet.getInt("COLUMN_SIZE"),
