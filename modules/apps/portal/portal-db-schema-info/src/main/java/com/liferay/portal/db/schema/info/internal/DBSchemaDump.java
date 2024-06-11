@@ -5,6 +5,9 @@
 
 package com.liferay.portal.db.schema.info.internal;
 
+import com.liferay.object.service.ObjectDefinitionLocalService;
+import com.liferay.object.service.ObjectFieldLocalService;
+import com.liferay.object.service.ObjectRelationshipLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
@@ -87,7 +90,9 @@ public class DBSchemaDump {
 			new DBSchemaToFilesProcessor(
 				DBType.valueOf(
 					StringUtil.toUpperCase(
-						dbSchemaDumpConfiguration.databaseType()))
+						dbSchemaDumpConfiguration.databaseType())),
+				_objectDefinitionLocalService, _objectFieldLocalService,
+				_objectRelationshipLocalService
 			).processTo(
 				dbSchemaDumpConfiguration.path()
 			);
@@ -108,5 +113,14 @@ public class DBSchemaDump {
 
 	@Reference
 	private ConfigurationAdmin _configurationAdmin;
+
+	@Reference
+	private ObjectDefinitionLocalService _objectDefinitionLocalService;
+
+	@Reference
+	private ObjectFieldLocalService _objectFieldLocalService;
+
+	@Reference
+	private ObjectRelationshipLocalService _objectRelationshipLocalService;
 
 }
