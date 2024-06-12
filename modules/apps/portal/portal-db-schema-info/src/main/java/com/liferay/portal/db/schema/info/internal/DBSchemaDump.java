@@ -13,6 +13,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.db.schema.info.internal.configuration.DBSchemaDumpConfiguration;
 import com.liferay.portal.db.schema.info.internal.processor.DBSchemaToFilesProcessor;
+import com.liferay.portal.db.schema.info.internal.validation.DBSchemaDumpValidation;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -100,6 +101,9 @@ public class DBSchemaDump {
 			if (_log.isInfoEnabled()) {
 				_log.info("Schema generation finished");
 			}
+
+			DBSchemaDumpValidation.validateSchemaDump(
+				dbSchemaDumpConfiguration.path());
 		}
 		catch (Exception exception) {
 			_log.error("Unable to perform schema generation", exception);
