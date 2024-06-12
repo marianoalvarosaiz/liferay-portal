@@ -5,6 +5,8 @@
 
 package com.liferay.portal.db.schema.info.internal.test.util;
 
+import com.liferay.portal.kernel.util.FileUtil;
+
 import java.io.File;
 
 import java.util.List;
@@ -46,6 +48,15 @@ public class DatabaseValidationTestUtil {
 				DatabaseTestUtil.destroyDataSource(targetDataSource);
 			}
 		}
+	}
+
+	public static void assertMissingTableIsReported(
+			String dumpPath, String missingTable)
+		throws Exception {
+
+		String content = FileUtil.read(new File(dumpPath, "report.info"));
+
+		Assert.assertTrue(content.contains("Missing tables: " + missingTable));
 	}
 
 	private static void _assertSameIndexesStructure(DataSource targetDataSource)
