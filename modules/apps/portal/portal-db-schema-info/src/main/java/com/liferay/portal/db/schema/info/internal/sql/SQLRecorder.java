@@ -55,14 +55,15 @@ public class SQLRecorder {
 		else if (lowerCaseSQL.contains("create sequence")) {
 			_sequencesSB.append(sql);
 		}
-		else {
+		else if (!lowerCaseSQL.contains("create or replace rule")) {
 			_tablesSB.append(sql);
 		}
 	}
 
 	public void recordTablesSQL(String sql) {
 		if (sql != null) {
-			_tablesSB.append(sql);
+			_tablesSB.append(
+				sql.replaceAll("(?mi)^create or replace rule.*", ""));
 		}
 	}
 
