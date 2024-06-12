@@ -8,6 +8,7 @@ package com.liferay.portal.db.schema.info.internal.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.db.schema.info.internal.test.helper.ConfigurationTestHelper;
 import com.liferay.portal.db.schema.info.internal.test.util.ConfigurationValidationTestUtil;
+import com.liferay.portal.db.schema.info.internal.test.util.DatabaseTestUtil;
 import com.liferay.portal.db.schema.info.internal.test.util.DatabaseValidationTestUtil;
 import com.liferay.portal.db.schema.info.internal.test.util.LoggingValidationTestUtil;
 import com.liferay.portal.db.schema.info.internal.test.util.ObjectsTestUtil;
@@ -99,6 +100,22 @@ public class DBSchemaDumpTest {
 				assertConfigurationIsDeletedAfterDeploy(
 					_configurationTestHelper, _PID);
 			LoggingValidationTestUtil.assertStartEndIsLogged(logCapture);
+		}
+	}
+
+	@Test
+	public void testCopyDatabaseConfigurationMissingTable() throws Exception {
+		DatabaseTestUtil.createExtraTable();
+
+		try {
+			_configurationTestHelper.deployConfiguration(
+				_PID, _databaseType, _dumpPath);
+
+			DatabaseValidationTestUtil.assertMissingTableIsReported(
+				_dumpPath, "test");
+		}
+		finally {
+			DatabaseTestUtil.dropExtraTable();
 		}
 	}
 
