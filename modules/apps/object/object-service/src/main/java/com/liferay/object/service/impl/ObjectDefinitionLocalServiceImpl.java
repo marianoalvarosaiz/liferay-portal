@@ -45,7 +45,6 @@ import com.liferay.object.internal.dao.db.ObjectDBManagerUtil;
 import com.liferay.object.internal.deployer.InactiveObjectDefinitionDeployerImpl;
 import com.liferay.object.internal.deployer.ObjectDefinitionDeployerImpl;
 import com.liferay.object.internal.petra.sql.dsl.DynamicObjectDefinitionLocalizationTableFactory;
-import com.liferay.object.internal.petra.sql.dsl.DynamicObjectDefinitionTableFactory;
 import com.liferay.object.internal.security.permission.resource.util.ObjectDefinitionResourcePermissionUtil;
 import com.liferay.object.model.ObjectAction;
 import com.liferay.object.model.ObjectDefinition;
@@ -1503,8 +1502,7 @@ public class ObjectDefinitionLocalServiceImpl
 
 		if (objectDefinition.isUnmodifiableSystemObject()) {
 			_createTable(
-				DynamicObjectDefinitionTableFactory.createExtensionTable(
-					objectDefinition, _objectFieldLocalService));
+				objectDefinition.getExtensionDBTableName(), objectDefinition);
 		}
 
 		return objectDefinition;
@@ -1603,9 +1601,11 @@ public class ObjectDefinitionLocalServiceImpl
 			null);
 	}
 
-	private void _createLocalizationTable(
+	private void _createLocalizationTable(ObjectDefinition objectDefinition) {
 		DynamicObjectDefinitionLocalizationTable
-			dynamicObjectDefinitionLocalizedTable) {
+			dynamicObjectDefinitionLocalizedTable =
+				DynamicObjectDefinitionLocalizationTableFactory.create(
+					objectDefinition, _objectFieldLocalService);
 
 		if (dynamicObjectDefinitionLocalizedTable == null) {
 			return;
@@ -1615,14 +1615,20 @@ public class ObjectDefinitionLocalServiceImpl
 	}
 
 	private void _createTable(
-			DynamicObjectDefinitionTable dynamicObjectDefinitionTable)
+			String dbTableName, ObjectDefinition objectDefinition)
 		throws PortalException {
+
+		List<ObjectField> objectFields =
+			_objectFieldLocalService.getObjectFields(
+				objectDefinition.getObjectDefinitionId(), dbTableName);
+
+		DynamicObjectDefinitionTable dynamicObjectDefinitionTable =
+			new DynamicObjectDefinitionTable(
+				objectDefinition, objectFields, dbTableName);
 
 		runSQL(dynamicObjectDefinitionTable.getCreateTableSQL());
 
-		for (ObjectField objectField :
-				dynamicObjectDefinitionTable.getObjectFields()) {
-
+		for (ObjectField objectField : objectFields) {
 			if (!StringUtil.equals(
 					objectField.getBusinessType(),
 					ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP)) {
@@ -1633,8 +1639,7 @@ public class ObjectDefinitionLocalServiceImpl
 			ObjectDBManagerUtil.createIndexMetadata(
 				_currentConnection.getConnection(
 					objectDefinitionPersistence.getDataSource()),
-				dynamicObjectDefinitionTable.getTableName(), false,
-				objectField.getDBColumnName());
+				dbTableName, false, objectField.getDBColumnName());
 		}
 	}
 
@@ -1837,15 +1842,10 @@ public class ObjectDefinitionLocalServiceImpl
 
 		objectDefinition = objectDefinitionPersistence.update(objectDefinition);
 
-		_createLocalizationTable(
-			DynamicObjectDefinitionLocalizationTableFactory.create(
-				objectDefinition, _objectFieldLocalService));
+		_createLocalizationTable(objectDefinition);
+		_createTable(objectDefinition.getDBTableName(), objectDefinition);
 		_createTable(
-			DynamicObjectDefinitionTableFactory.create(
-				objectDefinition, _objectFieldLocalService));
-		_createTable(
-			DynamicObjectDefinitionTableFactory.createExtensionTable(
-				objectDefinition, _objectFieldLocalService));
+			objectDefinition.getExtensionDBTableName(), objectDefinition);
 
 		for (ObjectRelationship objectRelationship :
 				_objectRelationshipLocalService.getObjectRelationships(
