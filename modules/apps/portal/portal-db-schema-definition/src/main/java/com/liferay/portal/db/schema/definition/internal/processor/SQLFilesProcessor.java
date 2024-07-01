@@ -6,13 +6,15 @@
 package com.liferay.portal.db.schema.definition.internal.processor;
 
 import com.liferay.petra.string.StringBundler;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.db.DBResourceUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactory;
 import com.liferay.portal.kernel.dao.db.DBType;
+import com.liferay.portal.kernel.db.partition.DBPartition;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.upgrade.release.SchemaCreator;
+
+import java.io.File;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
@@ -23,37 +25,47 @@ import org.osgi.framework.ServiceReference;
 /**
  * @author Mariano Álvaro Sáiz
  */
-public class SQLFilesProcessor {
+public abstract class SQLFilesProcessor {
 
-	public SQLFilesProcessor(DBType dbType) throws Exception {
-		_db = _getDB(dbType);
+	public static SQLFilesProcessor getSQLFilesProcessor(DBType dbType)
+		throws Exception {
 
-		_objectsSQLHelper = new ObjectsSQLHelper(_db);
+		if (DBPartition.isPartitionEnabled()) {
+			return new DBPartitionSQLFilesProcessor(dbType);
+		}
+
+		return new DefaultSQLFilesProcessor(dbType);
+	}
+
+	public abstract void writeFiles(File file) throws Exception;
+
+	protected SQLFilesProcessor(DBType dbType) throws Exception {
+		db = _getDB(dbType);
 
 		_generatePortalSQL();
 
 		_generateModulesSQL();
 	}
 
-	public String getIndexesSQL() {
-		return _indexesSQLSB.toString() + StringPool.NEW_LINE +
-			_objectsSQLHelper.getIndexesSQL();
+	protected String getIndexesSQL() {
+		return _indexesSQLSB.toString();
 	}
 
-	public String getTablesSQL() {
-		return _tablesSQLSB.toString() + StringPool.NEW_LINE +
-			_objectsSQLHelper.getTablesSQL();
+	protected String getTablesSQL() {
+		return _tablesSQLSB.toString();
 	}
+
+	protected final DB db;
 
 	private void _appendSQL(String indexesSQL, String tablesSQL)
 		throws Exception {
 
 		if (indexesSQL != null) {
-			_indexesSQLSB.append(_db.buildSQL(indexesSQL));
+			_indexesSQLSB.append(db.buildSQL(indexesSQL));
 		}
 
 		if (tablesSQL != null) {
-			_tablesSQLSB.append(_db.buildSQL(tablesSQL));
+			_tablesSQLSB.append(db.buildSQL(tablesSQL));
 		}
 	}
 
@@ -93,9 +105,7 @@ public class SQLFilesProcessor {
 		throw new IllegalArgumentException("Database type " + dbType);
 	}
 
-	private final DB _db;
 	private final StringBundler _indexesSQLSB = new StringBundler();
-	private final ObjectsSQLHelper _objectsSQLHelper;
 	private final StringBundler _tablesSQLSB = new StringBundler();
 
 }

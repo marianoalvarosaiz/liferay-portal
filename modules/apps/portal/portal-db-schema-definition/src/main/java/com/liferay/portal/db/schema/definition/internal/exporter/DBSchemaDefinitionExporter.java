@@ -14,7 +14,6 @@ import com.liferay.portal.db.schema.definition.internal.validation.DBSchemaDefin
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -90,20 +89,17 @@ public class DBSchemaDefinitionExporter {
 						DBSchemaDefinitionExporterConfiguration.class,
 						properties);
 
-			SQLFilesProcessor sqlFilesProcessor = new SQLFilesProcessor(
-				DBType.valueOf(
-					StringUtil.toUpperCase(
-						dbSchemaDefinitionExporterConfiguration.
-							databaseType())));
+			SQLFilesProcessor sqlFilesProcessor =
+				SQLFilesProcessor.getSQLFilesProcessor(
+					DBType.valueOf(
+						StringUtil.toUpperCase(
+							dbSchemaDefinitionExporterConfiguration.
+								databaseType())));
 
 			File file = new File(
 				dbSchemaDefinitionExporterConfiguration.path());
 
-			FileUtil.write(
-				new File(file, "indexes.sql"),
-				sqlFilesProcessor.getIndexesSQL());
-			FileUtil.write(
-				new File(file, "tables.sql"), sqlFilesProcessor.getTablesSQL());
+			sqlFilesProcessor.writeFiles(file);
 
 			if (_log.isInfoEnabled()) {
 				_log.info(

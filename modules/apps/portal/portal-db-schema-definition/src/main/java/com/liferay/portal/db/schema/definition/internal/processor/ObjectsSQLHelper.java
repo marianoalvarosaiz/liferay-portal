@@ -19,9 +19,10 @@ import com.liferay.object.service.ObjectFieldLocalServiceUtil;
 import com.liferay.object.service.ObjectRelationshipLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.db.schema.definition.internal.partition.DBSchemaPartitionUtil;
 import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.IndexMetadata;
-import com.liferay.portal.kernel.instance.PortalInstancePool;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -42,8 +43,9 @@ import javax.sql.DataSource;
  */
 public class ObjectsSQLHelper {
 
-	public ObjectsSQLHelper(DB db) throws Exception {
+	public ObjectsSQLHelper(DB db, long companyId) throws Exception {
 		_db = db;
+		_companyId = companyId;
 
 		_generateSQL();
 	}
@@ -59,15 +61,19 @@ public class ObjectsSQLHelper {
 	private void _generateIndexesSQL() throws Exception {
 		DataSource dataSource = InfrastructureUtil.getDataSource();
 
+		DB db = DBManagerUtil.getDB();
+
 		Method method = _getMethod(
-			_db.getClass(), "getIndexes", Connection.class, String.class,
+			db.getClass(), "getIndexes", Connection.class, String.class,
 			String.class, boolean.class);
 
 		try (Connection connection = dataSource.getConnection()) {
+			DBSchemaPartitionUtil.setPartition(connection, _companyId);
+
 			for (String tableName : _tableNames) {
 				for (IndexMetadata indexMetadata :
 						(List<IndexMetadata>)method.invoke(
-							_db, connection, tableName, null, false)) {
+							db, connection, tableName, null, false)) {
 
 					_indexesSQLSB.append(indexMetadata.getCreateSQL(null));
 					_indexesSQLSB.append(StringPool.NEW_LINE);
@@ -153,8 +159,7 @@ public class ObjectsSQLHelper {
 	private void _generateSQL() throws Exception {
 		List<ObjectDefinition> objectDefinitions =
 			ObjectDefinitionLocalServiceUtil.getObjectDefinitions(
-				PortalInstancePool.getDefaultCompanyId(),
-				WorkflowConstants.STATUS_APPROVED);
+				_companyId, WorkflowConstants.STATUS_APPROVED);
 
 		for (ObjectDefinition objectDefinition : objectDefinitions) {
 			_generateRegularTables(objectDefinition);
@@ -191,6 +196,7 @@ public class ObjectsSQLHelper {
 		_tableNames.add(tableName);
 	}
 
+	private final long _companyId;
 	private final DB _db;
 	private final StringBundler _indexesSQLSB = new StringBundler();
 	private final Set<String> _tableNames = new HashSet<>();
