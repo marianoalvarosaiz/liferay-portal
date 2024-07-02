@@ -7,9 +7,11 @@ package com.liferay.company.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.portal.kernel.encryptor.Encryptor;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.CompanyInfo;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyInfoLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -58,20 +60,30 @@ public class CompanyInfoLocalServiceTest {
 
 	@Test
 	public void testGetCompanyInfoKey() {
-		CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
-			_company.getCompanyId());
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setWithSafeCloseable(
+					_company.getCompanyId())) {
 
-		Assert.assertEquals(companyInfo.getKey(), _company.getKey());
+			CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
+				_company.getCompanyId());
+
+			Assert.assertEquals(companyInfo.getKey(), _company.getKey());
+		}
 	}
 
 	@Test
 	public void testGetCompanyInfoKeyObj() {
-		CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
-			_company.getCompanyId());
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setWithSafeCloseable(
+					_company.getCompanyId())) {
 
-		Assert.assertEquals(
-			_encryptor.deserializeKey(companyInfo.getKey()),
-			_company.getKeyObj());
+			CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
+				_company.getCompanyId());
+
+			Assert.assertEquals(
+				_encryptor.deserializeKey(companyInfo.getKey()),
+				_company.getKeyObj());
+		}
 	}
 
 	@Test
@@ -80,10 +92,15 @@ public class CompanyInfoLocalServiceTest {
 
 		_company = _companyLocalService.updateCompany(_company);
 
-		CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
-			_company.getCompanyId());
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setWithSafeCloseable(
+					_company.getCompanyId())) {
 
-		Assert.assertEquals(companyInfo.getKey(), _company.getKey());
+			CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
+				_company.getCompanyId());
+
+			Assert.assertEquals(companyInfo.getKey(), _company.getKey());
+		}
 	}
 
 	@Test
@@ -92,12 +109,17 @@ public class CompanyInfoLocalServiceTest {
 
 		_company = _companyLocalService.updateCompany(_company);
 
-		CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
-			_company.getCompanyId());
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setWithSafeCloseable(
+					_company.getCompanyId())) {
 
-		Assert.assertEquals(
-			_encryptor.deserializeKey(companyInfo.getKey()),
-			_company.getKeyObj());
+			CompanyInfo companyInfo = _companyInfoLocalService.fetchCompany(
+				_company.getCompanyId());
+
+			Assert.assertEquals(
+				_encryptor.deserializeKey(companyInfo.getKey()),
+				_company.getKeyObj());
+		}
 	}
 
 	@Inject
