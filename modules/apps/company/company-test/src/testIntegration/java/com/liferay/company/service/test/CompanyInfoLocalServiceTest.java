@@ -8,8 +8,14 @@ package com.liferay.company.service.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.petra.lang.SafeCloseable;
+import com.liferay.portal.kernel.cache.PortalCacheException;
+import com.liferay.portal.kernel.cache.PortalCacheManager;
+import com.liferay.portal.kernel.cache.PortalCacheManagerListener;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
+import com.liferay.portal.kernel.cache.PortalCacheManagerProvider;
 import com.liferay.portal.kernel.encryptor.Encryptor;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.CompanyInfo;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyInfoLocalService;
@@ -51,11 +57,42 @@ public class CompanyInfoLocalServiceTest {
 	public void testDeleteCompanyInfo() throws Exception {
 		long companyId = _company.getCompanyId();
 
-		_companyLocalService.deleteCompany(_company);
+		CompanyInfo companyInfo = null;
+
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setWithSafeCloseable(companyId)) {
+
+			companyInfo = _companyInfoLocalService.fetchCompany(companyId);
+		}
+
+		PortalCacheManagerListener portalCacheManagerListener =
+			new CacheRemovedPortalCacheManagerListener();
+
+		_portalCacheManager.registerPortalCacheManagerListener(
+			portalCacheManagerListener);
+
+		_multiVMCachesRemoved = false;
+
+		try {
+			_companyLocalService.deleteCompany(_company);
+		}
+		finally {
+			_portalCacheManager.unregisterPortalCacheManagerListener(
+				portalCacheManagerListener);
+		}
 
 		_company = null;
 
-		Assert.assertNull(_companyInfoLocalService.fetchCompany(companyId));
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setWithSafeCloseable(
+					CompanyConstants.SYSTEM)) {
+
+			Assert.assertNull(
+				_companyInfoLocalService.fetchCompanyInfo(
+					companyInfo.getCompanyInfoId()));
+		}
+
+		Assert.assertTrue(_multiVMCachesRemoved);
 	}
 
 	@Test
@@ -122,6 +159,9 @@ public class CompanyInfoLocalServiceTest {
 		}
 	}
 
+	@DeleteAfterTestRun
+	private static Company _company;
+
 	@Inject
 	private static CompanyInfoLocalService _companyInfoLocalService;
 
@@ -134,7 +174,31 @@ public class CompanyInfoLocalServiceTest {
 	@Inject
 	private static Encryptor _encryptor;
 
-	@DeleteAfterTestRun
-	private Company _company;
+	private static boolean _multiVMCachesRemoved;
+	private static final PortalCacheManager<?, ?> _portalCacheManager =
+		PortalCacheManagerProvider.getPortalCacheManager(
+			PortalCacheManagerNames.MULTI_VM);
+
+	private static class CacheRemovedPortalCacheManagerListener
+		implements PortalCacheManagerListener {
+
+		@Override
+		public void dispose() throws PortalCacheException {
+		}
+
+		@Override
+		public void init() throws PortalCacheException {
+		}
+
+		@Override
+		public void notifyPortalCacheAdded(String portalCacheName) {
+		}
+
+		@Override
+		public void notifyPortalCacheRemoved(String portalCacheName) {
+			_multiVMCachesRemoved = true;
+		}
+
+	}
 
 }
