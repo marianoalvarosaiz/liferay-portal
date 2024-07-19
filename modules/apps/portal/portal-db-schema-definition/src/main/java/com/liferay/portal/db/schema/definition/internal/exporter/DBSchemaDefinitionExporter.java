@@ -9,12 +9,10 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.db.schema.definition.internal.configuration.DBSchemaDefinitionExporterConfiguration;
-import com.liferay.portal.db.schema.definition.internal.sql.provider.PortalSQLProvider;
-import com.liferay.portal.db.schema.definition.internal.sql.provider.SQLProvider;
+import com.liferay.portal.db.schema.definition.internal.sql.writer.SQLWriter;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -90,7 +88,7 @@ public class DBSchemaDefinitionExporter {
 						DBSchemaDefinitionExporterConfiguration.class,
 						properties);
 
-			SQLProvider sqlProvider = new PortalSQLProvider(
+			SQLWriter sqlWriter = new SQLWriter(
 				DBType.valueOf(
 					StringUtil.toUpperCase(
 						dbSchemaDefinitionExporterConfiguration.
@@ -99,10 +97,7 @@ public class DBSchemaDefinitionExporter {
 			File file = new File(
 				dbSchemaDefinitionExporterConfiguration.path());
 
-			FileUtil.write(
-				new File(file, "indexes.sql"), sqlProvider.getIndexesSQL());
-			FileUtil.write(
-				new File(file, "tables.sql"), sqlProvider.getTablesSQL());
+			sqlWriter.writeFiles(file);
 
 			if (_log.isInfoEnabled()) {
 				_log.info(
