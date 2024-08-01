@@ -171,7 +171,7 @@ public class DBPartitionUtil {
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				StringBundler.concat(
 					"select configurationId from ",
-					_getPartitionName(companyId),
+					getPartitionName(companyId),
 					".Configuration_ where dictionary like ",
 					"'%org.apache.felix.configadmin.revision%'"));
 			ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -193,7 +193,7 @@ public class DBPartitionUtil {
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				StringBundler.concat(
 					"select configurationId, dictionary from ",
-					_getPartitionName(companyId), ".Configuration_"));
+					getPartitionName(companyId), ".Configuration_"));
 			ResultSet resultSet = preparedStatement.executeQuery()) {
 
 			Map<String, String> configurations = new HashMap<>();
@@ -243,7 +243,7 @@ public class DBPartitionUtil {
 			return;
 		}
 
-		String partitionName = _getPartitionName(companyId);
+		String partitionName = getPartitionName(companyId);
 
 		try (Statement statement = connection.createStatement()) {
 			statement.execute(
@@ -335,7 +335,7 @@ public class DBPartitionUtil {
 		Connection connection = CurrentConnectionUtil.getConnection(
 			InfrastructureUtil.getDataSource());
 
-		String partitionName = _getPartitionName(companyId);
+		String partitionName = getPartitionName(companyId);
 
 		try (AutoCloseable autoCloseable = _disableAutoCommit(connection);
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -412,9 +412,9 @@ public class DBPartitionUtil {
 
 		DBInspector dbInspector = new DBInspector(connection);
 
-		String fromPartitionName = _getPartitionName(fromCompanyId);
+		String fromPartitionName = getPartitionName(fromCompanyId);
 		List<String> quartzTableNames = new ArrayList<>();
-		String toPartitionName = _getPartitionName(toCompanyId);
+		String toPartitionName = getPartitionName(toCompanyId);
 
 		try (AutoCloseable autoCloseable = _disableAutoCommit(connection);
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -632,7 +632,7 @@ public class DBPartitionUtil {
 
 				statement.executeUpdate(
 					_dbPartitionDB.getDropPartitionSQL(
-						_getPartitionName(companyId)));
+						getPartitionName(companyId)));
 			}
 		}
 		catch (Exception exception) {
@@ -693,7 +693,7 @@ public class DBPartitionUtil {
 					StringBundler.concat(
 						"Unable to roll back the extraction of database ",
 						"partition. Recover a backup of the database ",
-						"partition ", _getPartitionName(companyId), "."),
+						"partition ", getPartitionName(companyId), "."),
 					exception2);
 			}
 
@@ -708,7 +708,7 @@ public class DBPartitionUtil {
 			DBInspector dbInspector)
 		throws Exception {
 
-		String partitionName = _getPartitionName(companyId);
+		String partitionName = getPartitionName(companyId);
 
 		statement.executeUpdate(
 			_dbPartitionDB.getDropViewSQL(partitionName, tableName));
@@ -863,14 +863,14 @@ public class DBPartitionUtil {
 			public String getCatalog() throws SQLException {
 				return _dbPartitionDB.getCatalog(
 					connection,
-					_getPartitionName(CompanyThreadLocal.getCompanyId()));
+					getPartitionName(CompanyThreadLocal.getCompanyId()));
 			}
 
 			@Override
 			public String getSchema() {
 				return _dbPartitionDB.getSchema(
 					connection,
-					_getPartitionName(CompanyThreadLocal.getCompanyId()));
+					getPartitionName(CompanyThreadLocal.getCompanyId()));
 			}
 
 			@Override
@@ -939,7 +939,7 @@ public class DBPartitionUtil {
 			private void _setPartition() throws SQLException {
 				long companyId = CompanyThreadLocal.getCompanyId();
 
-				String partitionName = _getPartitionName(companyId);
+				String partitionName = getPartitionName(companyId);
 
 				_dbPartitionDB.setPartition(connection, partitionName);
 
@@ -974,7 +974,7 @@ public class DBPartitionUtil {
 			fromPartitionName, StringPool.PERIOD, fromTableName, whereClause);
 	}
 
-	private static String _getPartitionName(long companyId) {
+	private static String getPartitionName(long companyId) {
 		if ((companyId == CompanyConstants.SYSTEM) ||
 			(companyId == _defaultCompanyId)) {
 
@@ -999,7 +999,7 @@ public class DBPartitionUtil {
 
 		AutoCloseable autoCloseable = null;
 		List<String> copiedTableNames = new ArrayList<>();
-		String partitionName = _getPartitionName(companyId);
+		String partitionName = getPartitionName(companyId);
 
 		Connection connection = CurrentConnectionUtil.getConnection(
 			InfrastructureUtil.getDataSource());
@@ -1225,7 +1225,7 @@ public class DBPartitionUtil {
 			DBInspector dbInspector)
 		throws Exception {
 
-		String partitionName = _getPartitionName(companyId);
+		String partitionName = getPartitionName(companyId);
 
 		if (dbInspector.hasColumn(tableName, "companyId")) {
 			_moveCompanyData(
@@ -1305,7 +1305,7 @@ public class DBPartitionUtil {
 						super.execute(
 							_dbPartitionDB.getCreateViewSQL(
 								_defaultPartitionName,
-								_getPartitionName(companyId), tableName));
+								getPartitionName(companyId), tableName));
 					}
 
 					return returnValue;

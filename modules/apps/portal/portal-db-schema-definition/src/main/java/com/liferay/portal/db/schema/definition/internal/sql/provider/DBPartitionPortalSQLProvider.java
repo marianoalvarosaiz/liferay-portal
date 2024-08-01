@@ -67,9 +67,13 @@ public class DBPartitionPortalSQLProvider extends BaseSQLProvider {
 			return super.getTablesSQL() + StringPool.NEW_LINE +
 				_objectSQLProvider.getTablesSQL();
 		}
+		
+		String partition
+		
+		String partitionCreateTablePrefix = StringBundler.concat("create table ",_DATABASE_PARTITION_SCHEMA_NAME_PREFIX, _companyId, StringPool.PERIOD);
 
 		return StringBundler.concat(
-			_getCreatePartitionSQL(), _partitionTablesSQL, StringPool.NEW_LINE,
+			_getCreatePartitionSQL(), StringUtil.replace(_partitionTablesSQL, "create table ", partitionCreateTablePrefix, StringPool.NEW_LINE,
 			_getViewsSQL(), StringPool.NEW_LINE,
 			_objectSQLProvider.getTablesSQL());
 	}
@@ -77,7 +81,7 @@ public class DBPartitionPortalSQLProvider extends BaseSQLProvider {
 	private String _getCreatePartitionSQL() {
 		if (_companyId == PortalInstancePool.getDefaultCompanyId()) {
 			return StringPool.NEW_LINE;
-		}
+		}<>
 
 		if (db.getDBType() == DBType.MYSQL) {
 			return StringBundler.concat(
@@ -139,7 +143,7 @@ public class DBPartitionPortalSQLProvider extends BaseSQLProvider {
 
 			for (String createTableSQL : createTableSQLs) {
 				createTableSQL = StringUtil.trim(createTableSQL);
-
+				
 				if (StringUtil.startsWith(createTableSQL, "create table")) {
 					String[] parts = createTableSQL.split(StringPool.SPACE);
 

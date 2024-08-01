@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.db.partition.DBPartition;
 import com.liferay.portal.kernel.instance.PortalInstancePool;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 
@@ -23,6 +24,16 @@ import java.sql.SQLException;
  * @author Mariano Álvaro Sáiz
  */
 public class DBSchemaPartitionUtil {
+
+	public static String getPartitionName(long companyId) {
+		if ((companyId == CompanyConstants.SYSTEM) ||
+			(companyId == PortalInstancePool.getDefaultCompanyId())) {
+
+			return PortalInstancePool.getDefaultCompanyId();
+		}
+
+		return _DATABASE_PARTITION_SCHEMA_NAME_PREFIX + companyId;
+	}
 
 	public static void setPartition(Connection connection, long companyId)
 		throws SQLException {

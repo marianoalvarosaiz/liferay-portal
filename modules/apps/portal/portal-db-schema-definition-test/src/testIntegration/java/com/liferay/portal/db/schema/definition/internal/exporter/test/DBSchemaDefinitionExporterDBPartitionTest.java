@@ -12,15 +12,20 @@ import com.liferay.object.service.ObjectDefinitionLocalServiceUtil;
 import com.liferay.object.service.ObjectRelationshipLocalServiceUtil;
 import com.liferay.object.test.util.ObjectDefinitionTestUtil;
 import com.liferay.object.test.util.ObjectRelationshipTestUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.db.schema.definition.internal.test.util.ConfigurationTestUtil;
 import com.liferay.portal.db.schema.definition.internal.test.util.DatabaseTestUtil;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.db.partition.DBPartition;
+import com.liferay.portal.kernel.instance.PortalInstancePool;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.AssumeTestRule;
+import com.liferay.portal.kernel.test.util.CompanyTestUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -57,7 +62,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
  * @author Mariano Álvaro Sáiz
  */
 @RunWith(Arquillian.class)
-public class DBSchemaDefinitionExporterTest {
+public class DBSchemaDefinitionExporterDBPartitionTest {
 
 	@ClassRule
 	@Rule
@@ -66,7 +71,7 @@ public class DBSchemaDefinitionExporterTest {
 			new AssumeTestRule("assume"), new LiferayIntegrationTestRule());
 
 	public static void assume() {
-		Assume.assumeFalse(DBPartition.isPartitionEnabled());
+		Assume.assumeTrue(DBPartition.isPartitionEnabled());
 
 		DBType dbType = DBManagerUtil.getDBType();
 
@@ -76,6 +81,8 @@ public class DBSchemaDefinitionExporterTest {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		_company = CompanyTestUtil.addCompany();
+
 		_databaseType = String.valueOf(DBManagerUtil.getDBType());
 		_folder = FileUtil.createTempFolder();
 
@@ -93,6 +100,8 @@ public class DBSchemaDefinitionExporterTest {
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
+		_companyLocalService.deleteCompany(_company);
+
 		Files.deleteIfExists(ConfigurationTestUtil.getConfigurationPath(_PID));
 
 		FileUtil.deltree(_folder);
@@ -124,9 +133,22 @@ public class DBSchemaDefinitionExporterTest {
 				_configurationAdmin, _databaseType, _folder.getAbsolutePath(),
 				_PID);
 
-			_assertImportDBSchemaDefinition(
-				new File(_folder, "tables.sql"),
-				new File(_folder, "indexes.sql"));
+			_companyLocalService.forEachCompanyId(
+				companyId -> {
+					String tablesSQLName = "tables.sql";
+					String indexesSQLName = "indexes.sql";
+
+					if (companyId != PortalInstancePool.getDefaultCompanyId()) {
+						tablesSQLName =
+							companyId + StringPool.UNDERLINE + tablesSQLName;
+						indexesSQLName =
+							companyId + StringPool.UNDERLINE + indexesSQLName;
+					}
+
+					_assertImportDBSchemaDefinition(
+						companyId, new File(_folder, tablesSQLName),
+						new File(_folder, indexesSQLName));
+				});
 
 			Assert.assertFalse(
 				Files.exists(ConfigurationTestUtil.getConfigurationPath(_PID)));
@@ -166,7 +188,7 @@ public class DBSchemaDefinitionExporterTest {
 		String content = FileUtil.read(
 			new File(_folder, "db_schema_definition_export_report.info"));
 
-		Assert.assertTrue(content.endsWith("Missing tables:"));
+		Assert.assertTrue(content.endsWith("Default instance missing tables:"));
 	}
 
 	@Test
@@ -185,7 +207,8 @@ public class DBSchemaDefinitionExporterTest {
 
 			Assert.assertTrue(
 				content.contains(
-					"Missing tables: " + StringUtil.toLowerCase("TestTable")));
+					"Default instance missing tables: " +
+						StringUtil.toLowerCase("TestTable")));
 		}
 		finally {
 			db.runSQL("DROP_TABLE_IF_EXISTS(TestTable)");
@@ -193,12 +216,13 @@ public class DBSchemaDefinitionExporterTest {
 	}
 
 	private void _assertImportDBSchemaDefinition(
-			File tablesSQLFile, File indexesSQLFile)
+			long companyId, File tablesSQLFile, File indexesSQLFile)
 		throws Exception {
 
 		DatabaseTestUtil.createSchema(_COPY_DB_SCHEMA_NAME);
 
 		DataSource copyDataSource = null;
+		DataSource dataSource = null;
 
 		try {
 			copyDataSource = DatabaseTestUtil.initDataSource(
@@ -206,14 +230,28 @@ public class DBSchemaDefinitionExporterTest {
 
 			DatabaseTestUtil.importFile(tablesSQLFile, copyDataSource);
 
-			_assertTables(copyDataSource);
+			if (companyId == PortalInstancePool.getDefaultCompanyId()) {
+				dataSource = InfrastructureUtil.getDataSource();
+			}
+			else {
+				dataSource = DatabaseTestUtil.initDataSource(
+					DatabaseTestUtil.getPartitionName(companyId));
+			}
+
+			_assertTables(dataSource, copyDataSource);
 
 			DatabaseTestUtil.importFile(indexesSQLFile, copyDataSource);
 
-			_assertIndexes(copyDataSource);
+			_assertIndexes(dataSource, copyDataSource);
 		}
 		finally {
 			DatabaseTestUtil.dropSchema(_COPY_DB_SCHEMA_NAME);
+
+			if ((dataSource != null) &&
+				(dataSource != InfrastructureUtil.getDataSource())) {
+
+				DatabaseTestUtil.destroyDataSource(dataSource);
+			}
 
 			if (copyDataSource != null) {
 				DatabaseTestUtil.destroyDataSource(copyDataSource);
@@ -221,11 +259,14 @@ public class DBSchemaDefinitionExporterTest {
 		}
 	}
 
-	private void _assertIndexes(DataSource copyDataSource) throws Exception {
+	private void _assertIndexes(
+			DataSource dataSource, DataSource copyDataSource)
+		throws Exception {
+
 		List<String> copyIndexColumnNames =
 			DatabaseTestUtil.getIndexColumnNames(copyDataSource);
 		List<String> indexColumnNames = DatabaseTestUtil.getIndexColumnNames(
-			InfrastructureUtil.getDataSource());
+			dataSource);
 
 		Assert.assertEquals(
 			StringUtils.difference(
@@ -238,11 +279,13 @@ public class DBSchemaDefinitionExporterTest {
 		}
 	}
 
-	private void _assertTables(DataSource copyDataSource) throws Exception {
+	private void _assertTables(DataSource dataSource, DataSource copyDataSource)
+		throws Exception {
+
 		List<String> copyTableColumnNames =
 			DatabaseTestUtil.getTableColumnNames(copyDataSource);
 		List<String> tableColumnNames = DatabaseTestUtil.getTableColumnNames(
-			InfrastructureUtil.getDataSource());
+			dataSource);
 
 		Assert.assertEquals(
 			StringUtils.difference(
@@ -260,6 +303,11 @@ public class DBSchemaDefinitionExporterTest {
 	private static final String _PID =
 		"com.liferay.portal.db.schema.definition.internal.configuration." +
 			"DBSchemaDefinitionExporterConfiguration";
+
+	private static Company _company;
+
+	@Inject
+	private static CompanyLocalService _companyLocalService;
 
 	private static String _databaseType;
 	private static File _folder;
