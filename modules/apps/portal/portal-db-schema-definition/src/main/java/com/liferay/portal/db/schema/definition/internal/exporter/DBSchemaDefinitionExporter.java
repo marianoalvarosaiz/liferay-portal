@@ -250,7 +250,7 @@ public class DBSchemaDefinitionExporter {
 
 		private String _getTablesInfo() throws Exception {
 			if (!DBPartition.isPartitionEnabled()) {
-				_getTablesInfo(
+				return _getTablesInfo(
 					PortalInstancePool.getDefaultCompanyId(),
 					"Portal ? tables: ", "TABLE");
 			}
