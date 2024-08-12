@@ -89,8 +89,18 @@ public class ObjectDefinitionTestUtil {
 			ObjectDefinitionLocalService objectDefinitionLocalService)
 		throws PortalException {
 
+		return addCustomObjectDefinition(
+			name, objectDefinitionLocalService, TestPropsValues.getUserId());
+	}
+
+	public static ObjectDefinition addCustomObjectDefinition(
+			String name,
+			ObjectDefinitionLocalService objectDefinitionLocalService,
+			long userId)
+		throws PortalException {
+
 		return objectDefinitionLocalService.addCustomObjectDefinition(
-			TestPropsValues.getUserId(), 0, false, true, false, false,
+			userId, 0, false, true, false, false,
 			LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
 			name, null, null,
 			LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
@@ -99,7 +109,7 @@ public class ObjectDefinitionTestUtil {
 			Collections.singletonList(
 				new TextObjectFieldBuilder(
 				).userId(
-					TestPropsValues.getUserId()
+					userId
 				).labelMap(
 					LocalizedMapUtil.getLocalizedMap(StringUtil.randomId())
 				).name(
