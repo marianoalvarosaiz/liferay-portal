@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -98,6 +99,10 @@ public class DBSchemaImporterHelper {
 		Set<String> sourceTables = _sourceTableColumns.keySet();
 		Set<String> targetTables = _targetTableColumns.keySet();
 
+		sourceTables.retainAll(targetTables);
+
+		targetTables.retainAll(sourceTables);
+
 		Iterator<String> sourceTablesIterator = sourceTables.iterator();
 		Iterator<String> targetTablesIterator = targetTables.iterator();
 
@@ -123,12 +128,33 @@ public class DBSchemaImporterHelper {
 		List<String> sourceColumnsName = _sourceTableColumns.get(
 			sourceTableName);
 
+		List<String> targetColumnsName = _targetTableColumns.get(
+			targetTableName);
+
+		if (sourceColumnsName.size() > targetColumnsName.size()) {
+			throw new IllegalStateException(
+				StringBundler.concat(
+					"Incorrect number of columns for table ", targetTableName,
+					". Source has ", sourceColumnsName.size(),
+					" and target has ", targetColumnsName.size(),
+					StringPool.PERIOD));
+		}
+		else if (sourceColumnsName.size() < targetColumnsName.size()) {
+			Set<String> sourceColumnsNameSet = new TreeSet<String>(
+				String.CASE_INSENSITIVE_ORDER) {
+
+				{
+					addAll(sourceColumnsName);
+				}
+			};
+
+			targetColumnsName.removeIf(
+				columnName -> !sourceColumnsNameSet.contains(columnName));
+		}
+
 		String selectSQL = StringBundler.concat(
 			"select ", StringUtil.merge(sourceColumnsName), " from ",
 			sourceTableName);
-
-		List<String> targetColumnsName = _targetTableColumns.get(
-			targetTableName);
 
 		String insertSQL = StringBundler.concat(
 			"insert into ", targetTableName, "(",
