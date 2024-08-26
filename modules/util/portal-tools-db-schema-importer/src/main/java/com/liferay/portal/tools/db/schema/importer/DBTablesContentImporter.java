@@ -54,7 +54,7 @@ import javax.sql.DataSource;
  */
 public class DBTablesContentImporter {
 
-	public DBCompanySchemaImporterHelper(
+	public DBTablesContentImporter(
 		DataSource sourceDataSource, DataSource targetDataSource) {
 
 		_sourceDataSource = sourceDataSource;
