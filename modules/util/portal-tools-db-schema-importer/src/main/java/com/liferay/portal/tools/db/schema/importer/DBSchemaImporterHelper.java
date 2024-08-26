@@ -5,6 +5,7 @@
 
 package com.liferay.portal.tools.db.schema.importer;
 
+import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
@@ -14,6 +15,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.db.schema.importer.jdbc.AutoBatchPreparedStatementUtil;
+import com.liferay.portal.tools.db.schema.importer.jdbc.DataSourceFactoryUtil;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,7 +27,10 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -39,28 +44,75 @@ import javax.sql.DataSource;
 public class DBSchemaImporterHelper {
 
 	public DBSchemaImporterHelper(
-		String path, DataSource sourceDataSource, DataSource targetDataSource) {
+			String path, String sourceJDBCURL, String sourcePassword,
+			String sourceUser, String targetJDBCURL, String targetPassword,
+			String targetUser)
+		throws Exception {
 
 		_path = path;
-		_sourceDataSource = sourceDataSource;
-		_targetDataSource = targetDataSource;
+		_sourceJDBCURL = sourceJDBCURL;
+		_sourcePassword = sourcePassword;
+		_sourceUser = sourceUser;
+		_targetJDBCURL = targetJDBCURL;
+		_targetPassword = targetPassword;
+		_targetUser = targetUser;
+
+		_sourceDataSource = DataSourceFactoryUtil.initDataSource(
+			sourceJDBCURL, sourcePassword, sourceUser);
+
+		_targetDataSource = DataSourceFactoryUtil.initDataSource(
+			_targetJDBCURL, _targetPassword, _targetUser);
 	}
 
 	public void importDB() throws Exception {
 		_createTables();
 
-		AutoBatchPreparedStatementUtil.start();
-
-		new DBTablesContentImporter(
-			_sourceDataSource, _targetDataSource
-		).copyContent();
-
-		AutoBatchPreparedStatementUtil.stop();
+		_copyData();
 
 		_createIndexes();
 
 		_executorService.shutdownNow();
 		_executorService.awaitTermination(10, TimeUnit.SECONDS);
+	}
+
+	private void _copyData() throws Exception {
+		AutoBatchPreparedStatementUtil.start();
+
+		Set<Future<?>> futures = Collections.newSetFromMap(
+			new ConcurrentHashMap<>());
+
+		futures.add(
+			_executorService.submit(
+				() -> {
+					new DBTablesContentImporter(
+						_sourceDataSource, _targetDataSource
+					).copyContent();
+
+					return null;
+				}));
+
+		for (String partitionName : _partitionNames) {
+			futures.add(
+				_executorService.submit(
+					() -> {
+						new DBTablesContentImporter(
+							DataSourceFactoryUtil.initDataSource(
+								_sourceJDBCURL, _sourcePassword, _sourceUser,
+								partitionName),
+							DataSourceFactoryUtil.initDataSource(
+								_targetJDBCURL, _targetPassword, _targetUser,
+								partitionName)
+						).copyContent();
+
+						return null;
+					}));
+		}
+
+		for (Future<?> future : futures) {
+			future.get();
+		}
+
+		AutoBatchPreparedStatementUtil.stop();
 	}
 
 	private void _createIndexes() throws Exception {
@@ -146,10 +198,22 @@ public class DBSchemaImporterHelper {
 					sb.setIndex(0);
 
 					if (StringUtil.startsWith(sql, "create or replace rule")) {
-						_syncSQLs.add(sql);
+						_syncFinalSQLs.add(sql);
 					}
 					else {
 						_asyncSQLs.add(sql);
+					}
+
+					if (StringUtil.startsWith(
+							sql, "create schema if not exists")) {
+
+						_syncInitialSQLs.add(sql);
+
+						String[] parts = StringUtil.split(sql, CharPool.SPACE);
+
+						_partitionNames.add(
+							StringUtil.removeChar(
+								parts[5], CharPool.SEMICOLON));
 					}
 				}
 			}
@@ -166,6 +230,16 @@ public class DBSchemaImporterHelper {
 		throws Exception {
 
 		_preprocessSQL(sqlTemplate);
+
+		for (String sql : _syncInitialSQLs) {
+			try (Connection connection = dataSource.getConnection();
+				Statement statement = connection.createStatement()) {
+
+				statement.executeUpdate(sql);
+			}
+		}
+
+		_syncInitialSQLs.clear();
 
 		List<Future<?>> futures = new ArrayList<>();
 
@@ -191,7 +265,7 @@ public class DBSchemaImporterHelper {
 			future.get();
 		}
 
-		for (String sql : _syncSQLs) {
+		for (String sql : _syncFinalSQLs) {
 			try (Connection connection = dataSource.getConnection();
 				Statement statement = connection.createStatement()) {
 
@@ -199,7 +273,7 @@ public class DBSchemaImporterHelper {
 			}
 		}
 
-		_syncSQLs.clear();
+		_syncFinalSQLs.clear();
 	}
 
 	private static final int _COMPANY_BATCH_SIZE = 5;
@@ -210,9 +284,17 @@ public class DBSchemaImporterHelper {
 	private final List<String> _asyncSQLs = new ArrayList<>();
 	private final ExecutorService _executorService =
 		Executors.newFixedThreadPool(5);
+	private final List<String> _partitionNames = new ArrayList<>();
 	private final String _path;
 	private final DataSource _sourceDataSource;
-	private final List<String> _syncSQLs = new ArrayList<>();
+	private final String _sourceJDBCURL;
+	private final String _sourcePassword;
+	private final String _sourceUser;
+	private final List<String> _syncFinalSQLs = new ArrayList<>();
+	private final List<String> _syncInitialSQLs = new ArrayList<>();
 	private final DataSource _targetDataSource;
+	private final String _targetJDBCURL;
+	private final String _targetPassword;
+	private final String _targetUser;
 
 }
