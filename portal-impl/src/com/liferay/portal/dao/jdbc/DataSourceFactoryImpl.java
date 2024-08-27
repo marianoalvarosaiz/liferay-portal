@@ -243,7 +243,8 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 			if (StringUtil.equalsIgnoreCase(key, "url")) {
 				key = "jdbcUrl";
 
-				value = _rewriteJDBCURL(value);
+				value = _rewriteJDBCURL(
+					properties.getProperty("driverClassName"), value);
 			}
 
 			// Set HikariCP property
@@ -370,7 +371,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 		}
 	}
 
-	private String _rewriteJDBCURL(String url) {
+	private String _rewriteJDBCURL(String driverClassName, String url) {
 		if (!url.startsWith("jdbc:mariadb://") &&
 			!url.startsWith("jdbc:mysql://")) {
 
@@ -407,8 +408,17 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 			}
 		}
 
+		boolean permitMysqlScheme = false;
+
+		if (driverClassName.contains("mariadb") &&
+			url.startsWith("jdbc:mysql://")) {
+
+			permitMysqlScheme = true;
+		}
+
 		StringBundler sb = new StringBundler(
-			(existingParameterValues.size() * 4) + 2);
+			(existingParameterValues.size() * 4) + 2 +
+				(permitMysqlScheme ? 2 : 0));
 
 		if (index == -1) {
 			sb.append(url);
@@ -416,6 +426,11 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 		}
 		else {
 			sb.append(url.substring(0, index + 1));
+		}
+
+		if (permitMysqlScheme) {
+			sb.append("permitMysqlScheme");
+			sb.append(CharPool.AMPERSAND);
 		}
 
 		for (Map.Entry<String, String> entry :
@@ -427,7 +442,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 			sb.append(CharPool.AMPERSAND);
 		}
 
-		if (!existingParameterValues.isEmpty()) {
+		if (!existingParameterValues.isEmpty() || permitMysqlScheme) {
 			sb.setIndex(sb.index() - 1);
 		}
 
