@@ -50,6 +50,10 @@ public interface PortalInstancesLocalService extends BaseLocalService {
 	 */
 	public String getOSGiServiceIdentifier();
 
+	public void initializePortalInstance(
+			long companyId, String siteInitializerKey)
+		throws PortalException;
+
 	@Clusterable
 	public void synchronizePortalInstances();
 

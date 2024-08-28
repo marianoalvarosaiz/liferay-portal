@@ -5,6 +5,7 @@
 
 package com.liferay.portal.instances.service;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.module.service.Snapshot;
 
 /**
@@ -41,6 +42,13 @@ public class PortalInstancesLocalServiceUtil {
 	 */
 	public static String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static void initializePortalInstance(
+			long companyId, String siteInitializerKey)
+		throws PortalException {
+
+		getService().initializePortalInstance(companyId, siteInitializerKey);
 	}
 
 	public static void synchronizePortalInstances() {
