@@ -27,8 +27,6 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyService;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.util.PortalInstances;
-import com.liferay.site.initializer.extender.SiteInitializerThreadLocal;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -136,20 +134,21 @@ public class AddInstanceMVCActionCommand extends BaseMVCActionCommand {
 		String defaultAdminLastName = ParamUtil.getString(
 			actionRequest, "defaultAdminLastName", null);
 
-		SiteInitializerThreadLocal.setKey(
-			ParamUtil.getString(actionRequest, "siteInitializerKey"));
-
 		Company company = _companyService.addCompany(
 			webId, virtualHostname, mx, maxUsers, active, defaultAdminPassword,
 			defaultAdminScreenName, defaultAdminEmailAddress,
 			defaultAdminFirstName, defaultAdminMiddleName,
 			defaultAdminLastName);
 
+		String siteInitializerKey = ParamUtil.getString(
+			actionRequest, "siteInitializerKey");
+
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setWithSafeCloseable(
 					company.getCompanyId())) {
 
-			PortalInstances.initCompany(company, true);
+			_portalInstancesLocalService.initializePortalInstance(
+				company.getCompanyId(), siteInitializerKey);
 		}
 
 		_synchronizePortalInstances();
