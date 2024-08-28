@@ -53,10 +53,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -379,6 +381,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 		}
 
 		Map<String, String> existingParameterValues = new TreeMap<>();
+		Set<String> existingNoValueParameters = new HashSet<>();
 
 		int index = url.indexOf(CharPool.QUESTION);
 
@@ -391,14 +394,19 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 				String[] parameter = StringUtil.split(
 					parameterString, CharPool.EQUAL);
 
-				if (parameter.length == 2) {
+				if (parameter.length == 1) {
+					existingNoValueParameters.add(parameterString);
+				}
+				else if (parameter.length == 2) {
 					existingParameterValues.put(parameter[0], parameter[1]);
 				}
 			}
 		}
 
 		for (String[] parameter : _MYSQL_DEFAULT_PARAMETERS) {
-			if (existingParameterValues.containsKey(parameter[0])) {
+			if (existingParameterValues.containsKey(parameter[0]) ||
+				existingNoValueParameters.contains(parameter[0])) {
+
 				if (_log.isDebugEnabled()) {
 					_log.debug("Skipped " + Arrays.toString(parameter));
 				}
@@ -408,17 +416,17 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 			}
 		}
 
-		boolean permitMysqlScheme = false;
-
 		if (driverClassName.contains("mariadb") &&
-			url.startsWith("jdbc:mysql://")) {
+			url.startsWith("jdbc:mysql://") &&
+			!existingNoValueParameters.contains("permitMysqlScheme") &&
+			!existingParameterValues.containsKey("permitMysqlScheme")) {
 
-			permitMysqlScheme = true;
+			existingNoValueParameters.add("permitMysqlScheme");
 		}
 
 		StringBundler sb = new StringBundler(
 			(existingParameterValues.size() * 4) + 2 +
-				(permitMysqlScheme ? 2 : 0));
+				(existingNoValueParameters.size() * 2));
 
 		if (index == -1) {
 			sb.append(url);
@@ -426,11 +434,6 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 		}
 		else {
 			sb.append(url.substring(0, index + 1));
-		}
-
-		if (permitMysqlScheme) {
-			sb.append("permitMysqlScheme");
-			sb.append(CharPool.AMPERSAND);
 		}
 
 		for (Map.Entry<String, String> entry :
@@ -442,7 +445,14 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 			sb.append(CharPool.AMPERSAND);
 		}
 
-		if (!existingParameterValues.isEmpty() || permitMysqlScheme) {
+		for (String parameter : existingNoValueParameters) {
+			sb.append(parameter);
+			sb.append(CharPool.AMPERSAND);
+		}
+
+		if (!existingParameterValues.isEmpty() &&
+			!existingNoValueParameters.isEmpty()) {
+
 			sb.setIndex(sb.index() - 1);
 		}
 
