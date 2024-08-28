@@ -117,11 +117,11 @@ public class PortalInstanceResourceImpl extends BasePortalInstanceResourceImpl {
 		long finalCompanyId = companyId;
 
 		Company company = PortalInstances.addCompany(
-			portalInstance.getSiteInitializerKey(),
 			() -> _companyService.addCompany(
 				finalCompanyId, portalInstance.getPortalInstanceId(),
 				portalInstance.getVirtualHost(), portalInstance.getDomain(), 0,
-				true));
+				true),
+			portalInstance.getSiteInitializerKey());
 
 		if (admin != null) {
 			User defaultAdminUser = _userLocalService.getUserByEmailAddress(

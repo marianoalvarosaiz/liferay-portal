@@ -56,13 +56,13 @@ import javax.servlet.http.HttpServletRequest;
 public class PortalInstances {
 
 	public static Company addCompany(
-			String siteInitializerKey,
-			UnsafeSupplier<Company, PortalException> unsafeSupplier)
+			UnsafeSupplier<Company, PortalException> addCompanyUnsafeSupplier,
+			String siteInitializerKey)
 		throws PortalException {
 
 		SiteInitializerThreadLocal.setKey(siteInitializerKey);
 
-		Company company = unsafeSupplier.get();
+		Company company = addCompanyUnsafeSupplier.get();
 
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setWithSafeCloseable(
