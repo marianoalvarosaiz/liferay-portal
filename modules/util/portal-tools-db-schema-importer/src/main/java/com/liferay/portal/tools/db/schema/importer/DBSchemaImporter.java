@@ -5,7 +5,19 @@
 
 package com.liferay.portal.tools.db.schema.importer;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.tools.db.schema.importer.jdbc.DataSourceFactoryUtil;
+
+import java.io.File;
+import java.io.PrintWriter;
+
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -55,15 +67,20 @@ public class DBSchemaImporter {
 			DataSourceFactoryUtil.setFetchSize(
 				commandLine.getOptionValue("source-jdbc-fetch-size"));
 
-			new DBSchemaImporterProcess(
-				commandLine.getOptionValue("path"),
-				commandLine.getOptionValue("source-jdbc-url"),
-				commandLine.getOptionValue("source-password"),
-				commandLine.getOptionValue("source-user"),
-				commandLine.getOptionValue("target-jdbc-url"),
-				commandLine.getOptionValue("target-password"),
-				commandLine.getOptionValue("target-user")
-			).run();
+			DBSchemaImporterProcess dbSchemaImporterProcess =
+				new DBSchemaImporterProcess(
+					commandLine.getOptionValue("path"),
+					commandLine.getOptionValue("source-jdbc-url"),
+					commandLine.getOptionValue("source-password"),
+					commandLine.getOptionValue("source-user"),
+					commandLine.getOptionValue("target-jdbc-url"),
+					commandLine.getOptionValue("target-password"),
+					commandLine.getOptionValue("target-user"));
+
+			dbSchemaImporterProcess.run();
+
+			_generateReport(
+				commandLine.getOptionValue("path"), dbSchemaImporterProcess);
 
 			System.exit(_LIFERAY_COMMON_EXIT_CODE_OK);
 		}
@@ -71,6 +88,25 @@ public class DBSchemaImporter {
 			exception.printStackTrace(System.err);
 
 			System.exit(_LIFERAY_COMMON_EXIT_CODE_BAD);
+		}
+	}
+
+	private static void _generateReport(
+			String dirName, DBSchemaImporterProcess dbSchemaImporterProcess)
+		throws Exception {
+
+		try (PrintWriter printWriter = new PrintWriter(
+				new File(dirName, "db_schema_importer_report.info"))) {
+
+			printWriter.println(
+				StringUtil.merge(
+					new Object[] {
+						"Export date: " + _simpleDateFormat.format(new Date()),
+						dbSchemaImporterProcess.getReleaseInfo(),
+						StringPool.NEW_LINE, StringPool.NEW_LINE,
+						_getReportInfo(dbSchemaImporterProcess)
+					},
+					StringPool.NEW_LINE));
 		}
 	}
 
@@ -104,6 +140,21 @@ public class DBSchemaImporter {
 		return options;
 	}
 
+	private static String _getReportInfo(
+		DBSchemaImporterProcess dbSchemaImporterProcess) {
+
+		List<String> reportInfo = dbSchemaImporterProcess.getReportInfo();
+
+		StringBundler sb = new StringBundler(reportInfo.size() * 2);
+
+		for (String partitionReportInfo : reportInfo) {
+			sb.append(partitionReportInfo);
+			sb.append(StringPool.NEW_LINE);
+		}
+
+		return sb.toString();
+	}
+
 	/**
 	 * https://github.com/liferay/liferay-docker/blob/master/_liferay_common.sh
 	 */
@@ -112,5 +163,8 @@ public class DBSchemaImporter {
 	private static final int _LIFERAY_COMMON_EXIT_CODE_HELP = 2;
 
 	private static final int _LIFERAY_COMMON_EXIT_CODE_OK = 0;
+
+	private static final SimpleDateFormat _simpleDateFormat =
+		new SimpleDateFormat(DateUtil.ISO_8601_PATTERN);
 
 }
