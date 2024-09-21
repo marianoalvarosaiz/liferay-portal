@@ -84,9 +84,13 @@ public class CompanyLocalServiceDBPartitionTest
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		BaseDBPartitionTestCase.setUpClass();
+		_currentCompanyId = CompanyThreadLocal.getCompanyId();
 
 		_defaultCompanyId = PortalInstancePool.getDefaultCompanyId();
+
+		CompanyThreadLocal.setCompanyId(_defaultCompanyId);
+
+		BaseDBPartitionTestCase.setUpClass();
 
 		_resourceActions = ReflectionTestUtil.getFieldValue(
 			ResourceActionLocalServiceImpl.class, "_resourceActions");
@@ -97,6 +101,8 @@ public class CompanyLocalServiceDBPartitionTest
 	@AfterClass
 	public static void tearDownClass() throws Exception {
 		_regenerateResourceActions();
+
+		CompanyThreadLocal.setCompanyId(_currentCompanyId);
 	}
 
 	@Test
@@ -118,25 +124,21 @@ public class CompanyLocalServiceDBPartitionTest
 
 	@Test
 	public void testAddCompanyUsesVirtualHostCounter() throws Exception {
-		try (SafeCloseable safeCloseable =
-				CompanyThreadLocal.setWithSafeCloseable(_defaultCompanyId)) {
+		long counter = _counterLocalService.increment();
 
-			long counter = _counterLocalService.increment();
+		_company1 = CompanyTestUtil.addCompany();
 
-			_company1 = CompanyTestUtil.addCompany();
+		VirtualHost virtualHost = _virtualHostLocalService.getVirtualHost(
+			_company1.getVirtualHostname());
 
-			VirtualHost virtualHost = _virtualHostLocalService.getVirtualHost(
-				_company1.getVirtualHostname());
+		Assert.assertEquals(counter + 1, virtualHost.getVirtualHostId());
 
-			Assert.assertEquals(counter + 1, virtualHost.getVirtualHostId());
+		_company2 = CompanyTestUtil.addCompany();
 
-			_company2 = CompanyTestUtil.addCompany();
+		virtualHost = _virtualHostLocalService.getVirtualHost(
+			_company2.getVirtualHostname());
 
-			virtualHost = _virtualHostLocalService.getVirtualHost(
-				_company2.getVirtualHostname());
-
-			Assert.assertEquals(counter + 2, virtualHost.getVirtualHostId());
-		}
+		Assert.assertEquals(counter + 2, virtualHost.getVirtualHostId());
 	}
 
 	@Test
@@ -831,6 +833,7 @@ public class CompanyLocalServiceDBPartitionTest
 	@Inject
 	private static CounterLocalService _counterLocalService;
 
+	private static long _currentCompanyId;
 	private static long _defaultCompanyId;
 
 	@Inject
