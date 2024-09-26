@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.EmailAddressValidator;
 import com.liferay.portal.kernel.service.CompanyService;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -154,7 +155,12 @@ public class PortalInstanceResourceImpl extends BasePortalInstanceResourceImpl {
 				contact.getJobTitle(), null, null, null, null, null, null);
 		}
 
-		_portalInstancesLocalService.synchronizePortalInstances();
+		TransactionCommitCallbackUtil.registerCallback(
+			() -> {
+				_portalInstancesLocalService.synchronizePortalInstances();
+
+				return null;
+			});
 
 		return _toPortalInstance(company);
 	}
