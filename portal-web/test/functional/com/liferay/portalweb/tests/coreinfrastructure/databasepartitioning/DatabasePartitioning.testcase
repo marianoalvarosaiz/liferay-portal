@@ -613,23 +613,23 @@ definition {
 
 			ServerAdministration.openServerAdmin(baseURL = "http://localhost:9080");
 
-			var script = '''
+			var script1 = '''
 				import com.liferay.portal.db.partition.util.DBPartitionUtil;
 
 				int total = 0;
 
 				DBPartitionUtil.forEachCompanyId({companyId -> total++});
 
-				out.println(total);
+				out.println("Test1: " + total);
 			''';
 
 			ServerAdministration.executeScript(
 				language = "Groovy",
-				script = ${script});
+				script = ${script1});
 
 			AssertTextEquals(
 				locator1 = "ServerAdministrationScript#OUTPUT_FIELD",
-				value1 = 1);
+				value1 = "Test1: 1");
 		}
 
 		task ("Add company and check companies count") {
@@ -638,13 +638,23 @@ definition {
 				portalInstanceId = "www.able.com",
 				virtualHost = "www.able.com");
 
+			var script2 = '''
+				import com.liferay.portal.db.partition.util.DBPartitionUtil;
+
+				int total = 0;
+
+				DBPartitionUtil.forEachCompanyId({companyId -> total++});
+
+				out.println("Test2: " + total);
+			''';
+
 			ServerAdministration.executeScript(
 				language = "Groovy",
-				script = ${script});
+				script = ${script2});
 
 			AssertTextEquals(
 				locator1 = "ServerAdministrationScript#OUTPUT_FIELD",
-				value1 = 2);
+				value1 = "Test2: 2");
 		}
 
 		task ("Delete added company and check companies count") {
