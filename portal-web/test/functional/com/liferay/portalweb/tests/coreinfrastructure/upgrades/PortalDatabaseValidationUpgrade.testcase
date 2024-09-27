@@ -21,6 +21,13 @@ definition {
 
 		task ("Given the user is using the latest 7413 portal version") {
 			Upgrade.startReleasedBundle();
+
+			User.firstLoginUI(
+				password = PropsUtil.get("default.admin.password"),
+				specificURL = "http://localhost:8080",
+				userEmailAddress = "test@liferay.com");
+
+			User.logoutPG();
 		}
 
 		task ("And a partitioned is present") {
@@ -60,10 +67,10 @@ definition {
 
 			Portlet.startServer();
 
-			User.firstLoginPG(
+			User.firstLoginUI(
 				password = PropsUtil.get("default.admin.password"),
-				userEmailAddress = "test@liferay.com",
-				virtualHostsURL = "http://localhost:8080");
+				specificURL = "http://localhost:8080",
+				userEmailAddress = "test@liferay.com");
 		}
 
 		task ("And a new partition is created to emulate the same enviroment as before") {
