@@ -1616,6 +1616,7 @@ app.server.type=@{app.server.type}]]></echo>
 		<attribute name="app.server.type" />
 		<attribute default="${app.server.@{app.server.type}.version}" name="app.server.version" />
 		<attribute default="${browser.type}" name="browser.type" />
+		<attribute default="" name="database.partition.enabled" />
 		<attribute name="database.type" />
 		<attribute default="${database.@{database.type}.version}" name="database.version" />
 		<attribute default="poshi" name="functional.test.type" />
@@ -1681,6 +1682,12 @@ app.server.type=@{app.server.type}]]></echo>
 						<database-test-run-test database.type="@{database.type}" database.version="@{database.version}" rebuild.database="false">
 							<test-action>
 								<lstopwatch action="start" name="test.execution.duration" />
+
+								<antcall if:set="env.JENKINS_HOME" inheritAll="false" target="prepare-portal-ext-properties">
+									<param name="database.partition.enabled" value="@{database.partition.enabled}" />
+								</antcall>
+
+								<antcall inheritAll="false" target="prepare-system-ext-properties" />
 
 								<trycatch>
 									<try>
@@ -3879,6 +3886,26 @@ information. Make sure to commit in all format-javadoc results.
 		<run-functional-test app.server.type="tomcat" database.type="mysql" database.version="5.7" test.portal.log.assert="true" />
 	</target>
 
+	<target name="functional-db-partition-tomcat90-mysql57">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="mysql" database.version="5.7" />
+	</target>
+
+	<target name="functional-db-partition-tomcat90-mysql80">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="mysql" database.version="8.0" />
+	</target>
+
+	<target name="functional-db-partition-tomcat90-postgresql144">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="postgresql" database.version="14.4" />
+	</target>
+
+	<target name="functional-db-partition-tomcat90-postgresql153">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="postgresql" database.version="15.3" />
+	</target>
+
+	<target name="functional-db-partition-tomcat90-postgresql163">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="postgresql" database.version="16.3" />
+	</target>
+
 	<target name="functional-debian7-tomcat90-mysql57">
 		<run-functional-test app.server.type="tomcat" database.type="mysql" database.version="5.7" test.portal.log.assert="true" />
 	</target>
@@ -4893,6 +4920,22 @@ information. Make sure to commit in all format-javadoc results.
 		<run-functional-test app.server.type="tomcat" database.type="mysql" database.version="5.7" test.portal.log.assert="true" />
 	</target>
 
+	<target name="functional-upgrade-db-partition-tomcat90-mysql57">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="mysql" database.version="5.7" />
+	</target>
+
+	<target name="functional-upgrade-db-partition-tomcat90-postgresql144">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="postgresql" database.version="14.4" />
+	</target>
+
+	<target name="functional-upgrade-db-partition-tomcat90-postgresql153">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="postgresql" database.version="15.3" />
+	</target>
+
+	<target name="functional-upgrade-db-partition-tomcat90-postgresql163">
+		<run-functional-test app.server.type="tomcat" database.partition.enabled="true" database.type="postgresql" database.version="16.3" />
+	</target>
+
 	<target name="functional-upgrade-jboss74-mysql57">
 		<set-app-server-version-number app.server.type="jboss" app.server.version="7.4.0" />
 
@@ -5699,6 +5742,14 @@ information. Make sure to commit in all format-javadoc results.
 			database.partition.enabled="true"
 			database.type="mysql"
 			database.version="5.7"
+		/>
+	</target>
+
+	<target name="modules-integration-db-partition-postgresql144-jdk8">
+		<run-modules-integration-test
+			database.partition.enabled="true"
+			database.type="postgresql"
+			database.version="14.4"
 		/>
 	</target>
 
