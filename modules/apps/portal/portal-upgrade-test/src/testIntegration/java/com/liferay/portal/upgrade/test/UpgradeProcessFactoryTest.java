@@ -84,9 +84,10 @@ public class UpgradeProcessFactoryTest {
 
 		upgradeProcess.upgrade();
 
-		Assert.assertTrue(
-			_dbInspector.hasColumnType(
-				_TABLE_NAME_1, "newColumn", "LONG default 0 NOT NULL"));
+		_companyLocalService.forEachCompany(
+			company -> Assert.assertTrue(
+				_dbInspector.hasColumnType(
+					_TABLE_NAME_1, "newColumn", "LONG default 0 NOT NULL")));
 	}
 
 	@Test
@@ -96,10 +97,14 @@ public class UpgradeProcessFactoryTest {
 
 		upgradeProcess.upgrade();
 
-		Assert.assertTrue(
-			_dbInspector.hasColumnType(
-				_TABLE_NAME_1, "newTypeLong", "LONG null"));
-		Assert.assertFalse(_dbInspector.hasColumn(_TABLE_NAME_1, "typeLong"));
+		_companyLocalService.forEachCompany(
+			company -> {
+				Assert.assertTrue(
+					_dbInspector.hasColumnType(
+						_TABLE_NAME_1, "newTypeLong", "LONG null"));
+				Assert.assertFalse(
+					_dbInspector.hasColumn(_TABLE_NAME_1, "typeLong"));
+			});
 	}
 
 	@Test
@@ -109,11 +114,15 @@ public class UpgradeProcessFactoryTest {
 
 		upgradeProcess.upgrade();
 
-		Assert.assertTrue(
-			_dbInspector.hasColumnType(
-				_TABLE_NAME_1, "typeText", "VARCHAR(250) null"));
-		Assert.assertFalse(
-			_dbInspector.hasColumnType(_TABLE_NAME_1, "typeText", "TEXT null"));
+		_companyLocalService.forEachCompany(
+			company -> {
+				Assert.assertTrue(
+					_dbInspector.hasColumnType(
+						_TABLE_NAME_1, "typeText", "VARCHAR(250) null"));
+				Assert.assertFalse(
+					_dbInspector.hasColumnType(
+						_TABLE_NAME_1, "typeText", "TEXT null"));
+			});
 	}
 
 	@Test
@@ -123,7 +132,9 @@ public class UpgradeProcessFactoryTest {
 
 		upgradeProcess.upgrade();
 
-		Assert.assertFalse(_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+		_companyLocalService.forEachCompany(
+			company -> Assert.assertFalse(
+				_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate")));
 	}
 
 	@Test
@@ -137,8 +148,11 @@ public class UpgradeProcessFactoryTest {
 
 		upgradeProcess.upgrade();
 
-		Assert.assertFalse(_dbInspector.hasTable(_TABLE_NAME_1));
-		Assert.assertFalse(_dbInspector.hasTable(_TABLE_NAME_2));
+		_companyLocalService.forEachCompany(
+			company -> {
+				Assert.assertFalse(_dbInspector.hasTable(_TABLE_NAME_1));
+				Assert.assertFalse(_dbInspector.hasTable(_TABLE_NAME_2));
+			});
 	}
 
 	@Test
@@ -168,10 +182,14 @@ public class UpgradeProcessFactoryTest {
 			innerUpgradeProcess.upgrade();
 		}
 
-		Assert.assertTrue(
-			_dbInspector.hasColumnType(
-				_TABLE_NAME_1, "newColumn", "LONG null"));
-		Assert.assertFalse(_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+		_companyLocalService.forEachCompany(
+			company -> {
+				Assert.assertTrue(
+					_dbInspector.hasColumnType(
+						_TABLE_NAME_1, "newColumn", "LONG null"));
+				Assert.assertFalse(
+					_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+			});
 	}
 
 	@Test
@@ -210,10 +228,14 @@ public class UpgradeProcessFactoryTest {
 			innerUpgradeProcess.upgrade();
 		}
 
-		Assert.assertTrue(
-			_dbInspector.hasColumnType(
-				_TABLE_NAME_1, "newColumnModified", "LONG null"));
-		Assert.assertFalse(_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+		_companyLocalService.forEachCompany(
+			company -> {
+				Assert.assertTrue(
+					_dbInspector.hasColumnType(
+						_TABLE_NAME_1, "newColumnModified", "LONG null"));
+				Assert.assertFalse(
+					_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+			});
 	}
 
 	@Test
@@ -243,10 +265,14 @@ public class UpgradeProcessFactoryTest {
 			innerUpgradeProcess.upgrade();
 		}
 
-		Assert.assertTrue(
-			_dbInspector.hasColumnType(
-				_TABLE_NAME_1, "newColumn", "LONG null"));
-		Assert.assertFalse(_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+		_companyLocalService.forEachCompany(
+			company -> {
+				Assert.assertTrue(
+					_dbInspector.hasColumnType(
+						_TABLE_NAME_1, "newColumn", "LONG null"));
+				Assert.assertFalse(
+					_dbInspector.hasColumn(_TABLE_NAME_1, "typeDate"));
+			});
 	}
 
 	private static final String _TABLE_NAME_1 = "UpgradeProcessFactoryTest1";
