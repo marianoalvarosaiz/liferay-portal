@@ -26,6 +26,7 @@ definition {
 				echo("${expectedOutput} exists!");
 			}
 			else {
+			    echo("Content: ${outputContent}");
 				fail("${expectedOutput} does not exist!");
 			}
 		}

@@ -587,12 +587,24 @@ definition {
 
 			var script = '''
 				import com.liferay.portal.db.partition.util.DBPartitionUtil;
+				import com.liferay.portal.kernel.log.Log;
+				import com.liferay.portal.kernel.log.LogFactoryUtil;
+				
+				Log _log = LogFactoryUtil.getLog("TEST");
+				
+				_log.error("Before sleep");
 
-				sleep(10000);
+				sleep(60000);
+				
+				_log.error("After sleep");
 
 				int total = 0;
+				
+				_log.error("Before each company");
 
 				DBPartitionUtil.forEachCompanyId({companyId -> total++});
+				
+				_log.error("After each company " + total);
 
 				out.println(total);
 			''';
