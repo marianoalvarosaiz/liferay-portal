@@ -888,36 +888,14 @@ definition {
 		property test.run.type = "single";
 
 		task ("Check current companies count") {
-			User.logoutPG(
-				password = PropsUtil.get("default.admin.password"),
-				userEmailAddress = "test@liferay.com");
+			Groovy.runScriptViaGogoShell(
+				expectedOutput = "Companies count: 1",
+				scriptFile = "groovy-script-portal-instances.groovy");
 
-			User.loginPG(
+			Groovy.runScriptViaGogoShell(
+				expectedOutput = "Companies count: 1",
 				nodePort = 9080,
-				password = PropsUtil.get("default.admin.password"),
-				userEmailAddress = "test@liferay.com");
-
-			ServerAdministration.openServerAdmin(baseURL = "http://localhost:9080");
-
-			var script = '''
-				import com.liferay.portal.kernel.instance.PortalInstancePool;
-
-				import java.util.List;
-
-				sleep(10000);
-
-				List <Long> companyIds = PortalInstancePool.getCompanyIds();
-
-				out.println(companyIds.size());
-			''';
-
-			ServerAdministration.executeScript(
-				language = "Groovy",
-				script = ${script});
-
-			AssertTextEquals(
-				locator1 = "ServerAdministrationScript#OUTPUT_FIELD",
-				value1 = 1);
+				scriptFile = "groovy-script-portal-instances.groovy");
 		}
 
 		task ("Add company and check companies count") {
@@ -926,25 +904,27 @@ definition {
 				portalInstanceId = "www.able.com",
 				virtualHost = "www.able.com");
 
-			ServerAdministration.executeScript(
-				language = "Groovy",
-				script = ${script});
+			Groovy.runScriptViaGogoShell(
+				expectedOutput = "Companies count: 2",
+				scriptFile = "groovy-script-portal-instances.groovy");
 
-			AssertTextEquals(
-				locator1 = "ServerAdministrationScript#OUTPUT_FIELD",
-				value1 = 2);
+			Groovy.runScriptViaGogoShell(
+				expectedOutput = "Companies count: 2",
+				nodePort = 9080,
+				scriptFile = "groovy-script-portal-instances.groovy");
 		}
 
 		task ("Delete added company and check companies count") {
 			HeadlessPortalInstanceAPI.deletePortalInstance(portalInstanceId = "www.able.com");
 
-			ServerAdministration.executeScript(
-				language = "Groovy",
-				script = ${script});
+			Groovy.runScriptViaGogoShell(
+				expectedOutput = "Companies count: 1",
+				scriptFile = "groovy-script-portal-instances.groovy");
 
-			AssertTextEquals(
-				locator1 = "ServerAdministrationScript#OUTPUT_FIELD",
-				value1 = 1);
+			Groovy.runScriptViaGogoShell(
+				expectedOutput = "Companies count: 1",
+				nodePort = 9080,
+				scriptFile = "groovy-script-portal-instances.groovy");
 		}
 	}
 
