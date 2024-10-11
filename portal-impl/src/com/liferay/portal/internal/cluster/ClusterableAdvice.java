@@ -11,6 +11,8 @@ import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
 import com.liferay.portal.kernel.cluster.Clusterable;
 import com.liferay.portal.kernel.cluster.ClusterableInvokerUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -35,9 +37,17 @@ public class ClusterableAdvice extends ChainableMethodAdvice {
 			AopMethodInvocation aopMethodInvocation, Object[] arguments,
 			Object result)
 		throws Throwable {
+		
+		if (aopMethodInvocation.getMethod().getName().equalsIgnoreCase("synchronizePortalInstances")) {
+			_log.error("Invoking cluster for synchronizePortalInstances");
+		}
 
 		if (!ClusterInvokeThreadLocal.isEnabled()) {
 			return;
+		}
+		
+		if (aopMethodInvocation.getMethod().getName().equalsIgnoreCase("synchronizePortalInstances")) {
+			_log.error("Invoked cluster for synchronizePortalInstances");
 		}
 
 		Clusterable clusterable = aopMethodInvocation.getAdviceMethodContext();
@@ -83,5 +93,7 @@ public class ClusterableAdvice extends ChainableMethodAdvice {
 
 		return result;
 	}
+	
+	private static final Log _log = LogFactoryUtil.getLog(ClusterableAdvice.class);
 
 }

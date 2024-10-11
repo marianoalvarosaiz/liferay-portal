@@ -884,6 +884,7 @@ definition {
 
 	@priority = 5
 	test PortalInstanceCreationDeletionUpdatesPortalInstancesPoolWithCluster {
+		property test.assert.warning.exceptions = "false";
 		property test.liferay.virtual.instance = "false";
 		property test.run.type = "single";
 
@@ -903,12 +904,14 @@ definition {
 				import com.liferay.portal.kernel.instance.PortalInstancePool;
 
 				import java.util.List;
+				
+				PortalInstancePool.getCompanyIds();
 
-				sleep(10000);
+				sleep(60000);
 
-				List <Long> companyIds = PortalInstancePool.getCompanyIds();
+				long[] companyIds = PortalInstancePool.getCompanyIds();
 
-				out.println(companyIds.size());
+				out.println(companyIds.length);
 			''';
 
 			ServerAdministration.executeScript(

@@ -72,6 +72,7 @@ public class ClusterRequestReceiver extends BaseClusterReceiver {
 			_clusterExecutorImpl.getClusterChannel();
 
 		if (srcAddress.equals(clusterChannel.getLocalAddress())) {
+			_log.error("Received from localAddress");
 			return;
 		}
 

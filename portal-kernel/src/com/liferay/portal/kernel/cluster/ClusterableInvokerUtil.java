@@ -5,6 +5,7 @@
 
 package com.liferay.portal.kernel.cluster;
 
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiServiceInvokerUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
@@ -181,6 +182,9 @@ public class ClusterableInvokerUtil {
 
 		if (Validator.isNotNull(principalName)) {
 			try {
+				_log.error("This is the companyId: " + CompanyThreadLocal.getCompanyId());
+				_log.error("This is the principal: " + PrincipalThreadLocal.getName());
+				
 				User user = UserLocalServiceUtil.fetchUser(
 					PrincipalThreadLocal.getUserId());
 
@@ -214,6 +218,8 @@ public class ClusterableInvokerUtil {
 			LocaleThreadLocal.setThemeDisplayLocale(themeDisplayLocale);
 		}
 	}
+	
+	private static final com.liferay.portal.kernel.log.Log _log = LogFactoryUtil.getLog(ClusterableInvokerUtil.class);
 
 	private static final long _CLUSTERABLE_ADVICE_CALL_MASTER_TIMEOUT =
 		GetterUtil.getLong(

@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,6 +64,7 @@ public class PortalInstancePool {
 
 	public static long[] getCompanyIds() {
 		if (_cacheEnabled) {
+			_log.error("Ids: " + Arrays.toString(ArrayUtil.toLongArray(_portalInstances.keySet())));
 			return ArrayUtil.toLongArray(_portalInstances.keySet());
 		}
 

@@ -111,6 +111,14 @@ public class ClusterExecutorImpl implements ClusterExecutor {
 					clusterNodeResponse);
 			}
 		}
+		
+		if (clusterRequest.getPayload() instanceof MethodHandler) {
+			MethodHandler handler = (MethodHandler) clusterRequest.getPayload();
+			
+			_log.error("Send: " + handler.getMethodKey().getMethodName());
+			_log.error("Send with: " + clusterRequest.isMulticast());
+		}
+		
 
 		if (clusterRequest.isMulticast()) {
 			_clusterChannel.sendMulticastMessage(clusterRequest);
@@ -245,6 +253,8 @@ public class ClusterExecutorImpl implements ClusterExecutor {
 		MethodHandler methodHandler = (MethodHandler)payload;
 
 		ClusterInvokeThreadLocal.setEnabled(false);
+		
+		_log.error("Going to invoke method: " + methodHandler.getMethodKey().getMethodName());
 
 		try {
 			Object result = methodHandler.invoke();
@@ -264,6 +274,7 @@ public class ClusterExecutorImpl implements ClusterExecutor {
 						" that is not serializable")));
 		}
 		catch (Exception exception) {
+			_log.error(exception);
 			return ClusterNodeResponse.createExceptionClusterNodeResponse(
 				_localClusterNodeStatus.getClusterNode(),
 				clusterRequest.getUuid(), exception);
