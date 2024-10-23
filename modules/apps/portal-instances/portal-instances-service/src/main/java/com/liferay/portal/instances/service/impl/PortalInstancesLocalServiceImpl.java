@@ -57,6 +57,8 @@ public class PortalInstancesLocalServiceImpl
 
 			List<Long> removeableCompanyIds = ListUtil.fromArray(
 				initializedCompanyIds);
+			
+			_log.error("Synchronize portal instances");
 
 			_companyLocalService.forEachCompanyId(
 				companyId -> {
@@ -65,6 +67,8 @@ public class PortalInstancesLocalServiceImpl
 					if (ArrayUtil.contains(initializedCompanyIds, companyId)) {
 						return;
 					}
+					
+					_log.error("Init: "+ companyId);
 
 					PortalInstances.initCompany(
 						_companyLocalService.getCompany(companyId));

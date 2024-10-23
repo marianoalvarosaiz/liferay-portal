@@ -314,6 +314,7 @@ public class PortalInstances {
 						company.getCompanyId()));
 			}
 
+			_log.error("Adding company: " + company.getCompanyId() + " to pool");
 			PortalInstancePool.add(company);
 		}
 		finally {
@@ -385,6 +386,7 @@ public class PortalInstances {
 			_log.error(exception);
 		}
 
+		_log.error("Remoging" + companyId + " to pool");
 		PortalInstancePool.remove(companyId);
 
 		WebAppPool.remove(companyId, WebKeys.PORTLET_CATEGORY);

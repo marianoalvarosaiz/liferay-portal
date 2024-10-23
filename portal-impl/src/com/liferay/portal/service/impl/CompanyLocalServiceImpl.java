@@ -1539,6 +1539,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		if (DBPartition.isPartitionEnabled()) {
 			_clearCompanyCache(companyId, true);
 			_clearVirtualHostCache(companyId);
+			
+			_log.error("Adding unregister callback for: " + companyId);
 
 			TransactionCommitCallbackUtil.registerCallback(
 				() -> {
@@ -1744,6 +1746,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	protected void registerCompany(Company company) {
 		PortalInstanceLifecycleManager portalInstanceLifecycleManager =
 			_serviceTracker.getService();
+		
+		_log.error("Registering company: " + company.getCompanyId() + " in thread local: " + CompanyThreadLocal.getCompanyId());
 
 		if (portalInstanceLifecycleManager != null) {
 			portalInstanceLifecycleManager.registerCompany(company);
@@ -1777,6 +1781,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	protected void unregisterCompany(Company company) {
 		PortalInstanceLifecycleManager portalInstanceLifecycleManager =
 			_serviceTracker.getService();
+		
+		_log.error("Unregistering company: " + company.getCompanyId() + " in thread local: " + CompanyThreadLocal.getCompanyId());
 
 		if (portalInstanceLifecycleManager != null) {
 			portalInstanceLifecycleManager.unregisterCompany(company);
@@ -2326,6 +2332,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 			Company finalCompany = company;
 
+			_log.error("Adding register callback for: " + finalCompany.getCompanyId());
 			TransactionCommitCallbackUtil.registerCallback(
 				() -> {
 					registerCompany(finalCompany);
