@@ -32,14 +32,14 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 		try {
 			upgradeTable(
 				"ClassName_", "value", getClassNames(), WildcardMode.SURROUND,
-				true);
+				new String[] {"value"});
 			upgradeTable(
 				"Counter", "name", getClassNames(), WildcardMode.SURROUND);
 			upgradeTable(
 				"Lock_", "className", getClassNames(), WildcardMode.SURROUND);
 			upgradeTable(
 				"ResourceAction", "name", getClassNames(),
-				WildcardMode.SURROUND, true);
+				WildcardMode.SURROUND, new String[] {"name", "actionId"});
 			upgradeTable(
 				"ResourcePermission", "name", getClassNames(),
 				WildcardMode.SURROUND);
@@ -51,7 +51,7 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 				"ListType", "type_", getClassNames(), WildcardMode.TRAILING);
 			upgradeTable(
 				"ResourceAction", "name", getResourceNames(),
-				WildcardMode.LEADING, true);
+				WildcardMode.LEADING, new String[] {"name", "actionId"});
 			upgradeTable(
 				"ResourcePermission", "name", getResourceNames(),
 				WildcardMode.LEADING);
@@ -151,20 +151,23 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 			WildcardMode wildcardMode)
 		throws Exception {
 
-		upgradeTable(tableName, columnName, names, wildcardMode, false);
+		try (LoggingTimer loggingTimer = new LoggingTimer(
+				getClass(), tableName)) {
+
+			_executeUpdate(tableName, columnName, names, wildcardMode);
+		}
 	}
 
 	protected void upgradeTable(
 			String tableName, String columnName, String[][] names,
-			WildcardMode wildcardMode, boolean preventDuplicates)
+			WildcardMode wildcardMode, String[] uniqueColumns)
 		throws Exception {
 
 		try (LoggingTimer loggingTimer = new LoggingTimer(
 				getClass(), tableName)) {
 
-			if (preventDuplicates) {
-				_executeDelete(tableName, columnName, names, wildcardMode);
-			}
+			_executeDelete(
+				tableName, columnName, names, wildcardMode, uniqueColumns);
 
 			_executeUpdate(tableName, columnName, names, wildcardMode);
 		}
@@ -172,7 +175,7 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 
 	private void _executeDelete(
 			String tableName, String columnName, String[][] names,
-			WildcardMode wildcardMode)
+			WildcardMode wildcardMode, String[] uniqueColumns)
 		throws Exception {
 
 		for (String[] name : names) {
@@ -182,7 +185,10 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 					_getWhereClause(columnName, name[1], wildcardMode),
 					_getNotLikeClause(
 						columnName, (String)ArrayUtil.getValue(name, 2),
-						wildcardMode)));
+						wildcardMode),
+					_getExistsClause(
+						tableName, columnName, name[0], wildcardMode,
+						uniqueColumns)));
 		}
 	}
 
@@ -209,6 +215,40 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 
 			sb2.setIndex(0);
 		}
+	}
+
+	private String _getExistsClause(
+		String tableName, String columnName, String columnValue,
+		WildcardMode wildcardMode, String[] uniqueColumns) {
+
+		StringBundler sb = new StringBundler(10 + (uniqueColumns.length * 6));
+
+		sb.append(" and exists (select * from  ");
+		sb.append(tableName);
+		sb.append(" t1 where t1.");
+		sb.append(columnName);
+		sb.append(" like '");
+		sb.append(wildcardMode.getLeadingWildcard());
+		sb.append(columnValue);
+		sb.append(wildcardMode.getTrailingWildcard());
+		sb.append(StringPool.APOSTROPHE);
+
+		for (String uniqueColumn : uniqueColumns) {
+			if (StringUtil.equalsIgnoreCase(uniqueColumn, columnName)) {
+				continue;
+			}
+
+			sb.append(" and t1.");
+			sb.append(uniqueColumn);
+			sb.append(" = ");
+			sb.append(tableName);
+			sb.append(StringPool.PERIOD);
+			sb.append(uniqueColumn);
+		}
+
+		sb.append(StringPool.CLOSE_PARENTHESIS);
+
+		return sb.toString();
 	}
 
 	private String _getNotLikeClause(

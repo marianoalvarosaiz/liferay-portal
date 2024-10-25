@@ -222,7 +222,7 @@ public class UpgradeKernelPackageTest extends UpgradeKernelPackage {
 
 			upgradeTable(
 				"UpgradeKernelPackageTest", "data", _TEST_CLASS_NAMES,
-				WildcardMode.SURROUND, true);
+				WildcardMode.SURROUND, new String[] {"data"});
 
 			_assertData(10, "data", _PREFIX_POSTFIX_CLASS_NAME_NEW);
 			_assertData(11, "data", null);
