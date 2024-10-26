@@ -10,6 +10,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
+import com.liferay.portal.kernel.dao.db.DBTypeToSQLMap;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.orm.WildcardMode;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -179,16 +180,31 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 		throws Exception {
 
 		for (String[] name : names) {
-			runSQL(
+			DBTypeToSQLMap dbTypeToSQLMap = new DBTypeToSQLMap(
 				StringBundler.concat(
 					"delete from ", tableName,
-					_getWhereClause(columnName, name[1], wildcardMode),
+					_getWhereClause(
+						tableName, columnName, name[1], wildcardMode),
 					_getNotLikeClause(
-						columnName, (String)ArrayUtil.getValue(name, 2),
-						wildcardMode),
+						tableName, columnName,
+						(String)ArrayUtil.getValue(name, 2), wildcardMode),
 					_getExistsClause(
 						tableName, columnName, name[0], wildcardMode,
 						uniqueColumns)));
+
+			String sql = StringBundler.concat(
+				"delete t1 from ", tableName, " t1 inner join ", tableName,
+				" t2 ",
+				_getOnClause(columnName, name[0], wildcardMode, uniqueColumns),
+				_getWhereClause("t1", columnName, name[1], wildcardMode),
+				_getNotLikeClause(
+					"t1", columnName, (String)ArrayUtil.getValue(name, 2),
+					wildcardMode));
+
+			dbTypeToSQLMap.add(DBType.MYSQL, sql);
+			dbTypeToSQLMap.add(DBType.MARIADB, sql);
+
+			runSQL(dbTypeToSQLMap);
 		}
 	}
 
@@ -209,7 +225,8 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 			sb2.append("', '");
 			sb2.append(name[1]);
 			sb2.append("') ");
-			sb2.append(_getWhereClause(columnName, name[0], wildcardMode));
+			sb2.append(
+				_getWhereClause(tableName, columnName, name[0], wildcardMode));
 
 			runSQL(sb2.toString());
 
@@ -252,25 +269,55 @@ public class UpgradeKernelPackage extends UpgradeProcess {
 	}
 
 	private String _getNotLikeClause(
-		String columnName, String value, WildcardMode wildcardMode) {
+		String tableName, String columnName, String value,
+		WildcardMode wildcardMode) {
 
 		if (value == null) {
 			return StringPool.BLANK;
 		}
 
 		return StringBundler.concat(
-			" and ", columnName, " not like '",
+			" and ", tableName, StringPool.PERIOD, columnName, " not like '",
 			wildcardMode.getLeadingWildcard(), value,
 			wildcardMode.getTrailingWildcard(), StringPool.APOSTROPHE);
 	}
 
+	private String _getOnClause(
+		String columnName, String columnValue, WildcardMode wildcardMode,
+		String[] uniqueColumns) {
+
+		StringBundler sb = new StringBundler(7 + (uniqueColumns.length * 4));
+
+		sb.append(" on t2.");
+		sb.append(columnName);
+		sb.append(" like '");
+		sb.append(wildcardMode.getLeadingWildcard());
+		sb.append(columnValue);
+		sb.append(wildcardMode.getTrailingWildcard());
+		sb.append(StringPool.APOSTROPHE);
+
+		for (String uniqueColumn : uniqueColumns) {
+			if (StringUtil.equalsIgnoreCase(uniqueColumn, columnName)) {
+				continue;
+			}
+
+			sb.append(" and t1.");
+			sb.append(uniqueColumn);
+			sb.append(" = t2.");
+			sb.append(uniqueColumn);
+		}
+
+		return sb.toString();
+	}
+
 	private String _getWhereClause(
-		String columnName, String columnValue, WildcardMode wildcardMode) {
+		String tableName, String columnName, String columnValue,
+		WildcardMode wildcardMode) {
 
 		return StringBundler.concat(
-			" where ", columnName, " like '", wildcardMode.getLeadingWildcard(),
-			columnValue, wildcardMode.getTrailingWildcard(),
-			StringPool.APOSTROPHE);
+			" where ", tableName, StringPool.PERIOD, columnName, " like '",
+			wildcardMode.getLeadingWildcard(), columnValue,
+			wildcardMode.getTrailingWildcard(), StringPool.APOSTROPHE);
 	}
 
 	private String _transformColumnName(String columnName) {
