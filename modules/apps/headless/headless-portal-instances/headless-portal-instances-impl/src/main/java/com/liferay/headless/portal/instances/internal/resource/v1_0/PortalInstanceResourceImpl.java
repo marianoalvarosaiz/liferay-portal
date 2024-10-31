@@ -11,6 +11,8 @@ import com.liferay.headless.portal.instances.resource.v1_0.PortalInstanceResourc
 import com.liferay.portal.instances.service.PortalInstancesLocalService;
 import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.exception.UserScreenNameException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.User;
@@ -115,6 +117,8 @@ public class PortalInstanceResourceImpl extends BasePortalInstanceResourceImpl {
 		}
 
 		long finalCompanyId = companyId;
+		
+		_log.error("Before adding company: " + finalCompanyId);
 
 		Company company = PortalInstances.addCompany(
 			portalInstance.getSiteInitializerKey(),
@@ -122,6 +126,8 @@ public class PortalInstanceResourceImpl extends BasePortalInstanceResourceImpl {
 				finalCompanyId, portalInstance.getPortalInstanceId(),
 				portalInstance.getVirtualHost(), portalInstance.getDomain(), 0,
 				true));
+		
+		_log.error("After adding company: " + finalCompanyId);
 
 		if (admin != null) {
 			User defaultAdminUser = _userLocalService.getUserByEmailAddress(
@@ -209,6 +215,10 @@ public class PortalInstanceResourceImpl extends BasePortalInstanceResourceImpl {
 				admin.getEmailAddress(), emailAddressValidator);
 		}
 	}
+	
+	private static final Log _log = LogFactoryUtil.getLog(
+			PortalInstanceResourceImpl.class);
+
 
 	@Reference
 	private CompanyService _companyService;

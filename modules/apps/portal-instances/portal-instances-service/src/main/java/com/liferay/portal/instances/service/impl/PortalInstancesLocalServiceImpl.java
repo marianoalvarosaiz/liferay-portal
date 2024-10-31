@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.util.PortalInstances;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
@@ -46,6 +47,8 @@ public class PortalInstancesLocalServiceImpl
 	@Override
 	public void synchronizePortalInstances() {
 		try {
+			_log.error("Performing synchronization with default companyId: " + PortalInstancePool.getDefaultCompanyId());
+			
 			long[] initializedCompanyIds = _portal.getCompanyIds();
 
 			List<Long> removeableCompanyIds = ListUtil.fromArray(
@@ -53,16 +56,26 @@ public class PortalInstancesLocalServiceImpl
 
 			_companyLocalService.forEachCompany(
 				company -> {
+					_log.error("For companyId: " + company.getCompanyId());
+					
 					removeableCompanyIds.remove(company.getCompanyId());
 
 					if (ArrayUtil.contains(
 							initializedCompanyIds, company.getCompanyId())) {
+						
+						_log.error("CompanyId: " + company.getCompanyId() + " already initialized");
 
 						return;
 					}
+					
+					_log.error("Init company: " + company.getCompanyId());
 
 					PortalInstances.initCompany(company);
+					
+					_log.error("PortalInstances size: " + PortalInstancePool.getCompanyIds().length);
 				});
+			
+			_log.error("Remove company: " + Arrays.toString(ArrayUtil.toLongArray(removeableCompanyIds)));
 
 			_companyLocalService.forEachCompanyId(
 				companyId -> PortalInstances.removeCompany(companyId),
