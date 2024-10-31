@@ -112,10 +112,15 @@ public class ResourceActionLocalServiceImpl
 
 			for (String actionId : actionIds) {
 				String key = encodeKey(name, actionId);
+				
+				_log.error("Fetch resourceAction: " + name + " " + actionId);
 
 				if (_resourceActions.get(key) != null) {
+					_log.error("Found resourceAction: " + name + " " + actionId);
 					continue;
 				}
+				
+				_log.error("Not found resourceAction: " + name + " " + actionId);
 
 				if (resourceActionsMap == null) {
 					resourceActionsMap = new HashMap<>();
@@ -133,6 +138,8 @@ public class ResourceActionLocalServiceImpl
 
 				ResourceAction resourceAction = resourceActionsMap.get(
 					actionId);
+				
+				_log.error("ResourceAction: " + resourceAction);
 
 				if (resourceAction == null) {
 					long bitwiseValue = 1;
@@ -154,14 +161,20 @@ public class ResourceActionLocalServiceImpl
 					_resourceActions.put(key, resourceAction);
 				}
 			}
+			
+			_log.error("keyActionIdAndBitwiseValues: " + keyActionIdAndBitwiseValues);
 
 			if (keyActionIdAndBitwiseValues == null) {
 				return;
 			}
+			
+			_log.error("keyActionIdAndBitwiseValues size: " + keyActionIdAndBitwiseValues);
 
 			long batchCounter = counterLocalService.increment(
 				ResourceAction.class.getName(),
 				keyActionIdAndBitwiseValues.size());
+			
+			_log.error("batchCounter: " + batchCounter);
 
 			batchCounter -= keyActionIdAndBitwiseValues.size();
 
@@ -188,9 +201,7 @@ public class ResourceActionLocalServiceImpl
 					_resourceActions.put(key, resourceAction);
 				}
 				catch (Throwable throwable) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(throwable);
-					}
+						_log.error(throwable);
 
 					resourceActionLocalService.addResourceAction(
 						name, actionId, bitwiseValue);
