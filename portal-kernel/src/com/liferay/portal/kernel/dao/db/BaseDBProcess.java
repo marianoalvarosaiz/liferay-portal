@@ -600,7 +600,7 @@ public abstract class BaseDBProcess implements DBProcess {
 			boolean notificationEnabled = NotificationThreadLocal.isEnabled();
 			boolean workflowEnabled = WorkflowThreadLocal.isEnabled();
 
-			long companyId = CompanyThreadLocal.getCompanyId();
+			long companyIdentifier = CompanyThreadLocal.getCompanyId();
 
 			T next = null;
 
@@ -613,7 +613,7 @@ public abstract class BaseDBProcess implements DBProcess {
 						WorkflowThreadLocal.setEnabled(workflowEnabled);
 
 						try (SafeCloseable safeCloseable =
-								CompanyThreadLocal.lock(companyId)) {
+								CompanyThreadLocal.lock(companyIdentifier)) {
 
 							if (Validator.isNull(updateSQL)) {
 								unsafeConsumer.accept(current);
