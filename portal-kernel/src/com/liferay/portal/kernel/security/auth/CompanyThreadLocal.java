@@ -8,6 +8,7 @@ package com.liferay.portal.kernel.security.auth;
 import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.db.partition.DBPartition;
@@ -44,7 +45,9 @@ public class CompanyThreadLocal {
 		User guestUser = null;
 
 		try {
-			guestUser = UserLocalServiceUtil.fetchGuestUser(companyId);
+			if (CacheRegistryUtil.isActive()) {
+				guestUser = UserLocalServiceUtil.fetchGuestUser(companyId);
+			}
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {
