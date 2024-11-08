@@ -51,6 +51,8 @@ public class PortalInstancesConfigurationFactory {
 				String mx = portalInstancesConfiguration.mx();
 				int maxUsers = portalInstancesConfiguration.maxUsers();
 				boolean active = portalInstancesConfiguration.active();
+				
+				_log.error("Trying to add " + webId);
 
 				Company company = null;
 

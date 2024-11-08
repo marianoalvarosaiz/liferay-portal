@@ -287,6 +287,24 @@ definition {
 			exceptionText = "No default user was found for company",
 			nodePort = 9080);
 	}
+	
+	@description = "This is a use case for LPS-170924."
+	@priority = 5
+	test JustATest {
+		property custom.properties = "virtual.hosts.valid.hosts=localhost,127.0.0.1,www.baker.com";
+		property database.partition.enabled = "true";
+		property database.types = "mysql, postgresql";
+		property liferay.online.properties = "true";
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		OSGiConfig.deployOSGiConfigFile(
+				osgiConfigFileName = "com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~www.able.com.config",
+				osgiConfigs = "mx=\"www.able.com\"${line.separator}virtualHostname=\"www.able.com\"");
+				
+		OSGiConfig.waitForOSGiConfig();
+	}
+	
 
 	@description = "This is a use case for LPS-171011."
 	@priority = 5

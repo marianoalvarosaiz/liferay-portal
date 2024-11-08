@@ -383,6 +383,8 @@ definition {
 		property test.assert.warning.exceptions = "true";
 		property test.liferay.virtual.instance = "false";
 		property test.run.type = "single";
+		property app.server.bundles.size = "1";
+		property cluster.enabled = "true";
 
 		task ("Add www.able.com with an asset") {
 			HeadlessPortalInstanceAPI.addPortalInstance(
