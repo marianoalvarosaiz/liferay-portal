@@ -419,7 +419,9 @@ definition {
 		task ("Extract www.able.com partition and shutdown the server") {
 			DBPartition.extractDBPartition(partitionCompanyId = ${partitionCompanyId});
 
-			Portlet.shutdownServer();
+			Clustering.shutdownSpecificServer(nodePort = 8080);
+
+			Clustering.shutdownSpecificServer(nodePort = 9080);
 		}
 
 		task ("Create an empty database") {
@@ -434,7 +436,9 @@ definition {
 				SQL.executeSQLStatement(sqlStatement = "create schema public;");
 			}
 
-			Portlet.startServer(deleteLiferayHome = "false");
+			Clustering.startSpecificServer(
+				deleteLiferayHome = "false",
+				nodePort = 8080);
 		}
 
 		task ("Add previously extracted www.able.com partition into new database") {
