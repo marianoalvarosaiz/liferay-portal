@@ -379,6 +379,8 @@ definition {
 
 	@priority = 5
 	test ExtractAndAddDBPartitionCompanyWithInitialEmptyDB {
+		property app.server.bundles.size = "1";
+		property cluster.enabled = "true";
 		property custom.properties = "database.partition.schema.name.prefix=ltest_${line.separator}virtual.hosts.valid.hosts=localhost,127.0.0.1,www.able.com";
 		property test.assert.warning.exceptions = "true";
 		property test.liferay.virtual.instance = "false";
