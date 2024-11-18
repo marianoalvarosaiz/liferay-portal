@@ -5,6 +5,7 @@
 
 package com.liferay.portal.db.schema.definition.internal.exporter;
 
+import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
@@ -18,6 +19,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.model.ReleaseConstants;
+import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.patcher.PatcherValues;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ReleaseLocalService;
@@ -299,6 +301,9 @@ public class DBSchemaDefinitionExporter {
 
 	@Reference
 	private ConfigurationAdmin _configurationAdmin;
+
+	@Reference(target = "(module.service.lifecycle=db.schema.export2)")
+	private ModuleServiceLifecycle _moduleServiceLifecycle;
 
 	@Reference
 	private ReleaseLocalService _releaseLocalService;

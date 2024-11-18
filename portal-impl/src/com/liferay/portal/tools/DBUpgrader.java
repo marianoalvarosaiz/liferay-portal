@@ -146,13 +146,7 @@ public class DBUpgrader {
 	}
 
 	public static void main(String[] args) {
-		String result = "Completed";
-
-		_upgradeClient = true;
-
 		try {
-			_initUpgradeStopwatch();
-
 			PortalClassPathUtil.initializeClassPaths(null);
 
 			InitUtil.initWithSpring(
@@ -160,38 +154,17 @@ public class DBUpgrader {
 					PropsUtil.getArray(PropsKeys.SPRING_CONFIGS)),
 				true, false, () -> StartupHelperUtil.setUpgrading(true));
 
-			StartupHelperUtil.printPatchLevel();
-
-			upgradePortal();
-
 			InitUtil.registerContext();
 
-			upgradeModules();
+			_registerModuleServiceLifecycle("db.schema.export");
 
-			BundleContext bundleContext = SystemBundleUtil.getBundleContext();
-
-			Collection<?> collection = bundleContext.getServiceReferences(
-				Store.class, "(default=true)");
-
-			if (collection.isEmpty()) {
-				throw new IllegalStateException("Missing default Store");
-			}
+			_registerModuleServiceLifecycle("db.schema.export2");
 		}
 		catch (Exception exception) {
 			_log.error(exception);
-
-			result = "Failed";
-		}
-		finally {
-			StartupHelperUtil.setUpgrading(false);
-
-			System.out.println(
-				StringBundler.concat(
-					"\n", result, " Liferay upgrade process in ",
-					_stopWatch.getTime() / Time.SECOND, " seconds"));
 		}
 
-		System.out.println("Exiting DBUpgrader#main(String[]).");
+		System.out.println("Exiting migration");
 	}
 
 	public static void startUpgradeLogAppender() {
