@@ -371,10 +371,10 @@ public class CompanyLocalServiceDBPartitionTest
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
 					_company1.getCompanyId())) {
 
-			expectedClassName2 = _classNameLocalService.addClassName(
-				_CLASS_NAME_VALUE2);
 			expectedClassName1 = _classNameLocalService.addClassName(
 				_CLASS_NAME_VALUE1);
+			expectedClassName2 = _classNameLocalService.addClassName(
+				_CLASS_NAME_VALUE2);
 		}
 
 		long counter = 0;
@@ -385,12 +385,12 @@ public class CompanyLocalServiceDBPartitionTest
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
 					_company2.getCompanyId())) {
 
+			_classNameLocalService.addClassName(_CLASS_NAME_VALUE1);
+			_classNameLocalService.addClassName(_CLASS_NAME_VALUE2);
+
 			counter = _counterLocalService.increment(counterName);
 
 			_counterLocalService.reset(counterName, 100000);
-
-			_classNameLocalService.addClassName(_CLASS_NAME_VALUE1);
-			_classNameLocalService.addClassName(_CLASS_NAME_VALUE2);
 		}
 
 		String virtualHostname = _company2.getVirtualHostname();
@@ -406,14 +406,14 @@ public class CompanyLocalServiceDBPartitionTest
 					_company2.getCompanyId())) {
 
 			Assert.assertEquals(
-				counter, _counterLocalService.increment(counterName));
-
-			Assert.assertEquals(
 				expectedClassName1,
 				_classNameLocalService.getClassName(_CLASS_NAME_VALUE1));
 			Assert.assertEquals(
 				expectedClassName2,
 				_classNameLocalService.getClassName(_CLASS_NAME_VALUE2));
+
+			Assert.assertEquals(
+				counter, _counterLocalService.increment(counterName));
 		}
 	}
 
