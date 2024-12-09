@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.test.rule.DataGuard;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.CompanyTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.ProxyUtil;
@@ -362,20 +363,9 @@ public class CompanyLocalServiceDBPartitionTest
 	@Test
 	public void testCacheCleanup() throws Exception {
 		_company1 = CompanyTestUtil.addCompany();
-		_company2 = CompanyTestUtil.addCompany();
 
-		ClassName expectedClassName1 = null;
-		ClassName expectedClassName2 = null;
-
-		try (SafeCloseable safeCloseable =
-				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
-					_company1.getCompanyId())) {
-
-			expectedClassName1 = _classNameLocalService.addClassName(
-				_CLASS_NAME_VALUE1);
-			expectedClassName2 = _classNameLocalService.addClassName(
-				_CLASS_NAME_VALUE2);
-		}
+		ClassName expectedClassName = _classNameLocalService.addClassName(
+			"com.liferay.test.testCacheCleanup");
 
 		long counter = 0;
 
@@ -383,34 +373,32 @@ public class CompanyLocalServiceDBPartitionTest
 
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
-					_company2.getCompanyId())) {
+					_company1.getCompanyId())) {
 
-			_classNameLocalService.addClassName(_CLASS_NAME_VALUE1);
-			_classNameLocalService.addClassName(_CLASS_NAME_VALUE2);
+			_classNameLocalService.addClassName(
+				"com.liferay.test.testCacheCleanup");
 
 			counter = _counterLocalService.increment(counterName);
 
 			_counterLocalService.reset(counterName, 100000);
 		}
 
-		String virtualHostname = _company2.getVirtualHostname();
+		String virtualHostname = _company1.getVirtualHostname();
 
-		companyLocalService.deleteCompany(_company2);
+		companyLocalService.deleteCompany(_company1);
 
-		_company2 = companyLocalService.copyDBPartitionCompany(
-			_company1.getCompanyId(), _company2.getCompanyId(),
-			_company2.getName(), virtualHostname, _company2.getWebId());
+		_company1 = companyLocalService.copyDBPartitionCompany(
+			TestPropsValues.getCompanyId(), _company1.getCompanyId(),
+			_company1.getName(), virtualHostname, _company1.getWebId());
 
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
-					_company2.getCompanyId())) {
+					_company1.getCompanyId())) {
 
 			Assert.assertEquals(
-				expectedClassName1,
-				_classNameLocalService.getClassName(_CLASS_NAME_VALUE1));
-			Assert.assertEquals(
-				expectedClassName2,
-				_classNameLocalService.getClassName(_CLASS_NAME_VALUE2));
+				expectedClassName,
+				_classNameLocalService.getClassName(
+					"com.liferay.test.testCacheCleanup"));
 
 			Assert.assertEquals(
 				counter, _counterLocalService.increment(counterName));
@@ -921,10 +909,6 @@ public class CompanyLocalServiceDBPartitionTest
 
 		return viewNames.size();
 	}
-
-	private static final String _CLASS_NAME_VALUE1 = "com.liferay.test1";
-
-	private static final String _CLASS_NAME_VALUE2 = "com.liferay.test2";
 
 	@Inject
 	private static ClassNameLocalService _classNameLocalService;
