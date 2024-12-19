@@ -18,6 +18,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.db.partition.util.DBPartitionUtil;
 import com.liferay.portal.events.StartupHelperUtil;
 import com.liferay.portal.kernel.bean.BeanReference;
+import com.liferay.portal.kernel.cache.CacheRegistryUtil;
 import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
 import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
@@ -702,7 +703,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 			TransactionCommitCallbackUtil.registerCallback(
 				() -> {
-					_clearCache(company.getCompanyId());
+					CacheRegistryUtil.clear();
 
 					PortalInstances.removeCompany(company.getCompanyId());
 
@@ -1557,7 +1558,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		if (DBPartition.isPartitionEnabled()) {
 			TransactionCommitCallbackUtil.registerCallback(
 				() -> {
-					_clearCache(companyId);
+					CacheRegistryUtil.clear();
 
 					PortalInstances.removeCompany(company.getCompanyId());
 
@@ -2186,7 +2187,13 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 			});
 
 		companyLocalService.forEachCompanyId(
-			companyId -> PortalInstances.removeCompany(companyId),
+			companyId -> {
+				PortalInstances.removeCompany(companyId);
+
+				if (DBPartition.isPartitionEnabled()) {
+					CacheRegistryUtil.clear();
+				}
+			},
 			ArrayUtil.toLongArray(companyIds));
 	}
 
@@ -2399,19 +2406,6 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		}
 
 		return company;
-	}
-
-	private void _clearCache(long companyId) {
-		Company company = companyPersistence.fetchByPrimaryKey(companyId);
-
-		if (company != null) {
-			companyPersistence.clearCache(company);
-
-			VirtualHost virtualHost = _virtualHostPersistence.fetchByHostname(
-				company.getVirtualHostname());
-
-			_virtualHostPersistence.clearCache(virtualHost);
-		}
 	}
 
 	private void _clearCacheCallback(
