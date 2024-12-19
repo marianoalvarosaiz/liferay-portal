@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.model.ClassName;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.ResourceAction;
 import com.liferay.portal.kernel.model.VirtualHost;
+import com.liferay.portal.kernel.repository.LocalRepository;
+import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -36,8 +38,12 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.repository.registry.RepositoryClassDefinition;
+import com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalog;
+import com.liferay.portal.repository.registry.RepositoryClassDefinitionCatalogUtil;
 import com.liferay.portal.service.impl.CompanyLocalServiceImpl;
 import com.liferay.portal.service.impl.ResourceActionLocalServiceImpl;
 import com.liferay.portal.spring.aop.AopInvocationHandler;
@@ -404,7 +410,11 @@ public class CompanyLocalServiceDBPartitionTest
 
 		String virtualHostname = _company1.getVirtualHostname();
 
+		long companyId = _company1.getCompanyId();
+
 		companyLocalService.deleteCompany(_company1);
+
+		_assertRepositoryClassDefinitionsCacheCleanup(companyId);
 
 		_company1 = companyLocalService.copyDBPartitionCompany(
 			TestPropsValues.getCompanyId(), _company1.getCompanyId(),
@@ -871,6 +881,43 @@ public class CompanyLocalServiceDBPartitionTest
 					}
 				}
 			}
+		}
+	}
+
+	private void _assertRepositoryClassDefinitionsCacheCleanup(long companyId) {
+		RepositoryClassDefinitionCatalog repositoryClassDefinitionCatalog =
+			(RepositoryClassDefinitionCatalog)ReflectionTestUtil.getFieldValue(
+				RepositoryClassDefinitionCatalogUtil.class,
+				"_repositoryClassDefinitionCatalog");
+
+		Map<Long, Map<String, RepositoryClassDefinition>>
+			repositoryClassDefinitions =
+				(Map<Long, Map<String, RepositoryClassDefinition>>)
+					ReflectionTestUtil.getFieldValue(
+						repositoryClassDefinitionCatalog,
+						"_repositoryClassDefinitions");
+
+		Map<String, RepositoryClassDefinition>
+			companyRepositoryClassDefinitions = repositoryClassDefinitions.get(
+				companyId);
+
+		Assert.assertTrue(
+			MapUtil.isNotEmpty(companyRepositoryClassDefinitions));
+
+		for (RepositoryClassDefinition repositoryClassDefinition :
+				companyRepositoryClassDefinitions.values()) {
+
+			Assert.assertTrue(
+				MapUtil.isEmpty(
+					(Map<Long, Map<Long, LocalRepository>>)
+						ReflectionTestUtil.getFieldValue(
+							repositoryClassDefinition,
+							"_localRepositoriesMap")));
+			Assert.assertTrue(
+				MapUtil.isEmpty(
+					(Map<Long, Map<Long, Repository>>)
+						ReflectionTestUtil.getFieldValue(
+							repositoryClassDefinition, "_repositoriesMap")));
 		}
 	}
 
