@@ -13,6 +13,7 @@ import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.instance.PortalInstancePool;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.util.PortalInstances;
 
 import java.io.Serializable;
 
@@ -649,6 +651,14 @@ public class CPConfigurationEntrySettingModelImpl
 	public void setValue(String value) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
+		}
+		
+		long[] companyIds = PortalInstancePool.getCompanyIds();
+		
+		for (long companyId : companyIds) {
+			if (StringUtil.count(value, Long.toString(companyId)) > 0) {
+				throw new IllegalStateException("Value: " + value + " companyId: " + companyId);
+			}
 		}
 
 		_value = value;
