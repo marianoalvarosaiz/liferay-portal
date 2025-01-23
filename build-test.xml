@@ -8838,12 +8838,20 @@ war.path=${app.server.portal.dir}/</echo>
 diff -B --new-line-format='%L' --old-line-format= --unchanged-line-format= ${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql ${selenium.output.dir.name}/fresh-@{fresh.db.schema}.sql || true
 			</echo>
 
+			<print-file file.name="${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql" />
+
+			<echo>Fresh:</echo>
+
+			<print-file file.name="${selenium.output.dir.name}/fresh-@{fresh.db.schema}.sql" />
+
 			<chmod
 				file="validate_db_upgrade_schemas.sh"
 				perm="a+x"
 			/>
 
 			<exec executable="./validate_db_upgrade_schemas.sh" outputproperty="database.changes.master" />
+
+			<echo>ExecProperty: ${database.changes.master} to load</echo>
 
 			<if>
 				<not>
@@ -8871,6 +8879,8 @@ diff -y -B -W250 ${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql 
 					<echo file="${selenium.output.dir.name}/@{upgraded.db.schema}-@{fresh.db.schema}-validate-db-schemas.txt">Database schemas match</echo>
 				</else>
 			</if>
+			<echo>Fichero:</echo>
+			<print-file file.name="${selenium.output.dir.name}/@{upgraded.db.schema}-@{fresh.db.schema}-validate-db-schemas.txt" />
 
 			<delete failonerror="false" file="${project.dir}/validate_db_upgrade_schemas.sh" />
 		</sequential>
