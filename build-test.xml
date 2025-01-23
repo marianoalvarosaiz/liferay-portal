@@ -8837,6 +8837,8 @@ war.path=${app.server.portal.dir}/</echo>
 			<echo file="validate_db_upgrade_schemas.sh">
 diff -B --new-line-format='%L' --old-line-format= --unchanged-line-format= ${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql ${selenium.output.dir.name}/fresh-@{fresh.db.schema}.sql || true
 			</echo>
+			
+			<print-file file.name="${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql" />
 
 			<chmod
 				file="validate_db_upgrade_schemas.sh"
