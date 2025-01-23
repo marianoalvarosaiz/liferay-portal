@@ -10,8 +10,11 @@ import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.AssumeTestRule;
+import com.liferay.portal.kernel.upgrade.BaseDBColumnSizeUpgradeProcess;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.upgrade.v7_4_x.UpgradeOracle;
 
@@ -53,6 +56,18 @@ public class UpgradeOracleTest {
 					"key, testValue number(30,20) null)")) {
 
 			preparedStatement.executeUpdate();
+			
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			
+			try (ResultSet columnResultSet = databaseMetaData.getColumns(
+					connection.getCatalog(), connection.getSchema(), "TestTable", null)) {
+
+				while (columnResultSet.next()) {
+						_log.error("Column Name: " + columnResultSet.getString("COLUMN_NAME"));
+						_log.error("Column Size: " + columnResultSet.getInt("COLUMN_SIZE"));
+						_log.error("Column Digits: " + columnResultSet.getInt("DECIMAL_DIGITS"));
+				}
+			}
 		}
 	}
 
@@ -91,5 +106,9 @@ public class UpgradeOracleTest {
 			}
 		}
 	}
+	
+	private static final Log _log = LogFactoryUtil.getLog(
+			UpgradeOracleTest.class);
+
 
 }

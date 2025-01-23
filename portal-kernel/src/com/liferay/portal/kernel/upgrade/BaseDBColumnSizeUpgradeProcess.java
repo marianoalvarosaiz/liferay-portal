@@ -102,6 +102,16 @@ public abstract class BaseDBColumnSizeUpgradeProcess extends UpgradeProcess {
 						int decimalDigits = columnResultSet.getInt(
 							"DECIMAL_DIGITS");
 						int size = columnResultSet.getInt("COLUMN_SIZE");
+						
+						if (_dbType == DBType.ORACLE) {
+							_log.error("Column Name: " + columnResultSet.getString("COLUMN_NAME"));
+							_log.error("Column Size: " + size);
+							_log.error("Column Digits: " + decimalDigits);
+							
+							_log.error("Type: " + _oldColumnType);
+							_log.error("Size: " + _size);
+							_log.error("Digits: " + _decimalDigits);
+						}
 
 						if (((_decimalDigits == null) ||
 							 (decimalDigits == _decimalDigits)) &&
