@@ -686,16 +686,14 @@ public abstract class BaseDB implements DB {
 					s.executeUpdate(sql);
 				}
 				catch (SQLException sqlException) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							StringBundler.concat(
-								"SQL: ", sql, "\nSQL state: ",
-								sqlException.getSQLState(), "\nVendor: ",
-								getDBType(), "\nVendor error code: ",
-								sqlException.getErrorCode(),
-								"\nVendor error message: ",
-								sqlException.getMessage()));
-					}
+					_log.error(
+						StringBundler.concat(
+							"SQL: ", sql, "\nSQL state: ",
+							sqlException.getSQLState(), "\nVendor: ",
+							getDBType(), "\nVendor error code: ",
+							sqlException.getErrorCode(),
+							"\nVendor error message: ",
+							sqlException.getMessage()));
 
 					throw sqlException;
 				}
