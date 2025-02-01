@@ -121,8 +121,19 @@ public class DBColumnSizeUpgradeProcess extends UpgradeProcess {
 
 								continue;
 							}
+							
+							_log.error("Column default: " + columnResultSet.getString("COLUMN_DEF"));
+							_log.error("Column nullable: " + columnResultSet.getString("IS_NULLABLE"));
+							_log.error("Table Name: " + tableName);
+							_log.error("Column Name: " + columnName);
 
-							oldTypeNameTableColumns.put(tableName, columnName);
+							//oldTypeNameTableColumns.put(tableName, columnName);
+							
+							if (_dbType == DBType.DB2) {
+								runSQL(StringBundler.concat(
+										"alter table ", tableName, " alter column ", columnName,
+										" set data type varchar(4000)"));
+							}
 						}
 					}
 				}

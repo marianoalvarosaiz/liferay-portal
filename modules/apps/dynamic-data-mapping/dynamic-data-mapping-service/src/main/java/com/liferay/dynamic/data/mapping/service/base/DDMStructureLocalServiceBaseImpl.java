@@ -540,7 +540,14 @@ public abstract class DDMStructureLocalServiceBaseImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public DDMStructure updateDDMStructure(DDMStructure ddmStructure) {
-		return ddmStructurePersistence.update(ddmStructure);
+		try {
+			return ddmStructurePersistence.update(ddmStructure);
+		}
+		catch(Throwable throwable) {
+			_log.error(throwable);
+			
+			throw throwable;
+		}
 	}
 
 	@Deactivate

@@ -681,6 +681,10 @@ public abstract class BaseDB implements DB {
 				if (_log.isDebugEnabled()) {
 					_log.debug(sql);
 				}
+				
+				if (sql.toLowerCase().contains("ddmstructure")) {
+					_log.error("sql: " + sql);
+				}
 
 				try {
 					s.executeUpdate(sql);
