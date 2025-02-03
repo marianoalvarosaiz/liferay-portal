@@ -8847,7 +8847,8 @@ diff -y -B --suppress-common-lines ${selenium.output.dir.name}/upgraded-@{upgrad
 				perm="a+x"
 			/>
 
-			<exec executable="./validate_db_upgrade_schemas.sh" outputproperty="database.changes.master" />
+			<exec executable="./validate_db_upgrade_schemas.sh" logerror="true" outputproperty="database.changes.master" />
+			<echo>${database.changes.master}</echo>
 
 			<if>
 				<not>
