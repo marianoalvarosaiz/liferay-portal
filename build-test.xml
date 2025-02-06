@@ -8855,11 +8855,14 @@ diff -y -B --suppress-common-lines ${selenium.output.dir.name}/upgraded-@{upgrad
 					<equals arg1="${database.changes.master}" arg2="" />
 				</not>
 				<then>
+				    <echo>Going to print failure</echo>
 					<echo file="${selenium.output.dir.name}/@{upgraded.db.schema}-@{fresh.db.schema}-validate-db-schemas.txt">
 Upgraded database is missing the following elements from a fresh database: ${line.separator}${database.changes.master}
 
 diff:${line.separator}${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql > ${selenium.output.dir.name}/fresh-@{fresh.db.schema}.sql
 					</echo>
+					
+					<echo>Failure printed</echo>
 
 					<echo file="validate_db_upgrade_schemas.sh">
 diff -y -B -W250 ${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql ${selenium.output.dir.name}/fresh-@{fresh.db.schema}.sql | expand | grep -E -C40 '^.{123} [|>]( |$)'
@@ -8870,14 +8873,18 @@ diff -y -B -W250 ${selenium.output.dir.name}/upgraded-@{upgraded.db.schema}.sql 
 						perm="a+x"
 					/>
 
+					<echo>Second execution</echo>
 					<exec append="true" executable="./validate_db_upgrade_schemas.sh" output="${selenium.output.dir.name}/@{upgraded.db.schema}-@{fresh.db.schema}-validate-db-schemas.txt" />
+					<echo>Second execution OK</echo>
 				</then>
 				<else>
 					<echo file="${selenium.output.dir.name}/@{upgraded.db.schema}-@{fresh.db.schema}-validate-db-schemas.txt">Database schemas match</echo>
 				</else>
 			</if>
 
+			<echo>Execute delete</echo>
 			<delete failonerror="false" file="${project.dir}/validate_db_upgrade_schemas.sh" />
+			<echo>Execute delete did not fail</echo>
 		</sequential>
 	</macrodef>
 
