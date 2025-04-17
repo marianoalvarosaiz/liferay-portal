@@ -520,6 +520,8 @@ public abstract class BaseDBProcess implements DBProcess {
 				iterator.remove();
 
 				connection.close();
+
+				_log.error("Decrease count to: " + _count.decrementAndGet());
 			}
 		}
 		catch (SQLException sqlException) {
@@ -570,6 +572,10 @@ public abstract class BaseDBProcess implements DBProcess {
 
 					try {
 						if (dataSource != null) {
+							_log.error(
+								"Connections count1: " +
+									_count.incrementAndGet());
+
 							return dataSource.getConnection();
 						}
 					}
@@ -578,6 +584,8 @@ public abstract class BaseDBProcess implements DBProcess {
 					}
 				}
 			}
+
+			_log.error("Connections count2: " + _count.incrementAndGet());
 
 			return DataAccess.getConnection();
 		}
@@ -594,6 +602,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 			connectionsCount += connectionMap.size();
 		}
+
+		_log.error("Connection count: " + connectionsCount);
 
 		return connectionsCount;
 	}
@@ -734,6 +744,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
+	private static final AtomicInteger _count = new AtomicInteger(0);
+
 	private final Map<Long, Map<Thread, Connection>> _companyConnectionMap =
 		new ConcurrentHashMap<>();
 
@@ -746,11 +758,13 @@ public abstract class BaseDBProcess implements DBProcess {
 
 			String methodName = method.getName();
 
-			if (methodName.equals("close") && (_getConnectionsCount() > 0)) {
-				for (Map<Thread, Connection> connectionMap :
-						_companyConnectionMap.values()) {
+			if (methodName.equals("close")) {
+				if (_getConnectionsCount() > 0) {
+					for (Map<Thread, Connection> connectionMap :
+							_companyConnectionMap.values()) {
 
-					_closeConnections(connectionMap);
+						_closeConnections(connectionMap);
+					}
 				}
 
 				return null;
