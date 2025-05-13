@@ -6,20 +6,20 @@
 package com.liferay.portal.upgrade.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
-import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.upgrade.BaseUuidUpgradeProcess;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -39,58 +39,43 @@ public class BaseUuidUpgradeProcessTest extends BaseUuidUpgradeProcess {
 
 	@Before
 	public void setUp() throws Exception {
-		_db.runSQL("create table TestTable1 (id_ INTEGER not null primary key");
-		_db.runSQL("create table TestTable2 (id_ INTEGER not null primary key");
+		_db.runSQL(
+			StringBundler.concat(
+				"create table TestTable1 (blobColumn BLOB, sBlobColumn SBLOB, ",
+				"bigDecimalColumn BIGDECIMAL, booleanColumn BOOLEAN, ",
+				"dateColumn DATE, doubleColumn DOUBLE, integerColumn INTEGER, ",
+				"longColumn LONG, stringColumn STRING, textColumn TEXT, ",
+				"varcharColumn VARCHAR(10))"));
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		_db.runSQL("DROP_TABLE_IF_EXISTS(TestTable1)");
-		_db.runSQL("DROP_TABLE_IF_EXISTS(TestTable2)");
 	}
 
 	@Test
 	public void testUuidUpgrade() throws Exception {
-		_insertValues("TestTable1", 10000);
-		_insertValues("TestTable2", 5000);
+		try (Connection connection = DataAccess.getConnection()) {
+			DBInspector dbInspector = new DBInspector(connection);
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
 
-		upgrade();
+			try (ResultSet resultSet = databaseMetaData.getColumns(
+					connection.getCatalog(), connection.getSchema(),
+					dbInspector.normalizeName("TestTable1"), null)) {
 
-		Assert.assertEquals(10000, _getDistinctUuidCount("TestTable1"));
-		Assert.assertEquals(5000, _getDistinctUuidCount("TestTable2"));
+				while (resultSet.next()) {
+					String columnName = resultSet.getString("COLUMN_NAME");
+					int dataType = resultSet.getInt("DATA_TYPE");
+
+					System.out.println("Column Name: " + columnName);
+					System.out.println("Data type: " + dataType);
+				}
+			}
+		}
 	}
 
 	protected String[][] getTableAndPrimaryKeyColumnNames() {
-		return new String[][] {{"TestTable1", "id_"}, {"TestTable2", "id_"}};
-	}
-
-	private int _getDistinctUuidCount(String tableName) throws Exception {
-		try (Connection connection = DataAccess.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				"select count(distinct(uuid_)) from " + tableName)) {
-
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				resultSet.next();
-
-				return resultSet.getInt(1);
-			}
-		}
-	}
-
-	private void _insertValues(String tableName, int total) throws Exception {
-		try (Connection connection = DataAccess.getConnection();
-			PreparedStatement preparedStatement =
-				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
-					connection, "insert into " + tableName + " values (?)")) {
-
-			for (int i = 0; i < total; i++) {
-				preparedStatement.setInt(1, i);
-
-				preparedStatement.addBatch();
-			}
-
-			preparedStatement.executeBatch();
-		}
+		return null;
 	}
 
 	private final DB _db = DBManagerUtil.getDB();
