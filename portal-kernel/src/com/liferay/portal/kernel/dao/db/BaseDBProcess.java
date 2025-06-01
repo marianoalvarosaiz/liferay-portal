@@ -530,6 +530,10 @@ public abstract class BaseDBProcess implements DBProcess {
 				iterator.remove();
 
 				connection.close();
+
+				System.out.println(
+					"Decremented connection number: " +
+						_count.decrementAndGet());
 			}
 		}
 		catch (SQLException sqlException) {
@@ -554,6 +558,10 @@ public abstract class BaseDBProcess implements DBProcess {
 					connectionsMap.remove(entry.getKey());
 
 					connection.close();
+
+					System.out.println(
+						"Decremented connection number: " +
+							_count.decrementAndGet());
 				}
 			}
 		}
@@ -605,6 +613,10 @@ public abstract class BaseDBProcess implements DBProcess {
 
 					try {
 						if (dataSource != null) {
+							System.out.println(
+								"Connection number: " +
+									_count.incrementAndGet());
+
 							return dataSource.getConnection();
 						}
 					}
@@ -613,6 +625,9 @@ public abstract class BaseDBProcess implements DBProcess {
 					}
 				}
 			}
+
+			System.out.println(
+				"Connection number: " + _count.incrementAndGet());
 
 			return DataAccess.getConnection();
 		}
@@ -798,6 +813,8 @@ public abstract class BaseDBProcess implements DBProcess {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
+
+	private static final AtomicInteger _count = new AtomicInteger(0);
 
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
