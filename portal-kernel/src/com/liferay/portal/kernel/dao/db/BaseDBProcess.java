@@ -751,6 +751,23 @@ public abstract class BaseDBProcess implements DBProcess {
 							catch (Exception exception) {
 								throwableCollector.collect(exception);
 							}
+							finally {
+								PreparedStatement preparedStatement =
+									preparedStatementHashMap.remove(
+										Thread.currentThread());
+
+								try {
+									if (preparedStatement != null) {
+										preparedStatement.executeBatch();
+
+										preparedStatement.close();
+									}
+								}
+								finally {
+									closeConnections(Thread.currentThread());
+									threads.remove(Thread.currentThread());
+								}
+							}
 
 							return null;
 						}));
