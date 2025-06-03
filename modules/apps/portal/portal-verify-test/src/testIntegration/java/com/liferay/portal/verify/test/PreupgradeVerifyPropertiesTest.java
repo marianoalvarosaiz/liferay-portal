@@ -9,6 +9,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.util.OSDetector;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.test.log.LogCapture;
 import com.liferay.portal.test.log.LogEntry;
@@ -18,6 +19,12 @@ import com.liferay.portal.verify.PreupgradeVerifyProperties;
 import com.liferay.portal.verify.VerifyProcess;
 import com.liferay.portal.verify.test.util.BaseVerifyProcessTestCase;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -42,6 +49,36 @@ public class PreupgradeVerifyPropertiesTest extends BaseVerifyProcessTestCase {
 
 	@Test
 	public void testMigratedPortalKeys() throws Exception {
+		Properties properties = new Properties();
+
+		System.out.println(
+			"database.postgresql.url: " +
+				properties.getProperty("database.postgresql.url"));
+		System.out.println(
+			"database.postgresql.host: " +
+				properties.getProperty("database.postgresql.host"));
+		System.out.println(
+			"database.postgresql.password: " +
+				properties.getProperty("database.postgresql.password"));
+
+		properties = System.getProperties();
+
+		List<String> keys = Collections.list(
+			(Enumeration<String>)properties.propertyNames());
+
+		for (String key : keys) {
+			System.out.println(key + "=" + properties.getProperty(key));
+		}
+
+		System.out.println("****************************");
+
+		System.getenv(
+		).forEach(
+			(key, value) -> System.out.println(key + "=" + value)
+		);
+
+		_runPostgresqlDB();
+
 		String migratedPortalKey = _getFirstPortalPropertyKey();
 
 		String[][] originalMigratedPortalKeys = _setPropertyKeys(
@@ -52,7 +89,7 @@ public class PreupgradeVerifyPropertiesTest extends BaseVerifyProcessTestCase {
 				PreupgradeVerifyProperties.class.getName(),
 				LoggerTestUtil.ERROR)) {
 
-			List<String> keys = ReflectionTestUtil.invoke(
+			keys = ReflectionTestUtil.invoke(
 				PreupgradeVerifyProperties.class, "verifyPortalProperties",
 				null);
 
@@ -307,6 +344,51 @@ public class PreupgradeVerifyPropertiesTest extends BaseVerifyProcessTestCase {
 		Iterator<String> iterator = propertyNames.iterator();
 
 		return iterator.next();
+	}
+
+	private void _runPostgresqlDB() throws Exception {
+		StringBundler sb = new StringBundler(1);
+
+		if (!OSDetector.isWindows()) {
+			sb.append(
+				"/bin/bash ant -f build-test.xml start-docker-database -Ddatabase.type=postgresql");
+		}
+		else {
+			sb.append(
+				"cmd /c ant -f build-test.xml start-docker-database -Ddatabase.type=postgresql");
+		}
+
+		Runtime runtime = Runtime.getRuntime();
+
+		Process process = runtime.exec(
+			sb.toString(), null,
+			new File("/opt/dev/projects/github/liferay-portal/"));
+
+		InputStreamReader inputStreamReader = new InputStreamReader(
+			process.getInputStream());
+
+		BufferedReader inputBufferedReader = new BufferedReader(
+			inputStreamReader);
+
+		String line = null;
+
+		while ((line = inputBufferedReader.readLine()) != null) {
+			System.out.println("PostgreSQL: " + line);
+		}
+
+		InputStreamReader errorStreamReader = new InputStreamReader(
+			process.getErrorStream());
+
+		BufferedReader errorBufferedReader = new BufferedReader(
+			errorStreamReader);
+
+		if (errorBufferedReader.ready()) {
+			while ((line = errorBufferedReader.readLine()) != null) {
+				System.out.println("PostgreSQL: " + line);
+			}
+
+			throw new Exception();
+		}
 	}
 
 	private <T> T _setPropertyKeys(String fieldName, T value) {
