@@ -562,8 +562,12 @@ public abstract class BaseDBProcess implements DBProcess {
 					System.out.println(
 						"Decremented connection number: " +
 							_count.decrementAndGet());
+
+					return;
 				}
 			}
+
+			throw new IllegalArgumentException("No connection was closed");
 		}
 		catch (SQLException sqlException) {
 			_log.error(sqlException);
@@ -832,11 +836,11 @@ public abstract class BaseDBProcess implements DBProcess {
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
 	private static final AtomicInteger _count = new AtomicInteger(0);
+	private static final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(
+		0);
 
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
-	private static final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(
-		0);
 
 	private class ConnectionThreadProxyInvocationHandler
 		implements InvocationHandler {
