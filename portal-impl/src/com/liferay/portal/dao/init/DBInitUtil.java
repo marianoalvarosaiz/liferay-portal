@@ -60,14 +60,13 @@ public class DBInitUtil {
 			throw new IllegalStateException("Data source is null");
 		}
 
+		DBPartitionUtil.checkDatabasePartitionSchemaNamePrefix();
+
+		_dataSource = DBPartitionUtil.wrapDataSource(_dataSource);
+
 		try (Connection connection = _dataSource.getConnection()) {
-			_init(DBManagerUtil.getDB(), connection);
-
-			DBPartitionUtil.checkDatabasePartitionSchemaNamePrefix();
-
-			_dataSource = DBPartitionUtil.wrapDataSource(_dataSource);
-
 			DBPartitionUtil.setDefaultCompanyId(connection);
+			_init(DBManagerUtil.getDB(), connection);
 		}
 
 		_dataSource = new LazyConnectionDataSourceProxy(_dataSource);
