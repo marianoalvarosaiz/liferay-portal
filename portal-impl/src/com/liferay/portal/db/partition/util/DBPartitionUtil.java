@@ -1591,6 +1591,10 @@ public class DBPartitionUtil {
 				String lowerCaseSQL = StringUtil.toLowerCase(sql);
 
 				Connection connection = statement.getConnection();
+				
+				if (StringUtil.startsWith(lowerCaseSQL, "alter table release_")) {
+					_log.error("SQL: " + sql);
+				}
 
 				if (CompanyThreadLocal.getNonsystemCompanyId() !=
 						PortalInstancePool.getDefaultCompanyIdBySQL(
@@ -1628,6 +1632,10 @@ public class DBPartitionUtil {
 					 _isSkip(connection, query[2])) ||
 					(StringUtil.startsWith(lowerCaseSQL, "update") &&
 					 _isSkip(connection, query[1]))) {
+					
+					if (StringUtil.startsWith(lowerCaseSQL, "alter table release_")) {
+						_log.error("Skip for companyId: " + CompanyThreadLocal.getNonsystemCompanyId());
+					}
 
 					return 0;
 				}
@@ -1655,6 +1663,10 @@ public class DBPartitionUtil {
 				try {
 					DBInspector dbInspector = new DBInspector(connection);
 					String tableName = query[2];
+					
+					if (StringUtil.startsWith(lowerCaseSQL, "alter table release_")) {
+						_log.error("Is Control table: " + dbInspector.isControlTable(tableName));
+					}
 
 					if (!dbInspector.isControlTable(tableName)) {
 						return returnValue;
@@ -1665,6 +1677,12 @@ public class DBPartitionUtil {
 
 						if (companyId == _defaultCompanyId) {
 							continue;
+						}
+						
+						if (StringUtil.startsWith(lowerCaseSQL, "alter table release_")) {
+							_log.error("Execute for companyId: " + CompanyThreadLocal.getNonsystemCompanyId() + "sql: " + _dbPartitionDB.getCreateViewSQL(
+									_defaultPartitionName,
+									getPartitionName(companyId), tableName));
 						}
 
 						super.execute(

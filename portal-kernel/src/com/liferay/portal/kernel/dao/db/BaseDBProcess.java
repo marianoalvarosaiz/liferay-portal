@@ -253,6 +253,11 @@ public abstract class BaseDBProcess implements DBProcess {
 	protected void alterTableAddColumn(
 			String tableName, String columnName, String columnType)
 		throws Exception {
+		
+		if (tableName.equalsIgnoreCase("release_")) {
+			_log.error("alter table name for: "+ CompanyThreadLocal.getNonsystemCompanyId());
+			_log.error("hasColumn for: " + CompanyThreadLocal.getNonsystemCompanyId() + ": " +hasColumn(tableName, columnName) );
+		}
 
 		if (!hasColumn(tableName, columnName)) {
 			DB db = DBManagerUtil.getDB();

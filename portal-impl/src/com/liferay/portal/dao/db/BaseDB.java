@@ -181,6 +181,10 @@ public abstract class BaseDB implements DB {
 		sb.append(columnName);
 		sb.append(StringPool.SPACE);
 		sb.append(columnType);
+		
+		if (tableName.equalsIgnoreCase("release_")) {
+			_log.error("alter table name for: "+ CompanyThreadLocal.getNonsystemCompanyId());
+		}
 
 		runSQL(connection, sb.toString());
 	}
