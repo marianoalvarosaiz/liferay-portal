@@ -252,7 +252,7 @@ definition {
 
 		LiferayEvent.waitForPortletReady();
 
-		ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+		LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 		DMDocument.viewPG(dmDocumentTitle = "Document txt Title");
 

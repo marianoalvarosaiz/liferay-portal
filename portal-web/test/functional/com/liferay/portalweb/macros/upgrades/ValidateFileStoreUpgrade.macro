@@ -29,7 +29,7 @@ definition {
 				pageName = "Document",
 				siteName = "Site Name");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Document1");
 
@@ -60,7 +60,7 @@ definition {
 				pageName = "Document",
 				siteName = "Site Name");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Image1");
 
@@ -128,7 +128,7 @@ definition {
 				pageName = "Document",
 				siteName = "Site Name");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Document1");
 
@@ -159,7 +159,7 @@ definition {
 				pageName = "Document",
 				siteName = "Site Name");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Image1");
 

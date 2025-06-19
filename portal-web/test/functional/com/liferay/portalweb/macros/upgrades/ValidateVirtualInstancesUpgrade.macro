@@ -125,7 +125,7 @@ definition {
 		task ("Assert document on default instance") {
 			Navigator.gotoPage(pageName = "Document");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Document1");
 
@@ -214,7 +214,7 @@ definition {
 				baseURL = "http://www.able.com:8080",
 				pageName = "Document 2");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Document2");
 
@@ -309,7 +309,7 @@ definition {
 				baseURL = "http://www.baker.com:8080",
 				pageName = "Document 3");
 
-			ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+			LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 			DMDocument.viewPG(dmDocumentTitle = "Document3");
 

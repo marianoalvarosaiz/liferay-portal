@@ -55,7 +55,7 @@ definition {
 
 		Navigator.gotoPage(pageName = "Document");
 
-		ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+		LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 		DMDocument.viewPG(dmDocumentTitle = "Document1");
 
@@ -123,7 +123,7 @@ definition {
 
 		Navigator.gotoPage(pageName = "Document");
 
-		ValidateSmokeUpgrade.changeDisplayStyle(displayStyle = "list");
+		LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
 		DMDocument.viewPG(dmDocumentTitle = "Document1");
 
