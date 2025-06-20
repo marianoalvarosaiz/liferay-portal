@@ -41,10 +41,7 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 
 	@Override
 	protected UserAccount randomIrrelevantUserAccount() throws Exception {
-		User user = UserTestUtil.addUser();
-
-		return userAccountResource.putAssetLibraryUserAccount(
-			irrelevantDepotEntry.getGroupId(), user.getUserId());
+		return _addUserAccount();
 	}
 
 	@Override
