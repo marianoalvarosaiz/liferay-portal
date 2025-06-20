@@ -12,38 +12,29 @@ import {ComponentProps, useMemo} from 'react';
 import useSWR from 'swr';
 
 import ListView, {ListViewProps} from '../../../components/ListView';
+import {
+	FilterOption,
+	ManagementToolbarProps,
+} from '../../../components/ListView/components/ManagementToolbar';
+import {ListViewTypes} from '../../../components/ListView/hooks/ListViewContext';
 import Page from '../../../components/Page';
 import SearchBuilder from '../../../core/SearchBuilder';
 import {
 	OrderTypes,
+	OrderWorkflowStatusCode,
 	orderTypeLabel,
 	orderWorkflowDisplayType,
+	orderWorkflowStatusCodeLabels,
 	paymentWorkflowDisplayType,
 } from '../../../enums/Order';
 import i18n from '../../../i18n';
 import {Liferay} from '../../../liferay/liferay';
+import marketplaceOAuth2 from '../../../services/oauth/Marketplace';
 import CommerceSelectAccount from '../../../services/rest/CommerceSelectAccount';
 import HeadlessCommerceAdminOrder from '../../../services/rest/HeadlessCommerceAdminOrder';
 import {getLastDayOfMonth} from '../../../utils/date';
 import InfoCard from '../components/InfoCard';
 import useOrderMetrics from '../hooks/useOrderMetrics';
-import {ManagementToolbarProps} from '../../../components/ListView/components/ManagementToolbar';
-
-type AdministratorOrdersListViewProps = {
-	listViewProps?: Partial<ListViewProps<Order>>;
-	managementToolbarProps?: {
-		customFilterFields?: {[key: string]: string};
-		visible?: boolean;
-	} & Omit<
-		ManagementToolbarProps,
-		| 'actions'
-		| 'tableProps'
-		| 'totalItems'
-		| 'onSelectAllRows'
-		| 'rowSelectable'
-	>;
-	isSortable?: boolean;
-};
 
 function redirectTo(path: string) {
 	return async function (order: Order) {
@@ -63,24 +54,115 @@ function redirectTo(path: string) {
 	};
 }
 
-export const AdministratorOrdersListView: React.FC<
-	AdministratorOrdersListViewProps
-> = ({listViewProps, managementToolbarProps, isSortable = false}) => {
+type AdministratorOrdersListViewProps = {
+	isSortable?: boolean;
+	listViewProps?: Partial<ListViewProps<Order>>;
+	managementToolbarProps?: ManagementToolbarProps & {visible?: boolean};
+};
+
+const orderStatuses = [
+	OrderWorkflowStatusCode.CANCELLED,
+	OrderWorkflowStatusCode.COMPLETED,
+	OrderWorkflowStatusCode.ON_HOLD,
+	OrderWorkflowStatusCode.PENDING,
+	OrderWorkflowStatusCode.PROCESSING,
+];
+
+const orderTypes = [
+	OrderTypes.CLIENT_EXTENSION,
+	OrderTypes.CLOUDAPP,
+	OrderTypes.COMPOSITE_APP,
+	OrderTypes.DXPAPP,
+	OrderTypes.LOW_CODE_CONFIGURATION,
+	OrderTypes.OTHER,
+];
+
+const orderStatusFilters: FilterOption[] = orderStatuses.map((status) => ({
+	name: orderWorkflowStatusCodeLabels[status],
+	onClick: (dispatch) => {
+		dispatch({
+			payload: {
+				filters: {
+					filter: {
+						orderStatus: status,
+					},
+				},
+			},
+			type: ListViewTypes.SET_FILTERS,
+		});
+	},
+}));
+
+const orderTypeFilters: FilterOption[] = orderTypes.map((orderType) => ({
+	name: orderTypeLabel[orderType],
+	onClick: (dispatch) => {
+		dispatch({
+			payload: {
+				filters: {
+					filter: {
+						orderTypeExternalReferenceCode: orderType,
+					},
+				},
+			},
+			type: ListViewTypes.SET_FILTERS,
+		});
+	},
+}));
+
+export function AdministratorOrdersListView({
+	isSortable,
+	listViewProps,
+	managementToolbarProps,
+}: AdministratorOrdersListViewProps) {
 	return (
 		<ListView<Order>
 			emptyStateProps={{title: i18n.translate('no-orders-yet')}}
 			id="administrator-orders"
-			managementToolbarProps={{
-				filterSchema: 'administratorDashboardOrdersTable',
-				...managementToolbarProps,
-			}}
+			managementToolbarProps={managementToolbarProps}
 			paginationOptions={{displayType: 'always'}}
-			resource={`/o/headless-commerce-admin-order/v1.0/orders?${new URLSearchParams(
-				{
-					nestedFields: 'account,orderItems',
-					sort: 'createDate:desc',
+			resource={function getAdministratorOrders({
+				filters,
+				keywords,
+				page,
+				pageSize,
+				sort,
+			}) {
+				const searchBuilder = new SearchBuilder();
+
+				if (filters.filter) {
+					for (const [key, value] of Object.entries(filters.filter)) {
+						if (key === 'orderStatus') {
+							searchBuilder.lambda(key, value, {unquote: true});
+						}
+						else {
+							searchBuilder.eq(key, String(value));
+						}
+					}
 				}
-			)}`}
+				else {
+					searchBuilder.in('orderTypeExternalReferenceCode', [
+						OrderTypes.CLIENT_EXTENSION,
+						OrderTypes.CLOUDAPP,
+						OrderTypes.DXPAPP,
+						OrderTypes.COMPOSITE_APP,
+						OrderTypes.LOW_CODE_CONFIGURATION,
+						OrderTypes.OTHER,
+					]);
+				}
+
+				return HeadlessCommerceAdminOrder.getOrders(
+					new URLSearchParams({
+						filter: searchBuilder.build(),
+						nestedFields: 'account,orderItems',
+						page: page.toString(),
+						pageSize: pageSize.toString(),
+						search: keywords,
+						sort: sort.key
+							? `${sort.key}:${sort.direction}`
+							: 'createDate:desc',
+					})
+				);
+			}}
 			tableProps={{
 				actions: [
 					{
@@ -188,7 +270,7 @@ export const AdministratorOrdersListView: React.FC<
 			{...listViewProps}
 		/>
 	);
-};
+}
 
 async function getOrders(params = new URLSearchParams()) {
 	const response = await HeadlessCommerceAdminOrder.getOrders(params);
@@ -313,8 +395,43 @@ export default function Orders() {
 				<AdministratorOrdersListView
 					isSortable
 					managementToolbarProps={{
-						hasFilters: true,
-						hasSearch: true,
+						actionButton: ({filter}) => (
+							<Button
+								className="ml-3 mr-4"
+								displayType={
+									'' as ComponentProps<
+										typeof Button
+									>['displayType']
+								}
+								onClick={() =>
+									marketplaceOAuth2.downloadOrderReport(
+										filter
+											? SearchBuilder.in(
+													'orderTypeExternalReferenceCode',
+													[filter]
+												)
+											: ''
+									)
+								}
+								outline
+								size="sm"
+							>
+								<Icon className="mr-2" symbol="download" />
+
+								{i18n.translate('export-csv')}
+							</Button>
+						),
+						filterItems: [
+							{
+								children: orderTypeFilters,
+								name: i18n.translate('app-type'),
+							},
+							{
+								children: orderStatusFilters,
+								name: i18n.translate('status'),
+							},
+						],
+						hasOrderExportCSV: true,
 						visible: true,
 					}}
 				/>
