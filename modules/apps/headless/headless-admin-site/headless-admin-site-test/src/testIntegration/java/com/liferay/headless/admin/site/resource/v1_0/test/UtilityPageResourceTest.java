@@ -535,6 +535,22 @@ public class UtilityPageResourceTest extends BaseUtilityPageResourceTestCase {
 				siteExternalReferenceCode, utilityPage);
 	}
 
+	@Override
+	protected String
+			testGetSiteSiteByExternalReferenceCodeUtilityPagesPage_getIrrelevantSiteExternalReferenceCode()
+		throws Exception {
+
+		return irrelevantGroup.getExternalReferenceCode();
+	}
+
+	@Override
+	protected String
+			testGetSiteSiteByExternalReferenceCodeUtilityPagesPage_getSiteExternalReferenceCode()
+		throws Exception {
+
+		return testGroup.getExternalReferenceCode();
+	}
+
 	@Ignore
 	@Override
 	@Test
