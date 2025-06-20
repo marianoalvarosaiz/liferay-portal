@@ -429,30 +429,8 @@ public abstract class BaseSiteResourceImpl
 			Collection<Site> sites, Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeFunction<Site, Site, Exception> siteUnsafeFunction = site -> {
-			if (parameters.containsKey("assetLibraryExternalReferenceCode")) {
-				deleteAssetLibrarySite(
-					(Long)parameters.get("assetLibraryId"),
-					(Long)parameters.get("siteId"));
-
-				return site;
-			}
-
-			throw new UnsupportedOperationException(
-				"Unable to delete by external reference code or ID");
-		};
-
-		if (contextBatchUnsafeBiConsumer != null) {
-			contextBatchUnsafeBiConsumer.accept(sites, siteUnsafeFunction);
-		}
-		else if (contextBatchUnsafeConsumer != null) {
-			contextBatchUnsafeConsumer.accept(sites, siteUnsafeFunction::apply);
-		}
-		else {
-			for (Site site : sites) {
-				siteUnsafeFunction.apply(site);
-			}
-		}
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	public Set<String> getAvailableCreateStrategies() {

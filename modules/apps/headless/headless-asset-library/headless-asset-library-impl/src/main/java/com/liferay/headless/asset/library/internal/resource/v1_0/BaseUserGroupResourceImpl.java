@@ -477,35 +477,8 @@ public abstract class BaseUserGroupResourceImpl
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeFunction<UserGroup, UserGroup, Exception>
-			userGroupUnsafeFunction = userGroup -> {
-				if (parameters.containsKey(
-						"assetLibraryExternalReferenceCode")) {
-
-					deleteAssetLibraryUserGroup(
-						(Long)parameters.get("assetLibraryId"),
-						_parseLong((String)parameters.get("userGroupId")));
-
-					return userGroup;
-				}
-
-				throw new UnsupportedOperationException(
-					"Unable to delete by external reference code or ID");
-			};
-
-		if (contextBatchUnsafeBiConsumer != null) {
-			contextBatchUnsafeBiConsumer.accept(
-				userGroups, userGroupUnsafeFunction);
-		}
-		else if (contextBatchUnsafeConsumer != null) {
-			contextBatchUnsafeConsumer.accept(
-				userGroups, userGroupUnsafeFunction::apply);
-		}
-		else {
-			for (UserGroup userGroup : userGroups) {
-				userGroupUnsafeFunction.apply(userGroup);
-			}
-		}
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	public Set<String> getAvailableCreateStrategies() {
@@ -588,14 +561,6 @@ public abstract class BaseUserGroupResourceImpl
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	private Long _parseLong(String value) {
-		if (value != null) {
-			return Long.parseLong(value);
-		}
-
-		return null;
 	}
 
 	public void setContextAcceptLanguage(AcceptLanguage contextAcceptLanguage) {

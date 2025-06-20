@@ -478,44 +478,8 @@ public abstract class BaseERCAssetLibraryTestEntityResourceImpl
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeFunction
-			<ERCAssetLibraryTestEntity, ERCAssetLibraryTestEntity, Exception>
-				ercAssetLibraryTestEntityUnsafeFunction =
-					ercAssetLibraryTestEntity -> {
-						if (parameters.containsKey(
-								"assetLibraryExternalReferenceCode")) {
-
-							deleteAssetLibraryERCAssetLibraryTestEntity(
-								(String)parameters.get(
-									"assetLibraryExternalReferenceCode"),
-								ercAssetLibraryTestEntity.
-									getExternalReferenceCode());
-
-							return ercAssetLibraryTestEntity;
-						}
-
-						throw new UnsupportedOperationException(
-							"Unable to delete by external reference code or ID");
-					};
-
-		if (contextBatchUnsafeBiConsumer != null) {
-			contextBatchUnsafeBiConsumer.accept(
-				ercAssetLibraryTestEntities,
-				ercAssetLibraryTestEntityUnsafeFunction);
-		}
-		else if (contextBatchUnsafeConsumer != null) {
-			contextBatchUnsafeConsumer.accept(
-				ercAssetLibraryTestEntities,
-				ercAssetLibraryTestEntityUnsafeFunction::apply);
-		}
-		else {
-			for (ERCAssetLibraryTestEntity ercAssetLibraryTestEntity :
-					ercAssetLibraryTestEntities) {
-
-				ercAssetLibraryTestEntityUnsafeFunction.apply(
-					ercAssetLibraryTestEntity);
-			}
-		}
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	public Set<String> getAvailableCreateStrategies() {
