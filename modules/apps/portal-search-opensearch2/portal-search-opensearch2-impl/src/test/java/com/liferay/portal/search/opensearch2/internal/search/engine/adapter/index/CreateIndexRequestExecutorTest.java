@@ -7,6 +7,7 @@ package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.ind
 
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
 import com.liferay.portal.search.opensearch2.internal.OpenSearchTestRule;
@@ -50,13 +51,20 @@ public class CreateIndexRequestExecutorTest extends BaseOpenSearchTestCase {
 							))))
 			).toString());
 
-		CreateIndexRequestExecutor createIndexRequestExecutor =
-			new CreateIndexRequestExecutor(
-				new JSONFactoryImpl(), openSearchConnectionManager);
+		CreateIndexRequestExecutorImpl createIndexRequestExecutorImpl =
+			new CreateIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			createIndexRequestExecutorImpl, "_jsonFactory",
+			new JSONFactoryImpl());
+
+		ReflectionTestUtil.setFieldValue(
+			createIndexRequestExecutorImpl, "_openSearchConnectionManager",
+			openSearchConnectionManager);
 
 		org.opensearch.client.opensearch.indices.CreateIndexRequest
 			openSearchCreateIndexRequest =
-				createIndexRequestExecutor.createCreateIndexRequest(
+				createIndexRequestExecutorImpl.createCreateIndexRequest(
 					createIndexRequest);
 
 		Assert.assertEquals(
