@@ -16,6 +16,7 @@ import ApiHelper from '../../../../src/main/resources/META-INF/resources/js/serv
 describe('NewSpace', () => {
 	const props: NewSpaceProps = {
 		baseAddMembersUrl: 'fake-add-member-url/',
+		baseSpaceUrl: 'fake-redirect-url/',
 	};
 
 	let apiPostSpy: jest.SpyInstance;
@@ -42,8 +43,19 @@ describe('NewSpace', () => {
 			)
 		).toBeInTheDocument();
 
+		const learnMoreLink = screen.getByRole('link', {
+			name: 'learn-more-about-spaces',
+		});
+		expect(learnMoreLink).toBeInTheDocument();
+		expect(learnMoreLink).toHaveAttribute('href', '/');
+
 		expect(
-			screen.getByRole('button', {name: 'continue'})
+			screen.getByRole('button', {name: 'add-members'})
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole('button', {
+				name: 'create-a-space-without-members',
+			})
 		).toBeInTheDocument();
 	});
 
@@ -71,7 +83,7 @@ describe('NewSpace', () => {
 
 		await userEvent.click(
 			screen.getByRole('button', {
-				name: 'continue',
+				name: 'create-a-space-without-members',
 			})
 		);
 
@@ -120,7 +132,7 @@ describe('NewSpace', () => {
 
 		await userEvent.click(
 			screen.getByRole('button', {
-				name: 'continue',
+				name: 'create-a-space-without-members',
 			})
 		);
 
