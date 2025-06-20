@@ -1000,9 +1000,11 @@ public class UpgradeJakartaTest {
 	}
 
 	private String _read(String name) throws Exception {
-		try (InputStream inputStream =
-				UpgradeJakartaTest.class.getResourceAsStream(
-					"dependencies/" + name)) {
+		ClassLoader classLoader = UpgradeJakartaTest.class.getClassLoader();
+
+		try (InputStream inputStream = classLoader.getResourceAsStream(
+				"com/liferay/portal/upgrade/v7_4_x/test/dependencies/" +
+					name)) {
 
 			return StringUtil.read(inputStream);
 		}
