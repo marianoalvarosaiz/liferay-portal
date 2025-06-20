@@ -5,7 +5,7 @@
 
 import {getSpritemap} from '@liferay/frontend-icons-web';
 import {openSimpleInputModal, openToast} from 'frontend-js-components-web';
-import {fetch, getWindow, navigate} from 'frontend-js-web';
+import {fetch, getWindow, navigate, openWindow} from 'frontend-js-web';
 
 const TIME_POLLING = 500;
 const TIME_SHOW_MSG = 2000;
@@ -25,7 +25,6 @@ export class DocumentLibraryOpener {
 
 	_openExternal({externalURL}) {
 		window.open(externalURL);
-
 		this._hideLoading();
 
 		if (this._refreshAfterNavigate) {
@@ -75,19 +74,23 @@ export class DocumentLibraryOpener {
 
 	_showLoading({dialogMessage}) {
 		return new Promise((resolve) => {
-			Liferay.Util.openModal({
-				bodyHTML: `<p>${dialogMessage}</p><div aria-hidden="true" class="loading-animation"></div>`,
-				center: true,
-				className: 'office-365-redirect-modal',
-				containerProps: {},
-				height: 172,
-				id: this._dialogLoadingId,
-				onOpen: () => {
-					setTimeout(resolve, TIME_SHOW_MSG);
+			openWindow(
+				{
+					dialog: {
+						bodyContent: `<p>${dialogMessage}</p><div aria-hidden="true" class="loading-animation"></div>`,
+						cssClass: 'office-365-redirect-modal',
+						height: 172,
+						modal: true,
+						resizable: false,
+						title: '',
+						width: 320,
+					},
+					id: this._dialogLoadingId,
 				},
-				size: 'sm',
-				title: '',
-			});
+				() => {
+					setTimeout(resolve, TIME_SHOW_MSG);
+				}
+			);
 		});
 	}
 
