@@ -31,6 +31,7 @@ import com.liferay.portal.search.opensearch2.internal.search.engine.adapter.docu
 import com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index.CreateIndexRequestExecutor;
 import com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index.CreateIndexRequestExecutorImpl;
 import com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index.DeleteIndexRequestExecutor;
+import com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index.DeleteIndexRequestExecutorImpl;
 
 /**
  * @author Adam Brandizzi
@@ -105,8 +106,7 @@ public class RequestExecutorFixture {
 				_createOpenSearchDocumentRequestTranslator();
 
 		_createIndexRequestExecutor = _createCreateIndexRequestExecutor();
-		_deleteIndexRequestExecutor = new DeleteIndexRequestExecutor(
-			_openSearchConnectionManager);
+		_deleteIndexRequestExecutor = _createDeleteIndexRequestExecutor();
 		_getDocumentRequestExecutor = _createGetDocumentRequestExecutor(
 			openSearchDocumentRequestTranslator);
 		_indexDocumentRequestExecutor = _createIndexDocumentRequestExecutor(
@@ -126,6 +126,17 @@ public class RequestExecutorFixture {
 			_openSearchConnectionManager);
 
 		return createIndexRequestExecutor;
+	}
+
+	private DeleteIndexRequestExecutor _createDeleteIndexRequestExecutor() {
+		DeleteIndexRequestExecutor deleteIndexRequestExecutor =
+			new DeleteIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			deleteIndexRequestExecutor, "_openSearchConnectionManager",
+			_openSearchConnectionManager);
+
+		return deleteIndexRequestExecutor;
 	}
 
 	private GetDocumentRequestExecutor _createGetDocumentRequestExecutor(

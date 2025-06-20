@@ -37,7 +37,7 @@ public class IndexRequestExecutorFixture {
 				jsonFactory, _openSearchConnectionManager));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_deleteIndexRequestExecutor",
-			new DeleteIndexRequestExecutor(_openSearchConnectionManager));
+			_createDeleteIndexRequestExecutor(_openSearchConnectionManager));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_flushIndexRequestExecutor",
 			_createFlushIndexRequestExecutor(_openSearchConnectionManager));
@@ -104,6 +104,19 @@ public class IndexRequestExecutorFixture {
 			openSearchConnectionManager);
 
 		return createIndexRequestExecutor;
+	}
+
+	private DeleteIndexRequestExecutor _createDeleteIndexRequestExecutor(
+		OpenSearchConnectionManager openSearchConnectionManager) {
+
+		DeleteIndexRequestExecutor deleteIndexRequestExecutor =
+			new DeleteIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			deleteIndexRequestExecutor, "_openSearchConnectionManager",
+			openSearchConnectionManager);
+
+		return deleteIndexRequestExecutor;
 	}
 
 	private FlushIndexRequestExecutor _createFlushIndexRequestExecutor(
