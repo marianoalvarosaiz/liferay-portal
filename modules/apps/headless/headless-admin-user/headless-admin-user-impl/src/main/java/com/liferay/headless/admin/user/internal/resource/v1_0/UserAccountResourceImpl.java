@@ -280,8 +280,8 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 	@NestedField(parentClass = Account.class, value = "accountUserAccounts")
 	@Override
 	public Page<UserAccount> getAccountUserAccountsPage(
-			@NestedFieldId(value = "id") Long accountId, String search,
-			Filter filter, Pagination pagination, Sort[] sorts)
+			Long accountId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		Map<String, Map<String, String>> actions = _getModelActions(
