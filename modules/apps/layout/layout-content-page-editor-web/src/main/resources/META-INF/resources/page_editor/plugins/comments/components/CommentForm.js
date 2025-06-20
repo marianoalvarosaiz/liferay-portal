@@ -10,7 +10,6 @@ import React from 'react';
 import Button from '../../../common/components/Button';
 import Editor from '../../../common/components/Editor';
 import InvisibleFieldset from '../../../common/components/InvisibleFieldset';
-import CKEditor from './CKEditor';
 
 export default function CommentForm({
 	autoFocus = false,
@@ -27,26 +26,19 @@ export default function CommentForm({
 	return (
 		<form onFocus={onFormFocus}>
 			<InvisibleFieldset disabled={loading}>
-				{Liferay.FeatureFlags['LPD-11235'] ? (
-					<CKEditor
-						initialData={textareaContent}
+				<div className="form-group form-group-sm">
+					<Editor
+						autoFocus={autoFocus}
+						configurationName="comment"
+						id={id}
+						initialValue={textareaContent}
+						label={Liferay.Language.get('add-comment')}
 						onChange={onTextareaChange}
+						placeholder={Liferay.Language.get(
+							'type-your-comment-here'
+						)}
 					/>
-				) : (
-					<div className="form-group form-group-sm">
-						<Editor
-							autoFocus={autoFocus}
-							configurationName="comment"
-							id={id}
-							initialValue={textareaContent}
-							label={Liferay.Language.get('add-comment')}
-							onChange={onTextareaChange}
-							placeholder={Liferay.Language.get(
-								'type-your-comment-here'
-							)}
-						/>
-					</div>
-				)}
+				</div>
 
 				{showButtons && (
 					<ClayButton.Group className="mb-3" spaced>
