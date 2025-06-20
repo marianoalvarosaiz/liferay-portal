@@ -14,10 +14,6 @@ components:
                         Block of actions allowed by the user making the request.
                     readOnly: true
                     type: object
-                assetLibraryKey:
-                    description:
-                        The asset library's key.
-                    type: string
                 dateCreated:
                     description:
                         The asset library's creation date.
@@ -46,7 +42,7 @@ components:
                     type: string
                 id:
                     description:
-                        The asset library's ID.
+                        The asset library's site ID.
                     format: int64
                     readOnly: true
                     type: integer
@@ -79,12 +75,6 @@ components:
                     $ref: "#/components/schemas/Settings"
                     description:
                         The asset library's settings.
-                siteId:
-                    description:
-                        The asset library's site ID.
-                    format: int64
-                    readOnly: true
-                    type: integer
                 sites:
                     description:
                         The asset library's connected sites.
