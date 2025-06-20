@@ -27,9 +27,9 @@ public class ExportImportReportEntryLocalServiceImpl
 
 	@Override
 	public ExportImportReportEntry addExportImportReportEntryErrorType(
-		long groupId, long companyId, String classExternalReferenceCode,
-		long classNameId, long exportImportConfigurationId, String error,
-		String errorStacktrace) {
+		long companyId, long groupId, String classExternalReferenceCode,
+		long classNameId, String error, String errorStacktrace,
+		long exportImportConfigurationId) {
 
 		ExportImportReportEntry exportImportReportEntry =
 			exportImportReportEntryPersistence.create(
@@ -53,7 +53,7 @@ public class ExportImportReportEntryLocalServiceImpl
 
 	@Override
 	public ExportImportReportEntry addExportImportReportEntryIncompleteType(
-		long groupId, long companyId, String classExternalReferenceCode,
+		long companyId, long groupId, String classExternalReferenceCode,
 		long classNameId, long exportImportConfigurationId) {
 
 		ExportImportReportEntry exportImportReportEntry =
