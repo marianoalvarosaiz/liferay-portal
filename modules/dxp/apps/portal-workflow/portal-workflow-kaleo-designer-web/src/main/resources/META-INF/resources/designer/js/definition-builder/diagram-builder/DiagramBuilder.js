@@ -102,8 +102,6 @@ export default function DiagramBuilder() {
 				element.data.defaultEdge
 		).length;
 
-		const newEdgeId = uuidv4();
-
 		const newEdge = {
 			...params,
 			arrowHeadType: 'arrowclosed',
@@ -113,9 +111,8 @@ export default function DiagramBuilder() {
 					[defaultLanguageId]:
 						Liferay.Language.get('transition-label'),
 				},
-				name: newEdgeId,
 			},
-			id: newEdgeId,
+			id: uuidv4(),
 			type: 'transition',
 		};
 
