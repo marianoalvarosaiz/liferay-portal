@@ -34,16 +34,11 @@ interface FieldBaseProps {
 	warningMessage?: string;
 }
 
-export function RequiredMask({disabled}: {disabled?: boolean}) {
+export function RequiredMask() {
 	return (
 		<>
 			<span className="ml-1 reference-mark text-warning">
-				<ClayIcon
-					className={classNames({
-						'field-base-disabled-icon': disabled,
-					})}
-					symbol="asterisk"
-				/>
+				<ClayIcon symbol="asterisk" />
 			</span>
 
 			<span className="hide-accessible sr-only">
@@ -80,7 +75,7 @@ export default function FieldBase({
 				<label className={classNames({disabled})} htmlFor={id}>
 					{label}
 
-					{required && <RequiredMask disabled={disabled} />}
+					{required && <RequiredMask />}
 				</label>
 			)}
 
