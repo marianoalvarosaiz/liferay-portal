@@ -1014,7 +1014,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			testGetAssetLibraryTaxonomyVocabulariesPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantTestDepotEntry.getDepotEntryId();
+		return null;
 	}
 
 	@Test

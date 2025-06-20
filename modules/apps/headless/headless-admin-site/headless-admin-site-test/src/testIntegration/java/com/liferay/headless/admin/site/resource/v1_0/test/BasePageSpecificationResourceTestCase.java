@@ -337,14 +337,15 @@ public abstract class BasePageSpecificationResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodeDisplayPageTemplatePageSpecificationsPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodeDisplayPageTemplatePageSpecificationsPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String
@@ -462,14 +463,15 @@ public abstract class BasePageSpecificationResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodeMasterPagePageSpecificationsPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodeMasterPagePageSpecificationsPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String
@@ -636,14 +638,15 @@ public abstract class BasePageSpecificationResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodePageTemplatePageSpecificationsPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodePageTemplatePageSpecificationsPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String
@@ -761,14 +764,15 @@ public abstract class BasePageSpecificationResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodeSitePagePageSpecificationsPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodeSitePagePageSpecificationsPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String
@@ -888,14 +892,15 @@ public abstract class BasePageSpecificationResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodeUtilityPagePageSpecificationsPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodeUtilityPagePageSpecificationsPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String

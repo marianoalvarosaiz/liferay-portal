@@ -378,14 +378,15 @@ public abstract class BasePageRuleConditionResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodePageRulePageRuleConditionsPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodePageRulePageRuleConditionsPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String

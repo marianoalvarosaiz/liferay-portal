@@ -319,14 +319,15 @@ public abstract class BaseERCSiteTestEntityResourceTestCase {
 			testGetSiteERCSiteTestEntitiesPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteERCSiteTestEntitiesPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	@Test

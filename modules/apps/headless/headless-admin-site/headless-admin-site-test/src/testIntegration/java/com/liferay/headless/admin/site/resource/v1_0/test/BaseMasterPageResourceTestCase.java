@@ -750,14 +750,15 @@ public abstract class BaseMasterPageResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodeMasterPagesPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodeMasterPagesPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	@Test
@@ -832,7 +833,7 @@ public abstract class BaseMasterPageResourceTestCase {
 		assertHttpResponseStatusCode(
 			200,
 			masterPageResource.putSiteMasterPagePermissionsPageHttpResponse(
-				testGroup.getExternalReferenceCode(), null,
+				null, null,
 				new Permission[] {
 					new Permission() {
 						{
@@ -845,7 +846,7 @@ public abstract class BaseMasterPageResourceTestCase {
 		assertHttpResponseStatusCode(
 			404,
 			masterPageResource.putSiteMasterPagePermissionsPageHttpResponse(
-				testGroup.getExternalReferenceCode(), null,
+				null, null,
 				new Permission[] {
 					new Permission() {
 						{

@@ -641,7 +641,7 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 			testGetAssetLibraryDocumentShortcutsPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantTestDepotEntry.getDepotEntryId();
+		return null;
 	}
 
 	@Test

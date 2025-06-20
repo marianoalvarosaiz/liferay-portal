@@ -1011,7 +1011,7 @@ public abstract class BaseUserGroupResourceTestCase {
 			testGetAssetLibraryUserGroupsPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantTestDepotEntry.getDepotEntryId();
+		return null;
 	}
 
 	@Test

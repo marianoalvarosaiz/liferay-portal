@@ -665,7 +665,7 @@ public abstract class BaseSiteResourceTestCase {
 	protected Long testGetAssetLibrarySitesPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantTestDepotEntry.getDepotEntryId();
+		return null;
 	}
 
 	@Test

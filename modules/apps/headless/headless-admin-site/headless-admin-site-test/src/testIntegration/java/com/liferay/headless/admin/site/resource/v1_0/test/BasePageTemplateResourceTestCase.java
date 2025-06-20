@@ -411,14 +411,15 @@ public abstract class BasePageTemplateResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodePageTemplateSetPageTemplatesPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodePageTemplateSetPageTemplatesPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	protected String
@@ -890,14 +891,15 @@ public abstract class BasePageTemplateResourceTestCase {
 			testGetSiteSiteByExternalReferenceCodePageTemplatesPage_getSiteExternalReferenceCode()
 		throws Exception {
 
-		return testGroup.getExternalReferenceCode();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected String
 			testGetSiteSiteByExternalReferenceCodePageTemplatesPage_getIrrelevantSiteExternalReferenceCode()
 		throws Exception {
 
-		return irrelevantGroup.getExternalReferenceCode();
+		return null;
 	}
 
 	@Test
@@ -1088,7 +1090,7 @@ public abstract class BasePageTemplateResourceTestCase {
 		assertHttpResponseStatusCode(
 			200,
 			pageTemplateResource.putSitePageTemplatePermissionsPageHttpResponse(
-				testGroup.getExternalReferenceCode(), null,
+				null, null,
 				new Permission[] {
 					new Permission() {
 						{
@@ -1101,7 +1103,7 @@ public abstract class BasePageTemplateResourceTestCase {
 		assertHttpResponseStatusCode(
 			404,
 			pageTemplateResource.putSitePageTemplatePermissionsPageHttpResponse(
-				testGroup.getExternalReferenceCode(), null,
+				null, null,
 				new Permission[] {
 					new Permission() {
 						{

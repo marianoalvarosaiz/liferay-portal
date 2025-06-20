@@ -330,7 +330,7 @@ public abstract class BaseAssetLibraryTestEntityResourceTestCase {
 			testGetAssetLibraryAssetLibraryTestEntitiesPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantTestDepotEntry.getDepotEntryId();
+		return null;
 	}
 
 	@Test

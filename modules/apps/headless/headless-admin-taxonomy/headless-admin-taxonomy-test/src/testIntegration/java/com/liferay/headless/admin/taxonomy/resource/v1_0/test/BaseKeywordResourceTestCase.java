@@ -1061,7 +1061,7 @@ public abstract class BaseKeywordResourceTestCase {
 	protected Long testGetAssetLibraryKeywordsPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantTestDepotEntry.getDepotEntryId();
+		return null;
 	}
 
 	@Test
