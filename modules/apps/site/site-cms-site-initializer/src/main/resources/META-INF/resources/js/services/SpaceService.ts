@@ -4,7 +4,6 @@
  */
 
 import {Space} from '../types/Space';
-import {UserAccount, UserGroup} from '../types/UserAccount';
 import ApiHelper from './ApiHelper';
 
 async function addSpace({
@@ -26,54 +25,13 @@ async function addSpace({
 	);
 }
 
-async function getSpace({
-	externalReferenceCode,
-	spaceId,
-}:
-	| {externalReferenceCode: string; spaceId?: undefined}
-	| {externalReferenceCode?: undefined; spaceId: string}): Promise<Space> {
-	let url = `/o/headless-asset-library/v1.0/asset-libraries/${spaceId}`;
-
-	if (externalReferenceCode) {
-		url = `/o/headless-asset-library/v1.0/asset-libraries/by-external-reference-code/${externalReferenceCode}`;
-	}
-
-	const {data, error} = await ApiHelper.get<Space>(url);
+async function getSpace(externalReferenceCode: string): Promise<Space> {
+	const {data, error} = await ApiHelper.get<Space>(
+		`/o/headless-asset-library/v1.0/asset-libraries/by-external-reference-code/${externalReferenceCode}`
+	);
 
 	if (data) {
 		return data;
-	}
-
-	throw new Error(error);
-}
-
-async function getSpaceUserGroups({
-	spaceId,
-}: {
-	spaceId: string;
-}): Promise<UserGroup[]> {
-	const {data, error} = await ApiHelper.get<{items: UserGroup[]}>(
-		`/o/headless-asset-library/v1.0/asset-libraries/${spaceId}/user-accounts`
-	);
-
-	if (data) {
-		return data.items;
-	}
-
-	throw new Error(error);
-}
-
-async function getSpaceUsers({
-	spaceId,
-}: {
-	spaceId: string;
-}): Promise<UserAccount[]> {
-	const {data, error} = await ApiHelper.get<{items: UserAccount[]}>(
-		`/o/headless-asset-library/v1.0/asset-libraries/${spaceId}`
-	);
-
-	if (data) {
-		return data.items;
 	}
 
 	throw new Error(error);
@@ -142,8 +100,6 @@ async function unlinkUserGroupFromSpace({
 export default {
 	addSpace,
 	getSpace,
-	getSpaceUserGroups,
-	getSpaceUsers,
 	getSpaces,
 	linkUserGroupToSpace,
 	linkUserToSpace,
