@@ -41,7 +41,7 @@ public class ExportImportReportEntryLocalServiceTest {
 				"com.liferay.exportimport.report.service"));
 
 	@Test
-	public void testAddErrorExportImportReportEntry() throws Exception {
+	public void testAddExportImportReportEntryErrorType() throws Exception {
 		int count = _exportImportReportEntryPersistence.countAll();
 
 		String classExternalReferenceCode = RandomTestUtil.randomString();
@@ -54,9 +54,9 @@ public class ExportImportReportEntryLocalServiceTest {
 
 		ExportImportReportEntry exportImportReportEntry =
 			_exportImportReportEntryLocalService.
-				addErrorExportImportReportEntry(
-					groupId, companyId, classExternalReferenceCode, classNameId,
-					exportImportConfigurationId, error, errorStacktrace);
+				addExportImportReportEntryErrorType(
+					companyId, groupId, classExternalReferenceCode, classNameId,
+					error, errorStacktrace, exportImportConfigurationId);
 
 		Assert.assertEquals(
 			classExternalReferenceCode,
@@ -80,7 +80,9 @@ public class ExportImportReportEntryLocalServiceTest {
 	}
 
 	@Test
-	public void testAddIncompleteExportImportReportEntry() throws Exception {
+	public void testAddExportImportReportEntryIncompleteType()
+		throws Exception {
+
 		int count = _exportImportReportEntryPersistence.countAll();
 
 		String classExternalReferenceCode = RandomTestUtil.randomString();
@@ -91,8 +93,8 @@ public class ExportImportReportEntryLocalServiceTest {
 
 		ExportImportReportEntry exportImportReportEntry =
 			_exportImportReportEntryLocalService.
-				addIncompleteExportImportReportEntry(
-					groupId, companyId, classExternalReferenceCode, classNameId,
+				addExportImportReportEntryIncompleteType(
+					companyId, groupId, classExternalReferenceCode, classNameId,
 					exportImportConfigurationId);
 
 		Assert.assertEquals(
@@ -127,23 +129,23 @@ public class ExportImportReportEntryLocalServiceTest {
 		Assert.assertTrue(exportImportReportEntries.isEmpty());
 
 		_exportImportReportEntryLocalService.
-			addIncompleteExportImportReportEntry(
+			addExportImportReportEntryIncompleteType(
 				RandomTestUtil.randomLong(), RandomTestUtil.randomLong(),
 				RandomTestUtil.randomString(), RandomTestUtil.randomLong(),
 				RandomTestUtil.randomLong());
 		_exportImportReportEntryLocalService.
-			addIncompleteExportImportReportEntry(
+			addExportImportReportEntryIncompleteType(
 				RandomTestUtil.randomLong(), RandomTestUtil.randomLong(),
 				RandomTestUtil.randomString(), RandomTestUtil.randomLong(),
 				exportImportConfigurationId);
 		_exportImportReportEntryLocalService.
-			addIncompleteExportImportReportEntry(
-				RandomTestUtil.randomLong(), companyId,
+			addExportImportReportEntryIncompleteType(
+				companyId, RandomTestUtil.randomLong(),
 				RandomTestUtil.randomString(), RandomTestUtil.randomLong(),
 				RandomTestUtil.randomLong());
 		_exportImportReportEntryLocalService.
-			addIncompleteExportImportReportEntry(
-				RandomTestUtil.randomLong(), companyId,
+			addExportImportReportEntryIncompleteType(
+				companyId, RandomTestUtil.randomLong(),
 				RandomTestUtil.randomString(), RandomTestUtil.randomLong(),
 				exportImportConfigurationId);
 
