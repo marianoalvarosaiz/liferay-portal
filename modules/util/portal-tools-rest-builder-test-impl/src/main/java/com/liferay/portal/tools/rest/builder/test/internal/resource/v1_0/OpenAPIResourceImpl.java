@@ -91,8 +91,6 @@ public class OpenAPIResourceImpl {
 
 			add(ERCAssetLibraryTestEntityResourceImpl.class);
 
-			add(ERCScopedTestEntityResourceImpl.class);
-
 			add(ERCSiteTestEntityResourceImpl.class);
 
 			add(EntityModelResourceTestEntity1ResourceImpl.class);
