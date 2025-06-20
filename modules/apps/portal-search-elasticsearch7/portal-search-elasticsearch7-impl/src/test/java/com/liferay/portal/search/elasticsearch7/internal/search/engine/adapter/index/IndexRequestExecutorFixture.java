@@ -48,7 +48,8 @@ public class IndexRequestExecutorFixture {
 			_createGetIndexIndexRequestExecutor(_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_getMappingIndexRequestExecutor",
-			new GetMappingIndexRequestExecutor(_elasticsearchClientResolver));
+			_createGetMappingIndexRequestExecutor(
+				_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_indicesExistsIndexRequestExecutor",
 			_createIndexExistsIndexRequestExecutor(
@@ -157,6 +158,20 @@ public class IndexRequestExecutorFixture {
 			elasticsearchClientResolver);
 
 		return getIndexIndexRequestExecutor;
+	}
+
+	private GetMappingIndexRequestExecutor
+		_createGetMappingIndexRequestExecutor(
+			ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		GetMappingIndexRequestExecutor getMappingIndexRequestExecutor =
+			new GetMappingIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getMappingIndexRequestExecutor, "_elasticsearchClientResolver",
+			elasticsearchClientResolver);
+
+		return getMappingIndexRequestExecutor;
 	}
 
 	private IndicesExistsIndexRequestExecutor
