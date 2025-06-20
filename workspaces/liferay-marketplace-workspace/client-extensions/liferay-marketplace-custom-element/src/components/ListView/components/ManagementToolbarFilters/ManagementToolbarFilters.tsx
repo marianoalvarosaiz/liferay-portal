@@ -101,7 +101,7 @@ const FilterBody: React.FC<FilterBodyProps> = ({
 
 			let {value} = event.target;
 
-			if (type === 'date-range') {
+			if (type === 'date-picker') {
 				value = [
 					{
 						label: value,
