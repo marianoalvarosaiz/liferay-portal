@@ -9,19 +9,6 @@ import {ApplicationsMenuPage} from '../product-navigation-applications-menu/Appl
 
 export class UsersAdminItemSelectorPage {
 	readonly applicationsMenuPage: ApplicationsMenuPage;
-	readonly assignUsersUserGroupsFrame: (
-		userGroupName: string
-	) => FrameLocator;
-	readonly assignUsersUserGroupsFrameSearchBar: (
-		userGroupName: string
-	) => Locator;
-	readonly assignUsersUserGroupsFrameSearchButton: (
-		userGroupName: string
-	) => Locator;
-	readonly assignUsersUserGroupsFrameTableRow: (
-		name: string,
-		userGroupName: string
-	) => Locator;
 	readonly clientCredentialUserNameTextbox: Locator;
 	readonly creationMenuNewButton: Locator;
 	readonly page: Page;
@@ -32,22 +19,6 @@ export class UsersAdminItemSelectorPage {
 
 	constructor(page: Page) {
 		this.applicationsMenuPage = new ApplicationsMenuPage(page);
-		this.assignUsersUserGroupsFrame = (userGroupName) =>
-			page.frameLocator(`iframe[title="Add Users to ${userGroupName}"]`);
-		this.assignUsersUserGroupsFrameSearchBar = (userGroupName) =>
-			this.assignUsersUserGroupsFrame(userGroupName).getByPlaceholder(
-				'Search for'
-			);
-		this.assignUsersUserGroupsFrameSearchButton = (userGroupName) =>
-			this.assignUsersUserGroupsFrame(userGroupName).getByRole('button', {
-				name: 'search',
-			});
-		this.assignUsersUserGroupsFrameTableRow = (name, userGroupName) => {
-			return this.assignUsersUserGroupsFrame(userGroupName).getByRole(
-				'cell',
-				{exact: true, name}
-			);
-		};
 		this.clientCredentialUserNameTextbox = page.getByRole('textbox', {
 			name: 'client-credential-user-name',
 		});
