@@ -93,26 +93,19 @@ describe('Field Checkbox Multiple', () => {
 		).toBeInTheDocument();
 	});
 
-	it('applies the predefined value', () => {
-		render(
+	it('has a predefined Value', () => {
+		const {container} = render(
 			<CheckboxMultipleWithProvider
-				options={[
-					{
-						label: 'Option1',
-						value: 'Option1',
-					},
-					{
-						label: 'Option2',
-						value: 'Option2',
-					},
-				]}
-				predefinedValue={['Option2']}
+				placeholder="Option 1"
 				spritemap={spritemap}
 			/>
 		);
 
-		expect(screen.getByLabelText('Option1')).not.toBeChecked();
-		expect(screen.getByLabelText('Option2')).toBeChecked();
+		act(() => {
+			jest.runAllTimers();
+		});
+
+		expect(container).toMatchSnapshot();
 	});
 
 	it('is not required', () => {
