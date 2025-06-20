@@ -6,14 +6,16 @@
 package com.liferay.account.service.impl;
 
 import com.liferay.account.constants.AccountConstants;
+import com.liferay.account.exception.NoSuchRoleException;
 import com.liferay.account.model.AccountEntry;
 import com.liferay.account.model.AccountRole;
 import com.liferay.account.service.base.AccountRoleLocalServiceBaseImpl;
 import com.liferay.account.service.persistence.AccountEntryPersistence;
-import com.liferay.exportimport.kernel.incomplete.model.IncompleteModelManager;
 import com.liferay.petra.function.transform.TransformUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.lazy.referencing.LazyReferencingThreadLocal;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
@@ -228,24 +230,31 @@ public class AccountRoleLocalServiceImpl
 			long accountEntryId, String name)
 		throws Exception {
 
-		return _incompleteModelManager.getOrAddIncompleteModel(
-			AccountRole.class, companyId, externalReferenceCode,
-			this::fetchAccountRoleByExternalReferenceCode,
-			this::getAccountRoleByExternalReferenceCode,
-			() -> {
-				Role role = _roleLocalService.getOrAddIncompleteRole(
-					externalReferenceCode, companyId, userId,
-					AccountRole.class.getName(),
-					AccountConstants.ACCOUNT_ENTRY_ID_DEFAULT, name,
-					RoleConstants.TYPE_ACCOUNT);
+		AccountRole accountRole = fetchAccountRoleByExternalReferenceCode(
+			externalReferenceCode, companyId);
 
-				AccountRole accountRole = getAccountRoleByRoleId(
-					role.getRoleId());
+		if (accountRole != null) {
+			return accountRole;
+		}
 
-				accountRole.setAccountEntryId(accountEntryId);
+		if (!LazyReferencingThreadLocal.isEnabled()) {
+			throw new NoSuchRoleException(
+				StringBundler.concat(
+					"Unable to find account role with external reference code ",
+					externalReferenceCode, " and company ", companyId));
+		}
 
-				return updateAccountRole(accountRole);
-			});
+		Role role = _roleLocalService.getOrAddIncompleteRole(
+			externalReferenceCode, companyId, userId,
+			AccountRole.class.getName(),
+			AccountConstants.ACCOUNT_ENTRY_ID_DEFAULT, name,
+			RoleConstants.TYPE_ACCOUNT);
+
+		accountRole = getAccountRoleByRoleId(role.getRoleId());
+
+		accountRole.setAccountEntryId(accountEntryId);
+
+		return updateAccountRole(accountRole);
 	}
 
 	@Override
@@ -408,9 +417,6 @@ public class AccountRoleLocalServiceImpl
 
 	@Reference
 	private AccountEntryPersistence _accountEntryPersistence;
-
-	@Reference
-	private IncompleteModelManager _incompleteModelManager;
 
 	@Reference
 	private ResourceLocalService _resourceLocalService;
