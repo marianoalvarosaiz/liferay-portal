@@ -168,8 +168,10 @@ public class SolrIndexRequestExecutor implements IndexRequestExecutor {
 	private final GetFieldMappingIndexRequestExecutor
 		_getFieldMappingIndexRequestExecutor =
 			new GetFieldMappingIndexRequestExecutor();
-	private final GetIndexIndexRequestExecutor _getIndexIndexRequestExecutor =
-		new GetIndexIndexRequestExecutor();
+
+	@Reference
+	private GetIndexIndexRequestExecutor _getIndexIndexRequestExecutor;
+
 	private final GetMappingIndexRequestExecutor
 		_getMappingIndexRequestExecutor = new GetMappingIndexRequestExecutor();
 	private final IndicesExistsIndexRequestExecutor
