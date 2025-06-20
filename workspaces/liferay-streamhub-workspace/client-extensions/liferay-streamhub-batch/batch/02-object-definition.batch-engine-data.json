@@ -126,26 +126,6 @@
 					"indexed": true,
 					"indexedLanguageId": "en_US",
 					"label": {
-						"en_US": "Name"
-					},
-					"name": "name",
-					"objectFieldSettings": [
-						{
-							"name": "uniqueValues",
-							"value": true
-						}
-					],
-					"readOnly": "false",
-					"required": true,
-					"type": "String",
-					"unique": true
-				},
-				{
-					"DBType": "String",
-					"businessType": "Text",
-					"indexed": true,
-					"indexedLanguageId": "en_US",
-					"label": {
 						"en_US": "ObjectDefinitionId"
 					},
 					"name": "objectDefinitionId",
@@ -157,6 +137,26 @@
 					],
 					"required": true,
 					"state": false,
+					"type": "String",
+					"unique": true
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"indexed": true,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Name"
+					},
+					"name": "name",
+					"objectFieldSettings": [
+						{
+							"name": "uniqueValues",
+							"value": true
+						}
+					],
+					"readOnly": "false",
+					"required": true,
 					"type": "String",
 					"unique": true
 				}
