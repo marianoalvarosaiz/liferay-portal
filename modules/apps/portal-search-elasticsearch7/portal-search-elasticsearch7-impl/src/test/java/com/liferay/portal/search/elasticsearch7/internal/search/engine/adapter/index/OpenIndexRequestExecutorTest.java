@@ -61,6 +61,9 @@ public class OpenIndexRequestExecutorTest {
 		ReflectionTestUtil.setFieldValue(
 			openIndexRequestExecutorImpl, "_elasticsearchClientResolver",
 			_elasticsearchFixture);
+		ReflectionTestUtil.setFieldValue(
+			openIndexRequestExecutorImpl, "_indicesOptionsTranslator",
+			new IndicesOptionsTranslatorImpl());
 
 		org.elasticsearch.action.admin.indices.open.OpenIndexRequest
 			elastichsearchOpenIndexRequest =
@@ -71,8 +74,11 @@ public class OpenIndexRequestExecutorTest {
 			openIndexRequest.getIndexNames(),
 			elastichsearchOpenIndexRequest.indices());
 
+		IndicesOptionsTranslator indicesOptionsTranslator =
+			new IndicesOptionsTranslatorImpl();
+
 		Assert.assertEquals(
-			IndicesOptionsTranslatorUtil.translate(
+			indicesOptionsTranslator.translate(
 				openIndexRequest.getIndicesOptions()),
 			elastichsearchOpenIndexRequest.indicesOptions());
 
