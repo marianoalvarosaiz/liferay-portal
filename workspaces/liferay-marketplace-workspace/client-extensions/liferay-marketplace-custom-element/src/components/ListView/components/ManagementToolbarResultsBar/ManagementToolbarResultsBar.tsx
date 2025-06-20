@@ -9,10 +9,9 @@ import {ClayResultsBar} from '@clayui/management-toolbar';
 import {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 
+import './ManagementToolbarResultsBar.scss';
 import i18n from '../../../../i18n';
 import {ListViewContext, ListViewTypes} from '../../hooks/ListViewContext';
-
-import './ManagementToolbarResultsBar.scss';
 
 type ManagementToolbarResultsBarProps = {
 	totalItems: number;
@@ -30,31 +29,28 @@ const ManagementToolbarResultsBar: React.FC<
 	const [{filters}, dispatch] = useContext(ListViewContext);
 
 	const handleRemoveItemFromFilter = (itemToRemove: string) => {
-		if (!filter) {
-			return;
+		if (filter) {
+			const filterJSON = JSON.parse(decodeURIComponent(filter));
+
+			delete filterJSON[itemToRemove];
+
+			if (!Object.keys(filterJSON).length) {
+				searchParams.delete('filter');
+				searchParams.delete('filterSchema');
+				searchParams.delete('page');
+			}
+			else {
+				searchParams.set('filter', JSON.stringify(filterJSON));
+			}
+
+			navigate({
+				search: `?${searchParams.toString()}`,
+			});
 		}
-
-		const filterJSON = JSON.parse(decodeURIComponent(filter));
-
-		delete filterJSON[itemToRemove];
-
-		if (Object.keys(filterJSON).length) {
-			searchParams.set('filter', JSON.stringify(filterJSON));
-		}
-		else {
-			searchParams.delete('filter');
-			searchParams.delete('filterSchema');
-			searchParams.delete('page');
-		}
-
-		navigate({
-			search: `?${searchParams.toString()}`,
-		});
 	};
 
 	const onRemoveFilter = (filterName: string) => {
 		dispatch({payload: filterName, type: ListViewTypes.SET_REMOVE_FILTER});
-
 		handleRemoveItemFromFilter(filterName);
 	};
 
@@ -69,7 +65,7 @@ const ManagementToolbarResultsBar: React.FC<
 					})
 				);
 		}
-	}, [dispatch, filter, filters.entries]);
+	}, [filter, filters.entries, dispatch]);
 
 	return (
 		<div className="border-bottom border-top d-block toolbar-results-container w-100">
