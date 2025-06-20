@@ -63,7 +63,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 /**
  * @author Alicia García
  */
-@FeatureFlag("LPD-42553")
 @RunWith(Arquillian.class)
 public class ObjectEntryWorkflowHandlerTest {
 
