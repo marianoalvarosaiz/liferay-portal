@@ -340,8 +340,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			@Test
 			public void testDelete${schemaName}Batch() throws Exception {
-				<#assign getJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName))!""
-				 getterJavaMethodParametersMap = {} />
+				<#assign getJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName))!"" />
 
 				<#if useDeleteByExternalReferenceCode>
 					${schemaName} ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
@@ -446,11 +445,6 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 				waitForFinish("COMPLETED", JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 			}
-
-			<@getTestGetterMethods
-				getterJavaMethodParametersMap = getterJavaMethodParametersMap
-				testJavaMethodName = javaMethodSignature.methodName
-			/>
 		<#elseif stringUtil.endsWith(javaMethodSignature.methodName, schemaName + "Batch") || stringUtil.endsWith(javaMethodSignature.methodName, schemaNames + "PageExportBatch")>
 			<#continue>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "delete")>
@@ -501,7 +495,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<@getTestGetterMethods
 				getterJavaMethodParametersMap = getterJavaMethodParametersMap
-				testJavaMethodName = javaMethodSignature.methodName
+				javaMethodSignature = javaMethodSignature
 			/>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "get") && javaMethodSignature.returnType?contains("Page<")>
 			<#if javaMethodSignature.methodName?contains("Permission")>
@@ -1410,7 +1404,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<@getTestGetterMethods
 				getterJavaMethodParametersMap = getterJavaMethodParametersMap
-				testJavaMethodName = javaMethodSignature.methodName
+				javaMethodSignature = javaMethodSignature
 			/>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "patch") && freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "get" + javaMethodSignature.methodName?remove_beginning("patch")) && javaMethodSignature.returnType?ends_with(schemaName)>
 			@Test
@@ -1842,7 +1836,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<@getTestGetterMethods
 				getterJavaMethodParametersMap = getterJavaMethodParametersMap
-				testJavaMethodName = javaMethodSignature.methodName
+				javaMethodSignature = javaMethodSignature
 			/>
 
 			<#if javaMethodSignature.methodName?cap_first?ends_with("ByExternalReferenceCode")>
@@ -1918,7 +1912,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<@getTestGetterMethods
 				getterJavaMethodParametersMap = getterJavaMethodParametersMap
-				testJavaMethodName = javaMethodSignature.methodName
+				javaMethodSignature = javaMethodSignature
 			/>
 
 			<@getTestAdderMethod javaMethodSignature = javaMethodSignature />
@@ -2293,7 +2287,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<@getTestGetterMethods
 				getterJavaMethodParametersMap = getterJavaMethodParametersMap
-				testJavaMethodName = javaMethodSignature.methodName
+				javaMethodSignature = javaMethodSignature
 				testNamePrefix = "testGraphQL"
 			/>
 
@@ -2409,7 +2403,6 @@ public abstract class Base${schemaName}ResourceTestCase {
 				getAssetLibraryJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "getAssetLibrary" + schemaName))!""
 				getJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName))!""
 				getSiteJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "getSite" + schemaName))!""
-				getterJavaMethodParametersMap = {}
 			/>
 
 			<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode && !useDeleteById && !useDeleteSite>
@@ -2688,11 +2681,6 @@ public abstract class Base${schemaName}ResourceTestCase {
 					}
 				}
 			</#if>
-
-		<@getTestGetterMethods
-			getterJavaMethodParametersMap = getterJavaMethodParametersMap
-			testJavaMethodName = "batchEngineDeleteImportTask"
-		/>
 	</#if>
 
 	<#if generateSearchTestRule>
@@ -4175,11 +4163,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 <#macro getTestGetterMethods
 	getterJavaMethodParametersMap
-	testJavaMethodName
+	javaMethodSignature
 	testNamePrefix = "test"
 >
 	<#list getterJavaMethodParametersMap?values as javaMethodParameter>
-		protected ${javaMethodParameter.parameterType} ${testNamePrefix}${testJavaMethodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(
+		protected ${javaMethodParameter.parameterType} ${testNamePrefix}${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(
 			<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
 				${schemaName} ${schemaVarName}
 			</#if>
