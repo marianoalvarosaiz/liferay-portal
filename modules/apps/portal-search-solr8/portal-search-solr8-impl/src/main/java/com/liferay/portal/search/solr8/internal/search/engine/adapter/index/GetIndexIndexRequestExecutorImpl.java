@@ -8,12 +8,20 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.index;
 import com.liferay.portal.search.engine.adapter.index.GetIndexIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetIndexIndexResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface GetIndexIndexRequestExecutor {
+@Component(service = GetIndexIndexRequestExecutor.class)
+public class GetIndexIndexRequestExecutorImpl
+	implements GetIndexIndexRequestExecutor {
 
+	@Override
 	public GetIndexIndexResponse execute(
-		GetIndexIndexRequest getIndexIndexRequest);
+		GetIndexIndexRequest getIndexIndexRequest) {
+
+		throw new UnsupportedOperationException();
+	}
 
 }
