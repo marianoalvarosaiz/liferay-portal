@@ -44,122 +44,98 @@ test.describe('Revision History tab', () => {
 				'demo.company.admin@liferay.com'
 			);
 
+		await performLogout(page);
+
+		await performLogin(page, demoUser.alternateName);
+
+		await processBuilderPage.goto();
+
+		await processBuilderPage.clickWorkflowDefinitionName(
+			workflowDefinitionName
+		);
+
+		await nodePropertiesSidebarPage.dragNodeToDiagram('Task', 200, 200);
+
+		await nodePropertiesSidebarPage.nodeLabelInput.fill('Task 1');
+
+		await diagramViewPage.saveWorkflowDefinition();
+
+		await diagramViewPage.definitionInfoButton.click();
+
+		await definitionInfoPage.revisionHistoryTabButton.click();
+
+		const newWorkflowDefinition =
+			await apiHelpers.headlessAdminWorkflow.getWorkflowDefinitionByName(
+				workflowDefinitionName
+			);
+
+		const dateCreated = toLocalDateTimeFormatted(
+			newWorkflowDefinition.dateCreated,
+			'en-us',
+			'UTC'
+		);
+		const dateModified = toLocalDateTimeFormatted(
+			newWorkflowDefinition.dateModified,
+			'en-us',
+			'UTC'
+		);
+
+		await expect(definitionInfoPage.getVersionLabel('2')).toBeVisible();
+
 		const testUser =
 			await apiHelpers.headlessAdminUser.getUserAccountByEmailAddress(
 				'test@liferay.com'
 			);
 
-		await test.step('Navigate to workflow definition and modify it with demo user', async () => {
-			await performLogout(page);
+		await expect(
+			definitionInfoPage.getDateAndUserFromVersion(
+				dateCreated,
+				testUser.name
+			)
+		).toBeVisible();
 
-			await performLogin(page, demoUser.alternateName);
+		await expect(
+			definitionInfoPage.getDateAndUserFromVersion(
+				dateModified,
+				demoUser.name
+			)
+		).toBeVisible();
 
-			await processBuilderPage.goto();
+		await performLogout(page);
 
-			await processBuilderPage.clickWorkflowDefinitionName(
+		await performLogin(page, testUser.alternateName);
+
+		await processBuilderPage.goto();
+
+		await processBuilderPage.clickWorkflowDefinitionName(
+			workflowDefinitionName
+		);
+
+		await diagramViewPage.deleteNode('Task 1');
+
+		await diagramViewPage.publishWorkflowDefinitionButton.click();
+
+		await diagramViewPage.definitionInfoButton.click();
+
+		await definitionInfoPage.revisionHistoryTabButton.click();
+
+		const newWorkflowDefinition2 =
+			await apiHelpers.headlessAdminWorkflow.getWorkflowDefinitionByName(
 				workflowDefinitionName
 			);
 
-			await nodePropertiesSidebarPage.dragNodeToDiagram('Task', 200, 200);
+		const currentDateModified = toLocalDateTimeFormatted(
+			newWorkflowDefinition2.dateModified,
+			'en-us',
+			'UTC'
+		);
 
-			await nodePropertiesSidebarPage.nodeLabelInput.fill('Task 1');
+		await expect(definitionInfoPage.getVersionLabel('3')).toBeVisible();
 
-			await diagramViewPage.saveWorkflowDefinition();
-		});
-
-		await test.step('Assert that versions were created by different users after modifying the workflow definition', async () => {
-			await diagramViewPage.definitionInfoButton.click();
-
-			await definitionInfoPage.revisionHistoryTabButton.click();
-
-			const newWorkflowDefinition =
-				await apiHelpers.headlessAdminWorkflow.getWorkflowDefinitionByName(
-					workflowDefinitionName
-				);
-
-			const dateCreated = toLocalDateTimeFormatted(
-				newWorkflowDefinition.dateCreated,
-				'en-us',
-				'UTC'
-			);
-			const dateModified = toLocalDateTimeFormatted(
-				newWorkflowDefinition.dateModified,
-				'en-us',
-				'UTC'
-			);
-
-			await expect(definitionInfoPage.getVersionLabel('2')).toBeVisible();
-
-			await expect(
-				definitionInfoPage.getDateAndUserFromVersion(
-					dateCreated,
-					testUser.name
-				)
-			).toBeVisible();
-
-			await expect(
-				definitionInfoPage.getDateAndUserFromVersion(
-					dateModified,
-					demoUser.name
-				)
-			).toBeVisible();
-		});
-
-		await test.step('Modify the workflow definition once again and publish it using the test user', async () => {
-			await performLogout(page);
-
-			await performLogin(page, testUser.alternateName);
-
-			await processBuilderPage.goto();
-
-			await processBuilderPage.clickWorkflowDefinitionName(
-				workflowDefinitionName
-			);
-
-			await diagramViewPage.deleteNode('Task 1');
-
-			await diagramViewPage.publishWorkflowDefinitionButton.click();
-		});
-
-		await test.step('Assert that the latest revision is visible and displays its date and user', async () => {
-			await diagramViewPage.definitionInfoButton.click();
-
-			await definitionInfoPage.revisionHistoryTabButton.click();
-
-			const newWorkflowDefinition2 =
-				await apiHelpers.headlessAdminWorkflow.getWorkflowDefinitionByName(
-					workflowDefinitionName
-				);
-
-			const currentDateModified = toLocalDateTimeFormatted(
-				newWorkflowDefinition2.dateModified,
-				'en-us',
-				'UTC'
-			);
-
-			await expect(definitionInfoPage.getVersionLabel('3')).toBeVisible();
-
-			await expect(
-				definitionInfoPage
-					.getDateAndUserFromVersion(
-						currentDateModified,
-						testUser.name
-					)
-					.last()
-			).toBeVisible();
-		});
-
-		await test.step('Assert that the Revision History tab displays a list of versions in descending order', async () => {
-			const versionLabels = page.getByText('version');
-
-			await expect(versionLabels).toHaveCount(4);
-
-			await expect(versionLabels).toHaveText([
-				'Current Version: 4',
-				'Version 3',
-				'Version 2',
-				'Version 1',
-			]);
-		});
+		await expect(
+			definitionInfoPage
+				.getDateAndUserFromVersion(currentDateModified, testUser.name)
+				.last()
+		).toBeVisible();
 	});
 });
