@@ -158,8 +158,6 @@ public class OpenSearchIndexRequestExecutor implements IndexRequestExecutor {
 			_openSearchConnectionManager);
 		_closeIndexRequestExecutor = new CloseIndexRequestExecutor(
 			_openSearchConnectionManager);
-		_createIndexRequestExecutor = new CreateIndexRequestExecutor(
-			_jsonFactory, _openSearchConnectionManager);
 		_deleteIndexRequestExecutor = new DeleteIndexRequestExecutor(
 			_openSearchConnectionManager);
 		_flushIndexRequestExecutor = new FlushIndexRequestExecutor(
@@ -184,7 +182,10 @@ public class OpenSearchIndexRequestExecutor implements IndexRequestExecutor {
 
 	private AnalyzeIndexRequestExecutor _analyzeIndexRequestExecutor;
 	private CloseIndexRequestExecutor _closeIndexRequestExecutor;
+
+	@Reference
 	private CreateIndexRequestExecutor _createIndexRequestExecutor;
+
 	private DeleteIndexRequestExecutor _deleteIndexRequestExecutor;
 	private FlushIndexRequestExecutor _flushIndexRequestExecutor;
 	private GetFieldMappingIndexRequestExecutor
