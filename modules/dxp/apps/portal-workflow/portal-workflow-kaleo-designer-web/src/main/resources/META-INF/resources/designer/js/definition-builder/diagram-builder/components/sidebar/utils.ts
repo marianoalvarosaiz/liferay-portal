@@ -3,9 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {isEdge} from 'react-flow-renderer';
-
-import type {Edge, Elements} from 'react-flow-renderer';
+import type {Elements} from 'react-flow-renderer';
 
 export function isIdDuplicated(elements: Elements, id: string) {
 	let duplicated = false;
@@ -17,23 +15,6 @@ export function isIdDuplicated(elements: Elements, id: string) {
 	});
 
 	return duplicated;
-}
-
-export function isTransitionNameDuplicated(
-	elements: Elements,
-	selectedTransition: Edge,
-	transitionName: string
-) {
-	const sameSourceTransitions = elements.filter(
-		(element) =>
-			isEdge(element) &&
-			element.source === selectedTransition.source &&
-			element.id !== selectedTransition.id
-	);
-
-	return sameSourceTransitions.some(
-		(transition) => transition.data.name === transitionName
-	);
 }
 
 export function getModalInfo(itemType: string) {
