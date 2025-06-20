@@ -232,14 +232,11 @@ public class ObjectEntryFolderLocalServiceImpl
 			objectEntryFolder.getGroupId(), objectEntryFolder.getCompanyId(),
 			objectEntryFolder.getTreePath() + "%");
 
-		if (FeatureFlagManagerUtil.isEnabled("LPD-42553")) {
-			_workflowDefinitionLinkLocalService.deleteWorkflowDefinitionLink(
-				objectEntryFolder.getCompanyId(),
-				objectEntryFolder.getGroupId(),
-				ObjectEntryFolder.class.getName(),
-				objectEntryFolder.getObjectEntryFolderId(),
-				ObjectDefinitionConstants.OBJECT_DEFINITION_ID_ALL);
-		}
+		_workflowDefinitionLinkLocalService.deleteWorkflowDefinitionLink(
+			objectEntryFolder.getCompanyId(), objectEntryFolder.getGroupId(),
+			ObjectEntryFolder.class.getName(),
+			objectEntryFolder.getObjectEntryFolderId(),
+			ObjectDefinitionConstants.OBJECT_DEFINITION_ID_ALL);
 
 		return objectEntryFolder;
 	}
@@ -364,8 +361,7 @@ public class ObjectEntryFolderLocalServiceImpl
 			long objectEntryFolderId, ServiceContext serviceContext)
 		throws PortalException {
 
-		if (!FeatureFlagManagerUtil.isEnabled("LPD-42553") ||
-			!GetterUtil.getBoolean(
+		if (!GetterUtil.getBoolean(
 				serviceContext.getAttribute("updateWorkflowDefinitionLinks"),
 				true)) {
 
