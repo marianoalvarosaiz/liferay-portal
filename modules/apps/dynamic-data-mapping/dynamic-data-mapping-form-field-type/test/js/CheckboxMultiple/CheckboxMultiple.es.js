@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom/extend-expect';
 import {screen} from '@testing-library/dom';
-import {cleanup, render} from '@testing-library/react';
+import {act, cleanup, render} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {PageProvider} from 'data-engine-js-components-web';
 import React from 'react';
@@ -181,11 +181,13 @@ describe('Field Checkbox Multiple', () => {
 	it('call the onChange callback on the field change', () => {
 		const handleFieldEdited = jest.fn();
 
-		const {container} = render(
-			<CheckboxMultipleWithProvider onChange={handleFieldEdited} />
-		);
+		render(<CheckboxMultipleWithProvider onChange={handleFieldEdited} />);
 
-		userEvent.click(container.querySelector('input'));
+		userEvent.click(document.body.querySelector('input'));
+
+		act(() => {
+			jest.runAllTimers();
+		});
 
 		expect(handleFieldEdited).toHaveBeenCalled();
 	});
