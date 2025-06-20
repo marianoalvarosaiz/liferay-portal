@@ -34,13 +34,7 @@ public class PreupgradeVerifyProcessSuiteTest {
 			MockedConstruction<PreupgradeVerifyDatabaseCharacterSet>
 				mockedConstruction2 = _mockConstruction(
 					PreupgradeVerifyDatabaseCharacterSet.class);
-			MockedConstruction<PreupgradeVerifyDatabasePrivileges>
-				mockedConstruction3 = _mockConstruction(
-					PreupgradeVerifyDatabasePrivileges.class);
-			MockedConstruction<PreupgradeVerifyDatabaseState>
-				mockedConstruction4 = _mockConstruction(
-					PreupgradeVerifyDatabaseState.class);
-			MockedConstruction<PreupgradeVerifyProperties> mockedConstruction5 =
+			MockedConstruction<PreupgradeVerifyProperties> mockedConstruction3 =
 				_mockConstruction(PreupgradeVerifyProperties.class)) {
 
 			VerifyProcess verifyProcess = new PreupgradeVerifyProcessSuite();
@@ -54,8 +48,6 @@ public class PreupgradeVerifyProcessSuiteTest {
 				StringBundler.concat(
 					"Exception in PreupgradeVerifyCompanyUsers\n",
 					"Exception in PreupgradeVerifyDatabaseCharacterSet\n",
-					"Exception in PreupgradeVerifyDatabasePrivileges\n",
-					"Exception in PreupgradeVerifyDatabaseState\n",
 					"Exception in PreupgradeVerifyProperties"),
 				verifyException.getMessage());
 		}
