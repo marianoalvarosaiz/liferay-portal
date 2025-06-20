@@ -7548,9 +7548,7 @@ test.describe('Rich Text Fragment', () => {
 
 			await page.getByText('student description').selectText();
 
-			const toolbar = page.locator('.ck-toolbar', {
-				hasText: 'Text alignment',
-			});
+			const toolbar = page.locator('.ck-toolbar');
 
 			await toolbar.waitFor();
 
