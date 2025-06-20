@@ -167,9 +167,6 @@ public class OpenSearchIndexRequestExecutor implements IndexRequestExecutor {
 			_openSearchConnectionManager);
 		_statsIndexRequestExecutor = new StatsIndexRequestExecutor(
 			_openSearchConnectionManager);
-		_updateIndexSettingsIndexRequestExecutor =
-			new UpdateIndexSettingsIndexRequestExecutor(
-				_openSearchConnectionManager);
 	}
 
 	private AnalyzeIndexRequestExecutor _analyzeIndexRequestExecutor;
@@ -205,6 +202,8 @@ public class OpenSearchIndexRequestExecutor implements IndexRequestExecutor {
 	private RefreshIndexRequestExecutor _refreshIndexRequestExecutor;
 
 	private StatsIndexRequestExecutor _statsIndexRequestExecutor;
+
+	@Reference
 	private UpdateIndexSettingsIndexRequestExecutor
 		_updateIndexSettingsIndexRequestExecutor;
 
