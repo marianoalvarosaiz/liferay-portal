@@ -74,7 +74,6 @@ public class AssetLibraryDTOConverter
 		return new AssetLibrary() {
 			{
 				setActions(dtoConverterContext::getActions);
-				setAssetLibraryKey(group::getGroupKey);
 				setDateCreated(depotEntry::getCreateDate);
 				setDateModified(
 					() -> GetterUtil.getObject(
@@ -112,7 +111,6 @@ public class AssetLibraryDTOConverter
 							_userGroupLocalService.getGroupUserGroupsCount(
 								group.getGroupId())));
 				setSettings(() -> _toSettings(group));
-				setSiteId(group::getGroupId);
 			}
 		};
 	}
