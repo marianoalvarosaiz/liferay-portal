@@ -2339,12 +2339,14 @@ public class ObjectEntryLocalServiceTest {
 				_listTypeDefinition.getListTypeDefinitionId(),
 				listTypeEntryKey);
 
+			Assert.assertNotNull(listTypeEntry);
 			Assert.assertEquals(
 				WorkflowConstants.STATUS_INCOMPLETE, listTypeEntry.getStatus());
 
-			Assert.assertNull(
-				_listTypeEntryLocalService.fetchListTypeEntry(
-					_listTypeDefinition.getListTypeDefinitionId(), ""));
+			listTypeEntry = _listTypeEntryLocalService.fetchListTypeEntry(
+				_listTypeDefinition.getListTypeDefinitionId(), "");
+
+			Assert.assertNull(listTypeEntry);
 		}
 	}
 

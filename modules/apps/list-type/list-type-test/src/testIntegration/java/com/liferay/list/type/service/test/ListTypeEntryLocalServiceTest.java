@@ -356,7 +356,6 @@ public class ListTypeEntryLocalServiceTest {
 
 		Assert.assertEquals(key, listTypeEntry.getKey());
 		Assert.assertEquals(key, listTypeEntry.getName(LocaleUtil.US));
-
 		Assert.assertEquals(
 			WorkflowConstants.STATUS_INCOMPLETE, listTypeEntry.getStatus());
 	}
