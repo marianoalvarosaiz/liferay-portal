@@ -44,21 +44,25 @@ export function AddSpaceMembers({
 	);
 
 	useEffect(() => {
-		const fetchMembers = async () => {
-			const [spaceUsers, spaceUserGroups] = await Promise.all([
-				SpaceService.getSpaceUsers({
-					spaceId: assetLibraryId,
-				}),
-				SpaceService.getSpaceUserGroups({
-					spaceId: assetLibraryId,
-				}),
-			]);
-
+		const fetchSpaceUsers = async () => {
+			const spaceUsers = await SpaceService.getSpaceUsers({
+				spaceId: assetLibraryId,
+			});
 			setSelectedUsers(spaceUsers);
+		};
+
+		fetchSpaceUsers();
+	}, [assetLibraryId]);
+
+	useEffect(() => {
+		const fetchSpaceUserGroups = async () => {
+			const spaceUserGroups = await SpaceService.getSpaceUserGroups({
+				spaceId: assetLibraryId,
+			});
 			setSelectedUserGroups(spaceUserGroups);
 		};
 
-		fetchMembers();
+		fetchSpaceUserGroups();
 	}, [assetLibraryId]);
 
 	const onAutocompleteItemSelected = async (
