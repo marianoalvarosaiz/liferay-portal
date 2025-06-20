@@ -2751,7 +2751,9 @@ public class ObjectEntryLocalServiceTest {
 					objectValidationRuleResults.size() - 1));
 		}
 
-		_objectValidationRuleLocalService.deleteObjectValidationRule(
+		objectValidationRule5.setActive(false);
+
+		_objectValidationRuleLocalService.updateObjectValidationRule(
 			objectValidationRule5);
 
 		// Must be over 18 years old
