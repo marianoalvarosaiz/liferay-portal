@@ -40,6 +40,10 @@ public class RefreshIndexRequestExecutorTest extends BaseOpenSearchTestCase {
 			new RefreshIndexRequestExecutorImpl();
 
 		ReflectionTestUtil.setFieldValue(
+			refreshIndexRequestExecutorImpl,
+			"_indexRequestShardFailureTranslator",
+			new IndexRequestShardFailureTranslatorImpl());
+		ReflectionTestUtil.setFieldValue(
 			refreshIndexRequestExecutorImpl, "_openSearchConnectionManager",
 			openSearchConnectionManager);
 
