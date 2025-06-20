@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {sub} from 'frontend-js-web';
-
 type ValidationFunction = (value: any) => string | undefined;
 type ValidationSchema = Record<string, ValidationFunction[]>;
 
@@ -15,18 +13,18 @@ const alphanumeric: ValidationFunction = (value) =>
 				'please-enter-only-alphanumeric-characters-dashes-or-underscores'
 			);
 
-const invalidCharacters = (chars: string[]): ValidationFunction => (value) => {
-	if (value && chars.some(char => value.includes(char))) {
-		return sub(
-			Liferay.Language.get('name-cannot-contain-the-following-invalid-characters-x'),
-			chars.join(', ')
+const invalidCharacter = (char: string): ValidationFunction => (value) => {
+	if (value && value.includes(char)) {
+		return Liferay.Util.sub(
+			Liferay.Language.get('name-cannot-contain-the-following-invalid-character-x'),
+			char
 		);
 	}
 };
 
 const maxLength = (max: number): ValidationFunction => (value) => {
 	if (value && value.length > max) {
-		return sub(
+		return Liferay.Util.sub(
 			Liferay.Language.get('please-enter-no-more-than-x-characters'),
 			max
 		);
@@ -74,7 +72,7 @@ const validate = (
 
 export {
 	alphanumeric,
-	invalidCharacters,
+	invalidCharacter,
 	maxLength,
 	notNull,
 	nonNumeric,
