@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.AnalyzeIndexRequestExecutorTest;
 import com.liferay.portal.search.engine.adapter.snapshot.DeleteSnapshotRequest;
@@ -43,12 +44,16 @@ public class DeleteSnapshotRequestExecutorImplTest {
 		DeleteSnapshotRequest deleteSnapshotRequest = new DeleteSnapshotRequest(
 			"repository", "snapshot");
 
-		DeleteSnapshotRequestExecutor deleteSnapshotRequestExecutor =
-			new DeleteSnapshotRequestExecutor(_elasticsearchFixture);
+		DeleteSnapshotRequestExecutorImpl deleteSnapshotRequestExecutorImpl =
+			new DeleteSnapshotRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			deleteSnapshotRequestExecutorImpl, "_elasticsearchClientResolver",
+			_elasticsearchFixture);
 
 		org.elasticsearch.action.admin.cluster.snapshots.delete.
 			DeleteSnapshotRequest elasticDeleteSnapshotRequest =
-				deleteSnapshotRequestExecutor.createDeleteSnapshotRequest(
+				deleteSnapshotRequestExecutorImpl.createDeleteSnapshotRequest(
 					deleteSnapshotRequest);
 
 		Assert.assertEquals(
