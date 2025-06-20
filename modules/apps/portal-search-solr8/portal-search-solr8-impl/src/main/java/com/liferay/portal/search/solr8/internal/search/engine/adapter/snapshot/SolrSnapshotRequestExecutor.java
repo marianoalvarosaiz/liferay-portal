@@ -92,7 +92,7 @@ public class SolrSnapshotRequestExecutor implements SnapshotRequestExecutor {
 	@Reference
 	private GetSnapshotsRequestExecutor _getSnapshotsRequestExecutor;
 
-	private final RestoreSnapshotRequestExecutor
-		_restoreSnapshotRequestExecutor = new RestoreSnapshotRequestExecutor();
+	@Reference
+	private RestoreSnapshotRequestExecutor _restoreSnapshotRequestExecutor;
 
 }
