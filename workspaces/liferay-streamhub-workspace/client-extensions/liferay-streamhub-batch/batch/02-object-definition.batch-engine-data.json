@@ -28,10 +28,10 @@
 				{
 					"active": true,
 					"errorMessage": {
-						"en_US": "Unable to configure event stream."
+						"en_US": "Error while configuring event stream."
 					},
 					"label": {
-						"en_US": "Configure Event Stream"
+						"en_US": "Configure event stream."
 					},
 					"name": "ConfigureEventStream",
 					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
@@ -49,9 +49,9 @@
 					"active": true,
 					"description": "",
 					"label": {
-						"en_US": "Configure Event Stream on Add"
+						"en_US": "Configure event stream on create"
 					},
-					"name": "ConfigureEventStreamOnAdd",
+					"name": "ConfigureEventStreamOnCreate",
 					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
 					"objectActionTriggerKey": "onAfterAdd",
 					"parameters": {
@@ -66,7 +66,7 @@
 				{
 					"active": true,
 					"label": {
-						"en_US": "Configure Event Stream on Update"
+						"en_US": "Configure event stream on update."
 					},
 					"name": "ConfigureEventStreamOnUpdate",
 					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
@@ -84,7 +84,7 @@
 					"active": true,
 					"description": "",
 					"label": {
-						"en_US": "Unconfigure Event Stream"
+						"en_US": "Unconfigure event stream."
 					},
 					"name": "UnconfigureEventStream",
 					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-6",
