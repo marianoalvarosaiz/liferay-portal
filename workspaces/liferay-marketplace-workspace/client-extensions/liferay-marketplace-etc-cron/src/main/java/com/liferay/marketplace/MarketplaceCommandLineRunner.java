@@ -258,20 +258,23 @@ public class MarketplaceCommandLineRunner
 	}
 
 	private void _processMarketplaceProjects() throws Exception {
+		ZonedDateTime zonedDateTime = LocalDate.of(
+			2025, 1, 1
+		).atStartOfDay(
+			ZoneOffset.UTC
+		);
+
 		Map<String, UserAccount> customerUserAccounts = new HashMap<>();
-		String filterString = StringBundler.concat(
-			"createDate gt ",
-			LocalDate.of(
-				2025, 1, 1
-			).atStartOfDay(
-				ZoneOffset.UTC
-			),
-			"and (not contains(creatorEmailAddress, '@liferay.com')) and ",
-			"orderTypeExternalReferenceCode ne 'SOLUTIONS7'");
+
 		Collection<UserAccount> userAccounts = _getCustomerUserAccounts();
 
+		String filter = StringBundler.concat(
+			"createDate gt ", zonedDateTime,
+			"and (not contains(creatorEmailAddress, '@liferay.com')) and ",
+			"orderTypeExternalReferenceCode ne 'SOLUTIONS7'");
+
 		for (int i = 1;; i++) {
-			Page<Order> page = _getOrdersPage(filterString, i, 200);
+			Page<Order> page = _getOrdersPage(filter, i, 200);
 
 			for (Order order : page.getItems()) {
 				String creatorEmailAddress = order.getCreatorEmailAddress();
@@ -330,10 +333,7 @@ public class MarketplaceCommandLineRunner
 								0
 							)));
 
-					UserAccountResource userAccountResource =
-						_getUserAccountResource();
-
-					userAccountResource.patchUserAccount(
+					_getUserAccountResource().patchUserAccount(
 						userAccount.getId(), userAccount);
 				}
 
