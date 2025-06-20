@@ -66,19 +66,20 @@ async function handleRequest<T>(
 			};
 		}
 
-		if (response.status === 204) {
+		try {
+			const data: T = await response.json();
+
 			return {
-				data: {} as T,
+				data,
 				error: null,
 			};
 		}
-
-		const data: T = await response.json();
-
-		return {
-			data,
-			error: null,
-		};
+		catch (error) {
+			return {
+				data: null as T,
+				error: null,
+			};
+		}
 	}
 	catch (error) {
 		return {
