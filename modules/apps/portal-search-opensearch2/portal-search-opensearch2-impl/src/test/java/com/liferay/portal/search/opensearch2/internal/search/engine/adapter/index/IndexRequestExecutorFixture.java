@@ -30,7 +30,7 @@ public class IndexRequestExecutorFixture {
 			new AnalyzeIndexRequestExecutor(_openSearchConnectionManager));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_closeIndexRequestExecutor",
-			new CloseIndexRequestExecutor(_openSearchConnectionManager));
+			_createCloseIndexRequestExecutor(_openSearchConnectionManager));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_createIndexRequestExecutor",
 			_createCreateIndexRequestExecutor(
@@ -75,6 +75,19 @@ public class IndexRequestExecutorFixture {
 		OpenSearchConnectionManager openSearchConnectionManager) {
 
 		_openSearchConnectionManager = openSearchConnectionManager;
+	}
+
+	private CloseIndexRequestExecutor _createCloseIndexRequestExecutor(
+		OpenSearchConnectionManager openSearchConnectionManager) {
+
+		CloseIndexRequestExecutor closeIndexRequestExecutor =
+			new CloseIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			closeIndexRequestExecutor, "_openSearchConnectionManager",
+			openSearchConnectionManager);
+
+		return closeIndexRequestExecutor;
 	}
 
 	private CreateIndexRequestExecutor _createCreateIndexRequestExecutor(

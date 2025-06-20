@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
@@ -53,12 +54,16 @@ public class CloseIndexRequestExecutorTest {
 
 		closeIndexRequest.setTimeout(100);
 
-		CloseIndexRequestExecutor closeIndexRequestExecutor =
-			new CloseIndexRequestExecutor(_elasticsearchFixture);
+		CloseIndexRequestExecutorImpl closeIndexRequestExecutorImpl =
+			new CloseIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			closeIndexRequestExecutorImpl, "_elasticsearchClientResolver",
+			_elasticsearchFixture);
 
 		org.elasticsearch.client.indices.CloseIndexRequest
 			elasticsearchCloseIndexRequest =
-				closeIndexRequestExecutor.createCloseIndexRequest(
+				closeIndexRequestExecutorImpl.createCloseIndexRequest(
 					closeIndexRequest);
 
 		Assert.assertArrayEquals(
