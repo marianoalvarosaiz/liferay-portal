@@ -28,6 +28,8 @@ DeserializeUtil.prototype = {
 
 		const elements = [];
 
+		const transitionsNames = [];
+
 		const nodesNames = [];
 
 		instance.definition.forEachField((_, fieldData) => {
@@ -142,8 +144,6 @@ DeserializeUtil.prototype = {
 					let hasDefaultEdge = transitions?.find(
 						(transition) => transition?.default === 'true'
 					);
-
-					const transitionsNames = [];
 
 					transitions.forEach((transition) => {
 						let label = {};
