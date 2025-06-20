@@ -15,8 +15,6 @@ import com.liferay.blogs.test.util.BlogsTestUtil;
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
 import com.liferay.data.engine.rest.resource.v2_0.DataDefinitionResource;
 import com.liferay.data.engine.rest.test.util.DataDefinitionTestUtil;
-import com.liferay.depot.model.DepotEntry;
-import com.liferay.depot.service.DepotEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
@@ -161,7 +159,7 @@ public class StructuredContentResourceTest
 		_ddmTemplate = _addDDMTemplate(_ddmStructure);
 
 		_depotDDMStructure = _addDDMStructure(
-			testDepotEntryGroup, "test-ddm-structure.json");
+			testDepotEntry.getGroup(), "test-ddm-structure.json");
 
 		DLFolder dlFolder = DLTestUtil.addDLFolder(testGroup.getGroupId());
 
@@ -173,9 +171,6 @@ public class StructuredContentResourceTest
 
 		_irrelevantDDMStructure = _addDDMStructure(
 			irrelevantGroup, "test-ddm-structure.json");
-
-		_irrelevantDepotDDMStructure = _addDDMStructure(
-			irrelevantDepotEntryGroup, "test-ddm-structure.json");
 
 		_addDDMTemplate(_irrelevantDDMStructure);
 
@@ -849,16 +844,8 @@ public class StructuredContentResourceTest
 				Long assetLibraryId, StructuredContent structuredContent)
 		throws Exception {
 
-		DepotEntry depotEntry = DepotEntryLocalServiceUtil.getDepotEntry(
-			assetLibraryId);
-
-		List<DDMStructure> ddmStructures =
-			DDMStructureLocalServiceUtil.getStructures(depotEntry.getGroupId());
-
 		structuredContent.setContentStructureId(
-			ddmStructures.get(
-				0
-			).getStructureId());
+			_depotDDMStructure.getStructureId());
 
 		return structuredContentResource.postAssetLibraryStructuredContent(
 			assetLibraryId, structuredContent);
@@ -2848,7 +2835,6 @@ public class StructuredContentResourceTest
 	private ExpandoTable _expandoTable;
 
 	private DDMStructure _irrelevantDDMStructure;
-	private DDMStructure _irrelevantDepotDDMStructure;
 	private JournalFolder _irrelevantJournalFolder;
 
 	@Inject

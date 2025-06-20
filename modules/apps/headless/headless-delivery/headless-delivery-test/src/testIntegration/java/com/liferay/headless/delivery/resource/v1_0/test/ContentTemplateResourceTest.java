@@ -6,8 +6,6 @@
 package com.liferay.headless.delivery.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.depot.model.DepotEntry;
-import com.liferay.depot.service.DepotEntryLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.constants.DDMStructureConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.io.DDMFormDeserializer;
@@ -101,10 +99,7 @@ public class ContentTemplateResourceTest
 				Long assetLibraryId, ContentTemplate contentTemplate)
 		throws Exception {
 
-		DepotEntry depotEntry = DepotEntryLocalServiceUtil.getDepotEntry(
-			assetLibraryId);
-
-		return _getContentTemplate(depotEntry.getGroup());
+		return _getContentTemplate(testDepotEntry.getGroup());
 	}
 
 	@Override

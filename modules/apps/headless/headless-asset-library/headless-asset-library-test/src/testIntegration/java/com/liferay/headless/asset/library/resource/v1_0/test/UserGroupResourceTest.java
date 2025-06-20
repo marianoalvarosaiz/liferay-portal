@@ -145,7 +145,7 @@ public class UserGroupResourceTest extends BaseUserGroupResourceTestCase {
 		throws Exception {
 
 		return userGroupResource.putAssetLibraryUserGroup(
-			assetLibraryId, userGroup.getId());
+			testDepotEntry.getGroupId(), userGroup.getId());
 	}
 
 	@Override
