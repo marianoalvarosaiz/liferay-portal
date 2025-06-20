@@ -1074,14 +1074,18 @@ public class ResourceOpenAPIParser {
 					operationIdSegments.size() - 1);
 
 				if (pathName.endsWith("ExternalReferenceCode")) {
-					if (!(Objects.equals(
-							previousMethodNameSegment, "AssetLibrary") ||
-						  Objects.equals(previousMethodNameSegment, "Site") ||
+					String externalReferenceCodeSubjectName =
+						StringUtil.upperCaseFirstLetter(
+							CamelCaseUtil.toCamelCase(
+								pathSegment.replaceAll(
+									"\\{|-?ExternalReferenceCode}", "")));
+
+					if (!(previousMethodNameSegment.endsWith(
+							externalReferenceCodeSubjectName) ||
 						  previousMethodNameSegment.endsWith(pathName) ||
-						  StringUtil.equalsIgnoreCase(
-							  previousMethodNameSegment,
-							  pathName.replaceFirst(
-								  "ExternalReferenceCode$", "")))) {
+						  Objects.equals(
+							  previousMethodNameSegment, "AssetLibrary") ||
+						  Objects.equals(previousMethodNameSegment, "Site"))) {
 
 						operationIdSegments.add(pathName);
 					}
