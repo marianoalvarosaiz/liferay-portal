@@ -112,6 +112,7 @@ public abstract class BaseERCScopedTestEntityResourceTestCase {
 				}
 			});
 		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
+
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -1520,7 +1521,6 @@ public abstract class BaseERCScopedTestEntityResourceTestCase {
 		randomIrrelevantERCScopedTestEntity.
 			setAssetLibraryExternalReferenceCode(
 				irrelevantDepotEntryGroup.getExternalReferenceCode());
-
 		randomIrrelevantERCScopedTestEntity.setSiteExternalReferenceCode(
 			irrelevantGroup.getExternalReferenceCode());
 
