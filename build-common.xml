@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 
+
 <project name="build-common" xmlns:antelope="antlib:ise.antelope.tasks" xmlns:artifact="antlib:org.apache.maven.artifact.ant" xmlns:if="ant:if" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:jacoco="antlib:org.jacoco.ant" xmlns:sonar="antlib:org.sonar.ant" xmlns:unless="ant:unless">
 	<dirname file="${ant.file.build-common}" property="project.dir.native" />
 
