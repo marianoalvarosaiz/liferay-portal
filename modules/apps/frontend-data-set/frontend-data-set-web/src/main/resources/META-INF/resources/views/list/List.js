@@ -86,14 +86,15 @@ const ListItem = ({item, schema}) => {
 	return (
 		<ClayList.Item
 			className={classNames({
-				active: selectedItemsValue.includes(item[selectedItemsKey]),
+				selectable,
+				selected: selectedItemsValue.includes(item[selectedItemsKey]),
 			})}
 			flex
 			onClick={() => {
 				if (selectable) {
 					selectItems(item[selectedItemsKey]);
 
-					onSelect?.({selectedItems: [item]});
+					onSelect({selectedItems: [item]});
 				}
 			}}
 		>
