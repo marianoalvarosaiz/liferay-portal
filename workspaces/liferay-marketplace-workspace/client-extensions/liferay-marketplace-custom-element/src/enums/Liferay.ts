@@ -32,3 +32,4 @@ export const LiferayVersionList = [
 	LiferayVersions.VERSION_2025Q1,
 	LiferayVersions.VERSION_2025Q2,
 ];
+
