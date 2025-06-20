@@ -23,7 +23,7 @@
 				"en_US": "T4L9 Stream Hub Configuration"
 			},
 			"modifiable": true,
-			"name": "T4l9configuration",
+			"name": "t4l9configurations",
 			"objectActions": [
 				{
 					"active": true,
@@ -167,7 +167,7 @@
 				"en_US": "T4L9 Configurations"
 			},
 			"portlet": false,
-			"restContextPath": "/o/c/t4l9configuration",
+			"restContextPath": "/o/c/t4l9configurations",
 			"scope": "company",
 			"status": {
 				"code": 0,
