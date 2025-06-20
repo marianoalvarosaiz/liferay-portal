@@ -157,8 +157,6 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 			_elasticsearchClientResolver);
 		_getMappingIndexRequestExecutor = new GetMappingIndexRequestExecutor(
 			_elasticsearchClientResolver);
-		_openIndexRequestExecutor = new OpenIndexRequestExecutor(
-			_elasticsearchClientResolver);
 		_statsIndexRequestExecutor = new StatsIndexRequestExecutor(
 			_elasticsearchClientResolver, _jsonFactory);
 	}
@@ -196,6 +194,7 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 	@Reference
 	private JSONFactory _jsonFactory;
 
+	@Reference
 	private OpenIndexRequestExecutor _openIndexRequestExecutor;
 
 	@Reference
