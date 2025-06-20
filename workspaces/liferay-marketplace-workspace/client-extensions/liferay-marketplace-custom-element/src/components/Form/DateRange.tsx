@@ -23,7 +23,7 @@ const DateRange: React.FC<DateRangeProps> = ({label, onChange, value}) => {
 				placeholder="YYYY-MM-DD - YYYY-MM-DD"
 				range
 				value={currentDate}
-				years={{end: new Date().getFullYear(), start: 2020}}
+				years={{start: 2020, end: new Date().getFullYear()}}
 			/>
 		</div>
 	);
