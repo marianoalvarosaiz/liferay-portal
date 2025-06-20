@@ -26,7 +26,7 @@ public class ExportImportReportEntryLocalServiceImpl
 	extends ExportImportReportEntryLocalServiceBaseImpl {
 
 	@Override
-	public ExportImportReportEntry addErrorExportImportReportEntry(
+	public ExportImportReportEntry addExportImportReportEntryErrorType(
 		long groupId, long companyId, String classExternalReferenceCode,
 		long classNameId, long exportImportConfigurationId, String error,
 		String errorStacktrace) {
@@ -52,7 +52,7 @@ public class ExportImportReportEntryLocalServiceImpl
 	}
 
 	@Override
-	public ExportImportReportEntry addIncompleteExportImportReportEntry(
+	public ExportImportReportEntry addExportImportReportEntryIncompleteType(
 		long groupId, long companyId, String classExternalReferenceCode,
 		long classNameId, long exportImportConfigurationId) {
 
