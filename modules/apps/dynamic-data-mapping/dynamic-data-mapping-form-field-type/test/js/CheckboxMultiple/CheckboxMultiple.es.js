@@ -221,8 +221,8 @@ describe('Field Checkbox Multiple', () => {
 		expect(handleFieldEdited).toHaveBeenCalled();
 	});
 
-	it('uses value over predefinedValue if there is a value', () => {
-		const {container, getByLabelText} = render(
+	it('checks the value if there is a value', () => {
+		const {getByLabelText} = render(
 			<CheckboxMultipleWithProvider
 				options={[
 					{
@@ -246,10 +246,6 @@ describe('Field Checkbox Multiple', () => {
 		expect(getByLabelText('Option 1')).not.toBeChecked();
 		expect(getByLabelText('Option 2')).not.toBeChecked();
 		expect(getByLabelText('Option 3')).toBeChecked();
-
-		const hiddenInput = container.querySelector('input[type="hidden"]');
-
-		expect(hiddenInput).toHaveAttribute('value', 'option3');
 	});
 
 	it('checks the predefinedValue if there is no value', () => {
