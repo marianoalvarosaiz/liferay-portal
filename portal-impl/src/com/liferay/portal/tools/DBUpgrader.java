@@ -331,7 +331,7 @@ public class DBUpgrader {
 			catch (VerifyException verifyException) {
 				StartupHelperUtil.setUpgrading(false);
 
-				_log.error(verifyException.getMessage());
+				_log.error(verifyException);
 
 				System.exit(1);
 			}
