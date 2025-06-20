@@ -4,8 +4,9 @@
  */
 
 import {ClayPaginationBarWithBasicItems} from '@clayui/pagination-bar';
-import React, {
+import {
 	ComponentProps,
+	memo,
 	ReactNode,
 	useCallback,
 	useContext,
@@ -66,23 +67,24 @@ export type ListViewProps<T extends Record<string, any>> = {
 	initialContext?: ListViewContextProviderProps;
 
 	managementToolbarProps?: {
+		customFilterFields?: {[key: string]: string};
 		visible?: boolean;
 	} & Omit<
 		ManagementToolbarProps,
 		| 'actions'
-		| 'onSelectAllRows'
-		| 'rowSelectable'
 		| 'tableProps'
 		| 'totalItems'
+		| 'onSelectAllRows'
+		| 'rowSelectable'
 	>;
 
 	/**
 	 * The options for the pagination.
 	 *
-	 * @default {displayType: true}
+	 * @default {displayType: 'auto'}
 	 */
 	paginationOptions?: {
-		displayType: boolean;
+		displayType: 'always' | 'auto' | 'never';
 	};
 
 	resource: string;
@@ -95,15 +97,16 @@ export type ListViewProps<T extends Record<string, any>> = {
 
 const ListView = <T extends Record<string, any>>({
 	children,
-	defaultFilters,
 	emptyStateProps,
 	managementToolbarProps: {
+		customFilterFields,
 		visible: managementToolbarVisible = false,
 		...managementToolbarProps
 	} = {},
-	paginationOptions = {displayType: true},
+	paginationOptions = {displayType: 'auto'},
 	resource,
 	tableProps,
+	defaultFilters,
 }: ListViewProps<T>) => {
 	const [listViewContext, dispatch] = useContext(ListViewContext);
 	const updateUrlParams = useUpdateUrlParams();
@@ -201,10 +204,14 @@ const ListView = <T extends Record<string, any>>({
 	const getURLSearchParams = useCallback(
 		() => ({
 			...filter,
-			page: currentPage ? Number(currentPage) : listViewContext.page,
-			pageSize: currentPageSize
-				? Number(currentPageSize)
-				: listViewContext.pageSize,
+			page:
+				managementToolbarProps.applyFilters && currentPage
+					? Number(currentPage)
+					: listViewContext.page,
+			pageSize:
+				managementToolbarProps.applyFilters && currentPageSize
+					? Number(currentPageSize)
+					: listViewContext.pageSize,
 			search: keywords,
 			sort: buildSort(sort),
 		}),
@@ -214,6 +221,7 @@ const ListView = <T extends Record<string, any>>({
 			filter,
 			listViewContext.page,
 			listViewContext.pageSize,
+			managementToolbarProps.applyFilters,
 			keywords,
 			sort,
 		]
@@ -249,11 +257,38 @@ const ListView = <T extends Record<string, any>>({
 	);
 
 	useEffect(() => {
+		const shouldCurrentPageBeChanged =
+			!loading && lastPage > 1 && page === lastPage;
+
+		if (shouldCurrentPageBeChanged) {
+			dispatch({payload: page - 1, type: ListViewTypes.SET_PAGE});
+		}
+	}, [dispatch, lastPage, loading, page]);
+
+	useEffect(() => {
+		if (customFilterFields) {
+			dispatch({
+				payload: {customFilterFields},
+				type: ListViewTypes.SET_CUSTOM_FILTER_FIELDS,
+			});
+		}
+	}, [customFilterFields, dispatch]);
+
+	useEffect(() => {
 		dispatch({
 			payload: isRowSelectable,
 			type: ListViewTypes.SET_CHECKED_ALL_ROWS,
 		});
 	}, [dispatch, isRowSelectable]);
+
+	useEffect(() => {
+		if (managementToolbarProps.applyFilters) {
+			dispatch({
+				payload: true,
+				type: ListViewTypes.SET_APPLY_FILTERS,
+			});
+		}
+	}, [dispatch, managementToolbarProps.applyFilters]);
 
 	if (loading || (isValidating && searchParams.get('filter'))) {
 		return <Loading />;
@@ -271,12 +306,16 @@ const ListView = <T extends Record<string, any>>({
 				selectPerPageItems: i18n.translate('x-items'),
 			}}
 			onDeltaChange={(delta) => {
-				updateUrlParams({pageSize: delta});
+				if (managementToolbarProps.applyFilters) {
+					updateUrlParams({pageSize: delta});
+				}
 
 				dispatch({payload: delta, type: ListViewTypes.SET_PAGE_SIZE});
 			}}
 			onPageChange={(page) => {
-				updateUrlParams({page});
+				if (managementToolbarProps.applyFilters) {
+					updateUrlParams({page});
+				}
 
 				dispatch({payload: page, type: ListViewTypes.SET_PAGE});
 			}}
@@ -290,6 +329,7 @@ const ListView = <T extends Record<string, any>>({
 				<ManagementToolbar
 					{...managementToolbarProps}
 					actions={actions}
+					customFilterFields={customFilterFields}
 					totalItems={totalCount}
 				/>
 			)}
@@ -311,7 +351,7 @@ const ListView = <T extends Record<string, any>>({
 						sort={sort}
 					/>
 
-					{paginationOptions.displayType && Pagination}
+					{/* {paginationOptions.displayType === 'always' && Pagination} */}
 
 					{children &&
 						children(response!, {

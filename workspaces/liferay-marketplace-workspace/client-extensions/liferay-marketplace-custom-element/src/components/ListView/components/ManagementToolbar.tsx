@@ -24,6 +24,7 @@ export type ManagementToolbarProps = {
 	actions: any;
 	applyFilters?: boolean;
 	buttons?: ReactNode | ((actions: any) => ReactNode);
+	customFilterFields?: {[key: string]: string};
 	display?: {
 		columns?: boolean;
 	};
@@ -32,8 +33,8 @@ export type ManagementToolbarProps = {
 	 * Check out the file {src/schema/filter.ts}
 	 */
 	filterSchema?: FilterSchemaOption;
-	filtersVisible?: boolean;
-	searchVisible?: boolean;
+	hasFilters?: boolean;
+	hasSearch?: boolean;
 	title?: string;
 	totalItems: number;
 	visible?: boolean;
@@ -42,10 +43,11 @@ export type ManagementToolbarProps = {
 const ManagementToolbar: React.FC<ManagementToolbarProps> = ({
 	actionButton,
 	applyFilters = true,
+	customFilterFields,
 	filterSchema,
 	totalItems,
-	filtersVisible = false,
-	searchVisible = false,
+	hasFilters = false,
+	hasSearch = false,
 }) => {
 	const [{filters}] = useContext(ListViewContext);
 
@@ -53,16 +55,17 @@ const ManagementToolbar: React.FC<ManagementToolbarProps> = ({
 		<>
 			<ClayManagementToolbar>
 				<div className="w-100 d-flex justify-content-between">
-					{!!filtersVisible && (
+					{!!hasFilters && (
 						<ManagementToolbarFilter
 							applyFilters={applyFilters}
+							customFilterFields={customFilterFields}
 							filterSchema={
 								(filterSchemas as any)[filterSchema ?? '']
 							}
 						/>
 					)}
 
-					{!!searchVisible && (
+					{!!hasSearch && (
 						<div className="w-100 d-flex">
 							<ManagementToolbarSearch />
 							{actionButton &&
