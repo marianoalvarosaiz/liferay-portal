@@ -8,12 +8,20 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.index;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface GetFieldMappingIndexRequestExecutor {
+@Component(service = GetFieldMappingIndexRequestExecutor.class)
+public class GetFieldMappingIndexRequestExecutorImpl
+	implements GetFieldMappingIndexRequestExecutor {
 
+	@Override
 	public GetFieldMappingIndexResponse execute(
-		GetFieldMappingIndexRequest getFieldMappingIndexRequest);
+		GetFieldMappingIndexRequest getFieldMappingIndexRequest) {
+
+		throw new UnsupportedOperationException();
+	}
 
 }
