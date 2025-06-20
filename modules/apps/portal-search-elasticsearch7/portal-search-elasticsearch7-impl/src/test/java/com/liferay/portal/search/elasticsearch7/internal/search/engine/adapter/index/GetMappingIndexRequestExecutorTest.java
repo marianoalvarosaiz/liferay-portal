@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
@@ -44,11 +45,15 @@ public class GetMappingIndexRequestExecutorTest {
 			new GetMappingIndexRequest(
 				new String[] {_INDEX_NAME}, _MAPPING_NAME);
 
-		GetMappingIndexRequestExecutor getMappingIndexRequestExecutor =
-			new GetMappingIndexRequestExecutor(_elasticsearchFixture);
+		GetMappingIndexRequestExecutorImpl getMappingIndexRequestExecutorImpl =
+			new GetMappingIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getMappingIndexRequestExecutorImpl, "_elasticsearchClientResolver",
+			_elasticsearchFixture);
 
 		GetMappingsRequest getMappingsRequest =
-			getMappingIndexRequestExecutor.createGetMappingsRequest(
+			getMappingIndexRequestExecutorImpl.createGetMappingsRequest(
 				getMappingIndexRequest);
 
 		Assert.assertArrayEquals(
