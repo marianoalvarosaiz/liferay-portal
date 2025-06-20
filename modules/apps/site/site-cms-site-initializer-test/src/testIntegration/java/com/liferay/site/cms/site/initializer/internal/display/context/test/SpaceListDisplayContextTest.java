@@ -73,7 +73,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 @FeatureFlag("LPD-17564")
 @RunWith(Arquillian.class)
-public class SpaceStickerDisplayContextTest extends BaseDisplayContextTestCase {
+public class SpaceListDisplayContextTest extends BaseDisplayContextTestCase {
 
 	@ClassRule
 	@Rule
@@ -104,7 +104,7 @@ public class SpaceStickerDisplayContextTest extends BaseDisplayContextTestCase {
 		AssetLibrary assetLibrary = _addAssetLibraryWithLogo(name, logoColor);
 
 		Map<String, Object> props = ReflectionTestUtil.invoke(
-			_getSpaceStickerDisplayContext(
+			_getSpaceListDisplayContext(
 				getMockHttpServletRequest(),
 				_depotEntryLocalService.getDepotEntry(assetLibrary.getId())),
 			"getProps", new Class<?>[0]);
@@ -168,7 +168,7 @@ public class SpaceStickerDisplayContextTest extends BaseDisplayContextTestCase {
 			Collections.emptyList(), Arrays.asList(objectField));
 	}
 
-	private Object _getSpaceStickerDisplayContext(
+	private Object _getSpaceListDisplayContext(
 			HttpServletRequest httpServletRequest, DepotEntry depotEntry)
 		throws Exception {
 
@@ -223,13 +223,13 @@ public class SpaceStickerDisplayContextTest extends BaseDisplayContextTestCase {
 			defaultFragmentRendererContext, httpServletRequest,
 			new MockHttpServletResponse());
 
-		Object spaceStickerDisplayContext = httpServletRequest.getAttribute(
+		Object spaceListDisplayContext = httpServletRequest.getAttribute(
 			"com.liferay.site.cms.site.initializer.internal.display.context." +
-				"SpaceStickerDisplayContext");
+				"SpaceListDisplayContext");
 
-		Assert.assertNotNull(spaceStickerDisplayContext);
+		Assert.assertNotNull(spaceListDisplayContext);
 
-		return spaceStickerDisplayContext;
+		return spaceListDisplayContext;
 	}
 
 	private AssetLibraryResource _assetLibraryResource;
