@@ -1174,74 +1174,19 @@ public class FreeMarkerTool {
 	public boolean isParameterNameSchemaRelated(
 		String parameterName, String path, String schemaName) {
 
-		String schemaVarName = TextFormatter.format(
-			schemaName, TextFormatter.I);
-
-		if (StringUtil.equals(
-				parameterName, "assetLibraryExternalReferenceCode") ||
-			StringUtil.equals(parameterName, "assetLibraryId") ||
-			StringUtil.equals(parameterName, "siteExternalReferenceCode") ||
-			StringUtil.equals(parameterName, "siteId") ||
-			StringUtil.equals(
-				parameterName, schemaVarName + "externalReferenceCode") ||
-			StringUtil.equals(parameterName, schemaVarName + "Id")) {
-
-			return true;
-		}
-
 		String parameterNameSubpath = "/{" + parameterName + "}";
 
-		if (StringUtil.endsWith(path, parameterNameSubpath) &&
-			(StringUtil.equals(parameterName, "externalReferenceCode") ||
-			 StringUtil.equals(parameterName, "id"))) {
-
+		if (StringUtil.endsWith(path, parameterNameSubpath)) {
 			return true;
 		}
 
-		int parameterIndex = path.indexOf(parameterNameSubpath);
+		String prefixPath = path.substring(
+			0, path.indexOf(parameterNameSubpath));
 
-		if (parameterIndex == -1) {
-			return false;
-		}
-
-		String[] pathSegments = path.substring(
-			0, parameterIndex
-		).split(
-			"/"
-		);
-
-		String parameterSchemaName = null;
-
-		for (int i = pathSegments.length - 1; i >= 0; i--) {
-			String segment = pathSegments[i];
-
-			if (StringUtil.startsWith(segment, "by-") ||
-				(StringUtil.startsWith(segment, "{") &&
-				 StringUtil.endsWith(segment, "}"))) {
-
-				continue;
-			}
-
-			parameterSchemaName = segment;
-
-			break;
-		}
-
-		if (parameterSchemaName == null) {
-			return false;
-		}
-
-		String formattedParameterSchemaName = TextFormatter.format(
-			parameterSchemaName, TextFormatter.K);
-		String formattedSchemaNamePlural = TextFormatter.format(
-			TextFormatter.formatPlural(schemaName), TextFormatter.K);
-		String formattedSchemaNameSingular = TextFormatter.format(
-			schemaName, TextFormatter.K);
-
-		if (StringUtil.equals(
-				formattedParameterSchemaName, formattedSchemaNamePlural) ||
-			StringUtil.equals(
-				formattedParameterSchemaName, formattedSchemaNameSingular)) {
+		if (prefixPath.contains(
+				TextFormatter.format(schemaName, TextFormatter.I)) ||
+			prefixPath.contains(
+				TextFormatter.format(schemaName, TextFormatter.K))) {
 
 			return true;
 		}
