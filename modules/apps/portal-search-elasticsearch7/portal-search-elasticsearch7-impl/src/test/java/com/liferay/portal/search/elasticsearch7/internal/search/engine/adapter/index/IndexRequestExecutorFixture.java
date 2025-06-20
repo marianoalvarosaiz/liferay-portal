@@ -38,7 +38,7 @@ public class IndexRequestExecutorFixture {
 			new DeleteIndexRequestExecutor(_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_flushIndexRequestExecutor",
-			new FlushIndexRequestExecutor(_elasticsearchClientResolver));
+			_createFlushIndexRequestExecutor(_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_getFieldMappingIndexRequestExecutor",
 			_createGetFieldMappingIndexRequestExecutor(
@@ -99,6 +99,19 @@ public class IndexRequestExecutorFixture {
 			elasticsearchClientResolver);
 
 		return createIndexRequestExecutor;
+	}
+
+	private FlushIndexRequestExecutor _createFlushIndexRequestExecutor(
+		ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		FlushIndexRequestExecutor flushIndexRequestExecutor =
+			new FlushIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			flushIndexRequestExecutor, "_elasticsearchClientResolver",
+			elasticsearchClientResolver);
+
+		return flushIndexRequestExecutor;
 	}
 
 	private GetFieldMappingIndexRequestExecutor
