@@ -6,7 +6,6 @@
 package com.liferay.data.engine.field.type.util;
 
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
-import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -95,76 +94,78 @@ public class LocalizedValueUtilTest {
 	}
 
 	@Test
-	public void testToLocalizedValuesMapWithLocaleStringMap() throws Exception {
-		_testToLocalizedValuesMapWithLocaleStringMap(
-			Collections.emptyMap(),
-			localizedValuesMap -> {
-				Assert.assertNull(localizedValuesMap.getDefaultValue());
-				Assert.assertNull(localizedValuesMap.get(LocaleUtil.US));
-			});
+	public void testToLocalizedValuesMapWithLocaleStringMap() {
+		LocalizedValuesMap localizedValuesMap =
+			LocalizedValueUtil.toLocalizedValuesMap((Map<Locale, String>)null);
 
-		_testToLocalizedValuesMapWithLocaleStringMap(
+		Assert.assertNull(localizedValuesMap.getDefaultValue());
+		Assert.assertNull(localizedValuesMap.get(LocaleUtil.US));
+
+		localizedValuesMap = LocalizedValueUtil.toLocalizedValuesMap(
 			HashMapBuilder.put(
 				LocaleUtil.BRAZIL, "pt_BR"
 			).put(
 				LocaleUtil.US, "en_US"
-			).build(),
-			localizedValuesMap -> {
-				Assert.assertEquals(
-					"en_US", localizedValuesMap.get(LocaleUtil.US));
-				Assert.assertEquals(
-					"pt_BR", localizedValuesMap.get(LocaleUtil.BRAZIL));
-			});
+			).build());
+
+		Assert.assertEquals("en_US", localizedValuesMap.get(LocaleUtil.US));
+		Assert.assertEquals("pt_BR", localizedValuesMap.get(LocaleUtil.BRAZIL));
 	}
 
 	@Test
-	public void testToLocalizedValuesMapWithLocalizedValue() throws Exception {
-		_testToLocalizedValuesMapWithLocalizedValue(
+	public void testToLocalizedValuesMapWithLocalizedValue() {
+		Assert.assertEquals(
+			Collections.emptyMap(),
+			LocalizedValueUtil.toLocalizedValuesMap((LocalizedValue)null));
+
+		Map<String, Object> map = LocalizedValueUtil.toLocalizedValuesMap(
 			new LocalizedValue() {
 				{
 					addString(LocaleUtil.US, "[\"eng\"]");
 					addString(LocaleUtil.BRAZIL, "[\"por\"]");
 				}
-			},
-			map -> JSONAssert.assertEquals(
-				JSONUtil.put(
-					"eng"
-				).toString(),
-				String.valueOf(map.get("en_US")), false));
+			});
 
-		_testToLocalizedValuesMapWithLocalizedValue(
+		JSONAssert.assertEquals(
+			JSONUtil.put(
+				"eng"
+			).toString(),
+			String.valueOf(map.get("en_US")), false);
+
+		Map<String, Object> map = LocalizedValueUtil.toLocalizedValuesMap(
 			new LocalizedValue() {
 				{
 					addString(LocaleUtil.US, "en_US");
 					addString(LocaleUtil.BRAZIL, "pt_BR");
 				}
-			},
-			map -> Assert.assertEquals("en_US", map.get("en_US")));
+			});
 
-		_testToLocalizedValuesMapWithLocalizedValue(
+		Assert.assertEquals("en_US", map.get("en_US"));
+
+		Map<String, Object> map = LocalizedValueUtil.toLocalizedValuesMap(
 			new LocalizedValue() {
 				{
 					addString(LocaleUtil.US, "true");
 					addString(LocaleUtil.BRAZIL, "false");
 				}
-			},
-			map -> {
-				Assert.assertEquals("true", map.get("en_US"));
-				Assert.assertEquals("false", map.get("pt_BR"));
 			});
 
-		_testToLocalizedValuesMapWithLocalizedValue(
+		Assert.assertEquals("true", map.get("en_US"));
+		Assert.assertEquals("false", map.get("pt_BR"));
+
+		Map<String, Object> map = LocalizedValueUtil.toLocalizedValuesMap(
 			new LocalizedValue() {
 				{
 					addString(LocaleUtil.US, "{\"language\": \"eng\"}");
 					addString(LocaleUtil.BRAZIL, "{\"language\": \"por\"}");
 				}
-			},
-			map -> JSONAssert.assertEquals(
-				JSONUtil.put(
-					"language", "eng"
-				).toString(),
-				String.valueOf(map.get("en_US")), false));
+			});
+
+		JSONAssert.assertEquals(
+			JSONUtil.put(
+				"language", "eng"
+			).toString(),
+			String.valueOf(map.get("en_US")), false);
 	}
 
 	@Test
@@ -225,28 +226,6 @@ public class LocalizedValueUtilTest {
 		);
 
 		languageUtil.setLanguage(language);
-	}
-
-	private void _testToLocalizedValuesMapWithLocaleStringMap(
-			Map<Locale, String> map,
-			UnsafeConsumer<LocalizedValuesMap, Exception> unsafeConsumer)
-		throws Exception {
-
-		LocalizedValuesMap localizedValuesMap =
-			LocalizedValueUtil.toLocalizedValuesMap(map);
-
-		unsafeConsumer.accept(localizedValuesMap);
-	}
-
-	private void _testToLocalizedValuesMapWithLocalizedValue(
-			LocalizedValue localizedValue,
-			UnsafeConsumer<Map<String, Object>, Exception> unsafeConsumer)
-		throws Exception {
-
-		Map<String, Object> map = LocalizedValueUtil.toLocalizedValuesMap(
-			localizedValue);
-
-		unsafeConsumer.accept(map);
 	}
 
 }
