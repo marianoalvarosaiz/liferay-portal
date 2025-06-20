@@ -118,15 +118,16 @@ describe('Field Checkbox Multiple', () => {
 	it('is not required', () => {
 		const {container} = render(
 			<CheckboxMultipleWithProvider
-				label="CheckboxMultipleLabel"
 				required={false}
 				spritemap={spritemap}
 			/>
 		);
 
-		expect(
-			container.querySelector('.lexicon-icon.lexicon-icon-asterisk')
-		).not.toBeInTheDocument();
+		act(() => {
+			jest.runAllTimers();
+		});
+
+		expect(container).toMatchSnapshot();
 	});
 
 	it('is shown as a switcher', () => {
