@@ -74,7 +74,7 @@ public interface ObjectEntryFolderLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public ObjectEntryFolder addObjectEntryFolder(
-			String externalReferenceCode, long groupId, long userId,
+			String externalReferenceCode, long userId, long groupId,
 			long parentObjectEntryFolderId, String description,
 			Map<Locale, String> labelMap, String name,
 			ServiceContext serviceContext)
