@@ -25,7 +25,7 @@ public class SnapshotRequestExecutorFixture {
 					_createCreateSnapshotRepositoryRequestExecutor(
 						_openSearchConnectionManager);
 				createSnapshotRequestExecutor =
-					new CreateSnapshotRequestExecutor(
+					_createCreateSnapshotRequestExecutor(
 						_openSearchConnectionManager);
 				deleteSnapshotRequestExecutor =
 					_createDeleteSnapshotRequestExecutor(
@@ -62,6 +62,19 @@ public class SnapshotRequestExecutorFixture {
 			"_openSearchConnectionManager", openSearchConnectionManager);
 
 		return createSnapshotRepositoryRequestExecutor;
+	}
+
+	private CreateSnapshotRequestExecutor _createCreateSnapshotRequestExecutor(
+		OpenSearchConnectionManager openSearchConnectionManager) {
+
+		CreateSnapshotRequestExecutor createSnapshotRequestExecutor =
+			new CreateSnapshotRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			createSnapshotRequestExecutor, "_openSearchConnectionManager",
+			openSearchConnectionManager);
+
+		return createSnapshotRequestExecutor;
 	}
 
 	private DeleteSnapshotRequestExecutor _createDeleteSnapshotRequestExecutor(
