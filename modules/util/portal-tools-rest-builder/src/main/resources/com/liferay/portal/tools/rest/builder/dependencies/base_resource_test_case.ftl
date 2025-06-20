@@ -3214,14 +3214,14 @@ public abstract class Base${schemaName}ResourceTestCase {
 				}
 			</#if>
 
-			<#if relatedSchemaProperties?keys?seq_contains("externalReferenceCode")>
-				if (${relatedSchemaVarName}.getExternalReferenceCode() == null) {
+			<#if relatedSchemaProperties?keys?seq_contains("id")>
+				if (${relatedSchemaVarName}.getId() == null) {
 					valid = false;
 				}
 			</#if>
 
-			<#if relatedSchemaProperties?keys?seq_contains("id")>
-				if (${relatedSchemaVarName}.getId() == null) {
+			<#if relatedSchemaProperties?keys?seq_contains("externalReferenceCode")>
+				if (${relatedSchemaVarName}.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 			</#if>
