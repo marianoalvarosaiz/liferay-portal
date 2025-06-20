@@ -530,11 +530,6 @@ public abstract class BaseSearchResultResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 

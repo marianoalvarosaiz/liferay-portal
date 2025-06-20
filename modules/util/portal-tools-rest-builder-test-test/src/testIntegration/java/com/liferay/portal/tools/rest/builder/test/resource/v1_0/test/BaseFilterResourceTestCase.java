@@ -207,11 +207,6 @@ public abstract class BaseFilterResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(Filter filter, List<Filter> filters) {
 		boolean contains = false;
 

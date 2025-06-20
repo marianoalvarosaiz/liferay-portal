@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.headless.commerce.admin.inventory.client.dto.v1_0.WarehouseOrderType;
 import com.liferay.headless.commerce.admin.inventory.client.http.HttpInvoker;
@@ -280,7 +279,7 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 			testDeleteWarehouseOrderTypeBatch_addWarehouseOrderType();
 
 		testDeleteWarehouseOrderTypeBatch_deleteWarehouseOrderType(
-			202, null, warehouseOrderType1.getWarehouseOrderTypeId());
+			"COMPLETED", null, warehouseOrderType1.getWarehouseOrderTypeId());
 	}
 
 	protected WarehouseOrderType
@@ -291,7 +290,7 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 	}
 
 	protected void testDeleteWarehouseOrderTypeBatch_deleteWarehouseOrderType(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -305,10 +304,10 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 							"warehouseOrderTypeId", () -> id
 						)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1050,58 +1049,6 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		WarehouseOrderType warehouseOrderType1 =
-			testBatchEngineDeleteImportTask_addWarehouseOrderType();
-
-		testBatchEngineDeleteImportTask_deleteWarehouseOrderType(
-			200, null, warehouseOrderType1.getWarehouseOrderTypeId());
-	}
-
-	protected WarehouseOrderType
-			testBatchEngineDeleteImportTask_addWarehouseOrderType()
-		throws Exception {
-
-		return testDeleteWarehouseOrderType_addWarehouseOrderType();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteWarehouseOrderType(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.commerce.admin.inventory.dto.v1_0.WarehouseOrderType",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"warehouseOrderTypeId", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	@Rule

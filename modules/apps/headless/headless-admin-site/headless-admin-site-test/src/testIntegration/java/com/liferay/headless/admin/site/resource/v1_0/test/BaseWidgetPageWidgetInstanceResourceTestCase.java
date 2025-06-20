@@ -589,11 +589,6 @@ public abstract class BaseWidgetPageWidgetInstanceResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		WidgetPageWidgetInstance widgetPageWidgetInstance,
 		List<WidgetPageWidgetInstance> widgetPageWidgetInstances) {

@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.headless.commerce.admin.catalog.client.dto.v1_0.SkuVirtualSettingsFileEntry;
 import com.liferay.headless.commerce.admin.catalog.client.http.HttpInvoker;
@@ -355,7 +354,7 @@ public abstract class BaseSkuVirtualSettingsFileEntryResourceTestCase {
 			testDeleteSkuVirtualSettingsFileEntryBatch_addSkuVirtualSettingsFileEntry();
 
 		testDeleteSkuVirtualSettingsFileEntryBatch_deleteSkuVirtualSettingsFileEntry(
-			202, null, skuVirtualSettingsFileEntry1.getId());
+			"COMPLETED", null, skuVirtualSettingsFileEntry1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -373,7 +372,8 @@ public abstract class BaseSkuVirtualSettingsFileEntryResourceTestCase {
 
 	protected void
 			testDeleteSkuVirtualSettingsFileEntryBatch_deleteSkuVirtualSettingsFileEntry(
-				int expectedStatusCode, String externalReferenceCode, Long id)
+				String expectedExecuteStatus, String externalReferenceCode,
+				Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -387,10 +387,10 @@ public abstract class BaseSkuVirtualSettingsFileEntryResourceTestCase {
 							"id", () -> id
 						)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1004,65 +1004,6 @@ public abstract class BaseSkuVirtualSettingsFileEntryResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		SkuVirtualSettingsFileEntry skuVirtualSettingsFileEntry1 =
-			testBatchEngineDeleteImportTask_addSkuVirtualSettingsFileEntry();
-
-		testBatchEngineDeleteImportTask_deleteSkuVirtualSettingsFileEntry(
-			200, null, skuVirtualSettingsFileEntry1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			skuVirtualSettingsFileEntryResource.
-				getSkuVirtualSettingsFileEntryHttpResponse(
-					skuVirtualSettingsFileEntry1.getId()));
-	}
-
-	protected SkuVirtualSettingsFileEntry
-			testBatchEngineDeleteImportTask_addSkuVirtualSettingsFileEntry()
-		throws Exception {
-
-		return testDeleteSkuVirtualSettingsFileEntry_addSkuVirtualSettingsFileEntry();
-	}
-
-	protected void
-			testBatchEngineDeleteImportTask_deleteSkuVirtualSettingsFileEntry(
-				int expectedStatusCode, String externalReferenceCode, Long id,
-				String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.commerce.admin.catalog.dto.v1_0.SkuVirtualSettingsFileEntry",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	protected SkuVirtualSettingsFileEntry

@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.headless.commerce.admin.catalog.client.dto.v1_0.Sku;
 import com.liferay.headless.commerce.admin.catalog.client.http.HttpInvoker;
@@ -331,24 +330,24 @@ public abstract class BaseSkuResourceTestCase {
 	public void testDeleteSkuBatch() throws Exception {
 		Sku sku1 = testDeleteSkuBatch_addSku();
 
-		testDeleteSkuBatch_deleteSku(
-			202, sku1.getExternalReferenceCode(), null);
+		testDeleteSkuBatch_deleteSku("COMPLETED", null, sku1.getId());
 
 		assertHttpResponseStatusCode(
 			404, skuResource.getSkuHttpResponse(sku1.getId()));
 
-		sku1 = testDeleteSkuBatch_addSku();
-
-		testDeleteSkuBatch_deleteSku(202, null, sku1.getId());
-
-		assertHttpResponseStatusCode(
-			404, skuResource.getSkuHttpResponse(sku1.getId()));
-
-		sku1 = testDeleteSkuBatch_addSku();
 		Sku sku2 = testDeleteSkuBatch_addSku();
 
 		testDeleteSkuBatch_deleteSku(
-			202, sku2.getExternalReferenceCode(), sku1.getId());
+			"COMPLETED", sku2.getExternalReferenceCode(), null);
+
+		assertHttpResponseStatusCode(
+			404, skuResource.getSkuHttpResponse(sku2.getId()));
+
+		sku1 = testDeleteSkuBatch_addSku();
+		sku2 = testDeleteSkuBatch_addSku();
+
+		testDeleteSkuBatch_deleteSku(
+			"COMPLETED", sku2.getExternalReferenceCode(), sku1.getId());
 
 		assertHttpResponseStatusCode(
 			404, skuResource.getSkuHttpResponse(sku1.getId()));
@@ -356,7 +355,7 @@ public abstract class BaseSkuResourceTestCase {
 			200, skuResource.getSkuHttpResponse(sku2.getId()));
 
 		testDeleteSkuBatch_deleteSku(
-			202, sku2.getExternalReferenceCode(), sku1.getId());
+			"COMPLETED", sku2.getExternalReferenceCode(), sku1.getId());
 
 		assertHttpResponseStatusCode(
 			404, skuResource.getSkuHttpResponse(sku2.getId()));
@@ -367,7 +366,7 @@ public abstract class BaseSkuResourceTestCase {
 	}
 
 	protected void testDeleteSkuBatch_deleteSku(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -380,10 +379,10 @@ public abstract class BaseSkuResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1956,81 +1955,6 @@ public abstract class BaseSkuResourceTestCase {
 		throws Exception {
 
 		return randomSku();
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Sku sku1 = testBatchEngineDeleteImportTask_addSku();
-
-		testBatchEngineDeleteImportTask_deleteSku(
-			200, sku1.getExternalReferenceCode(), null);
-
-		assertHttpResponseStatusCode(
-			404, skuResource.getSkuHttpResponse(sku1.getId()));
-
-		sku1 = testBatchEngineDeleteImportTask_addSku();
-
-		testBatchEngineDeleteImportTask_deleteSku(200, null, sku1.getId());
-
-		assertHttpResponseStatusCode(
-			404, skuResource.getSkuHttpResponse(sku1.getId()));
-
-		sku1 = testBatchEngineDeleteImportTask_addSku();
-		Sku sku2 = testBatchEngineDeleteImportTask_addSku();
-
-		testBatchEngineDeleteImportTask_deleteSku(
-			200, sku2.getExternalReferenceCode(), sku1.getId());
-
-		assertHttpResponseStatusCode(
-			404, skuResource.getSkuHttpResponse(sku1.getId()));
-		assertHttpResponseStatusCode(
-			200, skuResource.getSkuHttpResponse(sku2.getId()));
-
-		testBatchEngineDeleteImportTask_deleteSku(
-			200, sku2.getExternalReferenceCode(), sku1.getId());
-
-		assertHttpResponseStatusCode(
-			404, skuResource.getSkuHttpResponse(sku2.getId()));
-	}
-
-	protected Sku testBatchEngineDeleteImportTask_addSku() throws Exception {
-		return testDeleteSku_addSku();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteSku(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.commerce.admin.catalog.dto.v1_0.Sku",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	@Rule

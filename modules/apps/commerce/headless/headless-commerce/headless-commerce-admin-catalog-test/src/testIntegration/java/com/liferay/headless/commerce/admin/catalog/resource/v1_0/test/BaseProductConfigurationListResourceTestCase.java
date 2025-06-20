@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.headless.commerce.admin.catalog.client.dto.v1_0.ProductConfigurationList;
 import com.liferay.headless.commerce.admin.catalog.client.http.HttpInvoker;
@@ -354,7 +353,7 @@ public abstract class BaseProductConfigurationListResourceTestCase {
 			testDeleteProductConfigurationListBatch_addProductConfigurationList();
 
 		testDeleteProductConfigurationListBatch_deleteProductConfigurationList(
-			202, productConfigurationList1.getExternalReferenceCode(), null);
+			"COMPLETED", null, productConfigurationList1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -362,25 +361,26 @@ public abstract class BaseProductConfigurationListResourceTestCase {
 				getProductConfigurationListHttpResponse(
 					productConfigurationList1.getId()));
 
-		productConfigurationList1 =
-			testDeleteProductConfigurationListBatch_addProductConfigurationList();
-
-		testDeleteProductConfigurationListBatch_deleteProductConfigurationList(
-			202, null, productConfigurationList1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			productConfigurationListResource.
-				getProductConfigurationListHttpResponse(
-					productConfigurationList1.getId()));
-
-		productConfigurationList1 =
-			testDeleteProductConfigurationListBatch_addProductConfigurationList();
 		ProductConfigurationList productConfigurationList2 =
 			testDeleteProductConfigurationListBatch_addProductConfigurationList();
 
 		testDeleteProductConfigurationListBatch_deleteProductConfigurationList(
-			202, productConfigurationList2.getExternalReferenceCode(),
+			"COMPLETED", productConfigurationList2.getExternalReferenceCode(),
+			null);
+
+		assertHttpResponseStatusCode(
+			404,
+			productConfigurationListResource.
+				getProductConfigurationListHttpResponse(
+					productConfigurationList2.getId()));
+
+		productConfigurationList1 =
+			testDeleteProductConfigurationListBatch_addProductConfigurationList();
+		productConfigurationList2 =
+			testDeleteProductConfigurationListBatch_addProductConfigurationList();
+
+		testDeleteProductConfigurationListBatch_deleteProductConfigurationList(
+			"COMPLETED", productConfigurationList2.getExternalReferenceCode(),
 			productConfigurationList1.getId());
 
 		assertHttpResponseStatusCode(
@@ -395,7 +395,7 @@ public abstract class BaseProductConfigurationListResourceTestCase {
 					productConfigurationList2.getId()));
 
 		testDeleteProductConfigurationListBatch_deleteProductConfigurationList(
-			202, productConfigurationList2.getExternalReferenceCode(),
+			"COMPLETED", productConfigurationList2.getExternalReferenceCode(),
 			productConfigurationList1.getId());
 
 		assertHttpResponseStatusCode(
@@ -414,7 +414,8 @@ public abstract class BaseProductConfigurationListResourceTestCase {
 
 	protected void
 			testDeleteProductConfigurationListBatch_deleteProductConfigurationList(
-				int expectedStatusCode, String externalReferenceCode, Long id)
+				String expectedExecuteStatus, String externalReferenceCode,
+				Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -428,10 +429,10 @@ public abstract class BaseProductConfigurationListResourceTestCase {
 							"id", () -> id
 						)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1543,107 +1544,6 @@ public abstract class BaseProductConfigurationListResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		ProductConfigurationList productConfigurationList1 =
-			testBatchEngineDeleteImportTask_addProductConfigurationList();
-
-		testBatchEngineDeleteImportTask_deleteProductConfigurationList(
-			200, productConfigurationList1.getExternalReferenceCode(), null);
-
-		assertHttpResponseStatusCode(
-			404,
-			productConfigurationListResource.
-				getProductConfigurationListHttpResponse(
-					productConfigurationList1.getId()));
-
-		productConfigurationList1 =
-			testBatchEngineDeleteImportTask_addProductConfigurationList();
-
-		testBatchEngineDeleteImportTask_deleteProductConfigurationList(
-			200, null, productConfigurationList1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			productConfigurationListResource.
-				getProductConfigurationListHttpResponse(
-					productConfigurationList1.getId()));
-
-		productConfigurationList1 =
-			testBatchEngineDeleteImportTask_addProductConfigurationList();
-		ProductConfigurationList productConfigurationList2 =
-			testBatchEngineDeleteImportTask_addProductConfigurationList();
-
-		testBatchEngineDeleteImportTask_deleteProductConfigurationList(
-			200, productConfigurationList2.getExternalReferenceCode(),
-			productConfigurationList1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			productConfigurationListResource.
-				getProductConfigurationListHttpResponse(
-					productConfigurationList1.getId()));
-		assertHttpResponseStatusCode(
-			200,
-			productConfigurationListResource.
-				getProductConfigurationListHttpResponse(
-					productConfigurationList2.getId()));
-
-		testBatchEngineDeleteImportTask_deleteProductConfigurationList(
-			200, productConfigurationList2.getExternalReferenceCode(),
-			productConfigurationList1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			productConfigurationListResource.
-				getProductConfigurationListHttpResponse(
-					productConfigurationList2.getId()));
-	}
-
-	protected ProductConfigurationList
-			testBatchEngineDeleteImportTask_addProductConfigurationList()
-		throws Exception {
-
-		return testDeleteProductConfigurationList_addProductConfigurationList();
-	}
-
-	protected void
-			testBatchEngineDeleteImportTask_deleteProductConfigurationList(
-				int expectedStatusCode, String externalReferenceCode, Long id,
-				String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.commerce.admin.catalog.dto.v1_0.ProductConfigurationList",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	@Rule

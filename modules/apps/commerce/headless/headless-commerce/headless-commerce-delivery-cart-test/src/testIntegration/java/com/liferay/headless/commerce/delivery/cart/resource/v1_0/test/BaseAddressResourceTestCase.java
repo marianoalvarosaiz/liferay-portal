@@ -339,8 +339,7 @@ public abstract class BaseAddressResourceTestCase {
 
 		Address getAddress =
 			addressResource.getCartByExternalReferenceCodeBillingAddress(
-				testGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode(
-					postAddress));
+				testGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode());
 
 		assertEquals(postAddress, getAddress);
 		assertValid(getAddress);
@@ -355,8 +354,7 @@ public abstract class BaseAddressResourceTestCase {
 	}
 
 	protected String
-			testGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode(
-				Address address)
+			testGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -385,8 +383,8 @@ public abstract class BaseAddressResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode(
-													address) + "\"");
+												testGraphQLGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode() +
+													"\"");
 									}
 								},
 								getGraphQLFields())),
@@ -410,8 +408,8 @@ public abstract class BaseAddressResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode(
-														address) + "\"");
+													testGraphQLGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode() +
+														"\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -421,8 +419,7 @@ public abstract class BaseAddressResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode(
-				Address address)
+			testGraphQLGetCartByExternalReferenceCodeBillingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -493,8 +490,7 @@ public abstract class BaseAddressResourceTestCase {
 
 		Address getAddress =
 			addressResource.getCartByExternalReferenceCodeShippingAddress(
-				testGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode(
-					postAddress));
+				testGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode());
 
 		assertEquals(postAddress, getAddress);
 		assertValid(getAddress);
@@ -509,8 +505,7 @@ public abstract class BaseAddressResourceTestCase {
 	}
 
 	protected String
-			testGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode(
-				Address address)
+			testGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -539,8 +534,8 @@ public abstract class BaseAddressResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode(
-													address) + "\"");
+												testGraphQLGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode() +
+													"\"");
 									}
 								},
 								getGraphQLFields())),
@@ -564,8 +559,8 @@ public abstract class BaseAddressResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode(
-														address) + "\"");
+													testGraphQLGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode() +
+														"\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -575,8 +570,7 @@ public abstract class BaseAddressResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode(
-				Address address)
+			testGraphQLGetCartByExternalReferenceCodeShippingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(

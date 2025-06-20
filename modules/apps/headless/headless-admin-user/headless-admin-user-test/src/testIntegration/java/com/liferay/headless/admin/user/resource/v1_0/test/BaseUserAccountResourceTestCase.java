@@ -20,7 +20,6 @@ import com.liferay.headless.admin.user.client.pagination.Pagination;
 import com.liferay.headless.admin.user.client.resource.v1_0.UserAccountResource;
 import com.liferay.headless.admin.user.client.serdes.v1_0.UserAccountSerDes;
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.petra.function.UnsafeTriConsumer;
@@ -374,8 +373,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			204,
 			userAccountResource.
 				deleteAccountUserAccountByExternalReferenceCodeByEmailAddressHttpResponse(
-					testDeleteAccountUserAccountByExternalReferenceCodeByEmailAddress_getExternalReferenceCode(
-						userAccount),
+					testDeleteAccountUserAccountByExternalReferenceCodeByEmailAddress_getExternalReferenceCode(),
 					userAccount.getEmailAddress()));
 	}
 
@@ -383,13 +381,11 @@ public abstract class BaseUserAccountResourceTestCase {
 			testDeleteAccountUserAccountByExternalReferenceCodeByEmailAddress_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	protected String
-			testDeleteAccountUserAccountByExternalReferenceCodeByEmailAddress_getExternalReferenceCode(
-				UserAccount userAccount)
+			testDeleteAccountUserAccountByExternalReferenceCodeByEmailAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -406,8 +402,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			204,
 			userAccountResource.
 				deleteAccountUserAccountsByEmailAddressHttpResponse(
-					testDeleteAccountUserAccountsByEmailAddress_getAccountId(),
-					null));
+					testDeleteAccountUserAccountsByEmailAddress_getAccountId()));
 	}
 
 	protected UserAccount
@@ -436,22 +431,18 @@ public abstract class BaseUserAccountResourceTestCase {
 			204,
 			userAccountResource.
 				deleteAccountUserAccountsByExternalReferenceCodeByEmailAddressHttpResponse(
-					testDeleteAccountUserAccountsByExternalReferenceCodeByEmailAddress_getExternalReferenceCode(
-						userAccount),
-					null));
+					testDeleteAccountUserAccountsByExternalReferenceCodeByEmailAddress_getExternalReferenceCode()));
 	}
 
 	protected UserAccount
 			testDeleteAccountUserAccountsByExternalReferenceCodeByEmailAddress_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	protected String
-			testDeleteAccountUserAccountsByExternalReferenceCodeByEmailAddress_getExternalReferenceCode(
-				UserAccount userAccount)
+			testDeleteAccountUserAccountsByExternalReferenceCodeByEmailAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -479,8 +470,7 @@ public abstract class BaseUserAccountResourceTestCase {
 	protected UserAccount testDeleteUserAccount_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -565,28 +555,29 @@ public abstract class BaseUserAccountResourceTestCase {
 		UserAccount userAccount1 = testDeleteUserAccountBatch_addUserAccount();
 
 		testDeleteUserAccountBatch_deleteUserAccount(
-			202, userAccount1.getExternalReferenceCode(), null);
+			"COMPLETED", null, userAccount1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
 			userAccountResource.getUserAccountHttpResponse(
 				userAccount1.getId()));
 
-		userAccount1 = testDeleteUserAccountBatch_addUserAccount();
-
-		testDeleteUserAccountBatch_deleteUserAccount(
-			202, null, userAccount1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			userAccountResource.getUserAccountHttpResponse(
-				userAccount1.getId()));
-
-		userAccount1 = testDeleteUserAccountBatch_addUserAccount();
 		UserAccount userAccount2 = testDeleteUserAccountBatch_addUserAccount();
 
 		testDeleteUserAccountBatch_deleteUserAccount(
-			202, userAccount2.getExternalReferenceCode(), userAccount1.getId());
+			"COMPLETED", userAccount2.getExternalReferenceCode(), null);
+
+		assertHttpResponseStatusCode(
+			404,
+			userAccountResource.getUserAccountHttpResponse(
+				userAccount2.getId()));
+
+		userAccount1 = testDeleteUserAccountBatch_addUserAccount();
+		userAccount2 = testDeleteUserAccountBatch_addUserAccount();
+
+		testDeleteUserAccountBatch_deleteUserAccount(
+			"COMPLETED", userAccount2.getExternalReferenceCode(),
+			userAccount1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -598,7 +589,8 @@ public abstract class BaseUserAccountResourceTestCase {
 				userAccount2.getId()));
 
 		testDeleteUserAccountBatch_deleteUserAccount(
-			202, userAccount2.getExternalReferenceCode(), userAccount1.getId());
+			"COMPLETED", userAccount2.getExternalReferenceCode(),
+			userAccount1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -613,7 +605,7 @@ public abstract class BaseUserAccountResourceTestCase {
 	}
 
 	protected void testDeleteUserAccountBatch_deleteUserAccount(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -626,10 +618,10 @@ public abstract class BaseUserAccountResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -662,8 +654,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testDeleteUserAccountByExternalReferenceCode_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -687,8 +678,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testGetAccountByExternalReferenceCodeUserAccountByExternalReferenceCode_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	protected String
@@ -1885,9 +1875,6 @@ public abstract class BaseUserAccountResourceTestCase {
 
 	protected UserAccount testGetMyUserAccount_addUserAccount()
 		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3458,8 +3445,7 @@ public abstract class BaseUserAccountResourceTestCase {
 	}
 
 	protected UserAccount testGetUserAccount_addUserAccount() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -3575,8 +3561,7 @@ public abstract class BaseUserAccountResourceTestCase {
 	protected UserAccount testGetUserAccountByEmailAddress_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -3702,8 +3687,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testGetUserAccountByExternalReferenceCode_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5547,8 +5531,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testPatchSiteAccountUserAccountSelected_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5596,8 +5579,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testPatchSiteByFriendlyUrlPathAccountByExternalReferenceCodeAccountExternalReferenceCodeUserAccountByExternalReferenceCodeUserAccountExternalReferenceCodeSelected_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5625,8 +5607,7 @@ public abstract class BaseUserAccountResourceTestCase {
 	protected UserAccount testPatchUserAccount_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5659,8 +5640,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testPatchUserAccountByExternalReferenceCode_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5698,8 +5678,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testPostAccountByExternalReferenceCodeUserAccountByExternalReferenceCode_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5844,8 +5823,7 @@ public abstract class BaseUserAccountResourceTestCase {
 	}
 
 	protected UserAccount testPutUserAccount_addUserAccount() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	@Test
@@ -5894,8 +5872,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			testPutUserAccountByExternalReferenceCode_addUserAccount()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountUserAccount_addUserAccount(randomUserAccount());
 	}
 
 	protected UserAccount
@@ -5903,96 +5880,6 @@ public abstract class BaseUserAccountResourceTestCase {
 		throws Exception {
 
 		return randomUserAccount();
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		UserAccount userAccount1 =
-			testBatchEngineDeleteImportTask_addUserAccount();
-
-		testBatchEngineDeleteImportTask_deleteUserAccount(
-			200, userAccount1.getExternalReferenceCode(), null);
-
-		assertHttpResponseStatusCode(
-			404,
-			userAccountResource.getUserAccountHttpResponse(
-				userAccount1.getId()));
-
-		userAccount1 = testBatchEngineDeleteImportTask_addUserAccount();
-
-		testBatchEngineDeleteImportTask_deleteUserAccount(
-			200, null, userAccount1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			userAccountResource.getUserAccountHttpResponse(
-				userAccount1.getId()));
-
-		userAccount1 = testBatchEngineDeleteImportTask_addUserAccount();
-		UserAccount userAccount2 =
-			testBatchEngineDeleteImportTask_addUserAccount();
-
-		testBatchEngineDeleteImportTask_deleteUserAccount(
-			200, userAccount2.getExternalReferenceCode(), userAccount1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			userAccountResource.getUserAccountHttpResponse(
-				userAccount1.getId()));
-		assertHttpResponseStatusCode(
-			200,
-			userAccountResource.getUserAccountHttpResponse(
-				userAccount2.getId()));
-
-		testBatchEngineDeleteImportTask_deleteUserAccount(
-			200, userAccount2.getExternalReferenceCode(), userAccount1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			userAccountResource.getUserAccountHttpResponse(
-				userAccount2.getId()));
-	}
-
-	protected UserAccount testBatchEngineDeleteImportTask_addUserAccount()
-		throws Exception {
-
-		return testDeleteUserAccount_addUserAccount();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteUserAccount(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.admin.user.dto.v1_0.UserAccount", null,
-				null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	@Rule

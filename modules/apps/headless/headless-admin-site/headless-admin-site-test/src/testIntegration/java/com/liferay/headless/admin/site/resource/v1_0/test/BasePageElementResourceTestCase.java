@@ -796,11 +796,6 @@ public abstract class BasePageElementResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		PageElement pageElement, List<PageElement> pageElements) {
 

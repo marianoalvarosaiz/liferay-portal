@@ -20,7 +20,6 @@ import com.liferay.change.tracking.rest.client.pagination.Pagination;
 import com.liferay.change.tracking.rest.client.resource.v1_0.CTCollectionResource;
 import com.liferay.change.tracking.rest.client.serdes.v1_0.CTCollectionSerDes;
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.petra.function.UnsafeTriConsumer;
@@ -337,29 +336,29 @@ public abstract class BaseCTCollectionResourceTestCase {
 			testDeleteCTCollectionBatch_addCTCollection();
 
 		testDeleteCTCollectionBatch_deleteCTCollection(
-			202, ctCollection1.getExternalReferenceCode(), null);
+			"COMPLETED", null, ctCollection1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
 			ctCollectionResource.getCTCollectionHttpResponse(
 				ctCollection1.getId()));
 
-		ctCollection1 = testDeleteCTCollectionBatch_addCTCollection();
-
-		testDeleteCTCollectionBatch_deleteCTCollection(
-			202, null, ctCollection1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			ctCollectionResource.getCTCollectionHttpResponse(
-				ctCollection1.getId()));
-
-		ctCollection1 = testDeleteCTCollectionBatch_addCTCollection();
 		CTCollection ctCollection2 =
 			testDeleteCTCollectionBatch_addCTCollection();
 
 		testDeleteCTCollectionBatch_deleteCTCollection(
-			202, ctCollection2.getExternalReferenceCode(),
+			"COMPLETED", ctCollection2.getExternalReferenceCode(), null);
+
+		assertHttpResponseStatusCode(
+			404,
+			ctCollectionResource.getCTCollectionHttpResponse(
+				ctCollection2.getId()));
+
+		ctCollection1 = testDeleteCTCollectionBatch_addCTCollection();
+		ctCollection2 = testDeleteCTCollectionBatch_addCTCollection();
+
+		testDeleteCTCollectionBatch_deleteCTCollection(
+			"COMPLETED", ctCollection2.getExternalReferenceCode(),
 			ctCollection1.getId());
 
 		assertHttpResponseStatusCode(
@@ -372,7 +371,7 @@ public abstract class BaseCTCollectionResourceTestCase {
 				ctCollection2.getId()));
 
 		testDeleteCTCollectionBatch_deleteCTCollection(
-			202, ctCollection2.getExternalReferenceCode(),
+			"COMPLETED", ctCollection2.getExternalReferenceCode(),
 			ctCollection1.getId());
 
 		assertHttpResponseStatusCode(
@@ -388,7 +387,7 @@ public abstract class BaseCTCollectionResourceTestCase {
 	}
 
 	protected void testDeleteCTCollectionBatch_deleteCTCollection(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -401,10 +400,10 @@ public abstract class BaseCTCollectionResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1394,98 +1393,6 @@ public abstract class BaseCTCollectionResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		CTCollection ctCollection1 =
-			testBatchEngineDeleteImportTask_addCTCollection();
-
-		testBatchEngineDeleteImportTask_deleteCTCollection(
-			200, ctCollection1.getExternalReferenceCode(), null);
-
-		assertHttpResponseStatusCode(
-			404,
-			ctCollectionResource.getCTCollectionHttpResponse(
-				ctCollection1.getId()));
-
-		ctCollection1 = testBatchEngineDeleteImportTask_addCTCollection();
-
-		testBatchEngineDeleteImportTask_deleteCTCollection(
-			200, null, ctCollection1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			ctCollectionResource.getCTCollectionHttpResponse(
-				ctCollection1.getId()));
-
-		ctCollection1 = testBatchEngineDeleteImportTask_addCTCollection();
-		CTCollection ctCollection2 =
-			testBatchEngineDeleteImportTask_addCTCollection();
-
-		testBatchEngineDeleteImportTask_deleteCTCollection(
-			200, ctCollection2.getExternalReferenceCode(),
-			ctCollection1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			ctCollectionResource.getCTCollectionHttpResponse(
-				ctCollection1.getId()));
-		assertHttpResponseStatusCode(
-			200,
-			ctCollectionResource.getCTCollectionHttpResponse(
-				ctCollection2.getId()));
-
-		testBatchEngineDeleteImportTask_deleteCTCollection(
-			200, ctCollection2.getExternalReferenceCode(),
-			ctCollection1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			ctCollectionResource.getCTCollectionHttpResponse(
-				ctCollection2.getId()));
-	}
-
-	protected CTCollection testBatchEngineDeleteImportTask_addCTCollection()
-		throws Exception {
-
-		return testDeleteCTCollection_addCTCollection();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteCTCollection(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.change.tracking.rest.dto.v1_0.CTCollection", null,
-				null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	protected CTCollection testGraphQLCTCollection_addCTCollection()

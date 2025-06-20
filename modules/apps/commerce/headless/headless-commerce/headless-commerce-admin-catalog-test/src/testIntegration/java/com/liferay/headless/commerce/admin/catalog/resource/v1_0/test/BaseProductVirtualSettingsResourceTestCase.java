@@ -353,8 +353,7 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 
 		ProductVirtualSettings getProductVirtualSettings =
 			productVirtualSettingsResource.getProductIdProductVirtualSettings(
-				testGetProductIdProductVirtualSettings_getId(
-					postProductVirtualSettings));
+				testGetProductIdProductVirtualSettings_getId());
 
 		assertEquals(postProductVirtualSettings, getProductVirtualSettings);
 		assertValid(getProductVirtualSettings);
@@ -368,8 +367,7 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetProductIdProductVirtualSettings_getId(
-			ProductVirtualSettings productVirtualSettings)
+	protected Long testGetProductIdProductVirtualSettings_getId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -397,8 +395,7 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetProductIdProductVirtualSettings_getId(
-												productVirtualSettings));
+											testGraphQLGetProductIdProductVirtualSettings_getId());
 									}
 								},
 								getGraphQLFields())),
@@ -421,8 +418,7 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetProductIdProductVirtualSettings_getId(
-													productVirtualSettings));
+												testGraphQLGetProductIdProductVirtualSettings_getId());
 										}
 									},
 									getGraphQLFields()))),
@@ -431,8 +427,7 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 						"Object/productIdProductVirtualSettings"))));
 	}
 
-	protected Long testGraphQLGetProductIdProductVirtualSettings_getId(
-			ProductVirtualSettings productVirtualSettings)
+	protected Long testGraphQLGetProductIdProductVirtualSettings_getId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(

@@ -884,11 +884,6 @@ public abstract class BasePinResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected Pin testGraphQLPin_addPin() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");

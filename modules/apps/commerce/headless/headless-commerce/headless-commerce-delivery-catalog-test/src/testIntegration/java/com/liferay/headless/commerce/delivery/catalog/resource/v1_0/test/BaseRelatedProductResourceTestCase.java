@@ -393,11 +393,6 @@ public abstract class BaseRelatedProductResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected RelatedProduct testGraphQLRelatedProduct_addRelatedProduct()
 		throws Exception {
 

@@ -284,11 +284,6 @@ public abstract class BaseSearchableAssetNameDisplayResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		SearchableAssetNameDisplay searchableAssetNameDisplay,
 		List<SearchableAssetNameDisplay> searchableAssetNameDisplays) {

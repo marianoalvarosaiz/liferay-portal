@@ -218,8 +218,7 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 		PlacedOrderAddress getPlacedOrderAddress =
 			placedOrderAddressResource.
 				getPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress(
-					testGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode(
-						postPlacedOrderAddress));
+					testGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode());
 
 		assertEquals(postPlacedOrderAddress, getPlacedOrderAddress);
 		assertValid(getPlacedOrderAddress);
@@ -234,8 +233,7 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 	}
 
 	protected String
-			testGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode(
-				PlacedOrderAddress placedOrderAddress)
+			testGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -264,8 +262,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode(
-													placedOrderAddress) + "\"");
+												testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode() +
+													"\"");
 									}
 								},
 								getGraphQLFields())),
@@ -289,9 +287,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode(
-														placedOrderAddress) +
-															"\"");
+													testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode() +
+														"\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -301,8 +298,7 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode(
-				PlacedOrderAddress placedOrderAddress)
+			testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderBillingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -374,8 +370,7 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 		PlacedOrderAddress getPlacedOrderAddress =
 			placedOrderAddressResource.
 				getPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress(
-					testGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode(
-						postPlacedOrderAddress));
+					testGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode());
 
 		assertEquals(postPlacedOrderAddress, getPlacedOrderAddress);
 		assertValid(getPlacedOrderAddress);
@@ -390,8 +385,7 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 	}
 
 	protected String
-			testGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode(
-				PlacedOrderAddress placedOrderAddress)
+			testGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -420,8 +414,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode(
-													placedOrderAddress) + "\"");
+												testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode() +
+													"\"");
 									}
 								},
 								getGraphQLFields())),
@@ -445,9 +439,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode(
-														placedOrderAddress) +
-															"\"");
+													testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode() +
+														"\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -457,8 +450,7 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode(
-				PlacedOrderAddress placedOrderAddress)
+			testGraphQLGetPlacedOrderByExternalReferenceCodePlacedOrderShippingAddress_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(

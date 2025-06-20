@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.object.admin.rest.client.dto.v1_0.ObjectLayout;
@@ -330,7 +329,7 @@ public abstract class BaseObjectLayoutResourceTestCase {
 			testDeleteObjectLayoutBatch_addObjectLayout();
 
 		testDeleteObjectLayoutBatch_deleteObjectLayout(
-			202, null, objectLayout1.getId());
+			"COMPLETED", null, objectLayout1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -345,7 +344,7 @@ public abstract class BaseObjectLayoutResourceTestCase {
 	}
 
 	protected void testDeleteObjectLayoutBatch_deleteObjectLayout(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -358,10 +357,10 @@ public abstract class BaseObjectLayoutResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1289,8 +1288,8 @@ public abstract class BaseObjectLayoutResourceTestCase {
 	protected ObjectLayout testGetObjectLayout_addObjectLayout()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostObjectDefinitionObjectLayout_addObjectLayout(
+			randomObjectLayout());
 	}
 
 	@Test
@@ -1457,64 +1456,8 @@ public abstract class BaseObjectLayoutResourceTestCase {
 	protected ObjectLayout testPutObjectLayout_addObjectLayout()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		ObjectLayout objectLayout1 =
-			testBatchEngineDeleteImportTask_addObjectLayout();
-
-		testBatchEngineDeleteImportTask_deleteObjectLayout(
-			200, null, objectLayout1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			objectLayoutResource.getObjectLayoutHttpResponse(
-				objectLayout1.getId()));
-	}
-
-	protected ObjectLayout testBatchEngineDeleteImportTask_addObjectLayout()
-		throws Exception {
-
-		return testDeleteObjectLayout_addObjectLayout();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteObjectLayout(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.object.admin.rest.dto.v1_0.ObjectLayout", null,
-				null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
+		return testPostObjectDefinitionObjectLayout_addObjectLayout(
+			randomObjectLayout());
 	}
 
 	protected ObjectLayout testGraphQLObjectLayout_addObjectLayout()

@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.headless.commerce.admin.catalog.client.dto.v1_0.SkuUnitOfMeasure;
 import com.liferay.headless.commerce.admin.catalog.client.http.HttpInvoker;
@@ -330,7 +329,7 @@ public abstract class BaseSkuUnitOfMeasureResourceTestCase {
 			testDeleteSkuUnitOfMeasureBatch_addSkuUnitOfMeasure();
 
 		testDeleteSkuUnitOfMeasureBatch_deleteSkuUnitOfMeasure(
-			202, null, skuUnitOfMeasure1.getId());
+			"COMPLETED", null, skuUnitOfMeasure1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -346,7 +345,7 @@ public abstract class BaseSkuUnitOfMeasureResourceTestCase {
 	}
 
 	protected void testDeleteSkuUnitOfMeasureBatch_deleteSkuUnitOfMeasure(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -359,10 +358,10 @@ public abstract class BaseSkuUnitOfMeasureResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1146,63 +1145,6 @@ public abstract class BaseSkuUnitOfMeasureResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		SkuUnitOfMeasure skuUnitOfMeasure1 =
-			testBatchEngineDeleteImportTask_addSkuUnitOfMeasure();
-
-		testBatchEngineDeleteImportTask_deleteSkuUnitOfMeasure(
-			200, null, skuUnitOfMeasure1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			skuUnitOfMeasureResource.getSkuUnitOfMeasureHttpResponse(
-				skuUnitOfMeasure1.getId()));
-	}
-
-	protected SkuUnitOfMeasure
-			testBatchEngineDeleteImportTask_addSkuUnitOfMeasure()
-		throws Exception {
-
-		return testDeleteSkuUnitOfMeasure_addSkuUnitOfMeasure();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteSkuUnitOfMeasure(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.commerce.admin.catalog.dto.v1_0.SkuUnitOfMeasure",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	protected SkuUnitOfMeasure testGraphQLSkuUnitOfMeasure_addSkuUnitOfMeasure()

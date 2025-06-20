@@ -764,11 +764,6 @@ public abstract class BaseFormStructureResourceTestCase {
 		return testGraphQLFormStructure_addFormStructure();
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected FormStructure testGraphQLFormStructure_addFormStructure()
 		throws Exception {
 

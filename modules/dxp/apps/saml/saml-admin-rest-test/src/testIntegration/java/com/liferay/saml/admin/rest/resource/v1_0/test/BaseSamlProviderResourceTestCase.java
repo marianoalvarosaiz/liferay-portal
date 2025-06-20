@@ -218,11 +218,6 @@ public abstract class BaseSamlProviderResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		SamlProvider samlProvider, List<SamlProvider> samlProviders) {
 

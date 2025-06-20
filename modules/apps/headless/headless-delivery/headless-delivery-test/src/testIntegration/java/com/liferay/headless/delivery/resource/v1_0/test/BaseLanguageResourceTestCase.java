@@ -417,11 +417,6 @@ public abstract class BaseLanguageResourceTestCase {
 		return testGraphQLLanguage_addLanguage();
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected Language testGraphQLLanguage_addLanguage() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");

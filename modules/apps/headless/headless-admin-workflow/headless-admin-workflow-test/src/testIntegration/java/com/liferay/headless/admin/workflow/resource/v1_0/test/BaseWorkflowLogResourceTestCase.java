@@ -877,11 +877,6 @@ public abstract class BaseWorkflowLogResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected WorkflowLog testGraphQLWorkflowLog_addWorkflowLog()
 		throws Exception {
 

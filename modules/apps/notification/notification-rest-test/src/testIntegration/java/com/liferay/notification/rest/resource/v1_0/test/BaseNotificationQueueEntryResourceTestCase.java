@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.notification.rest.client.dto.v1_0.NotificationQueueEntry;
 import com.liferay.notification.rest.client.http.HttpInvoker;
@@ -363,7 +362,7 @@ public abstract class BaseNotificationQueueEntryResourceTestCase {
 			testDeleteNotificationQueueEntryBatch_addNotificationQueueEntry();
 
 		testDeleteNotificationQueueEntryBatch_deleteNotificationQueueEntry(
-			202, null, notificationQueueEntry1.getId());
+			"COMPLETED", null, notificationQueueEntry1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -381,7 +380,8 @@ public abstract class BaseNotificationQueueEntryResourceTestCase {
 
 	protected void
 			testDeleteNotificationQueueEntryBatch_deleteNotificationQueueEntry(
-				int expectedStatusCode, String externalReferenceCode, Long id)
+				String expectedExecuteStatus, String externalReferenceCode,
+				Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -395,10 +395,10 @@ public abstract class BaseNotificationQueueEntryResourceTestCase {
 							"id", () -> id
 						)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1258,64 +1258,6 @@ public abstract class BaseNotificationQueueEntryResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		NotificationQueueEntry notificationQueueEntry1 =
-			testBatchEngineDeleteImportTask_addNotificationQueueEntry();
-
-		testBatchEngineDeleteImportTask_deleteNotificationQueueEntry(
-			200, null, notificationQueueEntry1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			notificationQueueEntryResource.
-				getNotificationQueueEntryHttpResponse(
-					notificationQueueEntry1.getId()));
-	}
-
-	protected NotificationQueueEntry
-			testBatchEngineDeleteImportTask_addNotificationQueueEntry()
-		throws Exception {
-
-		return testDeleteNotificationQueueEntry_addNotificationQueueEntry();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteNotificationQueueEntry(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.notification.rest.dto.v1_0.NotificationQueueEntry",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	@Rule

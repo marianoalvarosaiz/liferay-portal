@@ -349,11 +349,6 @@ public abstract class BaseSegmentUserResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected SegmentUser testGraphQLSegmentUser_addSegmentUser()
 		throws Exception {
 

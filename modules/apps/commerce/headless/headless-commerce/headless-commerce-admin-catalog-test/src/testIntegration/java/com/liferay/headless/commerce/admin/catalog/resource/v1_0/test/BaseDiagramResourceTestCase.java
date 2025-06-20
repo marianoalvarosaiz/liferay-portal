@@ -337,7 +337,7 @@ public abstract class BaseDiagramResourceTestCase {
 		Diagram postDiagram = testGetProductIdDiagram_addDiagram();
 
 		Diagram getDiagram = diagramResource.getProductIdDiagram(
-			testGetProductIdDiagram_getId(postDiagram));
+			testGetProductIdDiagram_getId());
 
 		assertEquals(postDiagram, getDiagram);
 		assertValid(getDiagram);
@@ -348,9 +348,7 @@ public abstract class BaseDiagramResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetProductIdDiagram_getId(Diagram diagram)
-		throws Exception {
-
+	protected Long testGetProductIdDiagram_getId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -373,8 +371,7 @@ public abstract class BaseDiagramResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetProductIdDiagram_getId(
-												diagram));
+											testGraphQLGetProductIdDiagram_getId());
 									}
 								},
 								getGraphQLFields())),
@@ -396,8 +393,7 @@ public abstract class BaseDiagramResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetProductIdDiagram_getId(
-													diagram));
+												testGraphQLGetProductIdDiagram_getId());
 										}
 									},
 									getGraphQLFields()))),
@@ -406,9 +402,7 @@ public abstract class BaseDiagramResourceTestCase {
 						"Object/productIdDiagram"))));
 	}
 
-	protected Long testGraphQLGetProductIdDiagram_getId(Diagram diagram)
-		throws Exception {
-
+	protected Long testGraphQLGetProductIdDiagram_getId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -503,11 +497,6 @@ public abstract class BaseDiagramResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
 	}
 
 	protected Diagram testGraphQLDiagram_addDiagram() throws Exception {

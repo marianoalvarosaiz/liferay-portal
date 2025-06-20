@@ -875,11 +875,6 @@ public abstract class BaseProductResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 

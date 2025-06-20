@@ -704,11 +704,6 @@ public abstract class BaseFormResourceTestCase {
 	}
 
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
-	@Test
 	public void testPostFormEvaluateContext() throws Exception {
 		Assert.assertTrue(true);
 	}

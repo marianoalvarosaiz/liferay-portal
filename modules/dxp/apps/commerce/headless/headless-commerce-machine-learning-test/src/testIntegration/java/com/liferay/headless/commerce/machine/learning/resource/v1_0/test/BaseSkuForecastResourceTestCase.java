@@ -318,11 +318,6 @@ public abstract class BaseSkuForecastResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		SkuForecast skuForecast, List<SkuForecast> skuForecasts) {
 

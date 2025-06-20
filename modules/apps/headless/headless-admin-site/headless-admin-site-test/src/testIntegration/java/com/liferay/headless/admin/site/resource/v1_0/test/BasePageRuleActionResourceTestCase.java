@@ -506,11 +506,6 @@ public abstract class BasePageRuleActionResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		PageRuleAction pageRuleAction, List<PageRuleAction> pageRuleActions) {
 

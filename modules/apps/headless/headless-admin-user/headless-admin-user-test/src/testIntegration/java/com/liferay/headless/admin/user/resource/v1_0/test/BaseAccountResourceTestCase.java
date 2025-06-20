@@ -20,7 +20,6 @@ import com.liferay.headless.admin.user.client.pagination.Pagination;
 import com.liferay.headless.admin.user.client.resource.v1_0.AccountResource;
 import com.liferay.headless.admin.user.client.serdes.v1_0.AccountSerDes;
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.petra.function.UnsafeTriConsumer;
@@ -338,23 +337,24 @@ public abstract class BaseAccountResourceTestCase {
 		Account account1 = testDeleteAccountBatch_addAccount();
 
 		testDeleteAccountBatch_deleteAccount(
-			202, account1.getExternalReferenceCode(), null);
+			"COMPLETED", null, account1.getId());
 
 		assertHttpResponseStatusCode(
 			404, accountResource.getAccountHttpResponse(account1.getId()));
 
-		account1 = testDeleteAccountBatch_addAccount();
-
-		testDeleteAccountBatch_deleteAccount(202, null, account1.getId());
-
-		assertHttpResponseStatusCode(
-			404, accountResource.getAccountHttpResponse(account1.getId()));
-
-		account1 = testDeleteAccountBatch_addAccount();
 		Account account2 = testDeleteAccountBatch_addAccount();
 
 		testDeleteAccountBatch_deleteAccount(
-			202, account2.getExternalReferenceCode(), account1.getId());
+			"COMPLETED", account2.getExternalReferenceCode(), null);
+
+		assertHttpResponseStatusCode(
+			404, accountResource.getAccountHttpResponse(account2.getId()));
+
+		account1 = testDeleteAccountBatch_addAccount();
+		account2 = testDeleteAccountBatch_addAccount();
+
+		testDeleteAccountBatch_deleteAccount(
+			"COMPLETED", account2.getExternalReferenceCode(), account1.getId());
 
 		assertHttpResponseStatusCode(
 			404, accountResource.getAccountHttpResponse(account1.getId()));
@@ -362,7 +362,7 @@ public abstract class BaseAccountResourceTestCase {
 			200, accountResource.getAccountHttpResponse(account2.getId()));
 
 		testDeleteAccountBatch_deleteAccount(
-			202, account2.getExternalReferenceCode(), account1.getId());
+			"COMPLETED", account2.getExternalReferenceCode(), account1.getId());
 
 		assertHttpResponseStatusCode(
 			404, accountResource.getAccountHttpResponse(account2.getId()));
@@ -373,7 +373,7 @@ public abstract class BaseAccountResourceTestCase {
 	}
 
 	protected void testDeleteAccountBatch_deleteAccount(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -386,10 +386,10 @@ public abstract class BaseAccountResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -427,7 +427,7 @@ public abstract class BaseAccountResourceTestCase {
 		assertHttpResponseStatusCode(
 			204,
 			accountResource.deleteOrganizationAccountsHttpResponse(
-				testDeleteOrganizationAccounts_getOrganizationId(), null));
+				testDeleteOrganizationAccounts_getOrganizationId()));
 	}
 
 	protected Account testDeleteOrganizationAccounts_addAccount()
@@ -456,8 +456,7 @@ public abstract class BaseAccountResourceTestCase {
 			204,
 			accountResource.
 				deleteOrganizationAccountsByExternalReferenceCodeHttpResponse(
-					testDeleteOrganizationAccountsByExternalReferenceCode_getOrganizationId(),
-					null));
+					testDeleteOrganizationAccountsByExternalReferenceCode_getOrganizationId()));
 	}
 
 	protected Account
@@ -488,9 +487,7 @@ public abstract class BaseAccountResourceTestCase {
 			204,
 			accountResource.
 				deleteOrganizationByExternalReferenceCodeAccountsHttpResponse(
-					testDeleteOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(
-						account),
-					null));
+					testDeleteOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode()));
 	}
 
 	protected Account
@@ -502,8 +499,7 @@ public abstract class BaseAccountResourceTestCase {
 	}
 
 	protected String
-			testDeleteOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(
-				Account account)
+			testDeleteOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -522,8 +518,7 @@ public abstract class BaseAccountResourceTestCase {
 			204,
 			accountResource.
 				deleteOrganizationByExternalReferenceCodeOrganizationExternalReferenceCodeAccountByExternalReferenceCodeHttpResponse(
-					testDeleteOrganizationByExternalReferenceCodeOrganizationExternalReferenceCodeAccountByExternalReferenceCode_getOrganizationExternalReferenceCode(),
-					null));
+					testDeleteOrganizationByExternalReferenceCodeOrganizationExternalReferenceCodeAccountByExternalReferenceCode_getOrganizationExternalReferenceCode()));
 	}
 
 	protected Account
@@ -3745,22 +3740,19 @@ public abstract class BaseAccountResourceTestCase {
 			204,
 			accountResource.
 				postOrganizationByExternalReferenceCodeAccountsHttpResponse(
-					testPostOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(
-						account),
+					testPostOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(),
 					null));
 
 		assertHttpResponseStatusCode(
 			404,
 			accountResource.
 				postOrganizationByExternalReferenceCodeAccountsHttpResponse(
-					testPostOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(
-						account),
+					testPostOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(),
 					null));
 	}
 
 	protected String
-			testPostOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode(
-				Account account)
+			testPostOrganizationByExternalReferenceCodeAccounts_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -3886,84 +3878,6 @@ public abstract class BaseAccountResourceTestCase {
 		throws Exception {
 
 		return randomAccount();
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Account account1 = testBatchEngineDeleteImportTask_addAccount();
-
-		testBatchEngineDeleteImportTask_deleteAccount(
-			200, account1.getExternalReferenceCode(), null);
-
-		assertHttpResponseStatusCode(
-			404, accountResource.getAccountHttpResponse(account1.getId()));
-
-		account1 = testBatchEngineDeleteImportTask_addAccount();
-
-		testBatchEngineDeleteImportTask_deleteAccount(
-			200, null, account1.getId());
-
-		assertHttpResponseStatusCode(
-			404, accountResource.getAccountHttpResponse(account1.getId()));
-
-		account1 = testBatchEngineDeleteImportTask_addAccount();
-		Account account2 = testBatchEngineDeleteImportTask_addAccount();
-
-		testBatchEngineDeleteImportTask_deleteAccount(
-			200, account2.getExternalReferenceCode(), account1.getId());
-
-		assertHttpResponseStatusCode(
-			404, accountResource.getAccountHttpResponse(account1.getId()));
-		assertHttpResponseStatusCode(
-			200, accountResource.getAccountHttpResponse(account2.getId()));
-
-		testBatchEngineDeleteImportTask_deleteAccount(
-			200, account2.getExternalReferenceCode(), account1.getId());
-
-		assertHttpResponseStatusCode(
-			404, accountResource.getAccountHttpResponse(account2.getId()));
-	}
-
-	protected Account testBatchEngineDeleteImportTask_addAccount()
-		throws Exception {
-
-		return testDeleteAccount_addAccount();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteAccount(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.admin.user.dto.v1_0.Account", null, null,
-				null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	@Rule

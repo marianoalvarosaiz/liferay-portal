@@ -333,11 +333,6 @@ public abstract class BaseAssetLibraryTestEntityResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		AssetLibraryTestEntity assetLibraryTestEntity,
 		List<AssetLibraryTestEntity> assetLibraryTestEntities) {

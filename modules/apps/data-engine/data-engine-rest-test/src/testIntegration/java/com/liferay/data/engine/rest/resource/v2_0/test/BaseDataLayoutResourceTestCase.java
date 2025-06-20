@@ -20,7 +20,6 @@ import com.liferay.data.engine.rest.client.pagination.Pagination;
 import com.liferay.data.engine.rest.client.resource.v2_0.DataLayoutResource;
 import com.liferay.data.engine.rest.client.serdes.v2_0.DataLayoutSerDes;
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.petra.function.UnsafeTriConsumer;
@@ -232,8 +231,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 		assertHttpResponseStatusCode(
 			204,
 			dataLayoutResource.deleteDataDefinitionDataLayoutHttpResponse(
-				testDeleteDataDefinitionDataLayout_getDataDefinitionId(
-					dataLayout)));
+				testDeleteDataDefinitionDataLayout_getDataDefinitionId()));
 	}
 
 	protected DataLayout testDeleteDataDefinitionDataLayout_addDataLayout()
@@ -243,8 +241,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 			randomDataLayout());
 	}
 
-	protected Long testDeleteDataDefinitionDataLayout_getDataDefinitionId(
-			DataLayout dataLayout)
+	protected Long testDeleteDataDefinitionDataLayout_getDataDefinitionId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -269,8 +266,8 @@ public abstract class BaseDataLayoutResourceTestCase {
 	}
 
 	protected DataLayout testDeleteDataLayout_addDataLayout() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataLayout_addDataLayout(
+			randomDataLayout());
 	}
 
 	@Test
@@ -353,7 +350,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 		DataLayout dataLayout1 = testDeleteDataLayoutBatch_addDataLayout();
 
 		testDeleteDataLayoutBatch_deleteDataLayout(
-			202, null, dataLayout1.getId());
+			"COMPLETED", null, dataLayout1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -367,7 +364,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 	}
 
 	protected void testDeleteDataLayoutBatch_deleteDataLayout(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -380,10 +377,10 @@ public abstract class BaseDataLayoutResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -926,8 +923,8 @@ public abstract class BaseDataLayoutResourceTestCase {
 	}
 
 	protected DataLayout testGetDataLayout_addDataLayout() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataLayout_addDataLayout(
+			randomDataLayout());
 	}
 
 	@Test
@@ -1043,8 +1040,8 @@ public abstract class BaseDataLayoutResourceTestCase {
 			testGetSiteDataLayoutByContentTypeByDataLayoutKey_addDataLayout()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataLayout_addDataLayout(
+			randomDataLayout());
 	}
 
 	@Test
@@ -1231,63 +1228,8 @@ public abstract class BaseDataLayoutResourceTestCase {
 	}
 
 	protected DataLayout testPutDataLayout_addDataLayout() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		DataLayout dataLayout1 =
-			testBatchEngineDeleteImportTask_addDataLayout();
-
-		testBatchEngineDeleteImportTask_deleteDataLayout(
-			200, null, dataLayout1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			dataLayoutResource.getDataLayoutHttpResponse(dataLayout1.getId()));
-	}
-
-	protected DataLayout testBatchEngineDeleteImportTask_addDataLayout()
-		throws Exception {
-
-		return testDeleteDataLayout_addDataLayout();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteDataLayout(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.data.engine.rest.dto.v2_0.DataLayout", null, null,
-				null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
+		return testPostDataDefinitionDataLayout_addDataLayout(
+			randomDataLayout());
 	}
 
 	protected DataLayout testGraphQLDataLayout_addDataLayout()

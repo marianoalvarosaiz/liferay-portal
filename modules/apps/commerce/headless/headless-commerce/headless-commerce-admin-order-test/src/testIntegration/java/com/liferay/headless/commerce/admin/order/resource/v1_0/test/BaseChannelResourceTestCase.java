@@ -189,8 +189,7 @@ public abstract class BaseChannelResourceTestCase {
 
 		Channel getChannel =
 			channelResource.getOrderByExternalReferenceCodeChannel(
-				testGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode(
-					postChannel));
+				testGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode());
 
 		assertEquals(postChannel, getChannel);
 		assertValid(getChannel);
@@ -204,8 +203,7 @@ public abstract class BaseChannelResourceTestCase {
 	}
 
 	protected String
-			testGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode(
-				Channel channel)
+			testGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -234,8 +232,8 @@ public abstract class BaseChannelResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode(
-													channel) + "\"");
+												testGraphQLGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode() +
+													"\"");
 									}
 								},
 								getGraphQLFields())),
@@ -259,8 +257,8 @@ public abstract class BaseChannelResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode(
-														channel) + "\"");
+													testGraphQLGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode() +
+														"\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -270,8 +268,7 @@ public abstract class BaseChannelResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode(
-				Channel channel)
+			testGraphQLGetOrderByExternalReferenceCodeChannel_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -338,7 +335,7 @@ public abstract class BaseChannelResourceTestCase {
 		Channel postChannel = testGetOrderIdChannel_addChannel();
 
 		Channel getChannel = channelResource.getOrderIdChannel(
-			testGetOrderIdChannel_getId(postChannel));
+			testGetOrderIdChannel_getId());
 
 		assertEquals(postChannel, getChannel);
 		assertValid(getChannel);
@@ -349,9 +346,7 @@ public abstract class BaseChannelResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetOrderIdChannel_getId(Channel channel)
-		throws Exception {
-
+	protected Long testGetOrderIdChannel_getId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -374,8 +369,7 @@ public abstract class BaseChannelResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetOrderIdChannel_getId(
-												channel));
+											testGraphQLGetOrderIdChannel_getId());
 									}
 								},
 								getGraphQLFields())),
@@ -397,8 +391,7 @@ public abstract class BaseChannelResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetOrderIdChannel_getId(
-													channel));
+												testGraphQLGetOrderIdChannel_getId());
 										}
 									},
 									getGraphQLFields()))),
@@ -407,9 +400,7 @@ public abstract class BaseChannelResourceTestCase {
 						"Object/orderIdChannel"))));
 	}
 
-	protected Long testGraphQLGetOrderIdChannel_getId(Channel channel)
-		throws Exception {
-
+	protected Long testGraphQLGetOrderIdChannel_getId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}

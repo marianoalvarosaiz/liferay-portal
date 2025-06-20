@@ -884,11 +884,6 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 			testGroup.getGroupId(), randomSiteTestEntity());
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void appendGraphQLFieldValue(StringBuilder sb, Object value)
 		throws Exception {
 

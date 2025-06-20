@@ -886,11 +886,6 @@ public abstract class BaseSitePageResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 

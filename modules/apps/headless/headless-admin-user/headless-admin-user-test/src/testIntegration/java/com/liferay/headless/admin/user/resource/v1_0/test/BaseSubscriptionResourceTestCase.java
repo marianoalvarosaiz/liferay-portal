@@ -465,11 +465,6 @@ public abstract class BaseSubscriptionResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected Subscription testGraphQLSubscription_addSubscription()
 		throws Exception {
 

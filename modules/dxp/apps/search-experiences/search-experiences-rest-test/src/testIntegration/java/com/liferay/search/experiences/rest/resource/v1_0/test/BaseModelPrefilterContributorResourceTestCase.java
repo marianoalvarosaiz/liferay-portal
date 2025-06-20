@@ -244,11 +244,6 @@ public abstract class BaseModelPrefilterContributorResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		ModelPrefilterContributor modelPrefilterContributor,
 		List<ModelPrefilterContributor> modelPrefilterContributors) {

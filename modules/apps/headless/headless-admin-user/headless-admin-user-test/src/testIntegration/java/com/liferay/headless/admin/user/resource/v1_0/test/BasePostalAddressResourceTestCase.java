@@ -19,7 +19,6 @@ import com.liferay.headless.admin.user.client.pagination.Page;
 import com.liferay.headless.admin.user.client.resource.v1_0.PostalAddressResource;
 import com.liferay.headless.admin.user.client.serdes.v1_0.PostalAddressSerDes;
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.petra.function.transform.TransformUtil;
@@ -348,29 +347,29 @@ public abstract class BasePostalAddressResourceTestCase {
 			testDeletePostalAddressBatch_addPostalAddress();
 
 		testDeletePostalAddressBatch_deletePostalAddress(
-			202, postalAddress1.getExternalReferenceCode(), null);
+			"COMPLETED", null, postalAddress1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
 			postalAddressResource.getPostalAddressHttpResponse(
 				postalAddress1.getId()));
 
-		postalAddress1 = testDeletePostalAddressBatch_addPostalAddress();
-
-		testDeletePostalAddressBatch_deletePostalAddress(
-			202, null, postalAddress1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			postalAddressResource.getPostalAddressHttpResponse(
-				postalAddress1.getId()));
-
-		postalAddress1 = testDeletePostalAddressBatch_addPostalAddress();
 		PostalAddress postalAddress2 =
 			testDeletePostalAddressBatch_addPostalAddress();
 
 		testDeletePostalAddressBatch_deletePostalAddress(
-			202, postalAddress2.getExternalReferenceCode(),
+			"COMPLETED", postalAddress2.getExternalReferenceCode(), null);
+
+		assertHttpResponseStatusCode(
+			404,
+			postalAddressResource.getPostalAddressHttpResponse(
+				postalAddress2.getId()));
+
+		postalAddress1 = testDeletePostalAddressBatch_addPostalAddress();
+		postalAddress2 = testDeletePostalAddressBatch_addPostalAddress();
+
+		testDeletePostalAddressBatch_deletePostalAddress(
+			"COMPLETED", postalAddress2.getExternalReferenceCode(),
 			postalAddress1.getId());
 
 		assertHttpResponseStatusCode(
@@ -383,7 +382,7 @@ public abstract class BasePostalAddressResourceTestCase {
 				postalAddress2.getId()));
 
 		testDeletePostalAddressBatch_deletePostalAddress(
-			202, postalAddress2.getExternalReferenceCode(),
+			"COMPLETED", postalAddress2.getExternalReferenceCode(),
 			postalAddress1.getId());
 
 		assertHttpResponseStatusCode(
@@ -399,7 +398,7 @@ public abstract class BasePostalAddressResourceTestCase {
 	}
 
 	protected void testDeletePostalAddressBatch_deletePostalAddress(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -412,10 +411,10 @@ public abstract class BasePostalAddressResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -1033,8 +1032,8 @@ public abstract class BasePostalAddressResourceTestCase {
 	protected PostalAddress testGetPostalAddress_addPostalAddress()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountPostalAddress_addPostalAddress(
+			randomPostalAddress());
 	}
 
 	@Test
@@ -1154,8 +1153,8 @@ public abstract class BasePostalAddressResourceTestCase {
 			testGetPostalAddressByExternalReferenceCode_addPostalAddress()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountPostalAddress_addPostalAddress(
+			randomPostalAddress());
 	}
 
 	@Test
@@ -1485,8 +1484,8 @@ public abstract class BasePostalAddressResourceTestCase {
 	protected PostalAddress testPatchPostalAddress_addPostalAddress()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountPostalAddress_addPostalAddress(
+			randomPostalAddress());
 	}
 
 	@Test
@@ -1521,8 +1520,8 @@ public abstract class BasePostalAddressResourceTestCase {
 			testPatchPostalAddressByExternalReferenceCode_addPostalAddress()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountPostalAddress_addPostalAddress(
+			randomPostalAddress());
 	}
 
 	@Test
@@ -1567,8 +1566,8 @@ public abstract class BasePostalAddressResourceTestCase {
 	protected PostalAddress testPutPostalAddress_addPostalAddress()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountPostalAddress_addPostalAddress(
+			randomPostalAddress());
 	}
 
 	@Test
@@ -1618,8 +1617,8 @@ public abstract class BasePostalAddressResourceTestCase {
 			testPutPostalAddressByExternalReferenceCode_addPostalAddress()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostAccountPostalAddress_addPostalAddress(
+			randomPostalAddress());
 	}
 
 	protected PostalAddress
@@ -1627,98 +1626,6 @@ public abstract class BasePostalAddressResourceTestCase {
 		throws Exception {
 
 		return randomPostalAddress();
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		PostalAddress postalAddress1 =
-			testBatchEngineDeleteImportTask_addPostalAddress();
-
-		testBatchEngineDeleteImportTask_deletePostalAddress(
-			200, postalAddress1.getExternalReferenceCode(), null);
-
-		assertHttpResponseStatusCode(
-			404,
-			postalAddressResource.getPostalAddressHttpResponse(
-				postalAddress1.getId()));
-
-		postalAddress1 = testBatchEngineDeleteImportTask_addPostalAddress();
-
-		testBatchEngineDeleteImportTask_deletePostalAddress(
-			200, null, postalAddress1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			postalAddressResource.getPostalAddressHttpResponse(
-				postalAddress1.getId()));
-
-		postalAddress1 = testBatchEngineDeleteImportTask_addPostalAddress();
-		PostalAddress postalAddress2 =
-			testBatchEngineDeleteImportTask_addPostalAddress();
-
-		testBatchEngineDeleteImportTask_deletePostalAddress(
-			200, postalAddress2.getExternalReferenceCode(),
-			postalAddress1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			postalAddressResource.getPostalAddressHttpResponse(
-				postalAddress1.getId()));
-		assertHttpResponseStatusCode(
-			200,
-			postalAddressResource.getPostalAddressHttpResponse(
-				postalAddress2.getId()));
-
-		testBatchEngineDeleteImportTask_deletePostalAddress(
-			200, postalAddress2.getExternalReferenceCode(),
-			postalAddress1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			postalAddressResource.getPostalAddressHttpResponse(
-				postalAddress2.getId()));
-	}
-
-	protected PostalAddress testBatchEngineDeleteImportTask_addPostalAddress()
-		throws Exception {
-
-		return testDeletePostalAddress_addPostalAddress();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deletePostalAddress(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.admin.user.dto.v1_0.PostalAddress", null,
-				null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	protected PostalAddress testGraphQLPostalAddress_addPostalAddress()

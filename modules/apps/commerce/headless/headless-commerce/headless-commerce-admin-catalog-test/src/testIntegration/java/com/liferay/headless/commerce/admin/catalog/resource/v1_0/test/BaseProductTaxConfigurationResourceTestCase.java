@@ -343,8 +343,7 @@ public abstract class BaseProductTaxConfigurationResourceTestCase {
 
 		ProductTaxConfiguration getProductTaxConfiguration =
 			productTaxConfigurationResource.getProductIdTaxConfiguration(
-				testGetProductIdTaxConfiguration_getId(
-					postProductTaxConfiguration));
+				testGetProductIdTaxConfiguration_getId());
 
 		assertEquals(postProductTaxConfiguration, getProductTaxConfiguration);
 		assertValid(getProductTaxConfiguration);
@@ -358,10 +357,7 @@ public abstract class BaseProductTaxConfigurationResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetProductIdTaxConfiguration_getId(
-			ProductTaxConfiguration productTaxConfiguration)
-		throws Exception {
-
+	protected Long testGetProductIdTaxConfiguration_getId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -385,8 +381,7 @@ public abstract class BaseProductTaxConfigurationResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetProductIdTaxConfiguration_getId(
-												productTaxConfiguration));
+											testGraphQLGetProductIdTaxConfiguration_getId());
 									}
 								},
 								getGraphQLFields())),
@@ -409,8 +404,7 @@ public abstract class BaseProductTaxConfigurationResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetProductIdTaxConfiguration_getId(
-													productTaxConfiguration));
+												testGraphQLGetProductIdTaxConfiguration_getId());
 										}
 									},
 									getGraphQLFields()))),
@@ -419,8 +413,7 @@ public abstract class BaseProductTaxConfigurationResourceTestCase {
 						"Object/productIdTaxConfiguration"))));
 	}
 
-	protected Long testGraphQLGetProductIdTaxConfiguration_getId(
-			ProductTaxConfiguration productTaxConfiguration)
+	protected Long testGraphQLGetProductIdTaxConfiguration_getId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(

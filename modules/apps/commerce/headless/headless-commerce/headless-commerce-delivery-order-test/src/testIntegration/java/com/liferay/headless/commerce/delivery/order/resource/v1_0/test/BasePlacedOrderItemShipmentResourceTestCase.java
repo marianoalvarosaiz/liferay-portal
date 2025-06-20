@@ -400,11 +400,6 @@ public abstract class BasePlacedOrderItemShipmentResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected PlacedOrderItemShipment
 			testGraphQLPlacedOrderItemShipment_addPlacedOrderItemShipment()
 		throws Exception {

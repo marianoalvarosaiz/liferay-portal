@@ -21,7 +21,6 @@ import com.liferay.data.engine.rest.client.permission.Permission;
 import com.liferay.data.engine.rest.client.resource.v2_0.DataRecordCollectionResource;
 import com.liferay.data.engine.rest.client.serdes.v2_0.DataRecordCollectionSerDes;
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.petra.function.transform.TransformUtil;
@@ -346,7 +345,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testDeleteDataRecordCollectionBatch_addDataRecordCollection();
 
 		testDeleteDataRecordCollectionBatch_deleteDataRecordCollection(
-			202, null, dataRecordCollection1.getId());
+			"COMPLETED", null, dataRecordCollection1.getId());
 
 		assertHttpResponseStatusCode(
 			404,
@@ -363,7 +362,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 
 	protected void
 			testDeleteDataRecordCollectionBatch_deleteDataRecordCollection(
-				int expectedStatusCode, String externalReferenceCode, Long id)
+				String expectedExecuteStatus, String externalReferenceCode,
+				Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -377,10 +377,10 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 							"id", () -> id
 						)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -391,8 +391,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 
 		DataRecordCollection getDataRecordCollection =
 			dataRecordCollectionResource.getDataDefinitionDataRecordCollection(
-				testGetDataDefinitionDataRecordCollection_getDataDefinitionId(
-					postDataRecordCollection));
+				testGetDataDefinitionDataRecordCollection_getDataDefinitionId());
 
 		assertEquals(postDataRecordCollection, getDataRecordCollection);
 		assertValid(getDataRecordCollection);
@@ -407,8 +406,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 	}
 
 	protected Long
-			testGetDataDefinitionDataRecordCollection_getDataDefinitionId(
-				DataRecordCollection dataRecordCollection)
+			testGetDataDefinitionDataRecordCollection_getDataDefinitionId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -436,8 +434,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 									{
 										put(
 											"dataDefinitionId",
-											testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId(
-												dataRecordCollection));
+											testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId());
 									}
 								},
 								getGraphQLFields())),
@@ -460,8 +457,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 										{
 											put(
 												"dataDefinitionId",
-												testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId(
-													dataRecordCollection));
+												testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId());
 										}
 									},
 									getGraphQLFields()))),
@@ -470,8 +466,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 	}
 
 	protected Long
-			testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId(
-				DataRecordCollection dataRecordCollection)
+			testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -975,8 +970,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testGetDataRecordCollection_addDataRecordCollection()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
+			randomDataRecordCollection());
 	}
 
 	@Test
@@ -1104,8 +1099,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testGetDataRecordCollectionPermissionsPage_addDataRecordCollection()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
+			randomDataRecordCollection());
 	}
 
 	@Test
@@ -1129,8 +1124,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testGetSiteDataRecordCollectionByDataRecordCollectionKey_addDataRecordCollection()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
+			randomDataRecordCollection());
 	}
 
 	@Test
@@ -1314,8 +1309,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testPutDataRecordCollection_addDataRecordCollection()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
+			randomDataRecordCollection());
 	}
 
 	@Test
@@ -1361,65 +1356,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testPutDataRecordCollectionPermissionsPage_addDataRecordCollection()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		DataRecordCollection dataRecordCollection1 =
-			testBatchEngineDeleteImportTask_addDataRecordCollection();
-
-		testBatchEngineDeleteImportTask_deleteDataRecordCollection(
-			200, null, dataRecordCollection1.getId());
-
-		assertHttpResponseStatusCode(
-			404,
-			dataRecordCollectionResource.getDataRecordCollectionHttpResponse(
-				dataRecordCollection1.getId()));
-	}
-
-	protected DataRecordCollection
-			testBatchEngineDeleteImportTask_addDataRecordCollection()
-		throws Exception {
-
-		return testDeleteDataRecordCollection_addDataRecordCollection();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteDataRecordCollection(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.data.engine.rest.dto.v2_0.DataRecordCollection",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
+		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
+			randomDataRecordCollection());
 	}
 
 	protected DataRecordCollection

@@ -648,8 +648,8 @@ public abstract class BaseSkuResourceTestCase {
 
 		Sku getSku = skuResource.getChannelProductSku(
 			testGetChannelProductSku_getChannelId(),
-			testGetChannelProductSku_getProductId(postSku), postSku.getId(),
-			null, null);
+			testGetChannelProductSku_getProductId(), postSku.getId(), null,
+			null);
 
 		assertEquals(postSku, getSku);
 		assertValid(getSku);
@@ -665,9 +665,7 @@ public abstract class BaseSkuResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetChannelProductSku_getProductId(Sku sku)
-		throws Exception {
-
+	protected Long testGetChannelProductSku_getProductId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -694,8 +692,7 @@ public abstract class BaseSkuResourceTestCase {
 
 										put(
 											"productId",
-											testGraphQLGetChannelProductSku_getProductId(
-												sku));
+											testGraphQLGetChannelProductSku_getProductId());
 										put("skuId", sku.getId());
 									}
 								},
@@ -722,8 +719,7 @@ public abstract class BaseSkuResourceTestCase {
 
 											put(
 												"productId",
-												testGraphQLGetChannelProductSku_getProductId(
-													sku));
+												testGraphQLGetChannelProductSku_getProductId());
 											put("skuId", sku.getId());
 										}
 									},
@@ -740,7 +736,7 @@ public abstract class BaseSkuResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGraphQLGetChannelProductSku_getProductId(Sku sku)
+	protected Long testGraphQLGetChannelProductSku_getProductId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1049,11 +1045,6 @@ public abstract class BaseSkuResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
 	}
 
 	protected Sku testGraphQLSku_addSku() throws Exception {

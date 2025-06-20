@@ -820,11 +820,6 @@ public abstract class BaseCompanyTestEntityResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected CompanyTestEntity
 			testGraphQLCompanyTestEntity_addCompanyTestEntity()
 		throws Exception {

@@ -1256,8 +1256,7 @@ public abstract class BaseCTEntryResourceTestCase {
 		CTEntry getCTEntry =
 			ctEntryResource.
 				getCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK(
-					testGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-						postCTEntry),
+					testGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(),
 					postCTEntry.getModelClassNameId(),
 					postCTEntry.getModelClassPK());
 
@@ -1274,8 +1273,7 @@ public abstract class BaseCTEntryResourceTestCase {
 	}
 
 	protected Long
-			testGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-				CTEntry ctEntry)
+			testGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1303,8 +1301,7 @@ public abstract class BaseCTEntryResourceTestCase {
 									{
 										put(
 											"ctCollectionId",
-											testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-												ctEntry));
+											testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId());
 										put(
 											"modelClassNameId",
 											ctEntry.getModelClassNameId());
@@ -1333,8 +1330,7 @@ public abstract class BaseCTEntryResourceTestCase {
 										{
 											put(
 												"ctCollectionId",
-												testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-													ctEntry));
+												testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId());
 											put(
 												"modelClassNameId",
 												ctEntry.getModelClassNameId());
@@ -1349,8 +1345,7 @@ public abstract class BaseCTEntryResourceTestCase {
 	}
 
 	protected Long
-			testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-				CTEntry ctEntry)
+			testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1417,11 +1412,6 @@ public abstract class BaseCTEntryResourceTestCase {
 		throws Exception {
 
 		return testGraphQLCTEntry_addCTEntry();
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
 	}
 
 	@Rule

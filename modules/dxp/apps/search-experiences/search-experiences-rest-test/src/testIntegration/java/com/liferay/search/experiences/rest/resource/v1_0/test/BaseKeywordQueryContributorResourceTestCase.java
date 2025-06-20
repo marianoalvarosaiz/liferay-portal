@@ -238,11 +238,6 @@ public abstract class BaseKeywordQueryContributorResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		KeywordQueryContributor keywordQueryContributor,
 		List<KeywordQueryContributor> keywordQueryContributors) {

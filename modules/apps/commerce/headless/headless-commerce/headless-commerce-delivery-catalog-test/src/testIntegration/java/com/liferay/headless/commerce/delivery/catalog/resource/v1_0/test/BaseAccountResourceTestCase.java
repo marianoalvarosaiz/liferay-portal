@@ -577,11 +577,6 @@ public abstract class BaseAccountResourceTestCase {
 			testGetChannelAccountsPage_getChannelId(), account);
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 

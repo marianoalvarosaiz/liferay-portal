@@ -695,11 +695,6 @@ public abstract class BaseAccountOrganizationResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected void assertContains(
 		AccountOrganization accountOrganization,
 		List<AccountOrganization> accountOrganizations) {

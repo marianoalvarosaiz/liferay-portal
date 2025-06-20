@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.batch.engine.client.dto.v1_0.ImportTask;
-import com.liferay.headless.batch.engine.client.http.HttpInvoker.HttpResponse;
 import com.liferay.headless.batch.engine.client.resource.v1_0.ImportTaskResource;
 import com.liferay.headless.commerce.admin.pricing.client.dto.v1_0.DiscountProduct;
 import com.liferay.headless.commerce.admin.pricing.client.http.HttpInvoker;
@@ -269,7 +268,7 @@ public abstract class BaseDiscountProductResourceTestCase {
 			testDeleteDiscountProductBatch_addDiscountProduct();
 
 		testDeleteDiscountProductBatch_deleteDiscountProduct(
-			202, null, discountProduct1.getId());
+			"COMPLETED", null, discountProduct1.getId());
 	}
 
 	protected DiscountProduct
@@ -280,7 +279,7 @@ public abstract class BaseDiscountProductResourceTestCase {
 	}
 
 	protected void testDeleteDiscountProductBatch_deleteDiscountProduct(
-			int expectedStatusCode, String externalReferenceCode, Long id)
+			String expectedExecuteStatus, String externalReferenceCode, Long id)
 		throws Exception {
 
 		HttpInvoker.HttpResponse httpResponse =
@@ -293,10 +292,10 @@ public abstract class BaseDiscountProductResourceTestCase {
 						"id", () -> id
 					)));
 
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+		Assert.assertEquals(202, httpResponse.getStatusCode());
 
 		waitForFinish(
-			"COMPLETED",
+			expectedExecuteStatus,
 			JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 	}
 
@@ -739,58 +738,6 @@ public abstract class BaseDiscountProductResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		DiscountProduct discountProduct1 =
-			testBatchEngineDeleteImportTask_addDiscountProduct();
-
-		testBatchEngineDeleteImportTask_deleteDiscountProduct(
-			200, null, discountProduct1.getId());
-	}
-
-	protected DiscountProduct
-			testBatchEngineDeleteImportTask_addDiscountProduct()
-		throws Exception {
-
-		return testDeleteDiscountProduct_addDiscountProduct();
-	}
-
-	protected void testBatchEngineDeleteImportTask_deleteDiscountProduct(
-			int expectedStatusCode, String externalReferenceCode, Long id,
-			String... parameters)
-		throws Exception {
-
-		ImportTaskResource scopedImportTaskResource =
-			ImportTaskResource.builder(
-			).authentication(
-				_testCompanyAdminUser.getEmailAddress(),
-				PropsValues.DEFAULT_ADMIN_PASSWORD
-			).endpoint(
-				testCompany.getVirtualHostname(), 8080, "http"
-			).parameters(
-				parameters
-			).build();
-
-		HttpResponse httpResponse =
-			scopedImportTaskResource.deleteImportTaskHttpResponse(
-				"com.liferay.headless.commerce.admin.pricing.dto.v1_0.DiscountProduct",
-				null, null, null, null,
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"externalReferenceCode", () -> externalReferenceCode
-					).put(
-						"id", () -> id
-					)));
-
-		Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
-
-		if (expectedStatusCode == 200) {
-			waitForFinish(
-				"COMPLETED",
-				JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-		}
 	}
 
 	protected DiscountProduct testGraphQLDiscountProduct_addDiscountProduct()

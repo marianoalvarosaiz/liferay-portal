@@ -198,23 +198,20 @@ public abstract class BaseAccountMemberResourceTestCase {
 			204,
 			accountMemberResource.
 				deleteAccountByExternalReferenceCodeAccountMemberHttpResponse(
-					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(
-						accountMember),
+					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
 					accountMember.getUserId()));
 
 		assertHttpResponseStatusCode(
 			404,
 			accountMemberResource.
 				getAccountByExternalReferenceCodeAccountMemberHttpResponse(
-					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(
-						accountMember),
+					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
 					accountMember.getUserId()));
 		assertHttpResponseStatusCode(
 			404,
 			accountMemberResource.
 				getAccountByExternalReferenceCodeAccountMemberHttpResponse(
-					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(
-						accountMember),
+					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
 					accountMember.getUserId()));
 	}
 
@@ -227,8 +224,7 @@ public abstract class BaseAccountMemberResourceTestCase {
 	}
 
 	protected String
-			testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(
-				AccountMember accountMember)
+			testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -281,8 +277,7 @@ public abstract class BaseAccountMemberResourceTestCase {
 		AccountMember getAccountMember =
 			accountMemberResource.
 				getAccountByExternalReferenceCodeAccountMember(
-					testGetAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(
-						postAccountMember),
+					testGetAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
 					postAccountMember.getUserId());
 
 		assertEquals(postAccountMember, getAccountMember);
@@ -298,8 +293,7 @@ public abstract class BaseAccountMemberResourceTestCase {
 	}
 
 	protected String
-			testGetAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(
-				AccountMember accountMember)
+			testGetAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -791,11 +785,6 @@ public abstract class BaseAccountMemberResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
 	}
 
 	protected void assertContains(

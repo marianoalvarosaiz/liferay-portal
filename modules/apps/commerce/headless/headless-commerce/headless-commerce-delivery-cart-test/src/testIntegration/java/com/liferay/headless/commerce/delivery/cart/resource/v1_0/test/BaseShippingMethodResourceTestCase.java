@@ -351,11 +351,6 @@ public abstract class BaseShippingMethodResourceTestCase {
 		return null;
 	}
 
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		Assert.assertTrue(true);
-	}
-
 	protected ShippingMethod testGraphQLShippingMethod_addShippingMethod()
 		throws Exception {
 
