@@ -13,8 +13,6 @@ import {SeparatorContainer} from './SeparatorContainer';
 
 interface SeoContainerProps {
 	errors: FormError<ObjectDefinition>;
-	hasUpdateObjectDefinitionPermission: boolean;
-	isLinkedObjectDefinition?: boolean;
 	onSubmit?: (editedObjectDefinition?: Partial<ObjectDefinition>) => void;
 	setErrors?: (errors: Error) => void;
 	setValues: (values: Partial<ObjectDefinition>) => void;
@@ -23,24 +21,14 @@ interface SeoContainerProps {
 
 export function SeoContainer({
 	errors,
-	hasUpdateObjectDefinitionPermission,
-	isLinkedObjectDefinition,
 	onSubmit,
 	setErrors,
 	setValues,
 	values,
 }: SeoContainerProps) {
-	const isReadOnly = !values.modifiable && values.system;
-
-	const disabled =
-		!hasUpdateObjectDefinitionPermission ||
-		isLinkedObjectDefinition ||
-		isReadOnly;
-
 	return (
 		<ClayForm.Group>
 			<SeparatorContainer
-				disabled={disabled}
 				errors={errors}
 				onSubmit={onSubmit}
 				setErrors={setErrors}
@@ -49,7 +37,6 @@ export function SeoContainer({
 			/>
 
 			<AllowFriendlyURLContainer
-				disabled={disabled}
 				onSubmit={onSubmit}
 				setValues={setValues}
 				values={values}
