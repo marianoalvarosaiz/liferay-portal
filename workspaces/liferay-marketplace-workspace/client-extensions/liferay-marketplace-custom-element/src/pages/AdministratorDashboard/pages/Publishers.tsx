@@ -23,7 +23,8 @@ export function Publishers() {
 				}}
 				id="administrator-publishers"
 				managementToolbarProps={{
-					filterSchema: 'administratorPublishers',
+					filterSchema: 'administratorDashboardPublishersTable',
+					filtersVisible: true,
 					searchVisible: true,
 					visible: true,
 				}}
