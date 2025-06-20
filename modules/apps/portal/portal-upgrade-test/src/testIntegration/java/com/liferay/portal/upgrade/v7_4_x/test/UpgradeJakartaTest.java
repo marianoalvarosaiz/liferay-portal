@@ -145,14 +145,6 @@ public class UpgradeJakartaTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_group = GroupTestUtil.addGroup();
-
-		_fragmentCollection =
-			FragmentCollectionLocalServiceUtil.addFragmentCollection(
-				null, TestPropsValues.getUserId(), _group.getGroupId(),
-				RandomTestUtil.randomString(), StringPool.BLANK,
-				_serviceContext);
-		_layout = LayoutTestUtil.addTypeContentLayout(_group);
-
 		_originalName = PrincipalThreadLocal.getName();
 		_originalPermissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
@@ -165,6 +157,13 @@ public class UpgradeJakartaTest {
 			PermissionCheckerFactoryUtil.create(_user));
 
 		PrincipalThreadLocal.setName(_user.getUserId());
+
+		_fragmentCollection =
+			FragmentCollectionLocalServiceUtil.addFragmentCollection(
+				null, TestPropsValues.getUserId(), _group.getGroupId(),
+				RandomTestUtil.randomString(), StringPool.BLANK,
+				_serviceContext);
+		_layout = LayoutTestUtil.addTypeContentLayout(_group);
 
 		ScriptManagementConfigurationTestUtil.save(true);
 	}
