@@ -142,6 +142,7 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 				}
 			});
 		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
+
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),

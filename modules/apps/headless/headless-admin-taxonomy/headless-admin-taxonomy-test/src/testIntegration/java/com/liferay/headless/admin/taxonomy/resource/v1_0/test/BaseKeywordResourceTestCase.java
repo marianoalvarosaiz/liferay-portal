@@ -146,6 +146,7 @@ public abstract class BaseKeywordResourceTestCase {
 				}
 			});
 		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
+
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -3772,7 +3773,6 @@ public abstract class BaseKeywordResourceTestCase {
 
 		randomIrrelevantKeyword.setSiteExternalReferenceCode(
 			irrelevantGroup.getExternalReferenceCode());
-
 		randomIrrelevantKeyword.setSiteId(irrelevantGroup.getGroupId());
 
 		return randomIrrelevantKeyword;
