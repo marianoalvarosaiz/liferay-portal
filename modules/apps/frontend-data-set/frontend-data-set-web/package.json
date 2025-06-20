@@ -39,7 +39,7 @@
 			"<rootDir>/jest-setup.config.js"
 		]
 	},
-	"main": "index.ts",
+	"main": "index.js",
 	"name": "@liferay/frontend-data-set-web",
 	"private": true,
 	"scripts": {
