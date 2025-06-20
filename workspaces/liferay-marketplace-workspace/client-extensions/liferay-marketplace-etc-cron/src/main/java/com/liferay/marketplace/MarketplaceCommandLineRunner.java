@@ -7,17 +7,11 @@ package com.liferay.marketplace;
 
 import com.liferay.client.extension.util.spring.boot3.BaseRestController;
 import com.liferay.client.extension.util.spring.boot3.client.LiferayOAuth2AccessTokenManager;
-import com.liferay.headless.admin.user.client.custom.field.CustomField;
-import com.liferay.headless.admin.user.client.custom.field.CustomValue;
-import com.liferay.headless.admin.user.client.dto.v1_0.UserAccount;
-import com.liferay.headless.admin.user.client.dto.v1_0.UserGroup;
-import com.liferay.headless.admin.user.client.resource.v1_0.UserAccountResource;
-import com.liferay.headless.admin.user.client.resource.v1_0.UserGroupResource;
 import com.liferay.headless.commerce.admin.order.client.dto.v1_0.Order;
+import com.liferay.headless.commerce.admin.order.client.dto.v1_0.OrderItem;
 import com.liferay.headless.commerce.admin.order.client.pagination.Page;
 import com.liferay.headless.commerce.admin.order.client.pagination.Pagination;
 import com.liferay.headless.commerce.admin.order.client.resource.v1_0.OrderResource;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.net.URL;
 
@@ -25,11 +19,11 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -73,34 +67,6 @@ public class MarketplaceCommandLineRunner
 				).toUri()));
 	}
 
-	private Collection<UserAccount> _getCustomersUserAccounts()
-		throws Exception {
-
-		UserGroupResource userGroupResource = _getUserGroupResource();
-
-		UserGroup userGroup = userGroupResource.getUserGroupsPage(
-			"", "name eq 'Customers'",
-			com.liferay.headless.admin.user.client.pagination.Pagination.of(
-				-1, -1),
-			""
-		).fetchFirstItem();
-
-		if (userGroup == null) {
-			return Collections.emptyList();
-		}
-
-		UserAccountResource userAccountResource = _getUserAccountResource();
-
-		com.liferay.headless.admin.user.client.pagination.Page<UserAccount>
-			userAccountPage = userAccountResource.getUserGroupUsersPage(
-				userGroup.getId(), "", "not contains(emailAddress,'@liferay.com')",
-				com.liferay.headless.admin.user.client.pagination.Pagination.of(
-					-1, -1),
-				"");
-
-		return userAccountPage.getItems();
-	}
-
 	private OrderResource _getOrderResource() throws Exception {
 		return OrderResource.builder(
 		).endpoint(
@@ -122,30 +88,6 @@ public class MarketplaceCommandLineRunner
 
 		return orderResource.getOrdersPage(
 			"", filterString, Pagination.of(page, pageSize), "");
-	}
-
-	private UserAccountResource _getUserAccountResource() throws Exception {
-		return UserAccountResource.builder(
-		).header(
-			HttpHeaders.AUTHORIZATION,
-			_liferayOAuth2AccessTokenManager.getAuthorization(
-				"liferay-marketplace-etc-cron-oauth-application-headless-" +
-					"server")
-		).endpoint(
-			new URL(lxcDXPServerProtocol + "://" + lxcDXPMainDomain)
-		).build();
-	}
-
-	private UserGroupResource _getUserGroupResource() throws Exception {
-		return UserGroupResource.builder(
-		).header(
-			HttpHeaders.AUTHORIZATION,
-			_liferayOAuth2AccessTokenManager.getAuthorization(
-				"liferay-marketplace-etc-cron-oauth-application-headless-" +
-					"server")
-		).endpoint(
-			new URL(lxcDXPServerProtocol + "://" + lxcDXPMainDomain)
-		).build();
 	}
 
 	private void _postTrialExpire(long orderId) throws Exception {
@@ -256,40 +198,60 @@ public class MarketplaceCommandLineRunner
 	}
 
 	private void _processMarketplaceProjects() throws Exception {
+		JSONObject jsonObject = new JSONObject();
+
+		Set<String> accountExternalReferenceCodes = new HashSet<>();
+		JSONArray ordersJSONArray = new JSONArray();
 		ZonedDateTime zonedDateTime = LocalDate.of(
 			2025, 1, 1
 		).atStartOfDay(
 			ZoneOffset.UTC
 		);
 
-		Map<String, UserAccount> customerUserAccounts = new HashMap<>();
-
-		Collection<UserAccount> userAccounts = _getCustomersUserAccounts();
-
 		for (int i = 1;; i++) {
 			Page<Order> page = _getOrdersPage(
-				"not contains(creatorEmailAddress, '@liferay.com') and " +
-					"createDate gt " + zonedDateTime,
-				i, 200);
+				"createDate gt " + zonedDateTime, i, 200);
 
 			for (Order order : page.getItems()) {
-				String creatorEmailAddress = order.getCreatorEmailAddress();
+				String accountExternalReferenceCode =
+					order.getAccountExternalReferenceCode();
 
-				if (customerUserAccounts.containsKey(creatorEmailAddress)) {
+				if (!accountExternalReferenceCode.startsWith("KOR-")) {
 					continue;
 				}
 
-				for (UserAccount userAccount : userAccounts) {
-					if (Objects.equals(
-							creatorEmailAddress,
-							userAccount.getEmailAddress())) {
+				String appName = "";
 
-						customerUserAccounts.put(
-							creatorEmailAddress, userAccount);
+				for (OrderItem orderItem : order.getOrderItems()) {
+					appName = orderItem.getName(
+					).get(
+						"en_US"
+					);
 
-						break;
-					}
+					break;
 				}
+
+				accountExternalReferenceCodes.add(accountExternalReferenceCode);
+
+				ordersJSONArray.put(
+					new JSONObject(
+					).put(
+						"accountName",
+						order.getAccount(
+						).getName()
+					).put(
+						"accountExternalReferenceCode",
+						accountExternalReferenceCode
+					).put(
+						"appName", appName
+					).put(
+						"creatorEmailAddress", order.getCreatorEmailAddress()
+					).put(
+						"id", order.getId()
+					).put(
+						"orderTypeExternalReferenceCode",
+						order.getOrderTypeExternalReferenceCode()
+					));
 			}
 
 			if (i > page.getLastPage()) {
@@ -297,57 +259,41 @@ public class MarketplaceCommandLineRunner
 			}
 		}
 
-		JSONArray jsonArray = new JSONArray();
+		for (String accountExternalReferenceCode :
+				accountExternalReferenceCodes) {
 
-		for (UserAccount userAccount : customerUserAccounts.values()) {
-			for (CustomField customField : userAccount.getCustomFields()) {
-				if (!Objects.equals(
-						customField.getName(), "customer-project")) {
+			JSONArray filteredOrdersJSONArray = new JSONArray();
 
-					continue;
+			for (int i = 0; i < ordersJSONArray.length(); i++) {
+				JSONObject orderJSONObject = ordersJSONArray.getJSONObject(i);
+
+				if (accountExternalReferenceCode.equals(
+						orderJSONObject.optString(
+							"accountExternalReferenceCode"))) {
+
+					filteredOrdersJSONArray.put(orderJSONObject);
 				}
-
-				CustomValue customValue = customField.getCustomValue();
-
-				if (Validator.isNull(customValue.getData())) {
-					JSONObject jsonObject = new JSONObject(
-						get(
-							_liferayOAuth2AccessTokenManager.getAuthorization(
-								_liferayOAuthApplicationExternalReferenceCodes),
-							UriComponentsBuilder.fromUriString(
-								_liferayMarketplaceEtcSpringBootURL +
-									"/koroneiki/contact/by-email-address/" +
-										userAccount.getEmailAddress()
-							).build(
-							).toUri()));
-
-					customValue.setData(
-						String.valueOf(
-							jsonObject.getJSONArray(
-								"teams"
-							).get(
-								0
-							)));
-
-					_getUserAccountResource().patchUserAccount(
-						userAccount.getId(), userAccount);
-				}
-
-				jsonArray.put(
-					new JSONObject(
-					).put(
-						"customer-project",
-						new JSONObject(String.valueOf(customValue.getData()))
-					).put(
-						"emailAddress", userAccount.getEmailAddress()
-					));
 			}
+
+			jsonObject.put(
+				accountExternalReferenceCode,
+				new JSONObject(
+				).put(
+					"accountName",
+					filteredOrdersJSONArray.getJSONObject(
+						0
+					).optString(
+						"accountName"
+					)
+				).put(
+					"orders", filteredOrdersJSONArray
+				));
 		}
 
 		post(
 			_liferayOAuth2AccessTokenManager.getAuthorization(
 				_liferayOAuthApplicationExternalReferenceCodes),
-			jsonArray.toString(),
+			jsonObject.toString(),
 			UriComponentsBuilder.fromUriString(
 				_liferayMarketplaceEtcSpringBootURL +
 					"/marketplace/projects/kpi"
@@ -356,7 +302,7 @@ public class MarketplaceCommandLineRunner
 
 		if (_log.isInfoEnabled()) {
 			_log.info(
-				"There are " + customerUserAccounts.size() +
+				"There are " + accountExternalReferenceCodes.size() +
 					" projects with Marketplace apps");
 		}
 	}
