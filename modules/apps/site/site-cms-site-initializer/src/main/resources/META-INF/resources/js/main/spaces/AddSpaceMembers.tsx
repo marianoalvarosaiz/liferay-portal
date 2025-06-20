@@ -14,6 +14,7 @@ import {navigate, sub} from 'frontend-js-web';
 import React, {useEffect, useId, useState} from 'react';
 
 import SpaceService from '../../services/SpaceService';
+import {Space} from '../../types/Space';
 import {UserAccount, UserGroup} from '../../types/UserAccount';
 import {getImage} from '../util/getImage';
 import {NewSpaceFormSection} from './NewSpaceFormSection';
@@ -23,25 +24,32 @@ import {
 } from './SpaceMembersInputWithSelect';
 
 export interface AddSpaceMembersProps {
-	assetLibraryCreatorUserId: string;
 	assetLibraryId: string;
-	assetLibraryName: string;
 	baseSpaceUrl: string;
-	depotEntryName: string;
 }
 
 export function AddSpaceMembers({
-	assetLibraryCreatorUserId,
 	assetLibraryId,
-	assetLibraryName,
 	baseSpaceUrl,
 }: AddSpaceMembersProps) {
 	const currentUserId = Liferay.ThemeDisplay.getUserId();
+	const [currentSpace, setCurrentSpace] = useState<Space>();
 	const [selectedOption, setSelectedOption] = useState(SelectOptions.USERS);
 	const [selectedUsers, setSelectedUsers] = useState<UserAccount[]>([]);
 	const [selectedUserGroups, setSelectedUserGroups] = useState<UserGroup[]>(
 		[]
 	);
+
+	useEffect(() => {
+		const fetchAssetLibrary = async () => {
+			const space = await SpaceService.getSpace({
+				spaceId: assetLibraryId,
+			});
+			setCurrentSpace(space);
+		};
+
+		fetchAssetLibrary();
+	}, [assetLibraryId]);
 
 	useEffect(() => {
 		const fetchSpaceUsers = async () => {
@@ -218,50 +226,56 @@ export function AddSpaceMembers({
 			);
 		}
 
-		return selectedUsers.map((user) => (
-			<li
-				className="align-items-center d-flex justify-content-between"
-				key={user.id}
-			>
-				<div className="align-items-center d-flex">
-					<ClaySticker displayType="primary" shape="circle" size="sm">
-						<img
-							alt={user.name}
-							className="sticker-img"
-							src={user.image || '/image/user_portrait'}
-						/>
-					</ClaySticker>
+		return selectedUsers.map((user) => {
+			return (
+				<li
+					className="align-items-center d-flex justify-content-between"
+					key={user.id}
+				>
+					<div className="align-items-center d-flex">
+						<ClaySticker
+							displayType="primary"
+							shape="circle"
+							size="sm"
+						>
+							<img
+								alt={user.name}
+								className="sticker-img"
+								src={user.image || '/image/user_portrait'}
+							/>
+						</ClaySticker>
 
-					<span className="ml-2">{user.name}</span>
+						<span className="ml-2">{user.name}</span>
 
-					{String(user.id) === currentUserId && (
-						<span className="ml-1 text-lowercase text-secondary">
-							({Liferay.Language.get('you')})
-						</span>
-					)}
-				</div>
-
-				{assetLibraryCreatorUserId === String(user.id) ? (
-					<span className="text-3 text-capitalize text-secondary">
-						({Liferay.Language.get('owner')})
-					</span>
-				) : (
-					<ClayButtonWithIcon
-						aria-label={sub(
-							Liferay.Language.get('remove-x'),
-							Liferay.Language.get('user')
+						{String(user.id) === currentUserId && (
+							<span className="ml-1 text-lowercase text-secondary">
+								({Liferay.Language.get('you')})
+							</span>
 						)}
-						borderless
-						displayType="secondary"
-						onClick={async () => {
-							await onRemoveUser(user);
-						}}
-						symbol="times-circle"
-						translucent
-					/>
-				)}
-			</li>
-		));
+					</div>
+
+					{currentSpace?.creatorUserId === user.id ? (
+						<span className="text-3 text-capitalize text-secondary">
+							({Liferay.Language.get('owner')})
+						</span>
+					) : (
+						<ClayButtonWithIcon
+							aria-label={sub(
+								Liferay.Language.get('remove-x'),
+								Liferay.Language.get('user')
+							)}
+							borderless
+							displayType="secondary"
+							onClick={async () => {
+								await onRemoveUser(user);
+							}}
+							symbol="times-circle"
+							translucent
+						/>
+					)}
+				</li>
+			);
+		});
 	};
 
 	const renderUserGroupsList = () => {
@@ -319,7 +333,7 @@ export function AddSpaceMembers({
 					step={2}
 					title={sub(
 						Liferay.Language.get('add-members-to-x'),
-						assetLibraryName
+						currentSpace?.name || assetLibraryId
 					)}
 					withForm={false}
 				>
