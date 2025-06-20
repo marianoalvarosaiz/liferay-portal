@@ -6,24 +6,20 @@
 import {ClayPaginationBarWithBasicItems} from '@clayui/pagination-bar';
 import {
 	ComponentProps,
-	memo,
 	ReactNode,
 	useCallback,
 	useContext,
-	useEffect,
 	useMemo,
 } from 'react';
-import {KeyedMutator} from 'swr';
+import useSWR, {KeyedMutator} from 'swr';
 
 import i18n from '../../i18n';
+import fetcher from '../../services/fetcher';
 import {PAGINATION, SortDirection} from '../../utils/constants';
-import {
-	FilterSchema as FilterSchemaType,
-	filterSchema as filterSchemas,
-} from '../../schema/filters';
 import EmptyState from '../EmptyState';
 import Loading from '../Loading';
-import ManagementToolbar, {
+import {
+	ListViewManagementToolbar,
 	ManagementToolbarProps,
 } from './components/ManagementToolbar';
 import Table, {TableProps} from './components/Table';
@@ -33,12 +29,12 @@ import ListViewContextProvider, {
 	ListViewContext,
 	ListViewContextProviderProps,
 	ListViewTypes,
-	Sort,
 } from './hooks/ListViewContext';
-import {useFetch} from '../../hooks/useFetch';
-import SearchBuilder from '../../core/SearchBuilder';
-import {useSearchParams} from 'react-router-dom';
-import useUpdateUrlParams from './hooks/useUpdateUrlParams';
+
+type ResourceProps = Pick<
+	ListViewContextState,
+	'filters' | 'keywords' | 'page' | 'pageSize' | 'sort'
+>;
 
 type ChildrenOptions = {
 	dispatch: React.Dispatch<AppActions>;
@@ -46,13 +42,15 @@ type ChildrenOptions = {
 	mutate: KeyedMutator<APIResponse<any>>;
 };
 
+type Resource<T> =
+	| ((listViewContext: ResourceProps) => Promise<APIResponse<T>>)
+	| string;
+
 export type ListViewProps<T extends Record<string, any>> = {
 	children?: (
 		response: APIResponse<T>,
 		options: ChildrenOptions
 	) => ReactNode;
-
-	defaultFilters?: {filter: string};
 
 	emptyStateProps?: ComponentProps<typeof EmptyState>;
 
@@ -66,17 +64,7 @@ export type ListViewProps<T extends Record<string, any>> = {
 
 	initialContext?: ListViewContextProviderProps;
 
-	managementToolbarProps?: {
-		customFilterFields?: {[key: string]: string};
-		visible?: boolean;
-	} & Omit<
-		ManagementToolbarProps,
-		| 'actions'
-		| 'tableProps'
-		| 'totalItems'
-		| 'onSelectAllRows'
-		| 'rowSelectable'
-	>;
+	managementToolbarProps?: ManagementToolbarProps & {visible?: boolean};
 
 	/**
 	 * The options for the pagination.
@@ -87,7 +75,11 @@ export type ListViewProps<T extends Record<string, any>> = {
 		displayType: 'always' | 'auto' | 'never';
 	};
 
-	resource: string;
+	/**
+	 * The resource of the list view.
+	 * It can be an async function or a string.
+	 */
+	resource: Resource<T>;
 
 	tableProps: Omit<
 		TableProps<T>,
@@ -98,153 +90,55 @@ export type ListViewProps<T extends Record<string, any>> = {
 const ListView = <T extends Record<string, any>>({
 	children,
 	emptyStateProps,
-	managementToolbarProps: {
-		customFilterFields,
-		visible: managementToolbarVisible = false,
-		...managementToolbarProps
-	} = {},
+	managementToolbarProps,
 	paginationOptions = {displayType: 'auto'},
 	resource,
 	tableProps,
-	defaultFilters,
 }: ListViewProps<T>) => {
 	const [listViewContext, dispatch] = useContext(ListViewContext);
-	const updateUrlParams = useUpdateUrlParams();
 
-	const [searchParams] = useSearchParams();
+	const {filters, id, keywords, page, pageSize, sort} = listViewContext;
 
-	const currentPage = searchParams.get('page');
+	const params = useMemo(() => {
+		const isResourceString = typeof resource === 'string';
 
-	const currentPageSize = searchParams.get('pageSize');
-
-	let isRowSelectable = false;
-
-	const {filters, keywords, sort} = listViewContext;
-
-	const filterSchemaName = managementToolbarProps.filterSchema ?? '';
-
-	const filterSchema = (filterSchemas as any)[
-		filterSchemaName
-	] as FilterSchemaType;
-
-	const onApplyFilterMemo = useMemo(
-		() => filterSchema?.onApply?.bind(filterSchema),
-		[filterSchema]
-	);
-
-	const filterVariables = useMemo(
-		() => ({
-			appliedFilter: filters.filter,
-			defaultFilter: defaultFilters?.filter,
-			filterSchema,
-		}),
-		[filters, defaultFilters?.filter, filterSchema]
-	);
-
-	const buildSort = (sort: Sort | Sort[]) => {
-		if (Array.isArray(sort)) {
-			return sort
-				.reduce(
-					(prevSort, newSort) =>
-						prevSort +
-						`${newSort.key}:${newSort.direction.toLowerCase()},`,
-					''
-				)
-				.slice(0, -1);
+		if (isResourceString) {
+			return {
+				resource: () => fetcher(resource),
+				resourceKey: resource,
+			};
 		}
+		const [filterKey] = Object.keys(filters.filter);
 
-		return sort.key ? `${sort.key}:${sort.direction.toLowerCase()}` : '';
-	};
+		return {
+			resource: () =>
+				resource({
+					filters,
+					keywords,
+					page,
+					pageSize,
+					sort,
+				}),
 
-	const filter = useMemo(() => {
-		const appliedFilters: {[key: string]: string} = {
-			...filterVariables.appliedFilter,
+			resourceKey: `listView:${id}?${new URLSearchParams({
+				filter: filters.filter[filterKey],
+				keywords,
+				page: page.toString(),
+				pageSize: pageSize.toString(),
+				sortDir: sort.direction,
+				sortKey: sort.key,
+			}).toString()}`,
 		};
-
-		const filters: {[key: string]: string | undefined | boolean} = {};
-
-		Object.entries(appliedFilters).forEach(([key, value]) => {
-			const matchingField = filterSchema.fields.find(
-				(field) => field.name === key && field.isCustomFilter
-			);
-
-			if (matchingField) {
-				if (
-					value.includes(`No ${matchingField.label}`) &&
-					!matchingField.requestOperator
-				) {
-					const newKey = `no${key.charAt(0).toUpperCase() + key.slice(1)}`;
-
-					filters[newKey] = true;
-				}
-				else {
-					filters[key] = SearchBuilder.createCustomFilter(
-						matchingField,
-						value
-					);
-				}
-				delete appliedFilters[key];
-			}
-		});
-
-		const filterVariablesCopy = {
-			...filterVariables,
-			appliedFilter: {...appliedFilters},
-		};
-
-		const baseFilter = onApplyFilterMemo
-			? onApplyFilterMemo(filterVariablesCopy)
-			: SearchBuilder.createFilter(filterVariablesCopy) || '';
-
-		const filter = {filter: baseFilter, ...filters};
-
-		return filter;
-	}, [filterSchema?.fields, filterVariables, onApplyFilterMemo]);
-
-	const getURLSearchParams = useCallback(
-		() => ({
-			...filter,
-			page:
-				managementToolbarProps.applyFilters && currentPage
-					? Number(currentPage)
-					: listViewContext.page,
-			pageSize:
-				managementToolbarProps.applyFilters && currentPageSize
-					? Number(currentPageSize)
-					: listViewContext.pageSize,
-			search: keywords,
-			sort: buildSort(sort),
-		}),
-		[
-			currentPage,
-			currentPageSize,
-			filter,
-			listViewContext.page,
-			listViewContext.pageSize,
-			managementToolbarProps.applyFilters,
-			keywords,
-			sort,
-		]
-	);
+	}, [id, filters, keywords, page, pageSize, sort, resource]);
 
 	const {
 		data: response,
 		error,
-		isValidating,
-		loading,
+		isLoading: loading,
 		mutate,
-	} = useFetch(resource, {
-		params: getURLSearchParams(),
-	});
+	} = useSWR<APIResponse<T>>(params.resourceKey, params.resource);
 
-	const {
-		actions = {},
-		items = [],
-		lastPage = 1,
-		page = 1,
-		pageSize,
-		totalCount = 0,
-	} = response || {};
+	const {items = [], totalCount = 0} = response || {};
 
 	const onSort = useCallback(
 		(key: string, direction: SortDirection) => {
@@ -256,81 +150,54 @@ const ListView = <T extends Record<string, any>>({
 		[dispatch]
 	);
 
-	useEffect(() => {
-		const shouldCurrentPageBeChanged =
-			!loading && lastPage > 1 && page === lastPage;
+	const Pagination = useMemo(() => {
+		const paginationDisplayType = paginationOptions?.displayType;
 
-		if (shouldCurrentPageBeChanged) {
-			dispatch({payload: page - 1, type: ListViewTypes.SET_PAGE});
+		if (
+			(paginationDisplayType === 'auto' && totalCount < 5) ||
+			paginationDisplayType === 'never'
+		) {
+			return null;
 		}
-	}, [dispatch, lastPage, loading, page]);
 
-	useEffect(() => {
-		if (customFilterFields) {
-			dispatch({
-				payload: {customFilterFields},
-				type: ListViewTypes.SET_CUSTOM_FILTER_FIELDS,
-			});
-		}
-	}, [customFilterFields, dispatch]);
+		return (
+			<ClayPaginationBarWithBasicItems
+				activeDelta={pageSize}
+				activePage={page}
+				deltas={PAGINATION.delta.map((label) => ({label}))}
+				ellipsisBuffer={PAGINATION.ellipsisBuffer}
+				labels={{
+					paginationResults: i18n.translate('showing-x-to-x-of-x'),
+					perPageItems: i18n.translate('x-items'),
+					selectPerPageItems: i18n.translate('x-items'),
+				}}
+				onDeltaChange={(delta) =>
+					dispatch({
+						payload: delta,
+						type: ListViewTypes.SET_PAGE_SIZE,
+					})
+				}
+				onPageChange={(page) =>
+					dispatch({
+						payload: page,
+						type: ListViewTypes.SET_PAGE,
+					})
+				}
+				totalItems={totalCount}
+			/>
+		);
+	}, [dispatch, page, pageSize, paginationOptions?.displayType, totalCount]);
 
-	useEffect(() => {
-		dispatch({
-			payload: isRowSelectable,
-			type: ListViewTypes.SET_CHECKED_ALL_ROWS,
-		});
-	}, [dispatch, isRowSelectable]);
-
-	useEffect(() => {
-		if (managementToolbarProps.applyFilters) {
-			dispatch({
-				payload: true,
-				type: ListViewTypes.SET_APPLY_FILTERS,
-			});
-		}
-	}, [dispatch, managementToolbarProps.applyFilters]);
-
-	if (loading || (isValidating && searchParams.get('filter'))) {
+	if (loading) {
 		return <Loading />;
 	}
 
-	const Pagination = (
-		<ClayPaginationBarWithBasicItems
-			activeDelta={pageSize}
-			activePage={page}
-			deltas={PAGINATION.delta.map((label) => ({label}))}
-			ellipsisBuffer={PAGINATION.ellipsisBuffer}
-			labels={{
-				paginationResults: i18n.translate('showing-x-to-x-of-x'),
-				perPageItems: i18n.translate('x-items'),
-				selectPerPageItems: i18n.translate('x-items'),
-			}}
-			onDeltaChange={(delta) => {
-				if (managementToolbarProps.applyFilters) {
-					updateUrlParams({pageSize: delta});
-				}
-
-				dispatch({payload: delta, type: ListViewTypes.SET_PAGE_SIZE});
-			}}
-			onPageChange={(page) => {
-				if (managementToolbarProps.applyFilters) {
-					updateUrlParams({page});
-				}
-
-				dispatch({payload: page, type: ListViewTypes.SET_PAGE});
-			}}
-			totalItems={totalCount || 0}
-		/>
-	);
-
 	return (
 		<>
-			{managementToolbarVisible && (
-				<ManagementToolbar
+			{managementToolbarProps?.visible && (
+				<ListViewManagementToolbar
 					{...managementToolbarProps}
-					actions={actions}
-					customFilterFields={customFilterFields}
-					totalItems={totalCount}
+					results={items.length}
 				/>
 			)}
 
@@ -351,7 +218,7 @@ const ListView = <T extends Record<string, any>>({
 						sort={sort}
 					/>
 
-					{/* {paginationOptions.displayType === 'always' && Pagination} */}
+					{Pagination}
 
 					{children &&
 						children(response!, {
