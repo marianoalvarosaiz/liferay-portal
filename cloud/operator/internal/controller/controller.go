@@ -9,34 +9,21 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-func (r *Reconciler) Reconcile(
-	ctx context.Context,
-	req ctrl.Request,
-) (ctrl.Result, error) {
-	cm := &corev1.ConfigMap{}
+type Reconciler struct {
+	client.Client
+}
 
+func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).For(&corev1.ConfigMap{}).Named("Controller").Complete(r)
+}
+
+func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	cm := &corev1.ConfigMap{}
 	if err := r.Get(ctx, req.NamespacedName, cm); err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	log := logf.FromContext(ctx)
-	log.Info("Hello, world! ConfigMap reconciled.", "name", cm.Name)
+	logf.FromContext(ctx).Info("Hello, world! ConfigMap reconciled.", "name", cm.Name)
 
 	return ctrl.Result{}, nil
-}
-
-func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(
-		mgr,
-	).For(
-		&corev1.ConfigMap{},
-	).Named(
-		"Controller",
-	).Complete(
-		r,
-	)
-}
-
-type Reconciler struct {
-	client.Client
 }
