@@ -135,29 +135,26 @@ public abstract class BaseKeywordResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
+		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(irrelevantGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
-
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(testGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		testDepotEntryGroup = testDepotEntry.getGroup();
 
 		_keywordResource.setContextCompany(testCompany);
 
@@ -590,8 +587,8 @@ public abstract class BaseKeywordResourceTestCase {
 								put(
 									"assetLibraryId",
 									"\"" +
-										irrelevantDepotEntry.getDepotEntryId() +
-											"\"");
+										irrelevantTestDepotEntry.
+											getDepotEntryId() + "\"");
 								put(
 									"externalReferenceCode",
 									irrelevantExternalReferenceCode);
@@ -616,7 +613,7 @@ public abstract class BaseKeywordResourceTestCase {
 									put(
 										"assetLibraryId",
 										"\"" +
-											irrelevantDepotEntry.
+											irrelevantTestDepotEntry.
 												getDepotEntryId() + "\"");
 									put(
 										"externalReferenceCode",
@@ -1064,7 +1061,7 @@ public abstract class BaseKeywordResourceTestCase {
 	protected Long testGetAssetLibraryKeywordsPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantDepotEntry.getDepotEntryId();
+		return irrelevantTestDepotEntry.getDepotEntryId();
 	}
 
 	@Test
@@ -2784,18 +2781,19 @@ public abstract class BaseKeywordResourceTestCase {
 			String... parameters)
 		throws Exception {
 
-		ImportTaskResource importTaskResource = ImportTaskResource.builder(
-		).authentication(
-			_testCompanyAdminUser.getEmailAddress(),
-			PropsValues.DEFAULT_ADMIN_PASSWORD
-		).endpoint(
-			testCompany.getVirtualHostname(), 8080, "http"
-		).parameters(
-			parameters
-		).build();
+		ImportTaskResource scopedImportTaskResource =
+			ImportTaskResource.builder(
+			).authentication(
+				_testCompanyAdminUser.getEmailAddress(),
+				PropsValues.DEFAULT_ADMIN_PASSWORD
+			).endpoint(
+				testCompany.getVirtualHostname(), 8080, "http"
+			).parameters(
+				parameters
+			).build();
 
 		HttpResponse httpResponse =
-			importTaskResource.deleteImportTaskHttpResponse(
+			scopedImportTaskResource.deleteImportTaskHttpResponse(
 				"com.liferay.headless.admin.taxonomy.dto.v1_0.Keyword", null,
 				null, null, null,
 				JSONUtil.putAll(
@@ -2994,9 +2992,10 @@ public abstract class BaseKeywordResourceTestCase {
 			valid = false;
 		}
 
+		com.liferay.portal.kernel.model.Group group = testDepotEntry.getGroup();
+
 		if (!Objects.equals(
-				keyword.getAssetLibraryKey(),
-				testDepotEntryGroup.getGroupKey()) &&
+				keyword.getAssetLibraryKey(), group.getGroupKey()) &&
 			!Objects.equals(keyword.getSiteId(), testGroup.getGroupId())) {
 
 			valid = false;
@@ -3807,11 +3806,9 @@ public abstract class BaseKeywordResourceTestCase {
 	protected KeywordResource keywordResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
+	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
-	protected DepotEntry irrelevantDepotEntry;
-	protected com.liferay.portal.kernel.model.Group irrelevantDepotEntryGroup;
 	protected DepotEntry testDepotEntry;
-	protected com.liferay.portal.kernel.model.Group testDepotEntryGroup;
 	protected com.liferay.portal.kernel.model.Group testGroup;
 
 	protected static class BeanTestUtil {

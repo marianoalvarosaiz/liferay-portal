@@ -1122,18 +1122,19 @@ public abstract class BaseDataListViewResourceTestCase {
 			String... parameters)
 		throws Exception {
 
-		ImportTaskResource importTaskResource = ImportTaskResource.builder(
-		).authentication(
-			_testCompanyAdminUser.getEmailAddress(),
-			PropsValues.DEFAULT_ADMIN_PASSWORD
-		).endpoint(
-			testCompany.getVirtualHostname(), 8080, "http"
-		).parameters(
-			parameters
-		).build();
+		ImportTaskResource scopedImportTaskResource =
+			ImportTaskResource.builder(
+			).authentication(
+				_testCompanyAdminUser.getEmailAddress(),
+				PropsValues.DEFAULT_ADMIN_PASSWORD
+			).endpoint(
+				testCompany.getVirtualHostname(), 8080, "http"
+			).parameters(
+				parameters
+			).build();
 
 		HttpResponse httpResponse =
-			importTaskResource.deleteImportTaskHttpResponse(
+			scopedImportTaskResource.deleteImportTaskHttpResponse(
 				"com.liferay.data.engine.rest.dto.v2_0.DataListView", null,
 				null, null, null,
 				JSONUtil.putAll(

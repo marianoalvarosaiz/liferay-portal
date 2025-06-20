@@ -101,29 +101,26 @@ public abstract class BaseUserGroupResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
+		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(irrelevantGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
-
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(testGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		testDepotEntryGroup = testDepotEntry.getGroup();
 
 		_userGroupResource.setContextCompany(testCompany);
 
@@ -1014,7 +1011,7 @@ public abstract class BaseUserGroupResourceTestCase {
 			testGetAssetLibraryUserGroupsPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantDepotEntry.getDepotEntryId();
+		return irrelevantTestDepotEntry.getDepotEntryId();
 	}
 
 	@Test
@@ -1655,11 +1652,9 @@ public abstract class BaseUserGroupResourceTestCase {
 
 	protected UserGroupResource userGroupResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
+	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
-	protected DepotEntry irrelevantDepotEntry;
-	protected com.liferay.portal.kernel.model.Group irrelevantDepotEntryGroup;
 	protected DepotEntry testDepotEntry;
-	protected com.liferay.portal.kernel.model.Group testDepotEntryGroup;
 	protected com.liferay.portal.kernel.model.Group testGroup;
 
 	protected static class BeanTestUtil {

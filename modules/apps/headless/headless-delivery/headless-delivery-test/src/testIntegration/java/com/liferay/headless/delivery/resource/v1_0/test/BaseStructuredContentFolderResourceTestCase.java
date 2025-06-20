@@ -136,29 +136,26 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
+		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(irrelevantGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
-
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(testGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		testDepotEntryGroup = testDepotEntry.getGroup();
 
 		_structuredContentFolderResource.setContextCompany(testCompany);
 
@@ -645,8 +642,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 								put(
 									"assetLibraryId",
 									"\"" +
-										irrelevantDepotEntry.getDepotEntryId() +
-											"\"");
+										irrelevantTestDepotEntry.
+											getDepotEntryId() + "\"");
 								put(
 									"externalReferenceCode",
 									irrelevantExternalReferenceCode);
@@ -671,7 +668,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 									put(
 										"assetLibraryId",
 										"\"" +
-											irrelevantDepotEntry.
+											irrelevantTestDepotEntry.
 												getDepotEntryId() + "\"");
 									put(
 										"externalReferenceCode",
@@ -1221,7 +1218,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			testGetAssetLibraryStructuredContentFoldersPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantDepotEntry.getDepotEntryId();
+		return irrelevantTestDepotEntry.getDepotEntryId();
 	}
 
 	@Test
@@ -3368,18 +3365,19 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				String... parameters)
 		throws Exception {
 
-		ImportTaskResource importTaskResource = ImportTaskResource.builder(
-		).authentication(
-			_testCompanyAdminUser.getEmailAddress(),
-			PropsValues.DEFAULT_ADMIN_PASSWORD
-		).endpoint(
-			testCompany.getVirtualHostname(), 8080, "http"
-		).parameters(
-			parameters
-		).build();
+		ImportTaskResource scopedImportTaskResource =
+			ImportTaskResource.builder(
+			).authentication(
+				_testCompanyAdminUser.getEmailAddress(),
+				PropsValues.DEFAULT_ADMIN_PASSWORD
+			).endpoint(
+				testCompany.getVirtualHostname(), 8080, "http"
+			).parameters(
+				parameters
+			).build();
 
 		HttpResponse httpResponse =
-			importTaskResource.deleteImportTaskHttpResponse(
+			scopedImportTaskResource.deleteImportTaskHttpResponse(
 				"com.liferay.headless.delivery.dto.v1_0.StructuredContentFolder",
 				null, null, null, null,
 				JSONUtil.putAll(
@@ -3613,9 +3611,11 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			valid = false;
 		}
 
+		com.liferay.portal.kernel.model.Group group = testDepotEntry.getGroup();
+
 		if (!Objects.equals(
 				structuredContentFolder.getAssetLibraryKey(),
-				testDepotEntryGroup.getGroupKey()) &&
+				group.getGroupKey()) &&
 			!Objects.equals(
 				structuredContentFolder.getSiteId(), testGroup.getGroupId())) {
 
@@ -4552,11 +4552,9 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 	protected StructuredContentFolderResource structuredContentFolderResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
+	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
-	protected DepotEntry irrelevantDepotEntry;
-	protected com.liferay.portal.kernel.model.Group irrelevantDepotEntryGroup;
 	protected DepotEntry testDepotEntry;
-	protected com.liferay.portal.kernel.model.Group testDepotEntryGroup;
 	protected com.liferay.portal.kernel.model.Group testGroup;
 
 	protected static class BeanTestUtil {

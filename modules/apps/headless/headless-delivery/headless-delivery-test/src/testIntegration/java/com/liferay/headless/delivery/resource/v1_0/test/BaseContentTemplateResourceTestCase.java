@@ -103,29 +103,26 @@ public abstract class BaseContentTemplateResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
+		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(irrelevantGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
-
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 			null,
 			new ServiceContext() {
 				{
-					setCompanyId(testCompany.getCompanyId());
+					setCompanyId(testGroup.getCompanyId());
 					setUserId(TestPropsValues.getUserId());
 				}
 			});
-		testDepotEntryGroup = testDepotEntry.getGroup();
 
 		_contentTemplateResource.setContextCompany(testCompany);
 
@@ -667,7 +664,7 @@ public abstract class BaseContentTemplateResourceTestCase {
 			testGetAssetLibraryContentTemplatesPage_getIrrelevantAssetLibraryId()
 		throws Exception {
 
-		return irrelevantDepotEntry.getDepotEntryId();
+		return irrelevantTestDepotEntry.getDepotEntryId();
 	}
 
 	@Test
@@ -1429,9 +1426,10 @@ public abstract class BaseContentTemplateResourceTestCase {
 			valid = false;
 		}
 
+		com.liferay.portal.kernel.model.Group group = testDepotEntry.getGroup();
+
 		if (!Objects.equals(
-				contentTemplate.getAssetLibraryKey(),
-				testDepotEntryGroup.getGroupKey()) &&
+				contentTemplate.getAssetLibraryKey(), group.getGroupKey()) &&
 			!Objects.equals(
 				contentTemplate.getSiteId(), testGroup.getGroupId())) {
 
@@ -2362,11 +2360,9 @@ public abstract class BaseContentTemplateResourceTestCase {
 
 	protected ContentTemplateResource contentTemplateResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
+	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
-	protected DepotEntry irrelevantDepotEntry;
-	protected com.liferay.portal.kernel.model.Group irrelevantDepotEntryGroup;
 	protected DepotEntry testDepotEntry;
-	protected com.liferay.portal.kernel.model.Group testDepotEntryGroup;
 	protected com.liferay.portal.kernel.model.Group testGroup;
 
 	protected static class BeanTestUtil {

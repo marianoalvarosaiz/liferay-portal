@@ -1457,18 +1457,19 @@ public abstract class BaseCTCollectionResourceTestCase {
 			String... parameters)
 		throws Exception {
 
-		ImportTaskResource importTaskResource = ImportTaskResource.builder(
-		).authentication(
-			_testCompanyAdminUser.getEmailAddress(),
-			PropsValues.DEFAULT_ADMIN_PASSWORD
-		).endpoint(
-			testCompany.getVirtualHostname(), 8080, "http"
-		).parameters(
-			parameters
-		).build();
+		ImportTaskResource scopedImportTaskResource =
+			ImportTaskResource.builder(
+			).authentication(
+				_testCompanyAdminUser.getEmailAddress(),
+				PropsValues.DEFAULT_ADMIN_PASSWORD
+			).endpoint(
+				testCompany.getVirtualHostname(), 8080, "http"
+			).parameters(
+				parameters
+			).build();
 
 		HttpResponse httpResponse =
-			importTaskResource.deleteImportTaskHttpResponse(
+			scopedImportTaskResource.deleteImportTaskHttpResponse(
 				"com.liferay.change.tracking.rest.dto.v1_0.CTCollection", null,
 				null, null, null,
 				JSONUtil.putAll(
