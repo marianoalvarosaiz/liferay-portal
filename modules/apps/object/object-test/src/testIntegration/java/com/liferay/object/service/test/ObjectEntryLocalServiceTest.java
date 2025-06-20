@@ -2685,27 +2685,28 @@ public class ObjectEntryLocalServiceTest {
 			).localized(
 				true
 			).name(
-				"textLocalized"
+				"customField"
 			).objectDefinitionId(
 				_objectDefinition.getObjectDefinitionId()
 			).userId(
 				TestPropsValues.getUserId()
 			).build());
 
+		Map<String, Serializable> localizedValues = Collections.singletonMap(
+			localizedObjectField.getI18nObjectFieldName(),
+			HashMapBuilder.put(
+				"en_US", RandomTestUtil.randomString()
+			).put(
+				"pt_BR", RandomTestUtil.randomString()
+			).build());
+
 		ObjectValidationRule objectValidationRule7 = _addObjectValidationRule(
 			ObjectValidationRuleConstants.ENGINE_TYPE_DDM,
 			LocalizedMapUtil.getLocalizedMap("Can not be empty"),
-			"NOT(isEmpty(textLocalized))");
+			"NOT(isEmpty(customField))");
 
 		_addObjectEntry(
 			HashMapBuilder.<String, Serializable>put(
-				localizedObjectField.getI18nObjectFieldName(),
-				HashMapBuilder.put(
-					"en_US", RandomTestUtil.randomString()
-				).put(
-					"pt_BR", RandomTestUtil.randomString()
-				).build()
-			).put(
 				"birthday", "2000-12-25"
 			).put(
 				"date", tomorrowLocalDate.toString()
@@ -2719,32 +2720,38 @@ public class ObjectEntryLocalServiceTest {
 				"middleName", "Doe"
 			).put(
 				"time", timeString
+			).putAll(
+				localizedValues
 			).build());
 
 		_assertCount(5);
 
+		localizedValues = Collections.singletonMap(
+			localizedObjectField.getI18nObjectFieldName(),
+			HashMapBuilder.put(
+				"en_US", StringPool.BLANK
+			).put(
+				"pt_BR", StringPool.BLANK
+			).build());
+
+		values = HashMapBuilder.<String, Serializable>put(
+			"emailAddressRequired", RandomTestUtil.randomString()
+		).put(
+			"listTypeEntryKeyRequired", "listTypeEntryKey1"
+		).putAll(
+			localizedValues
+		).build();
+
 		try {
-			_addObjectEntry(
-				HashMapBuilder.<String, Serializable>put(
-					localizedObjectField.getI18nObjectFieldName(),
-					HashMapBuilder.put(
-						"en_US", StringPool.BLANK
-					).put(
-						"pt_BR", StringPool.BLANK
-					).build()
-				).put(
-					"emailAddressRequired", RandomTestUtil.randomString()
-				).put(
-					"listTypeEntryKeyRequired", "listTypeEntryKey1"
-				).build());
+			_addObjectEntry(values);
 
 			Assert.fail();
 		}
 		catch (ModelListenerException modelListenerException) {
 			ObjectValidationRuleEngineException
 				objectValidationRuleEngineException =
-					(ObjectValidationRuleEngineException)
-						modelListenerException.getCause();
+				(ObjectValidationRuleEngineException)
+					modelListenerException.getCause();
 
 			List<ObjectValidationRuleResult> objectValidationRuleResults =
 				objectValidationRuleEngineException.
