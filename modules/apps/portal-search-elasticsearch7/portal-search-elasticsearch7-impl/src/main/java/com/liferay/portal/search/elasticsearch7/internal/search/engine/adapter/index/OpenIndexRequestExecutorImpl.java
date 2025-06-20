@@ -53,7 +53,7 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 
 		if (indicesOptions != null) {
 			elasticsearchOpenIndexRequest.indicesOptions(
-				IndicesOptionsTranslatorUtil.translate(indicesOptions));
+				_indicesOptionsTranslator.translate(indicesOptions));
 		}
 
 		if (openIndexRequest.getTimeout() > 0) {
@@ -95,5 +95,8 @@ public class OpenIndexRequestExecutorImpl implements OpenIndexRequestExecutor {
 
 	@Reference
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
+
+	@Reference
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
 
 }

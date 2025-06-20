@@ -47,7 +47,7 @@ public class DeleteIndexRequestExecutorImpl
 				new org.elasticsearch.action.admin.indices.delete.
 					DeleteIndexRequest(deleteIndexRequest.getIndexNames());
 
-		IndicesOptions indicesOptions = IndicesOptionsTranslatorUtil.translate(
+		IndicesOptions indicesOptions = _indicesOptionsTranslator.translate(
 			deleteIndexRequest.getIndicesOptions());
 
 		elasticsearchDeleteIndexRequest.indicesOptions(indicesOptions);
@@ -78,5 +78,8 @@ public class DeleteIndexRequestExecutorImpl
 
 	@Reference
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
+
+	@Reference
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
 
 }
