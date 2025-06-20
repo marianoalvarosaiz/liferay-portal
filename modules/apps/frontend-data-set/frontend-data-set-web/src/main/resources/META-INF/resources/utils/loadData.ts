@@ -79,13 +79,8 @@ export async function loadData({
 		url.searchParams.append('doAsUserId', Liferay.ThemeDisplay.getUserId());
 	}
 
-	if (page) {
-		url.searchParams.append('page', page.toString());
-	}
-
-	if (delta) {
-		url.searchParams.append('pageSize', delta.toString());
-	}
+	url.searchParams.append('page', page.toString());
+	delta && url.searchParams.append('pageSize', delta.toString());
 
 	if (searchParam) {
 		url.searchParams.append('search', searchParam);
