@@ -188,11 +188,8 @@ portletDisplay.setURLBack(backURL);
 				return false;
 			}
 
-			const localDate = date.replace(/Z$/, '');
-
 			const currentDateTime = new Date();
-
-			const dateTime = new Date(localDate);
+			const dateTime = new Date(date);
 
 			return currentDateTime >= dateTime;
 		}
