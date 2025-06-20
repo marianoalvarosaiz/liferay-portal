@@ -2362,8 +2362,8 @@ public class ObjectEntryLocalServiceImpl
 			}
 
 			_putLocalizedValues(
-				objectFieldColumn.getName(), objectEntry.getDefaultLanguageId(),
-				localizedValues, values);
+				objectFieldColumn.getName(), (Serializable)localizedValues,
+				values);
 		}
 	}
 
@@ -4580,8 +4580,8 @@ public class ObjectEntryLocalServiceImpl
 								column.getName(), StringPool.UNDERLINE)));
 
 					_putLocalizedValues(
-						column.getName(), objectField.getDefaultLanguageId(),
-						localizedValues, insertedValues);
+						column.getName(), (Serializable)localizedValues,
+						insertedValues);
 				}
 
 				preparedStatement.addBatch();
@@ -4864,16 +4864,13 @@ public class ObjectEntryLocalServiceImpl
 	}
 
 	private void _putLocalizedValues(
-		String columnName, String defaultLanguageId,
-		Map<String, Serializable> localizedValues,
+		String columnName, Serializable localizedValues,
 		Map<String, Serializable> values) {
 
-		values.put(columnName + "i18n", (Serializable)localizedValues);
+		values.put(columnName + "i18n", localizedValues);
 		values.putIfAbsent(
 			StringUtil.removeLast(columnName, StringPool.UNDERLINE),
-			localizedValues.getOrDefault(
-				defaultLanguageId, StringPool.BLANK
-			).toString());
+			StringPool.BLANK);
 	}
 
 	private void _putObjectFilterParser(
