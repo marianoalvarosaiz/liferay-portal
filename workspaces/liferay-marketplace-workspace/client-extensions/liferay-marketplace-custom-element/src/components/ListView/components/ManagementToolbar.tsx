@@ -32,6 +32,7 @@ export type ManagementToolbarProps = {
 	 * Check out the file {src/schema/filter.ts}
 	 */
 	filterSchema?: FilterSchemaOption;
+	filtersVisible?: boolean;
 	searchVisible?: boolean;
 	title?: string;
 	totalItems: number;
@@ -41,6 +42,7 @@ export type ManagementToolbarProps = {
 const ManagementToolbar: React.FC<ManagementToolbarProps> = ({
 	actionButton,
 	filterSchema,
+	filtersVisible = false,
 	searchVisible = false,
 	totalItems,
 }) => {
@@ -50,7 +52,7 @@ const ManagementToolbar: React.FC<ManagementToolbarProps> = ({
 		<>
 			<ClayManagementToolbar>
 				<div className="d-flex justify-content-between w-100">
-					{filterSchema && (
+					{!!filtersVisible && (
 						<ManagementToolbarFilter
 							filterSchema={
 								(filterSchemas as any)[filterSchema ?? '']
