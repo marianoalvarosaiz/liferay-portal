@@ -40,11 +40,12 @@ import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 	generatePermissionsJavaMethodSignatures = []
 	javaDataType = freeMarkerTool.getJavaDataType(configYAML, openAPIYAML, schemaName)!""
 	javaMethodSignatures = freeMarkerTool.getResourceTestCaseJavaMethodSignatures(configYAML, openAPIYAML, schemaName)
-	properties = freeMarkerTool.getDTOProperties(configYAML, openAPIYAML, schema, allSchemas)
 
 	generateBatch = freeMarkerTool.generateBatch(configYAML, javaDataType, javaMethodSignatures, schemaName)
 	generateCRUD = freeMarkerTool.generateCRUD(configYAML, javaMethodSignatures, schemaName)
 	generateDepotEntry = freeMarkerTool.containsJavaMethodSignature(javaMethodSignatures, "AssetLibrary")
+	properties = freeMarkerTool.getDTOProperties(configYAML, openAPIYAML, schema, allSchemas)
+
 	useDeleteAssetLibrary = freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteAssetLibrary" + schemaName) && properties?keys?seq_contains("externalReferenceCode")
 	useDeleteByExternalReferenceCode = (freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteByExternalReferenceCode") || freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "delete" + schemaName + "ByExternalReferenceCode")) && properties?keys?seq_contains("externalReferenceCode")
 	useDeleteById = freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "delete" + schemaName) && (properties?keys?seq_contains("id") || properties?keys?seq_contains(schemaVarName + "Id"))
@@ -191,17 +192,18 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 		<#if generateDepotEntry>
 			irrelevantDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-				Collections.singletonMap(LocaleUtil.getDefault(), RandomTestUtil.randomString()), null,
-				new ServiceContext() {
+				Collections.singletonMap(LocaleUtil.getDefault(), RandomTestUtil.randomString()),
+				null, new ServiceContext() {
 					{
 						setCompanyId(testCompany.getCompanyId());
 						setUserId(TestPropsValues.getUserId());
 					}
 				});
 			irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
+
 			testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-				Collections.singletonMap(LocaleUtil.getDefault(), RandomTestUtil.randomString()), null,
-				new ServiceContext() {
+				Collections.singletonMap(LocaleUtil.getDefault(), RandomTestUtil.randomString()),
+				null, new ServiceContext() {
 					{
 						setCompanyId(testCompany.getCompanyId());
 						setUserId(TestPropsValues.getUserId());
