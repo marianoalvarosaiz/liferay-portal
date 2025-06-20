@@ -6,7 +6,7 @@
 import React, {memo, useMemo, useState} from 'react';
 import {Params} from 'react-router-dom';
 import Form from './index';
-import {Operators} from '../../core/SearchBuilder';
+import { Operators } from '../../core/SearchBuilder';
 import i18n from '../../i18n';
 
 type AutoCompleteProps = {
@@ -151,10 +151,7 @@ const Renderer: React.FC<RendererProps> = ({
 				};
 
 				if (type === 'date-range') {
-					const onDateChange = (
-						event: string,
-						setValue: React.Dispatch<React.SetStateAction<string>>
-					) => {
+					const onDateChange = (event: any, setValue: any) => {
 						setValue(event);
 
 						onChange({

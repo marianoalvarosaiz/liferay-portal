@@ -19,11 +19,14 @@ const DateRange: React.FC<DateRangeProps> = ({label, onChange, value}) => {
 		<div>
 			{label && <label>{label}</label>}
 			<DatePicker
-				onChange={(event: string) => onChange(event, setCurrentDate)}
+				onChange={(event: any) => onChange(event, setCurrentDate)}
 				placeholder="YYYY-MM-DD - YYYY-MM-DD"
 				range
 				value={currentDate}
-				years={{start: 2020, end: new Date().getFullYear()}}
+				years={{
+					end: new Date().getFullYear(),
+					start: 2020,
+				}}
 			/>
 		</div>
 	);

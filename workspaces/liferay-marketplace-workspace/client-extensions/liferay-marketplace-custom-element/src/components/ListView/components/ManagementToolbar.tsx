@@ -4,7 +4,7 @@
  */
 
 import ClayManagementToolbar from '@clayui/management-toolbar';
-import {ReactElement, ReactNode, useContext} from 'react';
+import {ReactNode, useContext} from 'react';
 import ManagementToolbarSearch from './ManagementToolbarSearch';
 import {
 	FilterSchemaOption,
@@ -15,12 +15,6 @@ import ManagementToolbarFilter from './ManagementToolbarFilters/ManagementToolba
 import ManagementToolbarResultsBar from './ManagementToolbarResultsBar/ManagementToolbarResultsBar';
 
 export type ManagementToolbarProps = {
-	actionButton?: (
-		filter: {
-			[key: string]: string;
-		},
-		filterSchema?: FilterSchemaOption,
-	) => ReactElement;
 	actions: any;
 	applyFilters?: boolean;
 	buttons?: ReactNode | ((actions: any) => ReactNode);
@@ -37,11 +31,10 @@ export type ManagementToolbarProps = {
 	hasSearch?: boolean;
 	title?: string;
 	totalItems: number;
-	visible?: boolean;
+	visible?: boolean
 };
 
 const ManagementToolbar: React.FC<ManagementToolbarProps> = ({
-	actionButton,
 	applyFilters = true,
 	customFilterFields,
 	filterSchema,
@@ -65,13 +58,7 @@ const ManagementToolbar: React.FC<ManagementToolbarProps> = ({
 						/>
 					)}
 
-					{!!hasSearch && (
-						<div className="w-100 d-flex">
-							<ManagementToolbarSearch />
-							{actionButton &&
-								actionButton(filters.filter, filterSchema)}
-						</div>
-					)}
+					{!!hasSearch && <ManagementToolbarSearch />}
 				</div>
 
 				{!!filters.entries?.filter(({value}) => value).length && (
