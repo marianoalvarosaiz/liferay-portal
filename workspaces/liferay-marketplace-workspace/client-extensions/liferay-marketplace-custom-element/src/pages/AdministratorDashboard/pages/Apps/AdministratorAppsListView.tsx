@@ -20,23 +20,24 @@ import {ManagementToolbarProps} from '../../../../components/ListView/components
 
 type AdministratorAppsListViewProps = {
 	filter?: string;
-	isSortable?: boolean;
 	listViewProps?: Partial<ListViewProps<Product>>;
 	managementToolbarProps?: {
+		customFilterFields?: {[key: string]: string};
 		visible?: boolean;
 	} & Omit<
 		ManagementToolbarProps,
 		| 'actions'
-		| 'onSelectAllRows'
-		| 'rowSelectable'
 		| 'tableProps'
 		| 'totalItems'
+		| 'onSelectAllRows'
+		| 'rowSelectable'
 	>;
+	isSortable?: boolean;
 };
 
 const AdministratorAppsListView: React.FC<AdministratorAppsListViewProps> = ({
-	isSortable = false,
 	listViewProps,
+	isSortable = false,
 	managementToolbarProps,
 }) => (
 	<ListView<Product>
@@ -47,9 +48,9 @@ const AdministratorAppsListView: React.FC<AdministratorAppsListViewProps> = ({
 		}}
 		resource={`/o/headless-commerce-admin-catalog/v1.0/products?${new URLSearchParams(
 			{
+				'sort': 'createDate:desc',
 				'nestedFields': 'catalog,productSpecifications',
 				'productSpecifications.pageSize': '-1',
-				'sort': 'createDate:desc',
 			}
 		)}`}
 		tableProps={{
@@ -90,7 +91,7 @@ const AdministratorAppsListView: React.FC<AdministratorAppsListViewProps> = ({
 
 						return <div className="text-capitalize">{label}</div>;
 					},
-					},
+				},
 				{
 					id: 'catalog',
 					name: i18n.translate('publisher-name'),
