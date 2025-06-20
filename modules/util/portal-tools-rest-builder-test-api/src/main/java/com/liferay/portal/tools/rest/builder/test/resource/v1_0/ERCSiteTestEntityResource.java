@@ -49,12 +49,6 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface ERCSiteTestEntityResource {
 
-	public void
-			deleteSiteERCSiteTestEntityErcSiteTestEntityExternalReferenceCode(
-				String ercSiteTestEntityExternalReferenceCode,
-				String siteExternalReferenceCode)
-		throws Exception;
-
 	public Page<ERCSiteTestEntity> getSiteERCSiteTestEntitiesPage(
 			String siteExternalReferenceCode)
 		throws Exception;

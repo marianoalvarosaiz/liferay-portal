@@ -85,8 +85,6 @@ public class OpenAPIResourceImpl {
 
 	private final Set<Class<?>> _resourceClasses = new HashSet<Class<?>>() {
 		{
-			add(AssetLibraryTestEntityResourceImpl.class);
-
 			add(CompanyTestEntityResourceImpl.class);
 
 			add(ERCAssetLibraryTestEntityResourceImpl.class);

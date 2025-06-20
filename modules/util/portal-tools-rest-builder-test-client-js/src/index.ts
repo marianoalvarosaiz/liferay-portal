@@ -8,7 +8,6 @@
  * @generated
  */
 
-	export {AssetLibraryTestEntityAPI} from './apis/AssetLibraryTestEntityAPI';
 	export {CompanyTestEntityAPI} from './apis/CompanyTestEntityAPI';
 	export {EntityModelResourceTestEntity1API} from './apis/EntityModelResourceTestEntity1API';
 	export {EntityModelResourceTestEntity2API} from './apis/EntityModelResourceTestEntity2API';
@@ -22,7 +21,6 @@
 	export {TestEntityAddressAPI} from './apis/TestEntityAddressAPI';
 	export {TestEntityAPI} from './apis/TestEntityAPI';
 
-	export {AssetLibraryTestEntity} from './models/AssetLibraryTestEntity';
 	export {ChildTestEntity1} from './models/ChildTestEntity1';
 	export {ChildTestEntity2} from './models/ChildTestEntity2';
 	export {ChildTestEntity3} from './models/ChildTestEntity3';
@@ -39,7 +37,6 @@
 	export {MultipartTestEntity} from './models/MultipartTestEntity';
 	export {NestedArrayItemsTestEntity} from './models/NestedArrayItemsTestEntity';
 	export {NestedTestEntity} from './models/NestedTestEntity';
-	export {PageAssetLibraryTestEntity} from './models/PageAssetLibraryTestEntity';
 	export {PageCompanyTestEntity} from './models/PageCompanyTestEntity';
 	export {PageEntityModelResourceTestEntity1} from './models/PageEntityModelResourceTestEntity1';
 	export {PageERCAssetLibraryTestEntity} from './models/PageERCAssetLibraryTestEntity';

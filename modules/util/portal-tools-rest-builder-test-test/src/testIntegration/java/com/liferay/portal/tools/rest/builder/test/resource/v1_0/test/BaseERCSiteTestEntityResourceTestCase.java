@@ -185,13 +185,6 @@ public abstract class BaseERCSiteTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testDeleteSiteERCSiteTestEntityErcSiteTestEntityExternalReferenceCode()
-		throws Exception {
-
-		Assert.assertTrue(false);
-	}
-
-	@Test
 	public void testGetSiteERCSiteTestEntitiesPage() throws Exception {
 		String siteExternalReferenceCode =
 			testGetSiteERCSiteTestEntitiesPage_getSiteExternalReferenceCode();
