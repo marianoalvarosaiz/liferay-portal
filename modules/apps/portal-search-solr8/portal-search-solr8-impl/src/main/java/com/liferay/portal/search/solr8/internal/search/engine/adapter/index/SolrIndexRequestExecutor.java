@@ -156,8 +156,8 @@ public class SolrIndexRequestExecutor implements IndexRequestExecutor {
 	@Reference
 	private CreateIndexRequestExecutor _createIndexRequestExecutor;
 
-	private final DeleteIndexRequestExecutor _deleteIndexRequestExecutor =
-		new DeleteIndexRequestExecutor();
+	@Reference
+	private DeleteIndexRequestExecutor _deleteIndexRequestExecutor;
 
 	@Reference
 	private FlushIndexRequestExecutor _flushIndexRequestExecutor;
