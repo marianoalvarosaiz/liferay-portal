@@ -235,7 +235,7 @@ public class RelationshipObjectFieldBusinessType
 					externalReferenceCode, objectDefinition1, 0L);
 			}
 
-			long objectDefinition1GroupId = 0;
+			long groupIdObjectDefinition1 = 0;
 
 			ObjectDefinition objectDefinition2 =
 				_objectDefinitionLocalService.getObjectDefinition(
@@ -248,12 +248,12 @@ public class RelationshipObjectFieldBusinessType
 					objectDefinition2.getScope(),
 					ObjectDefinitionConstants.SCOPE_SITE)) {
 
-				objectDefinition1GroupId = groupId;
+				groupIdObjectDefinition1 = groupId;
 			}
 
 			ObjectEntry objectEntry =
 				_objectEntryLocalService.getOrAddIncompleteObjectEntry(
-					externalReferenceCode, objectDefinition1GroupId, userId,
+					externalReferenceCode, groupIdObjectDefinition1, userId,
 					objectDefinition1.getObjectDefinitionId());
 
 			return objectEntry.getObjectEntryId();
