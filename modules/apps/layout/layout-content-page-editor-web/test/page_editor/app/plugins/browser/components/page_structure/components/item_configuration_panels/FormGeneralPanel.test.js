@@ -37,13 +37,6 @@ jest.mock(
 );
 
 jest.mock(
-	'../../../../../../../../../src/main/resources/META-INF/resources/page_editor/app/services/FormService',
-	() => ({
-		getFormFields: jest.fn(() => Promise.resolve([])),
-	})
-);
-
-jest.mock(
 	'../../../../../../../../../src/main/resources/META-INF/resources/page_editor/app/config/index',
 	() => ({
 		config: {
