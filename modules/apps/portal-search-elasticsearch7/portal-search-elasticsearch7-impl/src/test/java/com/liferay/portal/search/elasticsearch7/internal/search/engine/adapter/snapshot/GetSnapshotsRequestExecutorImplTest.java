@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.AnalyzeIndexRequestExecutorTest;
 import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotsRequest;
@@ -47,12 +48,16 @@ public class GetSnapshotsRequestExecutorImplTest {
 		getSnapshotsRequest.setSnapshotNames("snapshot1", "snapshot2");
 		getSnapshotsRequest.setVerbose(true);
 
-		GetSnapshotsRequestExecutor getSnapshotsRequestExecutor =
-			new GetSnapshotsRequestExecutor(_elasticsearchFixture);
+		GetSnapshotsRequestExecutorImpl getSnapshotsRequestExecutorImpl =
+			new GetSnapshotsRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getSnapshotsRequestExecutorImpl, "_elasticsearchClientResolver",
+			_elasticsearchFixture);
 
 		org.elasticsearch.action.admin.cluster.snapshots.get.GetSnapshotsRequest
 			elasticsearchGetSnapshotsRequest =
-				getSnapshotsRequestExecutor.createGetSnapshotsRequest(
+				getSnapshotsRequestExecutorImpl.createGetSnapshotsRequest(
 					getSnapshotsRequest);
 
 		Assert.assertEquals(
