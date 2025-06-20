@@ -1406,7 +1406,7 @@ public class SearchResultResourceTest extends BaseSearchResultResourceTestCase {
 			ServiceContextTestUtil.getServiceContext(testGroup.getGroupId());
 
 		_objectEntryLocalService.addObjectEntry(
-			testGroup.getGroupId(), _user.getUserId(),
+			_user.getUserId(), testGroup.getGroupId(),
 			_objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,
@@ -1418,7 +1418,7 @@ public class SearchResultResourceTest extends BaseSearchResultResourceTestCase {
 		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
 
 		_objectEntryLocalService.addObjectEntry(
-			testGroup.getGroupId(), _user.getUserId(),
+			_user.getUserId(), testGroup.getGroupId(),
 			_objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

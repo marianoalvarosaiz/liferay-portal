@@ -142,8 +142,8 @@ public class ObjectEntryFolderLocalServiceTest {
 
 		ObjectEntryFolder objectEntryFolder =
 			_objectEntryFolderLocalService.addObjectEntryFolder(
-				StringUtil.randomString(), _group.getGroupId(),
-				TestPropsValues.getUserId(),
+				StringUtil.randomString(), TestPropsValues.getUserId(),
+				_group.getGroupId(),
 				ObjectEntryFolderConstants.
 					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 				RandomTestUtil.randomString(), null, StringUtil.randomString(),
@@ -421,7 +421,7 @@ public class ObjectEntryFolderLocalServiceTest {
 		throws Exception {
 
 		return _objectEntryLocalService.addObjectEntry(
-			_group.getGroupId(), TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), _group.getGroupId(),
 			_objectDefinition.getObjectDefinitionId(), objectEntryFolderId,
 			null,
 			HashMapBuilder.<String, Serializable>put(
@@ -436,7 +436,7 @@ public class ObjectEntryFolderLocalServiceTest {
 		throws Exception {
 
 		return _objectEntryFolderLocalService.addObjectEntryFolder(
-			externalReferenceCode, groupId, TestPropsValues.getUserId(),
+			externalReferenceCode, TestPropsValues.getUserId(), groupId,
 			parentObjectEntryFolderId, RandomTestUtil.randomString(),
 			HashMapBuilder.put(
 				LocaleUtil.getDefault(), StringUtil.randomString()

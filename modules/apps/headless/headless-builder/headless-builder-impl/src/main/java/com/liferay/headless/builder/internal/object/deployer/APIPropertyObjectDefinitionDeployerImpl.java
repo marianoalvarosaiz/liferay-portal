@@ -146,7 +146,7 @@ public class APIPropertyObjectDefinitionDeployerImpl
 
 			_objectEntryLocalService.addOrUpdateObjectEntry(
 				(String)values.get("externalReferenceCode"),
-				GroupThreadLocal.getGroupId(), objectDefinition.getUserId(),
+				objectDefinition.getUserId(), GroupThreadLocal.getGroupId(),
 				objectDefinition.getObjectDefinitionId(),
 				ObjectEntryFolderConstants.
 					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,

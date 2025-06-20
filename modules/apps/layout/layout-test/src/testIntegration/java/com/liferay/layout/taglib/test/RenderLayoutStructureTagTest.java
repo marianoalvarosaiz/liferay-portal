@@ -474,7 +474,7 @@ public class RenderLayoutStructureTagTest {
 
 		ObjectEntry relationshipObjectEntry =
 			_objectEntryLocalService.addObjectEntry(
-				0, TestPropsValues.getUserId(),
+				TestPropsValues.getUserId(), 0,
 				relationshipObjectDefinition.getObjectDefinitionId(),
 				ObjectEntryFolderConstants.
 					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
@@ -496,7 +496,7 @@ public class RenderLayoutStructureTagTest {
 			).build());
 
 		ObjectEntry objectEntry = _objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,
@@ -1221,7 +1221,7 @@ public class RenderLayoutStructureTagTest {
 		String myTextValue = RandomTestUtil.randomString();
 
 		_objectEntryLocalService.addObjectEntry(
-			_group.getGroupId(), TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), _group.getGroupId(),
 			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

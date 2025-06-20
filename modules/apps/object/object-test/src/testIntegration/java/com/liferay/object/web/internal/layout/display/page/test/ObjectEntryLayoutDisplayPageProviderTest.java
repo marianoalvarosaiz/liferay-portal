@@ -66,7 +66,7 @@ public class ObjectEntryLayoutDisplayPageProviderTest {
 				).build()));
 
 		ObjectEntry objectEntry = _objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			objectDefinition1.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

@@ -292,13 +292,13 @@ public class ObjectRelationshipServiceTest {
 				StringUtil.randomId(), false, type, null);
 
 		ObjectEntry objectEntry1 = _objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			objectDefinition1.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null, Collections.emptyMap(),
 			ServiceContextTestUtil.getServiceContext());
 		ObjectEntry objectEntry2 = _objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			objectDefinition2.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null, Collections.emptyMap(),

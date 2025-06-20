@@ -123,7 +123,7 @@ public class
 		}
 
 		_objectEntry = _objectEntryLocalService.addObjectEntry(
-			0, commerceReturnObjectDefinition.getUserId(),
+			commerceReturnObjectDefinition.getUserId(), 0,
 			commerceReturnObjectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

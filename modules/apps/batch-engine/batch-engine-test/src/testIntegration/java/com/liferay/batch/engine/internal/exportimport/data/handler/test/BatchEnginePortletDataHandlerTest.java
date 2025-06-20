@@ -558,7 +558,7 @@ public class BatchEnginePortletDataHandlerTest {
 			objectDefinition, _OBJECT_FIELD_VALUE_ATTACHMENT_USER_COMPUTER);
 
 		return _objectEntryLocalService.addObjectEntry(
-			groupId, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), groupId,
 			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

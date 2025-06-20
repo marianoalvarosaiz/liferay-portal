@@ -99,7 +99,7 @@ public class ExecuteInfoItemActionStrutsActionTest {
 			_portal.getClassNameId(objectDefinition.getClassName()));
 
 		ObjectEntry objectEntry = _objectEntryLocalService.addObjectEntry(
-			_group.getGroupId(), _user.getUserId(),
+			_user.getUserId(), _group.getGroupId(),
 			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

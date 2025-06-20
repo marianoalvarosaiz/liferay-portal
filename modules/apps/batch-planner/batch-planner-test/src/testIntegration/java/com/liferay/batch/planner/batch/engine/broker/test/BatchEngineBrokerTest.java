@@ -571,8 +571,9 @@ public class BatchEngineBrokerTest {
 		throws Exception {
 
 		return _objectEntryLocalService.addOrUpdateObjectEntry(
-			externalReferenceCode, _getGroupId(groupId, objectDefinition),
-			userId, objectDefinition.getObjectDefinitionId(),
+			externalReferenceCode, userId,
+			_getGroupId(groupId, objectDefinition),
+			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			HashMapBuilder.<String, Serializable>put(
 				"testAttachmentField", dlFileEntry.getFileEntryId()

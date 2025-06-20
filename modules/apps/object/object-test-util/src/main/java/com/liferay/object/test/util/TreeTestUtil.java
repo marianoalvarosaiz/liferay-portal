@@ -166,7 +166,7 @@ public class TreeTestUtil {
 			Arrays.asList("A", "AA", "AB", "AAA", "AAB"));
 
 		ObjectEntry rootObjectEntry = objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(), rootNode.getPrimaryKey(),
+			TestPropsValues.getUserId(), 0, rootNode.getPrimaryKey(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,
 			HashMapBuilder.<String, Serializable>put(
@@ -183,7 +183,7 @@ public class TreeTestUtil {
 			Node node = iterator.next();
 
 			ObjectEntry objectEntry = objectEntryLocalService.addObjectEntry(
-				0, TestPropsValues.getUserId(), node.getPrimaryKey(),
+				TestPropsValues.getUserId(), 0, node.getPrimaryKey(),
 				ObjectEntryFolderConstants.
 					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 				null,

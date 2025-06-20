@@ -110,7 +110,7 @@ public class ObjectEntryDefaultLanguageIdUpgradeProcessTest {
 
 		ObjectEntry companyObjectEntry =
 			_objectEntryLocalService.addObjectEntry(
-				0, companyAdminUser.getUserId(),
+				companyAdminUser.getUserId(), 0,
 				companyObjectDefinition.getObjectDefinitionId(),
 				ObjectEntryFolderConstants.
 					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
@@ -148,7 +148,7 @@ public class ObjectEntryDefaultLanguageIdUpgradeProcessTest {
 				companyAdminUser.getUserId());
 
 		ObjectEntry siteObjectEntry = _objectEntryLocalService.addObjectEntry(
-			_group.getGroupId(), companyAdminUser.getUserId(),
+			companyAdminUser.getUserId(), _group.getGroupId(),
 			siteObjectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

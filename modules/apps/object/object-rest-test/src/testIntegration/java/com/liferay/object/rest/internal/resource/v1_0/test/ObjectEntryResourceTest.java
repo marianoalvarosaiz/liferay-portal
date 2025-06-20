@@ -5165,7 +5165,7 @@ public class ObjectEntryResourceTest {
 
 		ObjectEntry serviceBuilderObjectEntry =
 			_objectEntryLocalService.addObjectEntry(
-				0, user.getUserId(), objectDefinition.getObjectDefinitionId(),
+				user.getUserId(), 0, objectDefinition.getObjectDefinitionId(),
 				ObjectEntryFolderConstants.
 					PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 				null,
@@ -6821,7 +6821,7 @@ public class ObjectEntryResourceTest {
 
 			ObjectEntry serviceBuilderObjectEntry =
 				_objectEntryLocalService.addObjectEntry(
-					0, TestPropsValues.getUserId(),
+					TestPropsValues.getUserId(), 0,
 					objectDefinition.getObjectDefinitionId(),
 					ObjectEntryFolderConstants.
 						PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,

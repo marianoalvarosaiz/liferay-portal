@@ -152,7 +152,7 @@ public class CategoriesInputFragmentRendererTest
 		}
 
 		return _objectEntryLocalService.addObjectEntry(
-			groupId, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), groupId,
 			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

@@ -180,7 +180,7 @@ public class ObjectDefinitionGraphQLTest {
 				childObjectDefinition.getObjectDefinitionId());
 
 		_parentObjectEntry = ObjectEntryLocalServiceUtil.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			_parentObjectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,
@@ -192,7 +192,7 @@ public class ObjectDefinitionGraphQLTest {
 			ServiceContextTestUtil.getServiceContext());
 
 		_childObjectEntry = ObjectEntryLocalServiceUtil.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			childObjectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,
@@ -606,7 +606,7 @@ public class ObjectDefinitionGraphQLTest {
 				});
 
 		ObjectEntry objectEntry = _objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			_parentObjectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null,

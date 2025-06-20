@@ -108,7 +108,7 @@ public class DownloadObjectEntryFolderServletTest {
 		throws Exception {
 
 		return _objectEntryFolderLocalService.addObjectEntryFolder(
-			StringUtil.randomString(), groupId, TestPropsValues.getUserId(),
+			StringUtil.randomString(), TestPropsValues.getUserId(), groupId,
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			RandomTestUtil.randomString(), null, StringUtil.randomString(),
 			ServiceContextTestUtil.getServiceContext());

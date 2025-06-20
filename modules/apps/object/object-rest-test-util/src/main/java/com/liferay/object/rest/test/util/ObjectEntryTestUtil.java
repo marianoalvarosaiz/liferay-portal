@@ -42,7 +42,7 @@ public class ObjectEntryTestUtil {
 			"friendlyUrlMap", new HashMap<String, String>());
 
 		return ObjectEntryLocalServiceUtil.addObjectEntry(
-			groupId, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), groupId,
 			objectDefinition.getObjectDefinitionId(),
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null, values, serviceContext);

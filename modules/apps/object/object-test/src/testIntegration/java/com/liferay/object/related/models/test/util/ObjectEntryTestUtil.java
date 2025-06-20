@@ -26,7 +26,7 @@ public class ObjectEntryTestUtil {
 		throws Exception {
 
 		return ObjectEntryLocalServiceUtil.addObjectEntry(
-			groupId, TestPropsValues.getUserId(), objectDefinitionId,
+			TestPropsValues.getUserId(), groupId, objectDefinitionId,
 			ObjectEntryFolderConstants.PARENT_OBJECT_ENTRY_FOLDER_ID_DEFAULT,
 			null, values, ServiceContextTestUtil.getServiceContext());
 	}

@@ -87,8 +87,8 @@ public class ObjectEntryFolderModelDocumentContributorTest {
 		throws Exception {
 
 		return _objectEntryFolderLocalService.addObjectEntryFolder(
-			externalReferenceCode, _group.getGroupId(),
-			TestPropsValues.getUserId(), parentObjectEntryFolderId,
+			externalReferenceCode, TestPropsValues.getUserId(),
+			_group.getGroupId(), parentObjectEntryFolderId,
 			RandomTestUtil.randomString(),
 			HashMapBuilder.put(
 				LocaleUtil.ENGLISH, RandomTestUtil.randomString()
