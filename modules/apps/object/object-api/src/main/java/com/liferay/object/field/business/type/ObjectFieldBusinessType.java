@@ -63,7 +63,7 @@ public interface ObjectFieldBusinessType {
 			return values.get(objectField.getI18nObjectFieldName());
 		}
 
-		return getValue(null, objectField, userId, values);
+		return getValue(objectField, userId, values);
 	}
 
 	public String getLabel(Locale locale);
@@ -118,8 +118,7 @@ public interface ObjectFieldBusinessType {
 	}
 
 	public default Object getValue(
-			Long groupId, ObjectField objectField, long userId,
-			Map<String, Object> values)
+			ObjectField objectField, long userId, Map<String, Object> values)
 		throws PortalException {
 
 		if (!objectField.isLocalized()) {

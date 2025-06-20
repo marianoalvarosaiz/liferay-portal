@@ -687,7 +687,7 @@ public class PredicateExpressionVisitorImpl
 					objectField.getBusinessType());
 
 			Object value = objectFieldBusinessType.getValue(
-				null, objectField, PrincipalThreadLocal.getUserId(),
+				objectField, PrincipalThreadLocal.getUserId(),
 				Collections.singletonMap(entityField.getName(), right));
 
 			if (value == null) {

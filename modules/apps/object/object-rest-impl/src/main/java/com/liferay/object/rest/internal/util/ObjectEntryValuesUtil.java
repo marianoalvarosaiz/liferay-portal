@@ -26,7 +26,6 @@ import java.util.Map;
 public class ObjectEntryValuesUtil {
 
 	public static Object getValue(
-			Long groupId,
 			ObjectDefinitionLocalService objectDefinitionLocalService,
 			ObjectEntryLocalService objectEntryLocalService,
 			ObjectField objectField,
@@ -40,7 +39,7 @@ public class ObjectEntryValuesUtil {
 					objectField.getBusinessType());
 
 			return objectFieldBusinessType.getValue(
-				groupId, objectField, userId, values);
+				objectField, userId, values);
 		}
 		catch (NoSuchObjectEntryException noSuchObjectEntryException) {
 			if (_log.isDebugEnabled()) {
@@ -55,7 +54,7 @@ public class ObjectEntryValuesUtil {
 			}
 
 			ObjectEntry objectEntry = objectEntryLocalService.addObjectEntry(
-				externalReferenceCode, groupId, userId,
+				externalReferenceCode, userId,
 				objectDefinitionLocalService.getObjectDefinition(
 					noSuchObjectEntryException.getObjectDefinitionId()),
 				ObjectEntryFolderConstants.

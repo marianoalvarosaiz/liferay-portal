@@ -176,12 +176,11 @@ public class DateTimeObjectFieldBusinessType
 
 	@Override
 	public Timestamp getValue(
-			Long groupId, ObjectField objectField, long userId,
-			Map<String, Object> values)
+			ObjectField objectField, long userId, Map<String, Object> values)
 		throws PortalException {
 
 		Object value = ObjectFieldBusinessType.super.getValue(
-			groupId, objectField, userId, values);
+			objectField, userId, values);
 
 		if (Validator.isNull(value)) {
 			return null;

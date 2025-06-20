@@ -189,14 +189,12 @@ public class PicklistObjectFieldBusinessType
 
 	@Override
 	public Object getValue(
-			Long groupId, ObjectField objectField, long userId,
-			Map<String, Object> values)
+			ObjectField objectField, long userId, Map<String, Object> values)
 		throws PortalException {
 
 		return _getValue(
 			objectField.getName(),
-			ObjectFieldBusinessType.super.getValue(
-				groupId, objectField, userId, values),
+			ObjectFieldBusinessType.super.getValue(objectField, userId, values),
 			values);
 	}
 

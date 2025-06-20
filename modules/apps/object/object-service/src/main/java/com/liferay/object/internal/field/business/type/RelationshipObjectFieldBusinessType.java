@@ -5,7 +5,6 @@
 
 package com.liferay.object.internal.field.business.type;
 
-import com.liferay.object.constants.ObjectDefinitionConstants;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.constants.ObjectFieldSettingConstants;
 import com.liferay.object.constants.ObjectRelationshipConstants;
@@ -91,8 +90,7 @@ public class RelationshipObjectFieldBusinessType
 
 	@Override
 	public Object getValue(
-			Long groupId, ObjectField objectField, long userId,
-			Map<String, Object> values)
+			ObjectField objectField, long userId, Map<String, Object> values)
 		throws PortalException {
 
 		String relationshipName = StringUtil.split(
@@ -221,40 +219,18 @@ public class RelationshipObjectFieldBusinessType
 				return 0;
 			}
 
-			ObjectRelationship objectRelationship =
-				_objectRelationshipLocalService.
-					fetchObjectRelationshipByObjectFieldId2(
-						objectField.getObjectFieldId());
+			ObjectDefinition objectDefinition = _getObjectDefinition(
+				objectField);
 
-			ObjectDefinition objectDefinition1 =
-				_objectDefinitionLocalService.getObjectDefinition(
-					objectRelationship.getObjectDefinitionId1());
-
-			if (objectDefinition1.isUnmodifiableSystemObject()) {
+			if (objectDefinition.isUnmodifiableSystemObject()) {
 				return _getPrimaryKeyObj(
-					externalReferenceCode, objectDefinition1, 0L);
-			}
-
-			long groupIdObjectDefinition1 = 0;
-
-			ObjectDefinition objectDefinition2 =
-				_objectDefinitionLocalService.getObjectDefinition(
-					objectRelationship.getObjectDefinitionId2());
-
-			if (Objects.equals(
-					objectDefinition1.getScope(),
-					ObjectDefinitionConstants.SCOPE_SITE) &&
-				Objects.equals(
-					objectDefinition2.getScope(),
-					ObjectDefinitionConstants.SCOPE_SITE)) {
-
-				groupIdObjectDefinition1 = groupId;
+					externalReferenceCode, objectDefinition, 0L);
 			}
 
 			ObjectEntry objectEntry =
 				_objectEntryLocalService.getOrAddIncompleteObjectEntry(
-					externalReferenceCode, groupIdObjectDefinition1, userId,
-					objectDefinition1.getObjectDefinitionId());
+					externalReferenceCode, userId,
+					objectDefinition.getObjectDefinitionId());
 
 			return objectEntry.getObjectEntryId();
 		}

@@ -185,8 +185,7 @@ public abstract class BaseObjectEntryManager {
 					objectField.getBusinessType());
 
 			Object value = objectFieldBusinessType.getValue(
-				objectEntry.getScopeId(), objectField,
-				dtoConverterContext.getUserId(), properties);
+				objectField, dtoConverterContext.getUserId(), properties);
 
 			if (objectField.compareBusinessType(
 					ObjectFieldConstants.BUSINESS_TYPE_MULTISELECT_PICKLIST)) {

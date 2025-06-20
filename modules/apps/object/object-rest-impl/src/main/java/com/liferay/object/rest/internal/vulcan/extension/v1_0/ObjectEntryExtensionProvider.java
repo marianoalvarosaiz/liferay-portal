@@ -120,9 +120,8 @@ public class ObjectEntryExtensionProvider extends BaseObjectExtensionProvider {
 						objectDefinition.getObjectDefinitionId(), false)) {
 
 				Object value = ObjectEntryValuesUtil.getValue(
-					null, objectDefinitionLocalService,
-					_objectEntryLocalService, objectField,
-					_objectFieldBusinessTypeRegistry, userId,
+					objectDefinitionLocalService, _objectEntryLocalService,
+					objectField, _objectFieldBusinessTypeRegistry, userId,
 					new HashMap<>(extendedProperties));
 
 				if (value == null) {
