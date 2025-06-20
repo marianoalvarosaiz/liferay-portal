@@ -26,5 +26,5 @@ export default function openModal(props: OpenModalProps) {
 
 	// @ts-ignore
 
-	return render(Modal, props, document.createElement('div'));
+	render(Modal, props, document.createElement('div'));
 }
