@@ -16,10 +16,11 @@ import {
 } from './SpaceMembersInputWithSelect';
 
 export interface AddSpaceMembersProps {
+	assetLibraryId: string;
 	spaceName: string;
 }
 
-export function AddSpaceMembers({spaceName}: AddSpaceMembersProps) {
+const AddSpaceMembers = ({assetLibraryId}: AddSpaceMembersProps) => {
 	const [selectedOption, setSelectedOption] = useState(SelectOptions.USERS);
 	const [inputValue, setInputValue] = useState('');
 
@@ -38,7 +39,7 @@ export function AddSpaceMembers({spaceName}: AddSpaceMembersProps) {
 					step={2}
 					title={sub(
 						Liferay.Language.get('add-members-to-x'),
-						spaceName
+						assetLibraryId
 					)}
 				>
 					<SpaceMembersInputWithSelect
@@ -64,6 +65,6 @@ export function AddSpaceMembers({spaceName}: AddSpaceMembersProps) {
 			</ClayLayout.Col>
 		</ClayLayout.Row>
 	);
-}
+};
 
 export default AddSpaceMembers;
