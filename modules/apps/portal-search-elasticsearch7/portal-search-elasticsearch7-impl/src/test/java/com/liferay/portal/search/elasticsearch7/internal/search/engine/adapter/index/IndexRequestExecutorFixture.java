@@ -41,8 +41,8 @@ public class IndexRequestExecutorFixture {
 			new FlushIndexRequestExecutor(_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_getFieldMappingIndexRequestExecutor",
-			new GetFieldMappingIndexRequestExecutor(
-				_elasticsearchClientResolver, new JSONFactoryImpl()));
+			_createGetFieldMappingIndexRequestExecutor(
+				_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_getIndexIndexRequestExecutor",
 			_createGetIndexIndexRequestExecutor(_elasticsearchClientResolver));
@@ -86,6 +86,25 @@ public class IndexRequestExecutorFixture {
 			elasticsearchClientResolver);
 
 		return createIndexRequestExecutor;
+	}
+
+	private GetFieldMappingIndexRequestExecutor
+		_createGetFieldMappingIndexRequestExecutor(
+			ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		GetFieldMappingIndexRequestExecutor
+			getFieldMappingIndexRequestExecutor =
+				new GetFieldMappingIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getFieldMappingIndexRequestExecutor, "_elasticsearchClientResolver",
+			elasticsearchClientResolver);
+
+		ReflectionTestUtil.setFieldValue(
+			getFieldMappingIndexRequestExecutor, "_jsonFactory",
+			new JSONFactoryImpl());
+
+		return getFieldMappingIndexRequestExecutor;
 	}
 
 	private GetIndexIndexRequestExecutor _createGetIndexIndexRequestExecutor(
