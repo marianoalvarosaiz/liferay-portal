@@ -433,10 +433,12 @@ public class AssetCategoryLocalServiceImpl
 			String externalReferenceCode, long userId, long groupId)
 		throws PortalException {
 
+		User user = _userLocalService.getUser(userId);
+
 		return IncompleteModelManagerUtil.getOrAddIncompleteModel(
-			AssetCategory.class, externalReferenceCode,
+			AssetCategory.class, user.getCompanyId(), externalReferenceCode,
 			this::fetchAssetCategoryByExternalReferenceCode,
-			this::getAssetCategoryByExternalReferenceCode, groupId,
+			this::getAssetCategoryByExternalReferenceCode,
 			() -> assetCategoryLocalService.addCategory(
 				externalReferenceCode, userId, groupId,
 				AssetCategoryConstants.INCOMPLETE_PARENT_CATEGORY_ID,
