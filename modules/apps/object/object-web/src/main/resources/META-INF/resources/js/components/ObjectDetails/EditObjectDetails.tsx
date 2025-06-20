@@ -412,9 +412,6 @@ export default function EditObjectDetails({
 							<ClayPanel.Body>
 								<SeoContainer
 									errors={backEndErrors}
-									hasUpdateObjectDefinitionPermission={
-										hasUpdateObjectDefinitionPermission
-									}
 									setValues={setValues}
 									values={values}
 								/>
