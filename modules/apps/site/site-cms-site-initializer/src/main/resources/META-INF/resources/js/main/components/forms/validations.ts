@@ -15,29 +15,23 @@ const alphanumeric: ValidationFunction = (value) =>
 				'please-enter-only-alphanumeric-characters-dashes-or-underscores'
 			);
 
-const invalidCharacters =
-	(chars: string[]): ValidationFunction =>
-	(value) => {
-		if (value && chars.some((char) => value.includes(char))) {
-			return sub(
-				Liferay.Language.get(
-					'name-cannot-contain-the-following-invalid-characters-x'
-				),
-				chars.join(', ')
-			);
-		}
-	};
+const invalidCharacters = (chars: string[]): ValidationFunction => (value) => {
+	if (value && chars.some(char => value.includes(char))) {
+		return sub(
+			Liferay.Language.get('name-cannot-contain-the-following-invalid-characters-x'),
+			chars.join(', ')
+		);
+	}
+};
 
-const maxLength =
-	(max: number): ValidationFunction =>
-	(value) => {
-		if (value && value.length > max) {
-			return sub(
-				Liferay.Language.get('please-enter-no-more-than-x-characters'),
-				max
-			);
-		}
-	};
+const maxLength = (max: number): ValidationFunction => (value) => {
+	if (value && value.length > max) {
+		return sub(
+			Liferay.Language.get('please-enter-no-more-than-x-characters'),
+			max
+		);
+	}
+};
 
 const notNull: ValidationFunction = (value) => {
 	if (value === 'null') {
@@ -85,5 +79,5 @@ export {
 	notNull,
 	nonNumeric,
 	required,
-	validate,
+	validate
 };
