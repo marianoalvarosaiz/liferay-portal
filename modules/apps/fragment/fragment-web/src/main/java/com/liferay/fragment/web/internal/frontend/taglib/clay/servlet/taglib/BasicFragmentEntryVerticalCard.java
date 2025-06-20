@@ -14,6 +14,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItemListBuilder;
 import com.liferay.portal.kernel.dao.search.RowChecker;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -72,7 +73,10 @@ public class BasicFragmentEntryVerticalCard
 				themeDisplay.getPermissionChecker(),
 				themeDisplay.getScopeGroupId(),
 				FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES) ||
-			fragmentEntry.isTypeReact() || fragmentEntry.isMarketplace()) {
+			fragmentEntry.isTypeReact() ||
+			(FeatureFlagManagerUtil.isEnabled(
+				themeDisplay.getCompanyId(), "LPD-34938") &&
+			 fragmentEntry.isMarketplace())) {
 
 			return null;
 		}
@@ -92,7 +96,10 @@ public class BasicFragmentEntryVerticalCard
 
 	@Override
 	public String getIcon() {
-		if (fragmentEntry.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				themeDisplay.getCompanyId(), "LPD-34938") &&
+			fragmentEntry.isMarketplace()) {
+
 			return "marketplace";
 		}
 
@@ -133,7 +140,10 @@ public class BasicFragmentEntryVerticalCard
 
 	@Override
 	public String getStickerCssClass() {
-		if (fragmentEntry.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				themeDisplay.getCompanyId(), "LPD-34938") &&
+			fragmentEntry.isMarketplace()) {
+
 			return "fragment-marketplace-sticker";
 		}
 
@@ -142,7 +152,10 @@ public class BasicFragmentEntryVerticalCard
 
 	@Override
 	public String getStickerIcon() {
-		if (fragmentEntry.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				themeDisplay.getCompanyId(), "LPD-34938") &&
+			fragmentEntry.isMarketplace()) {
+
 			return "marketplace";
 		}
 

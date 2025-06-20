@@ -290,7 +290,8 @@ export default function FragmentsSidebar() {
 							}
 						/>
 
-						{permissions.VIEW_MARKETPLACE ? (
+						{Liferay.FeatureFlags['LPD-34938'] &&
+						permissions.VIEW_MARKETPLACE ? (
 							<MarketplaceButton
 								body={Liferay.Language.get(
 									'we-are-excited-to-share-that-marketplace-is-now-part-of-page-builder'
