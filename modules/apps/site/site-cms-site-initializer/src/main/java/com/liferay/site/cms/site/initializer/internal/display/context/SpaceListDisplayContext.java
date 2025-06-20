@@ -13,7 +13,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.site.cms.site.initializer.internal.constants.CMSSpaceStickerConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -23,15 +22,14 @@ import java.util.Map;
  * @author Georgel Pop
  * @author Roberto Díaz
  */
-public class SpaceStickerDisplayContext {
+public class SpaceListDisplayContext {
 
-	public SpaceStickerDisplayContext(
+	public SpaceListDisplayContext(
 		long groupId, GroupLocalService groupLocalService,
-		HttpServletRequest httpServletRequest, String size) {
+		HttpServletRequest httpServletRequest) {
 
 		_groupId = groupId;
 		_groupLocalService = groupLocalService;
-		_size = GetterUtil.get(size, CMSSpaceStickerConstants.LG);
 
 		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -46,7 +44,7 @@ public class SpaceStickerDisplayContext {
 			).put(
 				"name", StringPool.BLANK
 			).put(
-				"size", _size
+				"size", "sm"
 			).build();
 		}
 
@@ -62,13 +60,12 @@ public class SpaceStickerDisplayContext {
 		).put(
 			"name", group.getDescriptiveName(_themeDisplay.getLocale())
 		).put(
-			"size", _size
+			"size", "sm"
 		).build();
 	}
 
 	private final long _groupId;
 	private final GroupLocalService _groupLocalService;
-	private final String _size;
 	private final ThemeDisplay _themeDisplay;
 
 }
