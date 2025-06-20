@@ -41,7 +41,7 @@ public class ViewFilesSectionDisplayContext
 
 	@Override
 	protected String getCMSSectionFilterString() {
-		return "cmsRoot eq true and cmsSection eq 'files'";
+		return "cmsSection eq 'files' and cmsRoot eq true";
 	}
 
 	@Override
