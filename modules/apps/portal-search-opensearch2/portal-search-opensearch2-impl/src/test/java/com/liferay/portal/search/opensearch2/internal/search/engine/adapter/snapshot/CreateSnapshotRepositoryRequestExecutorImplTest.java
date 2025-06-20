@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRepositoryRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
 import com.liferay.portal.search.opensearch2.internal.OpenSearchTestRule;
@@ -41,13 +42,16 @@ public class CreateSnapshotRepositoryRequestExecutorImplTest
 		createSnapshotRepositoryRequest.setType("type");
 		createSnapshotRepositoryRequest.setVerify(true);
 
-		CreateSnapshotRepositoryRequestExecutor
-			createSnapshotRepositoryRequestExecutor =
-				new CreateSnapshotRepositoryRequestExecutor(
-					openSearchConnectionManager);
+		CreateSnapshotRepositoryRequestExecutorImpl
+			createSnapshotRepositoryRequestExecutorImpl =
+				new CreateSnapshotRepositoryRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			createSnapshotRepositoryRequestExecutorImpl,
+			"_openSearchConnectionManager", openSearchConnectionManager);
 
 		CreateRepositoryRequest createRepositoryRequest =
-			createSnapshotRepositoryRequestExecutor.
+			createSnapshotRepositoryRequestExecutorImpl.
 				createCreateRepositoryRequest(createSnapshotRepositoryRequest);
 
 		RepositorySettings repositorySettings =

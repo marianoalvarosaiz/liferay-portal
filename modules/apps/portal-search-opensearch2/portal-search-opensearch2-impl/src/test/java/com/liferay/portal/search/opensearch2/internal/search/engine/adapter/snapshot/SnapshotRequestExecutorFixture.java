@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequestExecutor;
 import com.liferay.portal.search.opensearch2.internal.connection.OpenSearchConnectionManager;
 
@@ -21,7 +22,7 @@ public class SnapshotRequestExecutorFixture {
 		_snapshotRequestExecutor = new OpenSearchSnapshotRequestExecutor() {
 			{
 				createSnapshotRepositoryRequestExecutor =
-					new CreateSnapshotRepositoryRequestExecutor(
+					_createCreateSnapshotRepositoryRequestExecutor(
 						_openSearchConnectionManager);
 				createSnapshotRequestExecutor =
 					new CreateSnapshotRequestExecutor(
@@ -45,6 +46,21 @@ public class SnapshotRequestExecutorFixture {
 		OpenSearchConnectionManager openSearchConnectionManager) {
 
 		_openSearchConnectionManager = openSearchConnectionManager;
+	}
+
+	private CreateSnapshotRepositoryRequestExecutor
+		_createCreateSnapshotRepositoryRequestExecutor(
+			OpenSearchConnectionManager openSearchConnectionManager) {
+
+		CreateSnapshotRepositoryRequestExecutor
+			createSnapshotRepositoryRequestExecutor =
+				new CreateSnapshotRepositoryRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			createSnapshotRepositoryRequestExecutor,
+			"_openSearchConnectionManager", openSearchConnectionManager);
+
+		return createSnapshotRepositoryRequestExecutor;
 	}
 
 	private OpenSearchConnectionManager _openSearchConnectionManager;
