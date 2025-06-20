@@ -26,39 +26,33 @@ func main() {
 
 	ctrl.SetLogger(zap.New())
 
-	mgr, err := ctrl.NewManager(
-		ctrl.GetConfigOrDie(),
-		ctrl.Options{
-			Cache: cache.Options{
-				DefaultLabelSelector: labels.SelectorFromSet(
-					map[string]string{
-						"controller-watched": "yes",
-					},
-				),
-			},
-			HealthProbeBindAddress: cfg.ProbeAddress,
-			Metrics: metricsserver.Options{
-				BindAddress: cfg.MetricsAddress,
-			},
-			Scheme: scheme,
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+		Cache: cache.Options{
+			DefaultLabelSelector: labels.SelectorFromSet(
+				map[string]string{
+					"controller-watched": "yes",
+				},
+			),
 		},
-	)
+		HealthProbeBindAddress: cfg.ProbeAddress,
+		Metrics: metricsserver.Options{
+			BindAddress: cfg.MetricsAddress,
+		},
+		Scheme: scheme,
+	})
 
 	if err != nil {
 		setupLog.Error(err, "Unable to start manager.")
-
 		os.Exit(1)
 	}
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "Unable to set up health check.")
-
 		os.Exit(1)
 	}
 
 	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
 		setupLog.Error(err, "Unable to set up ready check.")
-
 		os.Exit(1)
 	}
 
@@ -66,13 +60,11 @@ func main() {
 
 	if err := reconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "Unable to create controller.")
-
 		os.Exit(1)
 	}
 
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "Problem running manager.")
-
 		os.Exit(1)
 	}
 }
