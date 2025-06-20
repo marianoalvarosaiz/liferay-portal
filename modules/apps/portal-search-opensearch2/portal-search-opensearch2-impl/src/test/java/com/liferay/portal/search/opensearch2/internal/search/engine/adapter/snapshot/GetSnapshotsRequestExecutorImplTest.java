@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotsRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
@@ -40,11 +41,15 @@ public class GetSnapshotsRequestExecutorImplTest
 		getSnapshotsRequest.setSnapshotNames("snapshotName1", "snapshotName2");
 		getSnapshotsRequest.setVerbose(true);
 
-		GetSnapshotsRequestExecutor getSnapshotsRequestExecutor =
-			new GetSnapshotsRequestExecutor(openSearchConnectionManager);
+		GetSnapshotsRequestExecutorImpl getSnapshotsRequestExecutorImpl =
+			new GetSnapshotsRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getSnapshotsRequestExecutorImpl, "_openSearchConnectionManager",
+			openSearchConnectionManager);
 
 		GetSnapshotRequest openSearchGetSnapshotRequest =
-			getSnapshotsRequestExecutor.createGetSnapshotRequest(
+			getSnapshotsRequestExecutorImpl.createGetSnapshotRequest(
 				getSnapshotsRequest);
 
 		Assert.assertEquals(
