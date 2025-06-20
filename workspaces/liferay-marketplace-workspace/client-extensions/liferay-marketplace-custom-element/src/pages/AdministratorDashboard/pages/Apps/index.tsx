@@ -60,10 +60,13 @@ export default function Apps() {
 				<AdministratorAppsListView
 					filter={searchParams.get('filter') as string}
 					isSortable
+					listViewProps={{
+						paginationOptions: {displayType: 'always'},
+					}}
 					managementToolbarProps={{
-						filtersVisible: true,
-						searchVisible: true,
 						visible: true,
+						hasFilters: true,
+						hasSearch: true,
 					}}
 				/>
 			</Page>
