@@ -29,7 +29,7 @@ public class ViewSpaceContentsAbstractJSPSectionFragmentRenderer
 
 	@Override
 	public String getLabelKey() {
-		return "space-contents-abstract";
+		return "contents";
 	}
 
 	@Override
