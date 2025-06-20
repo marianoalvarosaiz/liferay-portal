@@ -446,7 +446,7 @@ test(
 		await usersAndOrganizationsPage.tableOrderMenu.click();
 
 		await expect(
-			usersAndOrganizationsPage.tableOrderMenuItem('Last Login Date')
+			usersAndOrganizationsPage.tableOrderLastLoginDateItem
 		).toBeVisible();
 	}
 );
