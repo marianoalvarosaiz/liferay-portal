@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="build-common-java" xmlns:antelope="antlib:ise.antelope.tasks" xmlns:artifact="antlib:org.apache.maven.artifact.ant" xmlns:if="ant:if" xmlns:unless="ant:unless">
-	<import file="build-common.xml" />
+	<import file="build-common.xml"/>
 
 	<condition else="${project.dir}/portal-impl/classes" property="portal-impl.classes.dir" value="${project.dir}/portal-web/docroot/WEB-INF/classes">
 		<and>
