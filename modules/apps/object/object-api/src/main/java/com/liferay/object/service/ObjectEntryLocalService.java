@@ -84,7 +84,7 @@ public interface ObjectEntryLocalService
 	public ObjectEntry addObjectEntry(ObjectEntry objectEntry);
 
 	public ObjectEntry addObjectEntry(
-			String externalReferenceCode, long groupId, long userId,
+			String externalReferenceCode, long userId,
 			ObjectDefinition objectDefinition, long objectEntryFolderId)
 		throws PortalException;
 
@@ -432,8 +432,7 @@ public interface ObjectEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	@Transactional(propagation = Propagation.REQUIRED)
 	public ObjectEntry getOrAddIncompleteObjectEntry(
-			String externalReferenceCode, long groupId, long userId,
-			long objectDefinitionId)
+			String externalReferenceCode, long userId, long objectDefinitionId)
 		throws PortalException;
 
 	/**
