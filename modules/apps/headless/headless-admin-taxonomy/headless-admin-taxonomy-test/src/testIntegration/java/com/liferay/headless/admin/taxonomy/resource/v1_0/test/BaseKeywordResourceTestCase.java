@@ -429,16 +429,27 @@ public abstract class BaseKeywordResourceTestCase {
 			204,
 			keywordResource.
 				deleteSiteKeywordByExternalReferenceCodeHttpResponse(
-					keyword.getSiteId(), keyword.getExternalReferenceCode()));
+					testDeleteSiteKeywordByExternalReferenceCode_getSiteId(
+						keyword),
+					keyword.getExternalReferenceCode()));
 
 		assertHttpResponseStatusCode(
 			404,
 			keywordResource.getSiteKeywordByExternalReferenceCodeHttpResponse(
-				keyword.getSiteId(), keyword.getExternalReferenceCode()));
+				testDeleteSiteKeywordByExternalReferenceCode_getSiteId(keyword),
+				keyword.getExternalReferenceCode()));
 		assertHttpResponseStatusCode(
 			404,
 			keywordResource.getSiteKeywordByExternalReferenceCodeHttpResponse(
-				keyword.getSiteId(), "-"));
+				testDeleteSiteKeywordByExternalReferenceCode_getSiteId(keyword),
+				"-"));
+	}
+
+	protected Long testDeleteSiteKeywordByExternalReferenceCode_getSiteId(
+			Keyword keyword)
+		throws Exception {
+
+		return keyword.getSiteId();
 	}
 
 	protected Keyword testDeleteSiteKeywordByExternalReferenceCode_addKeyword()
@@ -1846,11 +1857,19 @@ public abstract class BaseKeywordResourceTestCase {
 
 		Keyword getKeyword =
 			keywordResource.getSiteKeywordByExternalReferenceCode(
-				postKeyword.getSiteId(),
+				testGetSiteKeywordByExternalReferenceCode_getSiteId(
+					postKeyword),
 				postKeyword.getExternalReferenceCode());
 
 		assertEquals(postKeyword, getKeyword);
 		assertValid(getKeyword);
+	}
+
+	protected Long testGetSiteKeywordByExternalReferenceCode_getSiteId(
+			Keyword keyword)
+		throws Exception {
+
+		return keyword.getSiteId();
 	}
 
 	protected Keyword testGetSiteKeywordByExternalReferenceCode_addKeyword()
@@ -1881,7 +1900,9 @@ public abstract class BaseKeywordResourceTestCase {
 									{
 										put(
 											"siteKey",
-											"\"" + keyword.getSiteId() + "\"");
+											"\"" +
+												testGraphQLGetSiteKeywordByExternalReferenceCode_getSiteId(
+													keyword) + "\"");
 
 										put(
 											"externalReferenceCode",
@@ -1911,8 +1932,9 @@ public abstract class BaseKeywordResourceTestCase {
 										{
 											put(
 												"siteKey",
-												"\"" + keyword.getSiteId() +
-													"\"");
+												"\"" +
+													testGraphQLGetSiteKeywordByExternalReferenceCode_getSiteId(
+														keyword) + "\"");
 
 											put(
 												"externalReferenceCode",
@@ -1926,6 +1948,13 @@ public abstract class BaseKeywordResourceTestCase {
 						"JSONObject/data",
 						"JSONObject/headlessAdminTaxonomy_v1_0",
 						"Object/keywordByExternalReferenceCode"))));
+	}
+
+	protected Long testGraphQLGetSiteKeywordByExternalReferenceCode_getSiteId(
+			Keyword keyword)
+		throws Exception {
+
+		return keyword.getSiteId();
 	}
 
 	@Test
@@ -2646,15 +2675,17 @@ public abstract class BaseKeywordResourceTestCase {
 
 		Keyword putKeyword =
 			keywordResource.putSiteKeywordByExternalReferenceCode(
-				postKeyword.getSiteId(), postKeyword.getExternalReferenceCode(),
-				randomKeyword);
+				testPutSiteKeywordByExternalReferenceCode_getSiteId(
+					postKeyword),
+				postKeyword.getExternalReferenceCode(), randomKeyword);
 
 		assertEquals(randomKeyword, putKeyword);
 		assertValid(putKeyword);
 
 		Keyword getKeyword =
 			keywordResource.getSiteKeywordByExternalReferenceCode(
-				putKeyword.getSiteId(), putKeyword.getExternalReferenceCode());
+				testPutSiteKeywordByExternalReferenceCode_getSiteId(putKeyword),
+				putKeyword.getExternalReferenceCode());
 
 		assertEquals(randomKeyword, getKeyword);
 		assertValid(getKeyword);
@@ -2663,20 +2694,28 @@ public abstract class BaseKeywordResourceTestCase {
 			testPutSiteKeywordByExternalReferenceCode_createKeyword();
 
 		putKeyword = keywordResource.putSiteKeywordByExternalReferenceCode(
-			newKeyword.getSiteId(), newKeyword.getExternalReferenceCode(),
-			newKeyword);
+			testPutSiteKeywordByExternalReferenceCode_getSiteId(newKeyword),
+			newKeyword.getExternalReferenceCode(), newKeyword);
 
 		assertEquals(newKeyword, putKeyword);
 		assertValid(putKeyword);
 
 		getKeyword = keywordResource.getSiteKeywordByExternalReferenceCode(
-			putKeyword.getSiteId(), putKeyword.getExternalReferenceCode());
+			testPutSiteKeywordByExternalReferenceCode_getSiteId(putKeyword),
+			putKeyword.getExternalReferenceCode());
 
 		assertEquals(newKeyword, getKeyword);
 
 		Assert.assertEquals(
 			newKeyword.getExternalReferenceCode(),
 			putKeyword.getExternalReferenceCode());
+	}
+
+	protected Long testPutSiteKeywordByExternalReferenceCode_getSiteId(
+			Keyword keyword)
+		throws Exception {
+
+		return keyword.getSiteId();
 	}
 
 	protected Keyword testPutSiteKeywordByExternalReferenceCode_createKeyword()

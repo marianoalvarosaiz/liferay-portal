@@ -404,20 +404,32 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 			204,
 			documentShortcutResource.
 				deleteSiteDocumentShortcutByExternalReferenceCodeHttpResponse(
-					documentShortcut.getSiteId(),
+					testDeleteSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						documentShortcut),
 					documentShortcut.getExternalReferenceCode()));
 
 		assertHttpResponseStatusCode(
 			404,
 			documentShortcutResource.
 				getSiteDocumentShortcutByExternalReferenceCodeHttpResponse(
-					documentShortcut.getSiteId(),
+					testDeleteSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						documentShortcut),
 					documentShortcut.getExternalReferenceCode()));
 		assertHttpResponseStatusCode(
 			404,
 			documentShortcutResource.
 				getSiteDocumentShortcutByExternalReferenceCodeHttpResponse(
-					documentShortcut.getSiteId(), "-"));
+					testDeleteSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						documentShortcut),
+					"-"));
+	}
+
+	protected Long
+			testDeleteSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+				DocumentShortcut documentShortcut)
+		throws Exception {
+
+		return documentShortcut.getSiteId();
 	}
 
 	protected DocumentShortcut
@@ -956,11 +968,19 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		DocumentShortcut getDocumentShortcut =
 			documentShortcutResource.
 				getSiteDocumentShortcutByExternalReferenceCode(
-					postDocumentShortcut.getSiteId(),
+					testGetSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						postDocumentShortcut),
 					postDocumentShortcut.getExternalReferenceCode());
 
 		assertEquals(postDocumentShortcut, getDocumentShortcut);
 		assertValid(getDocumentShortcut);
+	}
+
+	protected Long testGetSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+			DocumentShortcut documentShortcut)
+		throws Exception {
+
+		return documentShortcut.getSiteId();
 	}
 
 	protected DocumentShortcut
@@ -993,8 +1013,8 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 										put(
 											"siteKey",
 											"\"" +
-												documentShortcut.getSiteId() +
-													"\"");
+												testGraphQLGetSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+													documentShortcut) + "\"");
 
 										put(
 											"externalReferenceCode",
@@ -1025,8 +1045,9 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 											put(
 												"siteKey",
 												"\"" +
-													documentShortcut.
-														getSiteId() + "\"");
+													testGraphQLGetSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+														documentShortcut) +
+															"\"");
 
 											put(
 												"externalReferenceCode",
@@ -1039,6 +1060,14 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/documentShortcutByExternalReferenceCode"))));
+	}
+
+	protected Long
+			testGraphQLGetSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+				DocumentShortcut documentShortcut)
+		throws Exception {
+
+		return documentShortcut.getSiteId();
 	}
 
 	@Test
@@ -1504,7 +1533,8 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		DocumentShortcut putDocumentShortcut =
 			documentShortcutResource.
 				putSiteDocumentShortcutByExternalReferenceCode(
-					postDocumentShortcut.getSiteId(),
+					testPutSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						postDocumentShortcut),
 					postDocumentShortcut.getExternalReferenceCode(),
 					randomDocumentShortcut);
 
@@ -1514,7 +1544,8 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		DocumentShortcut getDocumentShortcut =
 			documentShortcutResource.
 				getSiteDocumentShortcutByExternalReferenceCode(
-					putDocumentShortcut.getSiteId(),
+					testPutSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						putDocumentShortcut),
 					putDocumentShortcut.getExternalReferenceCode());
 
 		assertEquals(randomDocumentShortcut, getDocumentShortcut);
@@ -1526,7 +1557,8 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		putDocumentShortcut =
 			documentShortcutResource.
 				putSiteDocumentShortcutByExternalReferenceCode(
-					newDocumentShortcut.getSiteId(),
+					testPutSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						newDocumentShortcut),
 					newDocumentShortcut.getExternalReferenceCode(),
 					newDocumentShortcut);
 
@@ -1536,7 +1568,8 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		getDocumentShortcut =
 			documentShortcutResource.
 				getSiteDocumentShortcutByExternalReferenceCode(
-					putDocumentShortcut.getSiteId(),
+					testPutSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+						putDocumentShortcut),
 					putDocumentShortcut.getExternalReferenceCode());
 
 		assertEquals(newDocumentShortcut, getDocumentShortcut);
@@ -1544,6 +1577,13 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		Assert.assertEquals(
 			newDocumentShortcut.getExternalReferenceCode(),
 			putDocumentShortcut.getExternalReferenceCode());
+	}
+
+	protected Long testPutSiteDocumentShortcutByExternalReferenceCode_getSiteId(
+			DocumentShortcut documentShortcut)
+		throws Exception {
+
+		return documentShortcut.getSiteId();
 	}
 
 	protected DocumentShortcut

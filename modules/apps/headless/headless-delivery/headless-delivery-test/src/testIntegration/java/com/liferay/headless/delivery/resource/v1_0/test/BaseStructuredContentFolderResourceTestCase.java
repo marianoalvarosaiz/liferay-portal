@@ -314,20 +314,32 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			204,
 			structuredContentFolderResource.
 				deleteSiteStructuredContentFolderByExternalReferenceCodeHttpResponse(
-					structuredContentFolder.getSiteId(),
+					testDeleteSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						structuredContentFolder),
 					structuredContentFolder.getExternalReferenceCode()));
 
 		assertHttpResponseStatusCode(
 			404,
 			structuredContentFolderResource.
 				getSiteStructuredContentFolderByExternalReferenceCodeHttpResponse(
-					structuredContentFolder.getSiteId(),
+					testDeleteSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						structuredContentFolder),
 					structuredContentFolder.getExternalReferenceCode()));
 		assertHttpResponseStatusCode(
 			404,
 			structuredContentFolderResource.
 				getSiteStructuredContentFolderByExternalReferenceCodeHttpResponse(
-					structuredContentFolder.getSiteId(), "-"));
+					testDeleteSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						structuredContentFolder),
+					"-"));
+	}
+
+	protected Long
+			testDeleteSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+				StructuredContentFolder structuredContentFolder)
+		throws Exception {
+
+		return structuredContentFolder.getSiteId();
 	}
 
 	protected StructuredContentFolder
@@ -1217,11 +1229,20 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		StructuredContentFolder getStructuredContentFolder =
 			structuredContentFolderResource.
 				getSiteStructuredContentFolderByExternalReferenceCode(
-					postStructuredContentFolder.getSiteId(),
+					testGetSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						postStructuredContentFolder),
 					postStructuredContentFolder.getExternalReferenceCode());
 
 		assertEquals(postStructuredContentFolder, getStructuredContentFolder);
 		assertValid(getStructuredContentFolder);
+	}
+
+	protected Long
+			testGetSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+				StructuredContentFolder structuredContentFolder)
+		throws Exception {
+
+		return structuredContentFolder.getSiteId();
 	}
 
 	protected StructuredContentFolder
@@ -1254,8 +1275,9 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 										put(
 											"siteKey",
 											"\"" +
-												structuredContentFolder.
-													getSiteId() + "\"");
+												testGraphQLGetSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+													structuredContentFolder) +
+														"\"");
 
 										put(
 											"externalReferenceCode",
@@ -1286,8 +1308,9 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 											put(
 												"siteKey",
 												"\"" +
-													structuredContentFolder.
-														getSiteId() + "\"");
+													testGraphQLGetSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+														structuredContentFolder) +
+															"\"");
 
 											put(
 												"externalReferenceCode",
@@ -1300,6 +1323,14 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/structuredContentFolderByExternalReferenceCode"))));
+	}
+
+	protected Long
+			testGraphQLGetSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+				StructuredContentFolder structuredContentFolder)
+		throws Exception {
+
+		return structuredContentFolder.getSiteId();
 	}
 
 	@Test
@@ -3081,7 +3112,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		StructuredContentFolder putStructuredContentFolder =
 			structuredContentFolderResource.
 				putSiteStructuredContentFolderByExternalReferenceCode(
-					postStructuredContentFolder.getSiteId(),
+					testPutSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						postStructuredContentFolder),
 					postStructuredContentFolder.getExternalReferenceCode(),
 					randomStructuredContentFolder);
 
@@ -3091,7 +3123,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		StructuredContentFolder getStructuredContentFolder =
 			structuredContentFolderResource.
 				getSiteStructuredContentFolderByExternalReferenceCode(
-					putStructuredContentFolder.getSiteId(),
+					testPutSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						putStructuredContentFolder),
 					putStructuredContentFolder.getExternalReferenceCode());
 
 		assertEquals(randomStructuredContentFolder, getStructuredContentFolder);
@@ -3103,7 +3136,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		putStructuredContentFolder =
 			structuredContentFolderResource.
 				putSiteStructuredContentFolderByExternalReferenceCode(
-					newStructuredContentFolder.getSiteId(),
+					testPutSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						newStructuredContentFolder),
 					newStructuredContentFolder.getExternalReferenceCode(),
 					newStructuredContentFolder);
 
@@ -3113,7 +3147,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		getStructuredContentFolder =
 			structuredContentFolderResource.
 				getSiteStructuredContentFolderByExternalReferenceCode(
-					putStructuredContentFolder.getSiteId(),
+					testPutSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+						putStructuredContentFolder),
 					putStructuredContentFolder.getExternalReferenceCode());
 
 		assertEquals(newStructuredContentFolder, getStructuredContentFolder);
@@ -3121,6 +3156,14 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		Assert.assertEquals(
 			newStructuredContentFolder.getExternalReferenceCode(),
 			putStructuredContentFolder.getExternalReferenceCode());
+	}
+
+	protected Long
+			testPutSiteStructuredContentFolderByExternalReferenceCode_getSiteId(
+				StructuredContentFolder structuredContentFolder)
+		throws Exception {
+
+		return structuredContentFolder.getSiteId();
 	}
 
 	protected StructuredContentFolder

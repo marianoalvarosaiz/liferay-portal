@@ -475,16 +475,29 @@ public abstract class BaseDocumentResourceTestCase {
 			204,
 			documentResource.
 				deleteSiteDocumentByExternalReferenceCodeHttpResponse(
-					document.getSiteId(), document.getExternalReferenceCode()));
+					testDeleteSiteDocumentByExternalReferenceCode_getSiteId(
+						document),
+					document.getExternalReferenceCode()));
 
 		assertHttpResponseStatusCode(
 			404,
 			documentResource.getSiteDocumentByExternalReferenceCodeHttpResponse(
-				document.getSiteId(), document.getExternalReferenceCode()));
+				testDeleteSiteDocumentByExternalReferenceCode_getSiteId(
+					document),
+				document.getExternalReferenceCode()));
 		assertHttpResponseStatusCode(
 			404,
 			documentResource.getSiteDocumentByExternalReferenceCodeHttpResponse(
-				document.getSiteId(), "-"));
+				testDeleteSiteDocumentByExternalReferenceCode_getSiteId(
+					document),
+				"-"));
+	}
+
+	protected Long testDeleteSiteDocumentByExternalReferenceCode_getSiteId(
+			Document document)
+		throws Exception {
+
+		return document.getSiteId();
 	}
 
 	protected Document
@@ -2036,11 +2049,19 @@ public abstract class BaseDocumentResourceTestCase {
 
 		Document getDocument =
 			documentResource.getSiteDocumentByExternalReferenceCode(
-				postDocument.getSiteId(),
+				testGetSiteDocumentByExternalReferenceCode_getSiteId(
+					postDocument),
 				postDocument.getExternalReferenceCode());
 
 		assertEquals(postDocument, getDocument);
 		assertValid(getDocument);
+	}
+
+	protected Long testGetSiteDocumentByExternalReferenceCode_getSiteId(
+			Document document)
+		throws Exception {
+
+		return document.getSiteId();
 	}
 
 	protected Document testGetSiteDocumentByExternalReferenceCode_addDocument()
@@ -2071,7 +2092,9 @@ public abstract class BaseDocumentResourceTestCase {
 									{
 										put(
 											"siteKey",
-											"\"" + document.getSiteId() + "\"");
+											"\"" +
+												testGraphQLGetSiteDocumentByExternalReferenceCode_getSiteId(
+													document) + "\"");
 
 										put(
 											"externalReferenceCode",
@@ -2101,8 +2124,9 @@ public abstract class BaseDocumentResourceTestCase {
 										{
 											put(
 												"siteKey",
-												"\"" + document.getSiteId() +
-													"\"");
+												"\"" +
+													testGraphQLGetSiteDocumentByExternalReferenceCode_getSiteId(
+														document) + "\"");
 
 											put(
 												"externalReferenceCode",
@@ -2115,6 +2139,13 @@ public abstract class BaseDocumentResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/documentByExternalReferenceCode"))));
+	}
+
+	protected Long testGraphQLGetSiteDocumentByExternalReferenceCode_getSiteId(
+			Document document)
+		throws Exception {
+
+		return document.getSiteId();
 	}
 
 	@Test
@@ -3115,7 +3146,8 @@ public abstract class BaseDocumentResourceTestCase {
 
 		Document putDocument =
 			documentResource.putSiteDocumentByExternalReferenceCode(
-				postDocument.getSiteId(),
+				testPutSiteDocumentByExternalReferenceCode_getSiteId(
+					postDocument),
 				postDocument.getExternalReferenceCode(), randomDocument,
 				multipartFiles);
 
@@ -3124,7 +3156,8 @@ public abstract class BaseDocumentResourceTestCase {
 
 		Document getDocument =
 			documentResource.getSiteDocumentByExternalReferenceCode(
-				putDocument.getSiteId(),
+				testPutSiteDocumentByExternalReferenceCode_getSiteId(
+					putDocument),
 				putDocument.getExternalReferenceCode());
 
 		assertEquals(randomDocument, getDocument);
@@ -3136,20 +3169,29 @@ public abstract class BaseDocumentResourceTestCase {
 			testPutSiteDocumentByExternalReferenceCode_createDocument();
 
 		putDocument = documentResource.putSiteDocumentByExternalReferenceCode(
-			newDocument.getSiteId(), newDocument.getExternalReferenceCode(),
-			newDocument, getMultipartFiles());
+			testPutSiteDocumentByExternalReferenceCode_getSiteId(newDocument),
+			newDocument.getExternalReferenceCode(), newDocument,
+			getMultipartFiles());
 
 		assertEquals(newDocument, putDocument);
 		assertValid(putDocument);
 
 		getDocument = documentResource.getSiteDocumentByExternalReferenceCode(
-			putDocument.getSiteId(), putDocument.getExternalReferenceCode());
+			testPutSiteDocumentByExternalReferenceCode_getSiteId(putDocument),
+			putDocument.getExternalReferenceCode());
 
 		assertEquals(newDocument, getDocument);
 
 		Assert.assertEquals(
 			newDocument.getExternalReferenceCode(),
 			putDocument.getExternalReferenceCode());
+	}
+
+	protected Long testPutSiteDocumentByExternalReferenceCode_getSiteId(
+			Document document)
+		throws Exception {
+
+		return document.getSiteId();
 	}
 
 	protected Document

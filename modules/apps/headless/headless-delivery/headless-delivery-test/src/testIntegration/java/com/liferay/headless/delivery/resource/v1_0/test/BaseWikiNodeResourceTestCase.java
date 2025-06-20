@@ -240,16 +240,29 @@ public abstract class BaseWikiNodeResourceTestCase {
 			204,
 			wikiNodeResource.
 				deleteSiteWikiNodeByExternalReferenceCodeHttpResponse(
-					wikiNode.getSiteId(), wikiNode.getExternalReferenceCode()));
+					testDeleteSiteWikiNodeByExternalReferenceCode_getSiteId(
+						wikiNode),
+					wikiNode.getExternalReferenceCode()));
 
 		assertHttpResponseStatusCode(
 			404,
 			wikiNodeResource.getSiteWikiNodeByExternalReferenceCodeHttpResponse(
-				wikiNode.getSiteId(), wikiNode.getExternalReferenceCode()));
+				testDeleteSiteWikiNodeByExternalReferenceCode_getSiteId(
+					wikiNode),
+				wikiNode.getExternalReferenceCode()));
 		assertHttpResponseStatusCode(
 			404,
 			wikiNodeResource.getSiteWikiNodeByExternalReferenceCodeHttpResponse(
-				wikiNode.getSiteId(), "-"));
+				testDeleteSiteWikiNodeByExternalReferenceCode_getSiteId(
+					wikiNode),
+				"-"));
+	}
+
+	protected Long testDeleteSiteWikiNodeByExternalReferenceCode_getSiteId(
+			WikiNode wikiNode)
+		throws Exception {
+
+		return wikiNode.getSiteId();
 	}
 
 	protected WikiNode
@@ -397,11 +410,19 @@ public abstract class BaseWikiNodeResourceTestCase {
 
 		WikiNode getWikiNode =
 			wikiNodeResource.getSiteWikiNodeByExternalReferenceCode(
-				postWikiNode.getSiteId(),
+				testGetSiteWikiNodeByExternalReferenceCode_getSiteId(
+					postWikiNode),
 				postWikiNode.getExternalReferenceCode());
 
 		assertEquals(postWikiNode, getWikiNode);
 		assertValid(getWikiNode);
+	}
+
+	protected Long testGetSiteWikiNodeByExternalReferenceCode_getSiteId(
+			WikiNode wikiNode)
+		throws Exception {
+
+		return wikiNode.getSiteId();
 	}
 
 	protected WikiNode testGetSiteWikiNodeByExternalReferenceCode_addWikiNode()
@@ -432,7 +453,9 @@ public abstract class BaseWikiNodeResourceTestCase {
 									{
 										put(
 											"siteKey",
-											"\"" + wikiNode.getSiteId() + "\"");
+											"\"" +
+												testGraphQLGetSiteWikiNodeByExternalReferenceCode_getSiteId(
+													wikiNode) + "\"");
 
 										put(
 											"externalReferenceCode",
@@ -462,8 +485,9 @@ public abstract class BaseWikiNodeResourceTestCase {
 										{
 											put(
 												"siteKey",
-												"\"" + wikiNode.getSiteId() +
-													"\"");
+												"\"" +
+													testGraphQLGetSiteWikiNodeByExternalReferenceCode_getSiteId(
+														wikiNode) + "\"");
 
 											put(
 												"externalReferenceCode",
@@ -476,6 +500,13 @@ public abstract class BaseWikiNodeResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/wikiNodeByExternalReferenceCode"))));
+	}
+
+	protected Long testGraphQLGetSiteWikiNodeByExternalReferenceCode_getSiteId(
+			WikiNode wikiNode)
+		throws Exception {
+
+		return wikiNode.getSiteId();
 	}
 
 	@Test
@@ -1350,7 +1381,8 @@ public abstract class BaseWikiNodeResourceTestCase {
 
 		WikiNode putWikiNode =
 			wikiNodeResource.putSiteWikiNodeByExternalReferenceCode(
-				postWikiNode.getSiteId(),
+				testPutSiteWikiNodeByExternalReferenceCode_getSiteId(
+					postWikiNode),
 				postWikiNode.getExternalReferenceCode(), randomWikiNode);
 
 		assertEquals(randomWikiNode, putWikiNode);
@@ -1358,7 +1390,8 @@ public abstract class BaseWikiNodeResourceTestCase {
 
 		WikiNode getWikiNode =
 			wikiNodeResource.getSiteWikiNodeByExternalReferenceCode(
-				putWikiNode.getSiteId(),
+				testPutSiteWikiNodeByExternalReferenceCode_getSiteId(
+					putWikiNode),
 				putWikiNode.getExternalReferenceCode());
 
 		assertEquals(randomWikiNode, getWikiNode);
@@ -1368,20 +1401,28 @@ public abstract class BaseWikiNodeResourceTestCase {
 			testPutSiteWikiNodeByExternalReferenceCode_createWikiNode();
 
 		putWikiNode = wikiNodeResource.putSiteWikiNodeByExternalReferenceCode(
-			newWikiNode.getSiteId(), newWikiNode.getExternalReferenceCode(),
-			newWikiNode);
+			testPutSiteWikiNodeByExternalReferenceCode_getSiteId(newWikiNode),
+			newWikiNode.getExternalReferenceCode(), newWikiNode);
 
 		assertEquals(newWikiNode, putWikiNode);
 		assertValid(putWikiNode);
 
 		getWikiNode = wikiNodeResource.getSiteWikiNodeByExternalReferenceCode(
-			putWikiNode.getSiteId(), putWikiNode.getExternalReferenceCode());
+			testPutSiteWikiNodeByExternalReferenceCode_getSiteId(putWikiNode),
+			putWikiNode.getExternalReferenceCode());
 
 		assertEquals(newWikiNode, getWikiNode);
 
 		Assert.assertEquals(
 			newWikiNode.getExternalReferenceCode(),
 			putWikiNode.getExternalReferenceCode());
+	}
+
+	protected Long testPutSiteWikiNodeByExternalReferenceCode_getSiteId(
+			WikiNode wikiNode)
+		throws Exception {
+
+		return wikiNode.getSiteId();
 	}
 
 	protected WikiNode

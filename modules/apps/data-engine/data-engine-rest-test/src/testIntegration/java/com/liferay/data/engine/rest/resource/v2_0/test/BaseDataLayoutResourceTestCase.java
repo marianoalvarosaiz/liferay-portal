@@ -1030,11 +1030,20 @@ public abstract class BaseDataLayoutResourceTestCase {
 
 		DataLayout getDataLayout =
 			dataLayoutResource.getSiteDataLayoutByContentTypeByDataLayoutKey(
-				postDataLayout.getSiteId(), postDataLayout.getContentType(),
+				testGetSiteDataLayoutByContentTypeByDataLayoutKey_getSiteId(
+					postDataLayout),
+				postDataLayout.getContentType(),
 				postDataLayout.getDataLayoutKey());
 
 		assertEquals(postDataLayout, getDataLayout);
 		assertValid(getDataLayout);
+	}
+
+	protected Long testGetSiteDataLayoutByContentTypeByDataLayoutKey_getSiteId(
+			DataLayout dataLayout)
+		throws Exception {
+
+		return dataLayout.getSiteId();
 	}
 
 	protected DataLayout
@@ -1066,8 +1075,9 @@ public abstract class BaseDataLayoutResourceTestCase {
 									{
 										put(
 											"siteKey",
-											"\"" + dataLayout.getSiteId() +
-												"\"");
+											"\"" +
+												testGraphQLGetSiteDataLayoutByContentTypeByDataLayoutKey_getSiteId(
+													dataLayout) + "\"");
 
 										put(
 											"contentType",
@@ -1101,8 +1111,9 @@ public abstract class BaseDataLayoutResourceTestCase {
 										{
 											put(
 												"siteKey",
-												"\"" + dataLayout.getSiteId() +
-													"\"");
+												"\"" +
+													testGraphQLGetSiteDataLayoutByContentTypeByDataLayoutKey_getSiteId(
+														dataLayout) + "\"");
 
 											put(
 												"contentType",
@@ -1122,6 +1133,14 @@ public abstract class BaseDataLayoutResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/dataEngine_v2_0",
 						"Object/dataLayoutByContentTypeByDataLayoutKey"))));
+	}
+
+	protected Long
+			testGraphQLGetSiteDataLayoutByContentTypeByDataLayoutKey_getSiteId(
+				DataLayout dataLayout)
+		throws Exception {
+
+		return dataLayout.getSiteId();
 	}
 
 	@Test

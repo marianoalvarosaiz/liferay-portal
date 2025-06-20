@@ -419,8 +419,7 @@ public abstract class BaseAccountResourceTestCase {
 			accountResource.
 				deleteAccountGroupByExternalReferenceCodeAccountHttpResponse(
 					testDeleteAccountGroupByExternalReferenceCodeAccount_getAccountExternalReferenceCode(),
-					testDeleteAccountGroupByExternalReferenceCodeAccount_getExternalReferenceCode(
-						account)));
+					account.getExternalReferenceCode()));
 	}
 
 	protected String
@@ -429,14 +428,6 @@ public abstract class BaseAccountResourceTestCase {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteAccountGroupByExternalReferenceCodeAccount_getExternalReferenceCode(
-				Account account)
-		throws Exception {
-
-		return account.getExternalReferenceCode();
 	}
 
 	protected Account

@@ -194,10 +194,17 @@ public abstract class BaseSitePageResourceTestCase {
 		SitePage postSitePage = testGetSiteSitePage_addSitePage();
 
 		SitePage getSitePage = sitePageResource.getSiteSitePage(
-			postSitePage.getSiteId(), postSitePage.getFriendlyUrlPath());
+			testGetSiteSitePage_getSiteId(postSitePage),
+			postSitePage.getFriendlyUrlPath());
 
 		assertEquals(postSitePage, getSitePage);
 		assertValid(getSitePage);
+	}
+
+	protected Long testGetSiteSitePage_getSiteId(SitePage sitePage)
+		throws Exception {
+
+		return sitePage.getSiteId();
 	}
 
 	protected SitePage testGetSiteSitePage_addSitePage() throws Exception {
@@ -223,7 +230,9 @@ public abstract class BaseSitePageResourceTestCase {
 									{
 										put(
 											"siteKey",
-											"\"" + sitePage.getSiteId() + "\"");
+											"\"" +
+												testGraphQLGetSiteSitePage_getSiteId(
+													sitePage) + "\"");
 
 										put(
 											"friendlyUrlPath",
@@ -251,8 +260,9 @@ public abstract class BaseSitePageResourceTestCase {
 										{
 											put(
 												"siteKey",
-												"\"" + sitePage.getSiteId() +
-													"\"");
+												"\"" +
+													testGraphQLGetSiteSitePage_getSiteId(
+														sitePage) + "\"");
 
 											put(
 												"friendlyUrlPath",
@@ -265,6 +275,12 @@ public abstract class BaseSitePageResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/sitePage"))));
+	}
+
+	protected Long testGraphQLGetSiteSitePage_getSiteId(SitePage sitePage)
+		throws Exception {
+
+		return sitePage.getSiteId();
 	}
 
 	@Test
@@ -333,11 +349,20 @@ public abstract class BaseSitePageResourceTestCase {
 
 		SitePage getSitePage =
 			sitePageResource.getSiteSitePageExperienceExperienceKey(
-				postSitePage.getSiteId(), postSitePage.getFriendlyUrlPath(),
+				testGetSiteSitePageExperienceExperienceKey_getSiteId(
+					postSitePage),
+				postSitePage.getFriendlyUrlPath(),
 				testGetSiteSitePageExperienceExperienceKey_getExperienceKey());
 
 		assertEquals(postSitePage, getSitePage);
 		assertValid(getSitePage);
+	}
+
+	protected Long testGetSiteSitePageExperienceExperienceKey_getSiteId(
+			SitePage sitePage)
+		throws Exception {
+
+		return sitePage.getSiteId();
 	}
 
 	protected String
@@ -376,7 +401,9 @@ public abstract class BaseSitePageResourceTestCase {
 									{
 										put(
 											"siteKey",
-											"\"" + sitePage.getSiteId() + "\"");
+											"\"" +
+												testGraphQLGetSiteSitePageExperienceExperienceKey_getSiteId(
+													sitePage) + "\"");
 
 										put(
 											"friendlyUrlPath",
@@ -411,8 +438,9 @@ public abstract class BaseSitePageResourceTestCase {
 										{
 											put(
 												"siteKey",
-												"\"" + sitePage.getSiteId() +
-													"\"");
+												"\"" +
+													testGraphQLGetSiteSitePageExperienceExperienceKey_getSiteId(
+														sitePage) + "\"");
 
 											put(
 												"friendlyUrlPath",
@@ -431,6 +459,13 @@ public abstract class BaseSitePageResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/sitePageExperienceExperienceKey"))));
+	}
+
+	protected Long testGraphQLGetSiteSitePageExperienceExperienceKey_getSiteId(
+			SitePage sitePage)
+		throws Exception {
+
+		return sitePage.getSiteId();
 	}
 
 	protected String

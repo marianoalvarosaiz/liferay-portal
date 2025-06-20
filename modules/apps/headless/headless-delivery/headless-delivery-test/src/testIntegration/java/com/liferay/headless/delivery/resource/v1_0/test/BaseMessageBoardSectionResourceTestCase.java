@@ -1225,11 +1225,19 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		MessageBoardSection getMessageBoardSection =
 			messageBoardSectionResource.
 				getSiteMessageBoardSectionByFriendlyUrlPath(
-					postMessageBoardSection.getSiteId(),
+					testGetSiteMessageBoardSectionByFriendlyUrlPath_getSiteId(
+						postMessageBoardSection),
 					postMessageBoardSection.getFriendlyUrlPath());
 
 		assertEquals(postMessageBoardSection, getMessageBoardSection);
 		assertValid(getMessageBoardSection);
+	}
+
+	protected Long testGetSiteMessageBoardSectionByFriendlyUrlPath_getSiteId(
+			MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		return messageBoardSection.getSiteId();
 	}
 
 	protected MessageBoardSection
@@ -1262,8 +1270,9 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 										put(
 											"siteKey",
 											"\"" +
-												messageBoardSection.
-													getSiteId() + "\"");
+												testGraphQLGetSiteMessageBoardSectionByFriendlyUrlPath_getSiteId(
+													messageBoardSection) +
+														"\"");
 
 										put(
 											"friendlyUrlPath",
@@ -1294,8 +1303,9 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 											put(
 												"siteKey",
 												"\"" +
-													messageBoardSection.
-														getSiteId() + "\"");
+													testGraphQLGetSiteMessageBoardSectionByFriendlyUrlPath_getSiteId(
+														messageBoardSection) +
+															"\"");
 
 											put(
 												"friendlyUrlPath",
@@ -1308,6 +1318,14 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 									getGraphQLFields()))),
 						"JSONObject/data", "JSONObject/headlessDelivery_v1_0",
 						"Object/messageBoardSectionByFriendlyUrlPath"))));
+	}
+
+	protected Long
+			testGraphQLGetSiteMessageBoardSectionByFriendlyUrlPath_getSiteId(
+				MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		return messageBoardSection.getSiteId();
 	}
 
 	@Test
