@@ -26,34 +26,26 @@ import {getImage} from '../util/getImage';
 import {NewSpaceFormSection} from './NewSpaceFormSection';
 
 export interface NewSpaceProps {
-	baseAddMembersUrl: string;
-	baseSpaceUrl: string;
+	baseRedirectUrl: string;
 }
 
-const NewSpace = ({baseAddMembersUrl, baseSpaceUrl}: NewSpaceProps) => {
+const NewSpace = ({baseRedirectUrl}: NewSpaceProps) => {
 	const {
 		errors,
 		handleChange,
 		handleSubmit,
 		isSubmitting,
 		setFieldValue,
-		submitForm,
 		touched,
 		values,
 	} = useFormik({
 		initialValues: {
-			addMembers: false,
 			description: '',
 			logoColor: 'outline-0' as LogoColor,
 			name: '',
 		},
 		onSubmit: (values) => {
-			const {
-				addMembers,
-				description,
-				logoColor = 'outline-0',
-				name,
-			} = values;
+			const {description, logoColor = 'outline-0', name} = values;
 
 			SpaceService.addSpace({
 				description,
@@ -61,17 +53,7 @@ const NewSpace = ({baseAddMembersUrl, baseSpaceUrl}: NewSpaceProps) => {
 				settings: {logoColor},
 			}).then((response) => {
 				if (response.data) {
-					if (addMembers) {
-						navigate(
-							baseAddMembersUrl +
-								'?assetLibraryId=' +
-								response.data.id
-						);
-
-						return;
-					}
-
-					navigate(baseSpaceUrl + response.data.id);
+					navigate(baseRedirectUrl + response.data.id);
 				}
 			});
 		},
@@ -152,14 +134,7 @@ const NewSpace = ({baseAddMembersUrl, baseSpaceUrl}: NewSpaceProps) => {
 					</Form.Group>
 
 					<ClayButton.Group className="mb-0 w-100" spaced vertical>
-						<ClayButton
-							className="mt-4"
-							disabled={isSubmitting}
-							onClick={() => {
-								setFieldValue('addMembers', true);
-								submitForm();
-							}}
-						>
+						<ClayButton className="mt-4">
 							{Liferay.Language.get('add-members')}
 						</ClayButton>
 
