@@ -352,20 +352,20 @@ public abstract class BaseRegionResourceTestCase {
 		Region postRegion = testGetCountryRegionByRegionCode_addRegion();
 
 		Region getRegion = regionResource.getCountryRegionByRegionCode(
-			testGetCountryRegionByRegionCode_getCountryId(),
+			testGetCountryRegionByRegionCode_getCountryId(postRegion),
 			postRegion.getRegionCode());
 
 		assertEquals(postRegion, getRegion);
 		assertValid(getRegion);
 	}
 
-	protected Region testGetCountryRegionByRegionCode_addRegion()
+	protected Long testGetCountryRegionByRegionCode_getCountryId(Region region)
 		throws Exception {
 
-		return testPostCountryRegion_addRegion(randomRegion());
+		return region.getCountryId();
 	}
 
-	protected Long testGetCountryRegionByRegionCode_getCountryId()
+	protected Region testGetCountryRegionByRegionCode_addRegion()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -390,7 +390,9 @@ public abstract class BaseRegionResourceTestCase {
 									{
 										put(
 											"countryId",
-											testGraphQLGetCountryRegionByRegionCode_getCountryId());
+											testGraphQLGetCountryRegionByRegionCode_getCountryId(
+												region));
+
 										put(
 											"regionCode",
 											"\"" + region.getRegionCode() +
@@ -417,7 +419,9 @@ public abstract class BaseRegionResourceTestCase {
 										{
 											put(
 												"countryId",
-												testGraphQLGetCountryRegionByRegionCode_getCountryId());
+												testGraphQLGetCountryRegionByRegionCode_getCountryId(
+													region));
+
 											put(
 												"regionCode",
 												"\"" + region.getRegionCode() +
@@ -430,11 +434,11 @@ public abstract class BaseRegionResourceTestCase {
 						"Object/countryRegionByRegionCode"))));
 	}
 
-	protected Long testGraphQLGetCountryRegionByRegionCode_getCountryId()
+	protected Long testGraphQLGetCountryRegionByRegionCode_getCountryId(
+			Region region)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return region.getCountryId();
 	}
 
 	@Test
@@ -982,7 +986,8 @@ public abstract class BaseRegionResourceTestCase {
 	}
 
 	protected Region testGetRegion_addRegion() throws Exception {
-		return testPostCountryRegion_addRegion(randomRegion());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1401,7 +1406,8 @@ public abstract class BaseRegionResourceTestCase {
 	}
 
 	protected Region testPatchRegion_addRegion() throws Exception {
-		return testPostCountryRegion_addRegion(randomRegion());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1440,7 +1446,8 @@ public abstract class BaseRegionResourceTestCase {
 	}
 
 	protected Region testPutRegion_addRegion() throws Exception {
-		return testPostCountryRegion_addRegion(randomRegion());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected Region testGraphQLRegion_addRegion() throws Exception {

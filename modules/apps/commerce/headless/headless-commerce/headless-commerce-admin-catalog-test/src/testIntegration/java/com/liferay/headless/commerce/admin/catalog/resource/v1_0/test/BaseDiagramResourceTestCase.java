@@ -197,15 +197,15 @@ public abstract class BaseDiagramResourceTestCase {
 		assertValid(getDiagram);
 	}
 
-	protected Diagram testGetProductByExternalReferenceCodeDiagram_addDiagram()
+	protected String
+			testGetProductByExternalReferenceCodeDiagram_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected String
-			testGetProductByExternalReferenceCodeDiagram_getExternalReferenceCode()
+	protected Diagram testGetProductByExternalReferenceCodeDiagram_addDiagram()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -337,18 +337,19 @@ public abstract class BaseDiagramResourceTestCase {
 		Diagram postDiagram = testGetProductIdDiagram_addDiagram();
 
 		Diagram getDiagram = diagramResource.getProductIdDiagram(
-			testGetProductIdDiagram_getId());
+			testGetProductIdDiagram_getId(postDiagram));
 
 		assertEquals(postDiagram, getDiagram);
 		assertValid(getDiagram);
 	}
 
-	protected Diagram testGetProductIdDiagram_addDiagram() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+	protected Long testGetProductIdDiagram_getId(Diagram diagram)
+		throws Exception {
+
+		return diagram.getId();
 	}
 
-	protected Long testGetProductIdDiagram_getId() throws Exception {
+	protected Diagram testGetProductIdDiagram_addDiagram() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -371,7 +372,8 @@ public abstract class BaseDiagramResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetProductIdDiagram_getId());
+											testGraphQLGetProductIdDiagram_getId(
+												diagram));
 									}
 								},
 								getGraphQLFields())),
@@ -393,7 +395,8 @@ public abstract class BaseDiagramResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetProductIdDiagram_getId());
+												testGraphQLGetProductIdDiagram_getId(
+													diagram));
 										}
 									},
 									getGraphQLFields()))),
@@ -402,9 +405,10 @@ public abstract class BaseDiagramResourceTestCase {
 						"Object/productIdDiagram"))));
 	}
 
-	protected Long testGraphQLGetProductIdDiagram_getId() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+	protected Long testGraphQLGetProductIdDiagram_getId(Diagram diagram)
+		throws Exception {
+
+		return diagram.getId();
 	}
 
 	@Test

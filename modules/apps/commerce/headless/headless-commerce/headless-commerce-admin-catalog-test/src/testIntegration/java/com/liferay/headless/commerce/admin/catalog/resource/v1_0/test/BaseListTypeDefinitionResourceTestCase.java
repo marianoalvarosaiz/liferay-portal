@@ -195,16 +195,16 @@ public abstract class BaseListTypeDefinitionResourceTestCase {
 					listTypeDefinition.getId()));
 	}
 
-	protected ListTypeDefinition
-			testDeleteSpecificationListTypeDefinition_addListTypeDefinition()
+	protected Long
+			testDeleteSpecificationListTypeDefinition_getSpecificationId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long
-			testDeleteSpecificationListTypeDefinition_getSpecificationId()
+	protected ListTypeDefinition
+			testDeleteSpecificationListTypeDefinition_addListTypeDefinition()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -334,22 +334,12 @@ public abstract class BaseListTypeDefinitionResourceTestCase {
 			204,
 			listTypeDefinitionResource.
 				postSpecificationListTypeDefinitionHttpResponse(
-					testPostSpecificationListTypeDefinition_getSpecificationId(),
-					listTypeDefinition.getId()));
+					null, listTypeDefinition.getId()));
 
 		assertHttpResponseStatusCode(
 			404,
 			listTypeDefinitionResource.
-				postSpecificationListTypeDefinitionHttpResponse(
-					testPostSpecificationListTypeDefinition_getSpecificationId(),
-					0L));
-	}
-
-	protected Long testPostSpecificationListTypeDefinition_getSpecificationId()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+				postSpecificationListTypeDefinitionHttpResponse(null, 0L));
 	}
 
 	protected ListTypeDefinition
@@ -461,10 +451,6 @@ public abstract class BaseListTypeDefinitionResourceTestCase {
 			valid = false;
 		}
 
-		if (listTypeDefinition.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (listTypeDefinition.getId() == null) {
 			valid = false;
 		}
@@ -474,6 +460,16 @@ public abstract class BaseListTypeDefinitionResourceTestCase {
 
 			if (Objects.equals("actions", additionalAssertFieldName)) {
 				if (listTypeDefinition.getActions() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (listTypeDefinition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

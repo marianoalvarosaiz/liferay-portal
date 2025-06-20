@@ -219,81 +219,14 @@ public abstract class BaseProductConfigurationListOrderTypeResourceTestCase {
 
 	@Test
 	public void testDeleteProductConfigurationListOrderType() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		ProductConfigurationListOrderType productConfigurationListOrderType =
-			testDeleteProductConfigurationListOrderType_addProductConfigurationListOrderType();
-
-		assertHttpResponseStatusCode(
-			204,
-			productConfigurationListOrderTypeResource.
-				deleteProductConfigurationListOrderTypeHttpResponse(
-					productConfigurationListOrderType.
-						getProductConfigurationListOrderTypeId()));
-	}
-
-	protected ProductConfigurationListOrderType
-			testDeleteProductConfigurationListOrderType_addProductConfigurationListOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteProductConfigurationListOrderType()
 		throws Exception {
 
-		// No namespace
-
-		ProductConfigurationListOrderType productConfigurationListOrderType1 =
-			testGraphQLDeleteProductConfigurationListOrderType_addProductConfigurationListOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteProductConfigurationListOrderType",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"productConfigurationListOrderTypeId",
-									productConfigurationListOrderType1.
-										getProductConfigurationListOrderTypeId());
-							}
-						})),
-				"JSONObject/data",
-				"Object/deleteProductConfigurationListOrderType"));
-
-		// Using the namespace headlessCommerceAdminCatalog_v1_0
-
-		ProductConfigurationListOrderType productConfigurationListOrderType2 =
-			testGraphQLDeleteProductConfigurationListOrderType_addProductConfigurationListOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminCatalog_v1_0",
-						new GraphQLField(
-							"deleteProductConfigurationListOrderType",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"productConfigurationListOrderTypeId",
-										productConfigurationListOrderType2.
-											getProductConfigurationListOrderTypeId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminCatalog_v1_0",
-				"Object/deleteProductConfigurationListOrderType"));
-	}
-
-	protected ProductConfigurationListOrderType
-			testGraphQLDeleteProductConfigurationListOrderType_addProductConfigurationListOrderType()
-		throws Exception {
-
-		return testGraphQLProductConfigurationListOrderType_addProductConfigurationListOrderType();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -313,7 +246,8 @@ public abstract class BaseProductConfigurationListOrderTypeResourceTestCase {
 			testDeleteProductConfigurationListOrderTypeBatch_addProductConfigurationListOrderType()
 		throws Exception {
 
-		return testDeleteProductConfigurationListOrderType_addProductConfigurationListOrderType();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -407,16 +341,6 @@ public abstract class BaseProductConfigurationListOrderTypeResourceTestCase {
 			page,
 			testGetProductConfigurationListByExternalReferenceCodeProductConfigurationListOrderTypesPage_getExpectedActions(
 				externalReferenceCode));
-
-		productConfigurationListOrderTypeResource.
-			deleteProductConfigurationListOrderType(
-				productConfigurationListOrderType1.
-					getProductConfigurationListOrderTypeId());
-
-		productConfigurationListOrderTypeResource.
-			deleteProductConfigurationListOrderType(
-				productConfigurationListOrderType2.
-					getProductConfigurationListOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -643,16 +567,6 @@ public abstract class BaseProductConfigurationListOrderTypeResourceTestCase {
 			page,
 			testGetProductConfigurationListIdProductConfigurationListOrderTypesPage_getExpectedActions(
 				id));
-
-		productConfigurationListOrderTypeResource.
-			deleteProductConfigurationListOrderType(
-				productConfigurationListOrderType1.
-					getProductConfigurationListOrderTypeId());
-
-		productConfigurationListOrderTypeResource.
-			deleteProductConfigurationListOrderType(
-				productConfigurationListOrderType2.
-					getProductConfigurationListOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1160,14 +1074,6 @@ public abstract class BaseProductConfigurationListOrderTypeResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected ProductConfigurationListOrderType
-			testGraphQLProductConfigurationListOrderType_addProductConfigurationListOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		ProductConfigurationListOrderType productConfigurationListOrderType,
 		List<ProductConfigurationListOrderType>
@@ -1277,12 +1183,6 @@ public abstract class BaseProductConfigurationListOrderTypeResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (productConfigurationListOrderType.
-				getProductConfigurationListOrderTypeId() == null) {
-
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

@@ -204,78 +204,12 @@ public abstract class BaseShippingFixedOptionTermResourceTestCase {
 
 	@Test
 	public void testDeleteShippingFixedOptionTerm() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		ShippingFixedOptionTerm shippingFixedOptionTerm =
-			testDeleteShippingFixedOptionTerm_addShippingFixedOptionTerm();
-
-		assertHttpResponseStatusCode(
-			204,
-			shippingFixedOptionTermResource.
-				deleteShippingFixedOptionTermHttpResponse(
-					shippingFixedOptionTerm.getShippingFixedOptionTermId()));
-	}
-
-	protected ShippingFixedOptionTerm
-			testDeleteShippingFixedOptionTerm_addShippingFixedOptionTerm()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteShippingFixedOptionTerm() throws Exception {
-
-		// No namespace
-
-		ShippingFixedOptionTerm shippingFixedOptionTerm1 =
-			testGraphQLDeleteShippingFixedOptionTerm_addShippingFixedOptionTerm();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteShippingFixedOptionTerm",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"shippingFixedOptionTermId",
-									shippingFixedOptionTerm1.
-										getShippingFixedOptionTermId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteShippingFixedOptionTerm"));
-
-		// Using the namespace headlessCommerceAdminChannel_v1_0
-
-		ShippingFixedOptionTerm shippingFixedOptionTerm2 =
-			testGraphQLDeleteShippingFixedOptionTerm_addShippingFixedOptionTerm();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminChannel_v1_0",
-						new GraphQLField(
-							"deleteShippingFixedOptionTerm",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"shippingFixedOptionTermId",
-										shippingFixedOptionTerm2.
-											getShippingFixedOptionTermId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminChannel_v1_0",
-				"Object/deleteShippingFixedOptionTerm"));
-	}
-
-	protected ShippingFixedOptionTerm
-			testGraphQLDeleteShippingFixedOptionTerm_addShippingFixedOptionTerm()
-		throws Exception {
-
-		return testGraphQLShippingFixedOptionTerm_addShippingFixedOptionTerm();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -292,7 +226,8 @@ public abstract class BaseShippingFixedOptionTermResourceTestCase {
 			testDeleteShippingFixedOptionTermBatch_addShippingFixedOptionTerm()
 		throws Exception {
 
-		return testDeleteShippingFixedOptionTerm_addShippingFixedOptionTerm();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -382,12 +317,6 @@ public abstract class BaseShippingFixedOptionTermResourceTestCase {
 			page,
 			testGetShippingFixedOptionIdShippingFixedOptionTermsPage_getExpectedActions(
 				id));
-
-		shippingFixedOptionTermResource.deleteShippingFixedOptionTerm(
-			shippingFixedOptionTerm1.getShippingFixedOptionTermId());
-
-		shippingFixedOptionTermResource.deleteShippingFixedOptionTerm(
-			shippingFixedOptionTerm2.getShippingFixedOptionTermId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -842,14 +771,6 @@ public abstract class BaseShippingFixedOptionTermResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected ShippingFixedOptionTerm
-			testGraphQLShippingFixedOptionTerm_addShippingFixedOptionTerm()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		ShippingFixedOptionTerm shippingFixedOptionTerm,
 		List<ShippingFixedOptionTerm> shippingFixedOptionTerms) {
@@ -940,10 +861,6 @@ public abstract class BaseShippingFixedOptionTermResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (shippingFixedOptionTerm.getShippingFixedOptionTermId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

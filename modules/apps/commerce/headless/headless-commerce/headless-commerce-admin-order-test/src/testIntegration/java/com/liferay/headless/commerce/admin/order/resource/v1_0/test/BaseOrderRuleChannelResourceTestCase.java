@@ -199,74 +199,12 @@ public abstract class BaseOrderRuleChannelResourceTestCase {
 
 	@Test
 	public void testDeleteOrderRuleChannel() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		OrderRuleChannel orderRuleChannel =
-			testDeleteOrderRuleChannel_addOrderRuleChannel();
-
-		assertHttpResponseStatusCode(
-			204,
-			orderRuleChannelResource.deleteOrderRuleChannelHttpResponse(
-				orderRuleChannel.getOrderRuleChannelId()));
-	}
-
-	protected OrderRuleChannel testDeleteOrderRuleChannel_addOrderRuleChannel()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteOrderRuleChannel() throws Exception {
-
-		// No namespace
-
-		OrderRuleChannel orderRuleChannel1 =
-			testGraphQLDeleteOrderRuleChannel_addOrderRuleChannel();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteOrderRuleChannel",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"orderRuleChannelId",
-									orderRuleChannel1.getOrderRuleChannelId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteOrderRuleChannel"));
-
-		// Using the namespace headlessCommerceAdminOrder_v1_0
-
-		OrderRuleChannel orderRuleChannel2 =
-			testGraphQLDeleteOrderRuleChannel_addOrderRuleChannel();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminOrder_v1_0",
-						new GraphQLField(
-							"deleteOrderRuleChannel",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"orderRuleChannelId",
-										orderRuleChannel2.
-											getOrderRuleChannelId());
-								}
-							}))),
-				"JSONObject/data", "JSONObject/headlessCommerceAdminOrder_v1_0",
-				"Object/deleteOrderRuleChannel"));
-	}
-
-	protected OrderRuleChannel
-			testGraphQLDeleteOrderRuleChannel_addOrderRuleChannel()
-		throws Exception {
-
-		return testGraphQLOrderRuleChannel_addOrderRuleChannel();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -282,7 +220,8 @@ public abstract class BaseOrderRuleChannelResourceTestCase {
 			testDeleteOrderRuleChannelBatch_addOrderRuleChannel()
 		throws Exception {
 
-		return testDeleteOrderRuleChannel_addOrderRuleChannel();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteOrderRuleChannelBatch_deleteOrderRuleChannel(
@@ -368,12 +307,6 @@ public abstract class BaseOrderRuleChannelResourceTestCase {
 			page,
 			testGetOrderRuleByExternalReferenceCodeOrderRuleChannelsPage_getExpectedActions(
 				externalReferenceCode));
-
-		orderRuleChannelResource.deleteOrderRuleChannel(
-			orderRuleChannel1.getOrderRuleChannelId());
-
-		orderRuleChannelResource.deleteOrderRuleChannel(
-			orderRuleChannel2.getOrderRuleChannelId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -572,12 +505,6 @@ public abstract class BaseOrderRuleChannelResourceTestCase {
 		assertValid(
 			page,
 			testGetOrderRuleIdOrderRuleChannelsPage_getExpectedActions(id));
-
-		orderRuleChannelResource.deleteOrderRuleChannel(
-			orderRuleChannel1.getOrderRuleChannelId());
-
-		orderRuleChannelResource.deleteOrderRuleChannel(
-			orderRuleChannel2.getOrderRuleChannelId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1013,13 +940,6 @@ public abstract class BaseOrderRuleChannelResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected OrderRuleChannel testGraphQLOrderRuleChannel_addOrderRuleChannel()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		OrderRuleChannel orderRuleChannel,
 		List<OrderRuleChannel> orderRuleChannels) {
@@ -1099,10 +1019,6 @@ public abstract class BaseOrderRuleChannelResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (orderRuleChannel.getOrderRuleChannelId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

@@ -200,77 +200,12 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 
 	@Test
 	public void testDeleteWarehouseOrderType() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		WarehouseOrderType warehouseOrderType =
-			testDeleteWarehouseOrderType_addWarehouseOrderType();
-
-		assertHttpResponseStatusCode(
-			204,
-			warehouseOrderTypeResource.deleteWarehouseOrderTypeHttpResponse(
-				warehouseOrderType.getWarehouseOrderTypeId()));
-	}
-
-	protected WarehouseOrderType
-			testDeleteWarehouseOrderType_addWarehouseOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteWarehouseOrderType() throws Exception {
-
-		// No namespace
-
-		WarehouseOrderType warehouseOrderType1 =
-			testGraphQLDeleteWarehouseOrderType_addWarehouseOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteWarehouseOrderType",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"warehouseOrderTypeId",
-									warehouseOrderType1.
-										getWarehouseOrderTypeId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteWarehouseOrderType"));
-
-		// Using the namespace headlessCommerceAdminInventory_v1_0
-
-		WarehouseOrderType warehouseOrderType2 =
-			testGraphQLDeleteWarehouseOrderType_addWarehouseOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminInventory_v1_0",
-						new GraphQLField(
-							"deleteWarehouseOrderType",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"warehouseOrderTypeId",
-										warehouseOrderType2.
-											getWarehouseOrderTypeId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminInventory_v1_0",
-				"Object/deleteWarehouseOrderType"));
-	}
-
-	protected WarehouseOrderType
-			testGraphQLDeleteWarehouseOrderType_addWarehouseOrderType()
-		throws Exception {
-
-		return testGraphQLWarehouseOrderType_addWarehouseOrderType();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -286,7 +221,8 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 			testDeleteWarehouseOrderTypeBatch_addWarehouseOrderType()
 		throws Exception {
 
-		return testDeleteWarehouseOrderType_addWarehouseOrderType();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteWarehouseOrderTypeBatch_deleteWarehouseOrderType(
@@ -373,12 +309,6 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 			page,
 			testGetWarehouseByExternalReferenceCodeWarehouseOrderTypesPage_getExpectedActions(
 				externalReferenceCode));
-
-		warehouseOrderTypeResource.deleteWarehouseOrderType(
-			warehouseOrderType1.getWarehouseOrderTypeId());
-
-		warehouseOrderTypeResource.deleteWarehouseOrderType(
-			warehouseOrderType2.getWarehouseOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -587,12 +517,6 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 		assertValid(
 			page,
 			testGetWarehouseIdWarehouseOrderTypesPage_getExpectedActions(id));
-
-		warehouseOrderTypeResource.deleteWarehouseOrderType(
-			warehouseOrderType1.getWarehouseOrderTypeId());
-
-		warehouseOrderTypeResource.deleteWarehouseOrderType(
-			warehouseOrderType2.getWarehouseOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1054,14 +978,6 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected WarehouseOrderType
-			testGraphQLWarehouseOrderType_addWarehouseOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		WarehouseOrderType warehouseOrderType,
 		List<WarehouseOrderType> warehouseOrderTypes) {
@@ -1146,10 +1062,6 @@ public abstract class BaseWarehouseOrderTypeResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (warehouseOrderType.getWarehouseOrderTypeId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

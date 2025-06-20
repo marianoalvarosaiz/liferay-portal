@@ -200,77 +200,12 @@ public abstract class BaseDiscountOrderTypeResourceTestCase {
 
 	@Test
 	public void testDeleteDiscountOrderType() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		DiscountOrderType discountOrderType =
-			testDeleteDiscountOrderType_addDiscountOrderType();
-
-		assertHttpResponseStatusCode(
-			204,
-			discountOrderTypeResource.deleteDiscountOrderTypeHttpResponse(
-				discountOrderType.getDiscountOrderTypeId()));
-	}
-
-	protected DiscountOrderType
-			testDeleteDiscountOrderType_addDiscountOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteDiscountOrderType() throws Exception {
-
-		// No namespace
-
-		DiscountOrderType discountOrderType1 =
-			testGraphQLDeleteDiscountOrderType_addDiscountOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteDiscountOrderType",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"discountOrderTypeId",
-									discountOrderType1.
-										getDiscountOrderTypeId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteDiscountOrderType"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		DiscountOrderType discountOrderType2 =
-			testGraphQLDeleteDiscountOrderType_addDiscountOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deleteDiscountOrderType",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"discountOrderTypeId",
-										discountOrderType2.
-											getDiscountOrderTypeId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deleteDiscountOrderType"));
-	}
-
-	protected DiscountOrderType
-			testGraphQLDeleteDiscountOrderType_addDiscountOrderType()
-		throws Exception {
-
-		return testGraphQLDiscountOrderType_addDiscountOrderType();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -286,7 +221,8 @@ public abstract class BaseDiscountOrderTypeResourceTestCase {
 			testDeleteDiscountOrderTypeBatch_addDiscountOrderType()
 		throws Exception {
 
-		return testDeleteDiscountOrderType_addDiscountOrderType();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteDiscountOrderTypeBatch_deleteDiscountOrderType(
@@ -372,12 +308,6 @@ public abstract class BaseDiscountOrderTypeResourceTestCase {
 			page,
 			testGetDiscountByExternalReferenceCodeDiscountOrderTypesPage_getExpectedActions(
 				externalReferenceCode));
-
-		discountOrderTypeResource.deleteDiscountOrderType(
-			discountOrderType1.getDiscountOrderTypeId());
-
-		discountOrderTypeResource.deleteDiscountOrderType(
-			discountOrderType2.getDiscountOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -578,12 +508,6 @@ public abstract class BaseDiscountOrderTypeResourceTestCase {
 		assertValid(
 			page,
 			testGetDiscountIdDiscountOrderTypesPage_getExpectedActions(id));
-
-		discountOrderTypeResource.deleteDiscountOrderType(
-			discountOrderType1.getDiscountOrderTypeId());
-
-		discountOrderTypeResource.deleteDiscountOrderType(
-			discountOrderType2.getDiscountOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1023,14 +947,6 @@ public abstract class BaseDiscountOrderTypeResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected DiscountOrderType
-			testGraphQLDiscountOrderType_addDiscountOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		DiscountOrderType discountOrderType,
 		List<DiscountOrderType> discountOrderTypes) {
@@ -1110,10 +1026,6 @@ public abstract class BaseDiscountOrderTypeResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (discountOrderType.getDiscountOrderTypeId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

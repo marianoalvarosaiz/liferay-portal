@@ -211,79 +211,12 @@ public abstract class BasePriceModifierProductGroupResourceTestCase {
 
 	@Test
 	public void testDeletePriceModifierProductGroup() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PriceModifierProductGroup priceModifierProductGroup =
-			testDeletePriceModifierProductGroup_addPriceModifierProductGroup();
-
-		assertHttpResponseStatusCode(
-			204,
-			priceModifierProductGroupResource.
-				deletePriceModifierProductGroupHttpResponse(
-					priceModifierProductGroup.
-						getPriceModifierProductGroupId()));
-	}
-
-	protected PriceModifierProductGroup
-			testDeletePriceModifierProductGroup_addPriceModifierProductGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeletePriceModifierProductGroup() throws Exception {
-
-		// No namespace
-
-		PriceModifierProductGroup priceModifierProductGroup1 =
-			testGraphQLDeletePriceModifierProductGroup_addPriceModifierProductGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deletePriceModifierProductGroup",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"priceModifierProductGroupId",
-									priceModifierProductGroup1.
-										getPriceModifierProductGroupId());
-							}
-						})),
-				"JSONObject/data", "Object/deletePriceModifierProductGroup"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		PriceModifierProductGroup priceModifierProductGroup2 =
-			testGraphQLDeletePriceModifierProductGroup_addPriceModifierProductGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deletePriceModifierProductGroup",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"priceModifierProductGroupId",
-										priceModifierProductGroup2.
-											getPriceModifierProductGroupId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deletePriceModifierProductGroup"));
-	}
-
-	protected PriceModifierProductGroup
-			testGraphQLDeletePriceModifierProductGroup_addPriceModifierProductGroup()
-		throws Exception {
-
-		return testGraphQLPriceModifierProductGroup_addPriceModifierProductGroup();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -300,7 +233,8 @@ public abstract class BasePriceModifierProductGroupResourceTestCase {
 			testDeletePriceModifierProductGroupBatch_addPriceModifierProductGroup()
 		throws Exception {
 
-		return testDeletePriceModifierProductGroup_addPriceModifierProductGroup();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -391,12 +325,6 @@ public abstract class BasePriceModifierProductGroupResourceTestCase {
 			page,
 			testGetPriceModifierByExternalReferenceCodePriceModifierProductGroupsPage_getExpectedActions(
 				externalReferenceCode));
-
-		priceModifierProductGroupResource.deletePriceModifierProductGroup(
-			priceModifierProductGroup1.getPriceModifierProductGroupId());
-
-		priceModifierProductGroupResource.deletePriceModifierProductGroup(
-			priceModifierProductGroup2.getPriceModifierProductGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -613,12 +541,6 @@ public abstract class BasePriceModifierProductGroupResourceTestCase {
 			page,
 			testGetPriceModifierIdPriceModifierProductGroupsPage_getExpectedActions(
 				id));
-
-		priceModifierProductGroupResource.deletePriceModifierProductGroup(
-			priceModifierProductGroup1.getPriceModifierProductGroupId());
-
-		priceModifierProductGroupResource.deletePriceModifierProductGroup(
-			priceModifierProductGroup2.getPriceModifierProductGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1100,14 +1022,6 @@ public abstract class BasePriceModifierProductGroupResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected PriceModifierProductGroup
-			testGraphQLPriceModifierProductGroup_addPriceModifierProductGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		PriceModifierProductGroup priceModifierProductGroup,
 		List<PriceModifierProductGroup> priceModifierProductGroups) {
@@ -1203,12 +1117,6 @@ public abstract class BasePriceModifierProductGroupResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (priceModifierProductGroup.getPriceModifierProductGroupId() ==
-				null) {
-
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

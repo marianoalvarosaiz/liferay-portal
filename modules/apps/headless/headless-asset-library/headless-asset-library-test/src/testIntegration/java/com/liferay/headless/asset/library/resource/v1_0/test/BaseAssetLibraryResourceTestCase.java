@@ -102,16 +102,6 @@ public abstract class BaseAssetLibraryResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-			Collections.singletonMap(
-				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
-			null,
-			new ServiceContext() {
-				{
-					setCompanyId(irrelevantGroup.getCompanyId());
-					setUserId(TestPropsValues.getUserId());
-				}
-			});
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -974,18 +964,18 @@ public abstract class BaseAssetLibraryResourceTestCase {
 	}
 
 	protected AssetLibrary
+			testPutAssetLibraryByExternalReferenceCode_createAssetLibrary()
+		throws Exception {
+
+		return randomAssetLibrary();
+	}
+
+	protected AssetLibrary
 			testPutAssetLibraryByExternalReferenceCode_addAssetLibrary()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	protected AssetLibrary
-			testPutAssetLibraryByExternalReferenceCode_createAssetLibrary()
-		throws Exception {
-
-		return randomAssetLibrary();
 	}
 
 	@Test
@@ -1153,10 +1143,6 @@ public abstract class BaseAssetLibraryResourceTestCase {
 			valid = false;
 		}
 
-		if (assetLibrary.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (assetLibrary.getId() == null) {
 			valid = false;
 		}
@@ -1182,6 +1168,16 @@ public abstract class BaseAssetLibraryResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (assetLibrary.getDescription_i18n() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (assetLibrary.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
@@ -1995,7 +1991,6 @@ public abstract class BaseAssetLibraryResourceTestCase {
 
 	protected AssetLibraryResource assetLibraryResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
-	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
 	protected DepotEntry testDepotEntry;
 	protected com.liferay.portal.kernel.model.Group testGroup;

@@ -193,14 +193,14 @@ public abstract class BaseChannelResourceTestCase {
 		assertValid(getChannel);
 	}
 
-	protected Channel testGetDiscountChannelChannel_addChannel()
+	protected Long testGetDiscountChannelChannel_getDiscountChannelId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetDiscountChannelChannel_getDiscountChannelId()
+	protected Channel testGetDiscountChannelChannel_addChannel()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -327,14 +327,14 @@ public abstract class BaseChannelResourceTestCase {
 		assertValid(getChannel);
 	}
 
-	protected Channel testGetPriceListChannelChannel_addChannel()
+	protected Long testGetPriceListChannelChannel_getPriceListChannelId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetPriceListChannelChannel_getPriceListChannelId()
+	protected Channel testGetPriceListChannelChannel_addChannel()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -520,10 +520,6 @@ public abstract class BaseChannelResourceTestCase {
 	protected void assertValid(Channel channel) throws Exception {
 		boolean valid = true;
 
-		if (channel.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (channel.getId() == null) {
 			valid = false;
 		}
@@ -533,6 +529,16 @@ public abstract class BaseChannelResourceTestCase {
 
 			if (Objects.equals("currencyCode", additionalAssertFieldName)) {
 				if (channel.getCurrencyCode() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (channel.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

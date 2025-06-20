@@ -224,6 +224,7 @@ public abstract class BaseSitePageResourceTestCase {
 										put(
 											"siteKey",
 											"\"" + sitePage.getSiteId() + "\"");
+
 										put(
 											"friendlyUrlPath",
 											"\"" +
@@ -252,6 +253,7 @@ public abstract class BaseSitePageResourceTestCase {
 												"siteKey",
 												"\"" + sitePage.getSiteId() +
 													"\"");
+
 											put(
 												"friendlyUrlPath",
 												"\"" +
@@ -338,19 +340,19 @@ public abstract class BaseSitePageResourceTestCase {
 		assertValid(getSitePage);
 	}
 
-	protected SitePage testGetSiteSitePageExperienceExperienceKey_addSitePage()
-		throws Exception {
-
-		return sitePageResource.postSiteSitePage(
-			testGroup.getGroupId(), randomSitePage());
-	}
-
 	protected String
 			testGetSiteSitePageExperienceExperienceKey_getExperienceKey()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
+	}
+
+	protected SitePage testGetSiteSitePageExperienceExperienceKey_addSitePage()
+		throws Exception {
+
+		return sitePageResource.postSiteSitePage(
+			testGroup.getGroupId(), randomSitePage());
 	}
 
 	@Test
@@ -375,6 +377,7 @@ public abstract class BaseSitePageResourceTestCase {
 										put(
 											"siteKey",
 											"\"" + sitePage.getSiteId() + "\"");
+
 										put(
 											"friendlyUrlPath",
 											"\"" +
@@ -410,6 +413,7 @@ public abstract class BaseSitePageResourceTestCase {
 												"siteKey",
 												"\"" + sitePage.getSiteId() +
 													"\"");
+
 											put(
 												"friendlyUrlPath",
 												"\"" +

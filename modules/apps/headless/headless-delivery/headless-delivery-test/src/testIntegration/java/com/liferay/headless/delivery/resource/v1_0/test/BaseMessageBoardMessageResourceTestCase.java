@@ -260,8 +260,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testDeleteMessageBoardMessage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -420,8 +420,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testDeleteMessageBoardMessageMyRating_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -456,8 +456,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testDeleteSiteMessageBoardMessageByExternalReferenceCode_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -670,8 +670,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testGetMessageBoardMessage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1273,7 +1273,6 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 
 	@Test
 	public void testGetMessageBoardMessagePermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		MessageBoardMessage postMessageBoardMessage =
 			testGetMessageBoardMessagePermissionsPage_addMessageBoardMessage();
 
@@ -1818,8 +1817,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testGetSiteMessageBoardMessageByExternalReferenceCode_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardThreadMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1846,6 +1845,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 											"\"" +
 												messageBoardMessage.
 													getSiteId() + "\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -1877,6 +1877,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 												"\"" +
 													messageBoardMessage.
 														getSiteId() + "\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1973,8 +1974,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testGetSiteMessageBoardMessageByFriendlyUrlPath_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardThreadMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -2001,6 +2002,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 											"\"" +
 												messageBoardMessage.
 													getSiteId() + "\"");
+
 										put(
 											"friendlyUrlPath",
 											"\"" +
@@ -2032,6 +2034,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 												"\"" +
 													messageBoardMessage.
 														getSiteId() + "\"");
+
 											put(
 												"friendlyUrlPath",
 												"\"" +
@@ -2111,10 +2114,6 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 	public void testGetSiteMessageBoardMessagePermissionsPage()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		MessageBoardMessage postMessageBoardMessage =
-			testGetSiteMessageBoardMessagePermissionsPage_addMessageBoardMessage();
-
 		Page<Permission> page =
 			messageBoardMessageResource.
 				getSiteMessageBoardMessagePermissionsPage(
@@ -2127,8 +2126,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testGetSiteMessageBoardMessagePermissionsPage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardThreadMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -2941,8 +2940,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPatchMessageBoardMessage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3024,8 +3023,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutMessageBoardMessage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3050,8 +3049,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutMessageBoardMessageMarkAsAnswer_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3097,8 +3096,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutMessageBoardMessagePermissionsPage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3123,8 +3122,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutMessageBoardMessageSubscribe_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3149,8 +3148,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutMessageBoardMessageUnmarkAsAnswer_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3175,8 +3174,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutMessageBoardMessageUnsubscribe_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3235,18 +3234,18 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 	}
 
 	protected MessageBoardMessage
-			testPutSiteMessageBoardMessageByExternalReferenceCode_addMessageBoardMessage()
-		throws Exception {
-
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
-	}
-
-	protected MessageBoardMessage
 			testPutSiteMessageBoardMessageByExternalReferenceCode_createMessageBoardMessage()
 		throws Exception {
 
 		return randomMessageBoardMessage();
+	}
+
+	protected MessageBoardMessage
+			testPutSiteMessageBoardMessageByExternalReferenceCode_addMessageBoardMessage()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -3294,8 +3293,8 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			testPutSiteMessageBoardMessagePermissionsPage_addMessageBoardMessage()
 		throws Exception {
 
-		return testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-			randomMessageBoardMessage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Rule
@@ -3462,10 +3461,6 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			valid = false;
 		}
 
-		if (messageBoardMessage.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (messageBoardMessage.getId() == null) {
 			valid = false;
 		}
@@ -3539,6 +3534,16 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (messageBoardMessage.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (messageBoardMessage.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

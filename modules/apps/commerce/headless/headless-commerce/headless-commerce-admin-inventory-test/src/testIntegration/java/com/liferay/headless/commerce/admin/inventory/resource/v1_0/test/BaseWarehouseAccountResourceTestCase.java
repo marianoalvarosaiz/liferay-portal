@@ -199,75 +199,12 @@ public abstract class BaseWarehouseAccountResourceTestCase {
 
 	@Test
 	public void testDeleteWarehouseAccount() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		WarehouseAccount warehouseAccount =
-			testDeleteWarehouseAccount_addWarehouseAccount();
-
-		assertHttpResponseStatusCode(
-			204,
-			warehouseAccountResource.deleteWarehouseAccountHttpResponse(
-				warehouseAccount.getWarehouseAccountId()));
-	}
-
-	protected WarehouseAccount testDeleteWarehouseAccount_addWarehouseAccount()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteWarehouseAccount() throws Exception {
-
-		// No namespace
-
-		WarehouseAccount warehouseAccount1 =
-			testGraphQLDeleteWarehouseAccount_addWarehouseAccount();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteWarehouseAccount",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"warehouseAccountId",
-									warehouseAccount1.getWarehouseAccountId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteWarehouseAccount"));
-
-		// Using the namespace headlessCommerceAdminInventory_v1_0
-
-		WarehouseAccount warehouseAccount2 =
-			testGraphQLDeleteWarehouseAccount_addWarehouseAccount();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminInventory_v1_0",
-						new GraphQLField(
-							"deleteWarehouseAccount",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"warehouseAccountId",
-										warehouseAccount2.
-											getWarehouseAccountId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminInventory_v1_0",
-				"Object/deleteWarehouseAccount"));
-	}
-
-	protected WarehouseAccount
-			testGraphQLDeleteWarehouseAccount_addWarehouseAccount()
-		throws Exception {
-
-		return testGraphQLWarehouseAccount_addWarehouseAccount();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -283,7 +220,8 @@ public abstract class BaseWarehouseAccountResourceTestCase {
 			testDeleteWarehouseAccountBatch_addWarehouseAccount()
 		throws Exception {
 
-		return testDeleteWarehouseAccount_addWarehouseAccount();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteWarehouseAccountBatch_deleteWarehouseAccount(
@@ -369,12 +307,6 @@ public abstract class BaseWarehouseAccountResourceTestCase {
 			page,
 			testGetWarehouseByExternalReferenceCodeWarehouseAccountsPage_getExpectedActions(
 				externalReferenceCode));
-
-		warehouseAccountResource.deleteWarehouseAccount(
-			warehouseAccount1.getWarehouseAccountId());
-
-		warehouseAccountResource.deleteWarehouseAccount(
-			warehouseAccount2.getWarehouseAccountId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -573,12 +505,6 @@ public abstract class BaseWarehouseAccountResourceTestCase {
 		assertValid(
 			page,
 			testGetWarehouseIdWarehouseAccountsPage_getExpectedActions(id));
-
-		warehouseAccountResource.deleteWarehouseAccount(
-			warehouseAccount1.getWarehouseAccountId());
-
-		warehouseAccountResource.deleteWarehouseAccount(
-			warehouseAccount2.getWarehouseAccountId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1014,13 +940,6 @@ public abstract class BaseWarehouseAccountResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected WarehouseAccount testGraphQLWarehouseAccount_addWarehouseAccount()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		WarehouseAccount warehouseAccount,
 		List<WarehouseAccount> warehouseAccounts) {
@@ -1100,10 +1019,6 @@ public abstract class BaseWarehouseAccountResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (warehouseAccount.getWarehouseAccountId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

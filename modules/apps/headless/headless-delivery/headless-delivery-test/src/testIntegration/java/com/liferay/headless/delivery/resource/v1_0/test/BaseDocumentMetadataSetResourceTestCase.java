@@ -130,16 +130,6 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-			Collections.singletonMap(
-				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
-			null,
-			new ServiceContext() {
-				{
-					setCompanyId(irrelevantGroup.getCompanyId());
-					setUserId(TestPropsValues.getUserId());
-				}
-			});
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -281,20 +271,20 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 					"-"));
 	}
 
-	protected DocumentMetadataSet
-			testDeleteAssetLibraryDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
-		throws Exception {
-
-		return documentMetadataSetResource.postAssetLibraryDocumentMetadataSet(
-			testDepotEntry.getDepotEntryId(), randomDocumentMetadataSet());
-	}
-
 	protected Long
 			testDeleteAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
+	}
+
+	protected DocumentMetadataSet
+			testDeleteAssetLibraryDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
+		throws Exception {
+
+		return documentMetadataSetResource.postAssetLibraryDocumentMetadataSet(
+			testDepotEntry.getDepotEntryId(), randomDocumentMetadataSet());
 	}
 
 	@Test
@@ -507,20 +497,20 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 		assertValid(getDocumentMetadataSet);
 	}
 
-	protected DocumentMetadataSet
-			testGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
-		throws Exception {
-
-		return documentMetadataSetResource.postAssetLibraryDocumentMetadataSet(
-			testDepotEntry.getDepotEntryId(), randomDocumentMetadataSet());
-	}
-
 	protected Long
 			testGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
+	}
+
+	protected DocumentMetadataSet
+			testGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
+		throws Exception {
+
+		return documentMetadataSetResource.postAssetLibraryDocumentMetadataSet(
+			testDepotEntry.getDepotEntryId(), randomDocumentMetadataSet());
 	}
 
 	@Test
@@ -547,6 +537,7 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 											"\"" +
 												testGraphQLGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId() +
 													"\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -578,6 +569,7 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 												"\"" +
 													testGraphQLGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId() +
 														"\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1249,6 +1241,7 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 											"\"" +
 												documentMetadataSet.
 													getSiteId() + "\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -1280,6 +1273,7 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 												"\"" +
 													documentMetadataSet.
 														getSiteId() + "\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1754,14 +1748,6 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 			putDocumentMetadataSet.getExternalReferenceCode());
 	}
 
-	protected DocumentMetadataSet
-			testPutAssetLibraryDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
-		throws Exception {
-
-		return documentMetadataSetResource.postAssetLibraryDocumentMetadataSet(
-			testDepotEntry.getDepotEntryId(), randomDocumentMetadataSet());
-	}
-
 	protected Long
 			testPutAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
@@ -1775,6 +1761,14 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 		throws Exception {
 
 		return randomDocumentMetadataSet();
+	}
+
+	protected DocumentMetadataSet
+			testPutAssetLibraryDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
+		throws Exception {
+
+		return documentMetadataSetResource.postAssetLibraryDocumentMetadataSet(
+			testDepotEntry.getDepotEntryId(), randomDocumentMetadataSet());
 	}
 
 	@Test
@@ -1833,18 +1827,18 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 	}
 
 	protected DocumentMetadataSet
+			testPutSiteDocumentMetadataSetByExternalReferenceCode_createDocumentMetadataSet()
+		throws Exception {
+
+		return randomDocumentMetadataSet();
+	}
+
+	protected DocumentMetadataSet
 			testPutSiteDocumentMetadataSetByExternalReferenceCode_addDocumentMetadataSet()
 		throws Exception {
 
 		return documentMetadataSetResource.postSiteDocumentMetadataSet(
 			testGroup.getGroupId(), randomDocumentMetadataSet());
-	}
-
-	protected DocumentMetadataSet
-			testPutSiteDocumentMetadataSetByExternalReferenceCode_createDocumentMetadataSet()
-		throws Exception {
-
-		return randomDocumentMetadataSet();
 	}
 
 	protected void appendGraphQLFieldValue(StringBuilder sb, Object value)
@@ -2048,10 +2042,6 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 			valid = false;
 		}
 
-		if (documentMetadataSet.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (documentMetadataSet.getId() == null) {
 			valid = false;
 		}
@@ -2124,6 +2114,16 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (documentMetadataSet.getDescription_i18n() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (documentMetadataSet.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
@@ -2901,7 +2901,6 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 	protected DocumentMetadataSetResource documentMetadataSetResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
-	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
 	protected DepotEntry testDepotEntry;
 	protected com.liferay.portal.kernel.model.Group testGroup;

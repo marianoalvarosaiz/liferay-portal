@@ -2180,7 +2180,8 @@ public abstract class BaseCartResourceTestCase {
 	}
 
 	protected Cart testPatchCart_addCart() throws Exception {
-		return testPostChannelCart_addCart(randomCart());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -2207,7 +2208,8 @@ public abstract class BaseCartResourceTestCase {
 	protected Cart testPatchCartByExternalReferenceCode_addCart()
 		throws Exception {
 
-		return testPostChannelCart_addCart(randomCart());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -2331,7 +2333,8 @@ public abstract class BaseCartResourceTestCase {
 	}
 
 	protected Cart testPutCart_addCart() throws Exception {
-		return testPostChannelCart_addCart(randomCart());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -2370,16 +2373,17 @@ public abstract class BaseCartResourceTestCase {
 			putCart.getExternalReferenceCode());
 	}
 
-	protected Cart testPutCartByExternalReferenceCode_addCart()
-		throws Exception {
-
-		return testPostChannelCart_addCart(randomCart());
-	}
-
 	protected Cart testPutCartByExternalReferenceCode_createCart()
 		throws Exception {
 
 		return randomCart();
+	}
+
+	protected Cart testPutCartByExternalReferenceCode_addCart()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Rule
@@ -2450,10 +2454,6 @@ public abstract class BaseCartResourceTestCase {
 
 	protected void assertValid(Cart cart) throws Exception {
 		boolean valid = true;
-
-		if (cart.getExternalReferenceCode() == null) {
-			valid = false;
-		}
 
 		if (cart.getId() == null) {
 			valid = false;
@@ -2608,6 +2608,16 @@ public abstract class BaseCartResourceTestCase {
 
 			if (Objects.equals("errorMessages", additionalAssertFieldName)) {
 				if (cart.getErrorMessages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (cart.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

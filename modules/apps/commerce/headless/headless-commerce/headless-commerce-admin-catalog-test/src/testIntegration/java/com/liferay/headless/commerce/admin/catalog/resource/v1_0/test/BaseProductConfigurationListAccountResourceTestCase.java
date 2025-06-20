@@ -216,81 +216,14 @@ public abstract class BaseProductConfigurationListAccountResourceTestCase {
 
 	@Test
 	public void testDeleteProductConfigurationListAccount() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		ProductConfigurationListAccount productConfigurationListAccount =
-			testDeleteProductConfigurationListAccount_addProductConfigurationListAccount();
-
-		assertHttpResponseStatusCode(
-			204,
-			productConfigurationListAccountResource.
-				deleteProductConfigurationListAccountHttpResponse(
-					productConfigurationListAccount.
-						getProductConfigurationListAccountId()));
-	}
-
-	protected ProductConfigurationListAccount
-			testDeleteProductConfigurationListAccount_addProductConfigurationListAccount()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteProductConfigurationListAccount()
 		throws Exception {
 
-		// No namespace
-
-		ProductConfigurationListAccount productConfigurationListAccount1 =
-			testGraphQLDeleteProductConfigurationListAccount_addProductConfigurationListAccount();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteProductConfigurationListAccount",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"productConfigurationListAccountId",
-									productConfigurationListAccount1.
-										getProductConfigurationListAccountId());
-							}
-						})),
-				"JSONObject/data",
-				"Object/deleteProductConfigurationListAccount"));
-
-		// Using the namespace headlessCommerceAdminCatalog_v1_0
-
-		ProductConfigurationListAccount productConfigurationListAccount2 =
-			testGraphQLDeleteProductConfigurationListAccount_addProductConfigurationListAccount();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminCatalog_v1_0",
-						new GraphQLField(
-							"deleteProductConfigurationListAccount",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"productConfigurationListAccountId",
-										productConfigurationListAccount2.
-											getProductConfigurationListAccountId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminCatalog_v1_0",
-				"Object/deleteProductConfigurationListAccount"));
-	}
-
-	protected ProductConfigurationListAccount
-			testGraphQLDeleteProductConfigurationListAccount_addProductConfigurationListAccount()
-		throws Exception {
-
-		return testGraphQLProductConfigurationListAccount_addProductConfigurationListAccount();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -310,7 +243,8 @@ public abstract class BaseProductConfigurationListAccountResourceTestCase {
 			testDeleteProductConfigurationListAccountBatch_addProductConfigurationListAccount()
 		throws Exception {
 
-		return testDeleteProductConfigurationListAccount_addProductConfigurationListAccount();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -402,16 +336,6 @@ public abstract class BaseProductConfigurationListAccountResourceTestCase {
 			page,
 			testGetProductConfigurationListByExternalReferenceCodeProductConfigurationListAccountsPage_getExpectedActions(
 				externalReferenceCode));
-
-		productConfigurationListAccountResource.
-			deleteProductConfigurationListAccount(
-				productConfigurationListAccount1.
-					getProductConfigurationListAccountId());
-
-		productConfigurationListAccountResource.
-			deleteProductConfigurationListAccount(
-				productConfigurationListAccount2.
-					getProductConfigurationListAccountId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -634,16 +558,6 @@ public abstract class BaseProductConfigurationListAccountResourceTestCase {
 			page,
 			testGetProductConfigurationListIdProductConfigurationListAccountsPage_getExpectedActions(
 				id));
-
-		productConfigurationListAccountResource.
-			deleteProductConfigurationListAccount(
-				productConfigurationListAccount1.
-					getProductConfigurationListAccountId());
-
-		productConfigurationListAccountResource.
-			deleteProductConfigurationListAccount(
-				productConfigurationListAccount2.
-					getProductConfigurationListAccountId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1142,14 +1056,6 @@ public abstract class BaseProductConfigurationListAccountResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected ProductConfigurationListAccount
-			testGraphQLProductConfigurationListAccount_addProductConfigurationListAccount()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		ProductConfigurationListAccount productConfigurationListAccount,
 		List<ProductConfigurationListAccount>
@@ -1254,12 +1160,6 @@ public abstract class BaseProductConfigurationListAccountResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (productConfigurationListAccount.
-				getProductConfigurationListAccountId() == null) {
-
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

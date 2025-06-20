@@ -418,12 +418,13 @@ public abstract class BaseAccountResourceTestCase {
 			204,
 			accountResource.
 				deleteAccountGroupByExternalReferenceCodeAccountHttpResponse(
-					account.getExternalReferenceCode(),
-					testDeleteAccountGroupByExternalReferenceCodeAccount_getExternalReferenceCode()));
+					testDeleteAccountGroupByExternalReferenceCodeAccount_getAccountExternalReferenceCode(),
+					testDeleteAccountGroupByExternalReferenceCodeAccount_getExternalReferenceCode(
+						account)));
 	}
 
-	protected Account
-			testDeleteAccountGroupByExternalReferenceCodeAccount_addAccount()
+	protected String
+			testDeleteAccountGroupByExternalReferenceCodeAccount_getAccountExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -431,7 +432,15 @@ public abstract class BaseAccountResourceTestCase {
 	}
 
 	protected String
-			testDeleteAccountGroupByExternalReferenceCodeAccount_getExternalReferenceCode()
+			testDeleteAccountGroupByExternalReferenceCodeAccount_getExternalReferenceCode(
+				Account account)
+		throws Exception {
+
+		return account.getExternalReferenceCode();
+	}
+
+	protected Account
+			testDeleteAccountGroupByExternalReferenceCodeAccount_addAccount()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1365,10 +1374,6 @@ public abstract class BaseAccountResourceTestCase {
 			valid = false;
 		}
 
-		if (account.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (account.getId() == null) {
 			valid = false;
 		}
@@ -1442,6 +1447,16 @@ public abstract class BaseAccountResourceTestCase {
 
 			if (Objects.equals("emailAddresses", additionalAssertFieldName)) {
 				if (account.getEmailAddresses() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (account.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

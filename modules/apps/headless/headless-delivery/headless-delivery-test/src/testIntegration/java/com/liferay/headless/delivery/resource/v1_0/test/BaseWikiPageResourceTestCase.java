@@ -278,7 +278,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	}
 
 	protected WikiPage testDeleteWikiPage_addWikiPage() throws Exception {
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -409,7 +410,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	protected WikiPage testGetSiteWikiPageByExternalReferenceCode_addWikiPage()
 		throws Exception {
 
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -434,6 +436,7 @@ public abstract class BaseWikiPageResourceTestCase {
 										put(
 											"siteKey",
 											"\"" + wikiPage.getSiteId() + "\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -464,6 +467,7 @@ public abstract class BaseWikiPageResourceTestCase {
 												"siteKey",
 												"\"" + wikiPage.getSiteId() +
 													"\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1133,7 +1137,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	}
 
 	protected WikiPage testGetWikiPage_addWikiPage() throws Exception {
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1227,7 +1232,6 @@ public abstract class BaseWikiPageResourceTestCase {
 
 	@Test
 	public void testGetWikiPagePermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		WikiPage postWikiPage = testGetWikiPagePermissionsPage_addWikiPage();
 
 		Page<Permission> page = wikiPageResource.getWikiPagePermissionsPage(
@@ -1402,17 +1406,18 @@ public abstract class BaseWikiPageResourceTestCase {
 			putWikiPage.getExternalReferenceCode());
 	}
 
-	protected WikiPage testPutSiteWikiPageByExternalReferenceCode_addWikiPage()
-		throws Exception {
-
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
-	}
-
 	protected WikiPage
 			testPutSiteWikiPageByExternalReferenceCode_createWikiPage()
 		throws Exception {
 
 		return randomWikiPage();
+	}
+
+	protected WikiPage testPutSiteWikiPageByExternalReferenceCode_addWikiPage()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1435,7 +1440,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	}
 
 	protected WikiPage testPutWikiPage_addWikiPage() throws Exception {
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1477,7 +1483,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	protected WikiPage testPutWikiPagePermissionsPage_addWikiPage()
 		throws Exception {
 
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1495,7 +1502,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	}
 
 	protected WikiPage testPutWikiPageSubscribe_addWikiPage() throws Exception {
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1515,7 +1523,8 @@ public abstract class BaseWikiPageResourceTestCase {
 	protected WikiPage testPutWikiPageUnsubscribe_addWikiPage()
 		throws Exception {
 
-		return testPostWikiPageWikiPage_addWikiPage(randomWikiPage());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Rule
@@ -1600,10 +1609,6 @@ public abstract class BaseWikiPageResourceTestCase {
 			valid = false;
 		}
 
-		if (wikiPage.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (wikiPage.getId() == null) {
 			valid = false;
 		}
@@ -1665,6 +1670,16 @@ public abstract class BaseWikiPageResourceTestCase {
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (wikiPage.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (wikiPage.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

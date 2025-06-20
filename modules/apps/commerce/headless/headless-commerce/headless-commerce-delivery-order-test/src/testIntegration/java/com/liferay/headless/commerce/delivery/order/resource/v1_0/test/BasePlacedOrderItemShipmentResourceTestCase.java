@@ -499,10 +499,6 @@ public abstract class BasePlacedOrderItemShipmentResourceTestCase {
 
 		boolean valid = true;
 
-		if (placedOrderItemShipment.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (placedOrderItemShipment.getId() == null) {
 			valid = false;
 		}
@@ -558,6 +554,18 @@ public abstract class BasePlacedOrderItemShipmentResourceTestCase {
 					"estimatedShippingDate", additionalAssertFieldName)) {
 
 				if (placedOrderItemShipment.getEstimatedShippingDate() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (placedOrderItemShipment.getExternalReferenceCode() ==
 						null) {
 
 					valid = false;

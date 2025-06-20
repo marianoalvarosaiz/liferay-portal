@@ -199,75 +199,12 @@ public abstract class BaseDiscountProductResourceTestCase {
 
 	@Test
 	public void testDeleteDiscountProduct() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		DiscountProduct discountProduct =
-			testDeleteDiscountProduct_addDiscountProduct();
-
-		assertHttpResponseStatusCode(
-			204,
-			discountProductResource.deleteDiscountProductHttpResponse(
-				discountProduct.getDiscountProductId()));
-	}
-
-	protected DiscountProduct testDeleteDiscountProduct_addDiscountProduct()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteDiscountProduct() throws Exception {
-
-		// No namespace
-
-		DiscountProduct discountProduct1 =
-			testGraphQLDeleteDiscountProduct_addDiscountProduct();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteDiscountProduct",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"discountProductId",
-									discountProduct1.getDiscountProductId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteDiscountProduct"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		DiscountProduct discountProduct2 =
-			testGraphQLDeleteDiscountProduct_addDiscountProduct();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deleteDiscountProduct",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"discountProductId",
-										discountProduct2.
-											getDiscountProductId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deleteDiscountProduct"));
-	}
-
-	protected DiscountProduct
-			testGraphQLDeleteDiscountProduct_addDiscountProduct()
-		throws Exception {
-
-		return testGraphQLDiscountProduct_addDiscountProduct();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -283,7 +220,8 @@ public abstract class BaseDiscountProductResourceTestCase {
 			testDeleteDiscountProductBatch_addDiscountProduct()
 		throws Exception {
 
-		return testDeleteDiscountProduct_addDiscountProduct();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteDiscountProductBatch_deleteDiscountProduct(
@@ -369,12 +307,6 @@ public abstract class BaseDiscountProductResourceTestCase {
 			page,
 			testGetDiscountByExternalReferenceCodeDiscountProductsPage_getExpectedActions(
 				externalReferenceCode));
-
-		discountProductResource.deleteDiscountProduct(
-			discountProduct1.getDiscountProductId());
-
-		discountProductResource.deleteDiscountProduct(
-			discountProduct2.getDiscountProductId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -572,12 +504,6 @@ public abstract class BaseDiscountProductResourceTestCase {
 			discountProduct2, (List<DiscountProduct>)page.getItems());
 		assertValid(
 			page, testGetDiscountIdDiscountProductsPage_getExpectedActions(id));
-
-		discountProductResource.deleteDiscountProduct(
-			discountProduct1.getDiscountProductId());
-
-		discountProductResource.deleteDiscountProduct(
-			discountProduct2.getDiscountProductId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1013,13 +939,6 @@ public abstract class BaseDiscountProductResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected DiscountProduct testGraphQLDiscountProduct_addDiscountProduct()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		DiscountProduct discountProduct,
 		List<DiscountProduct> discountProducts) {
@@ -1096,10 +1015,6 @@ public abstract class BaseDiscountProductResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (discountProduct.getDiscountProductId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

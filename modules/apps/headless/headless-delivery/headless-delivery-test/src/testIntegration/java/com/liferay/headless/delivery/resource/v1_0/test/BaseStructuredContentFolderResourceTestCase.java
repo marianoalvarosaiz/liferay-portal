@@ -135,16 +135,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-			Collections.singletonMap(
-				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
-			null,
-			new ServiceContext() {
-				{
-					setCompanyId(irrelevantGroup.getCompanyId());
-					setUserId(TestPropsValues.getUserId());
-				}
-			});
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -294,6 +284,14 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 					"-"));
 	}
 
+	protected Long
+			testDeleteAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected StructuredContentFolder
 			testDeleteAssetLibraryStructuredContentFolderByExternalReferenceCode_addStructuredContentFolder()
 		throws Exception {
@@ -302,14 +300,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			postAssetLibraryStructuredContentFolder(
 				testDepotEntry.getDepotEntryId(),
 				randomStructuredContentFolder());
-	}
-
-	protected Long
-			testDeleteAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	@Test
@@ -528,6 +518,14 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		assertValid(getStructuredContentFolder);
 	}
 
+	protected Long
+			testGetAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected StructuredContentFolder
 			testGetAssetLibraryStructuredContentFolderByExternalReferenceCode_addStructuredContentFolder()
 		throws Exception {
@@ -536,14 +534,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			postAssetLibraryStructuredContentFolder(
 				testDepotEntry.getDepotEntryId(),
 				randomStructuredContentFolder());
-	}
-
-	protected Long
-			testGetAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	@Test
@@ -570,6 +560,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 											"\"" +
 												testGraphQLGetAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId() +
 													"\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -601,6 +592,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 												"\"" +
 													testGraphQLGetAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId() +
 														"\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -691,10 +683,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 	public void testGetAssetLibraryStructuredContentFolderPermissionsPage()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		StructuredContentFolder postStructuredContentFolder =
-			testGetAssetLibraryStructuredContentFolderPermissionsPage_addStructuredContentFolder();
-
 		Page<Permission> page =
 			structuredContentFolderResource.
 				getAssetLibraryStructuredContentFolderPermissionsPage(
@@ -707,10 +695,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			testGetAssetLibraryStructuredContentFolderPermissionsPage_addStructuredContentFolder()
 		throws Exception {
 
-		return structuredContentFolderResource.
-			postAssetLibraryStructuredContentFolder(
-				testDepotEntry.getDepotEntryId(),
-				randomStructuredContentFolder());
+		return testPostAssetLibraryStructuredContentFolder_addStructuredContentFolder(
+			randomStructuredContentFolder());
 	}
 
 	@Test
@@ -1270,6 +1256,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 											"\"" +
 												structuredContentFolder.
 													getSiteId() + "\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -1301,6 +1288,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 												"\"" +
 													structuredContentFolder.
 														getSiteId() + "\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1380,10 +1368,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 	public void testGetSiteStructuredContentFolderPermissionsPage()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		StructuredContentFolder postStructuredContentFolder =
-			testGetSiteStructuredContentFolderPermissionsPage_addStructuredContentFolder();
-
 		Page<Permission> page =
 			structuredContentFolderResource.
 				getSiteStructuredContentFolderPermissionsPage(
@@ -1396,8 +1380,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			testGetSiteStructuredContentFolderPermissionsPage_addStructuredContentFolder()
 		throws Exception {
 
-		return structuredContentFolderResource.postSiteStructuredContentFolder(
-			testGroup.getGroupId(), randomStructuredContentFolder());
+		return testPostSiteStructuredContentFolder_addStructuredContentFolder(
+			randomStructuredContentFolder());
 	}
 
 	@Test
@@ -2296,7 +2280,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 	public void testGetStructuredContentFolderPermissionsPage()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		StructuredContentFolder postStructuredContentFolder =
 			testGetStructuredContentFolderPermissionsPage_addStructuredContentFolder();
 
@@ -2312,8 +2295,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			testGetStructuredContentFolderPermissionsPage_addStructuredContentFolder()
 		throws Exception {
 
-		return structuredContentFolderResource.postSiteStructuredContentFolder(
-			testGroup.getGroupId(), randomStructuredContentFolder());
+		return testPostStructuredContentFolderStructuredContentFolder_addStructuredContentFolder(
+			randomStructuredContentFolder());
 	}
 
 	@Test
@@ -3009,16 +2992,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			putStructuredContentFolder.getExternalReferenceCode());
 	}
 
-	protected StructuredContentFolder
-			testPutAssetLibraryStructuredContentFolderByExternalReferenceCode_addStructuredContentFolder()
-		throws Exception {
-
-		return structuredContentFolderResource.
-			postAssetLibraryStructuredContentFolder(
-				testDepotEntry.getDepotEntryId(),
-				randomStructuredContentFolder());
-	}
-
 	protected Long
 			testPutAssetLibraryStructuredContentFolderByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
@@ -3032,6 +3005,16 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		throws Exception {
 
 		return randomStructuredContentFolder();
+	}
+
+	protected StructuredContentFolder
+			testPutAssetLibraryStructuredContentFolderByExternalReferenceCode_addStructuredContentFolder()
+		throws Exception {
+
+		return structuredContentFolderResource.
+			postAssetLibraryStructuredContentFolder(
+				testDepotEntry.getDepotEntryId(),
+				randomStructuredContentFolder());
 	}
 
 	@Test
@@ -3141,18 +3124,18 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 	}
 
 	protected StructuredContentFolder
+			testPutSiteStructuredContentFolderByExternalReferenceCode_createStructuredContentFolder()
+		throws Exception {
+
+		return randomStructuredContentFolder();
+	}
+
+	protected StructuredContentFolder
 			testPutSiteStructuredContentFolderByExternalReferenceCode_addStructuredContentFolder()
 		throws Exception {
 
 		return structuredContentFolderResource.postSiteStructuredContentFolder(
 			testGroup.getGroupId(), randomStructuredContentFolder());
-	}
-
-	protected StructuredContentFolder
-			testPutSiteStructuredContentFolderByExternalReferenceCode_createStructuredContentFolder()
-		throws Exception {
-
-		return randomStructuredContentFolder();
 	}
 
 	@Test
@@ -3548,10 +3531,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 			valid = false;
 		}
 
-		if (structuredContentFolder.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (structuredContentFolder.getId() == null) {
 			valid = false;
 		}
@@ -3604,6 +3583,18 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (structuredContentFolder.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (structuredContentFolder.getExternalReferenceCode() ==
+						null) {
+
 					valid = false;
 				}
 
@@ -4485,7 +4476,6 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 	protected StructuredContentFolderResource structuredContentFolderResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
-	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
 	protected DepotEntry testDepotEntry;
 	protected com.liferay.portal.kernel.model.Group testGroup;

@@ -206,77 +206,12 @@ public abstract class BaseOrderRuleAccountGroupResourceTestCase {
 
 	@Test
 	public void testDeleteOrderRuleAccountGroup() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		OrderRuleAccountGroup orderRuleAccountGroup =
-			testDeleteOrderRuleAccountGroup_addOrderRuleAccountGroup();
-
-		assertHttpResponseStatusCode(
-			204,
-			orderRuleAccountGroupResource.
-				deleteOrderRuleAccountGroupHttpResponse(
-					orderRuleAccountGroup.getOrderRuleAccountGroupId()));
-	}
-
-	protected OrderRuleAccountGroup
-			testDeleteOrderRuleAccountGroup_addOrderRuleAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteOrderRuleAccountGroup() throws Exception {
-
-		// No namespace
-
-		OrderRuleAccountGroup orderRuleAccountGroup1 =
-			testGraphQLDeleteOrderRuleAccountGroup_addOrderRuleAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteOrderRuleAccountGroup",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"orderRuleAccountGroupId",
-									orderRuleAccountGroup1.
-										getOrderRuleAccountGroupId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteOrderRuleAccountGroup"));
-
-		// Using the namespace headlessCommerceAdminOrder_v1_0
-
-		OrderRuleAccountGroup orderRuleAccountGroup2 =
-			testGraphQLDeleteOrderRuleAccountGroup_addOrderRuleAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminOrder_v1_0",
-						new GraphQLField(
-							"deleteOrderRuleAccountGroup",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"orderRuleAccountGroupId",
-										orderRuleAccountGroup2.
-											getOrderRuleAccountGroupId());
-								}
-							}))),
-				"JSONObject/data", "JSONObject/headlessCommerceAdminOrder_v1_0",
-				"Object/deleteOrderRuleAccountGroup"));
-	}
-
-	protected OrderRuleAccountGroup
-			testGraphQLDeleteOrderRuleAccountGroup_addOrderRuleAccountGroup()
-		throws Exception {
-
-		return testGraphQLOrderRuleAccountGroup_addOrderRuleAccountGroup();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -293,7 +228,8 @@ public abstract class BaseOrderRuleAccountGroupResourceTestCase {
 			testDeleteOrderRuleAccountGroupBatch_addOrderRuleAccountGroup()
 		throws Exception {
 
-		return testDeleteOrderRuleAccountGroup_addOrderRuleAccountGroup();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -384,12 +320,6 @@ public abstract class BaseOrderRuleAccountGroupResourceTestCase {
 			page,
 			testGetOrderRuleByExternalReferenceCodeOrderRuleAccountGroupsPage_getExpectedActions(
 				externalReferenceCode));
-
-		orderRuleAccountGroupResource.deleteOrderRuleAccountGroup(
-			orderRuleAccountGroup1.getOrderRuleAccountGroupId());
-
-		orderRuleAccountGroupResource.deleteOrderRuleAccountGroup(
-			orderRuleAccountGroup2.getOrderRuleAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -606,12 +536,6 @@ public abstract class BaseOrderRuleAccountGroupResourceTestCase {
 			page,
 			testGetOrderRuleIdOrderRuleAccountGroupsPage_getExpectedActions(
 				id));
-
-		orderRuleAccountGroupResource.deleteOrderRuleAccountGroup(
-			orderRuleAccountGroup1.getOrderRuleAccountGroupId());
-
-		orderRuleAccountGroupResource.deleteOrderRuleAccountGroup(
-			orderRuleAccountGroup2.getOrderRuleAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1079,14 +1003,6 @@ public abstract class BaseOrderRuleAccountGroupResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected OrderRuleAccountGroup
-			testGraphQLOrderRuleAccountGroup_addOrderRuleAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		OrderRuleAccountGroup orderRuleAccountGroup,
 		List<OrderRuleAccountGroup> orderRuleAccountGroups) {
@@ -1175,10 +1091,6 @@ public abstract class BaseOrderRuleAccountGroupResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (orderRuleAccountGroup.getOrderRuleAccountGroupId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

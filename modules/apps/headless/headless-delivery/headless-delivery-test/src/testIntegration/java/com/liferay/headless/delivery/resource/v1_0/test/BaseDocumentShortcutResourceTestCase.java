@@ -130,16 +130,6 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-			Collections.singletonMap(
-				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
-			null,
-			new ServiceContext() {
-				{
-					setCompanyId(irrelevantGroup.getCompanyId());
-					setUserId(TestPropsValues.getUserId());
-				}
-			});
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -1005,6 +995,7 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 											"\"" +
 												documentShortcut.getSiteId() +
 													"\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -1036,6 +1027,7 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 												"\"" +
 													documentShortcut.
 														getSiteId() + "\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1555,18 +1547,18 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 	}
 
 	protected DocumentShortcut
+			testPutSiteDocumentShortcutByExternalReferenceCode_createDocumentShortcut()
+		throws Exception {
+
+		return randomDocumentShortcut();
+	}
+
+	protected DocumentShortcut
 			testPutSiteDocumentShortcutByExternalReferenceCode_addDocumentShortcut()
 		throws Exception {
 
 		return documentShortcutResource.postSiteDocumentShortcut(
 			testGroup.getGroupId(), randomDocumentShortcut());
-	}
-
-	protected DocumentShortcut
-			testPutSiteDocumentShortcutByExternalReferenceCode_createDocumentShortcut()
-		throws Exception {
-
-		return randomDocumentShortcut();
 	}
 
 	protected void appendGraphQLFieldValue(StringBuilder sb, Object value)
@@ -1763,10 +1755,6 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 			valid = false;
 		}
 
-		if (documentShortcut.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (documentShortcut.getId() == null) {
 			valid = false;
 		}
@@ -1794,6 +1782,16 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 
 			if (Objects.equals("assetLibraryKey", additionalAssertFieldName)) {
 				if (documentShortcut.getAssetLibraryKey() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (documentShortcut.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
@@ -2490,7 +2488,6 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 	protected DocumentShortcutResource documentShortcutResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
-	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
 	protected DepotEntry testDepotEntry;
 	protected com.liferay.portal.kernel.model.Group testGroup;

@@ -132,16 +132,6 @@ public abstract class BaseDocumentDataDefinitionTypeResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-			Collections.singletonMap(
-				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
-			null,
-			new ServiceContext() {
-				{
-					setCompanyId(irrelevantGroup.getCompanyId());
-					setUserId(TestPropsValues.getUserId());
-				}
-			});
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -2145,10 +2135,6 @@ public abstract class BaseDocumentDataDefinitionTypeResourceTestCase {
 			valid = false;
 		}
 
-		if (documentDataDefinitionType.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (documentDataDefinitionType.getId() == null) {
 			valid = false;
 		}
@@ -2244,6 +2230,18 @@ public abstract class BaseDocumentDataDefinitionTypeResourceTestCase {
 					"documentMetadataSetIds", additionalAssertFieldName)) {
 
 				if (documentDataDefinitionType.getDocumentMetadataSetIds() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (documentDataDefinitionType.getExternalReferenceCode() ==
 						null) {
 
 					valid = false;
@@ -3096,7 +3094,6 @@ public abstract class BaseDocumentDataDefinitionTypeResourceTestCase {
 		documentDataDefinitionTypeResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
-	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
 	protected DepotEntry testDepotEntry;
 	protected com.liferay.portal.kernel.model.Group testGroup;

@@ -433,6 +433,7 @@ public abstract class BaseWikiNodeResourceTestCase {
 										put(
 											"siteKey",
 											"\"" + wikiNode.getSiteId() + "\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -463,6 +464,7 @@ public abstract class BaseWikiNodeResourceTestCase {
 												"siteKey",
 												"\"" + wikiNode.getSiteId() +
 													"\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -540,10 +542,6 @@ public abstract class BaseWikiNodeResourceTestCase {
 
 	@Test
 	public void testGetSiteWikiNodePermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		WikiNode postWikiNode =
-			testGetSiteWikiNodePermissionsPage_addWikiNode();
-
 		Page<Permission> page = wikiNodeResource.getSiteWikiNodePermissionsPage(
 			testGroup.getGroupId(), RoleConstants.GUEST);
 
@@ -553,8 +551,7 @@ public abstract class BaseWikiNodeResourceTestCase {
 	protected WikiNode testGetSiteWikiNodePermissionsPage_addWikiNode()
 		throws Exception {
 
-		return wikiNodeResource.postSiteWikiNode(
-			testGroup.getGroupId(), randomWikiNode());
+		return testPostSiteWikiNode_addWikiNode(randomWikiNode());
 	}
 
 	@Test
@@ -1303,7 +1300,6 @@ public abstract class BaseWikiNodeResourceTestCase {
 
 	@Test
 	public void testGetWikiNodePermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		WikiNode postWikiNode = testGetWikiNodePermissionsPage_addWikiNode();
 
 		Page<Permission> page = wikiNodeResource.getWikiNodePermissionsPage(
@@ -1315,8 +1311,7 @@ public abstract class BaseWikiNodeResourceTestCase {
 	protected WikiNode testGetWikiNodePermissionsPage_addWikiNode()
 		throws Exception {
 
-		return wikiNodeResource.postSiteWikiNode(
-			testGroup.getGroupId(), randomWikiNode());
+		return testPostSiteWikiNode_addWikiNode(randomWikiNode());
 	}
 
 	@Test
@@ -1389,18 +1384,18 @@ public abstract class BaseWikiNodeResourceTestCase {
 			putWikiNode.getExternalReferenceCode());
 	}
 
-	protected WikiNode testPutSiteWikiNodeByExternalReferenceCode_addWikiNode()
-		throws Exception {
-
-		return wikiNodeResource.postSiteWikiNode(
-			testGroup.getGroupId(), randomWikiNode());
-	}
-
 	protected WikiNode
 			testPutSiteWikiNodeByExternalReferenceCode_createWikiNode()
 		throws Exception {
 
 		return randomWikiNode();
+	}
+
+	protected WikiNode testPutSiteWikiNodeByExternalReferenceCode_addWikiNode()
+		throws Exception {
+
+		return wikiNodeResource.postSiteWikiNode(
+			testGroup.getGroupId(), randomWikiNode());
 	}
 
 	@Test
@@ -1732,10 +1727,6 @@ public abstract class BaseWikiNodeResourceTestCase {
 			valid = false;
 		}
 
-		if (wikiNode.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (wikiNode.getId() == null) {
 			valid = false;
 		}
@@ -1765,6 +1756,16 @@ public abstract class BaseWikiNodeResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (wikiNode.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (wikiNode.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

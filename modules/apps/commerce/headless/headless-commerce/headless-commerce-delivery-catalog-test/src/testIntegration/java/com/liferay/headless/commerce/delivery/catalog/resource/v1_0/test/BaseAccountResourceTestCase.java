@@ -658,10 +658,6 @@ public abstract class BaseAccountResourceTestCase {
 			valid = false;
 		}
 
-		if (account.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (account.getId() == null) {
 			valid = false;
 		}
@@ -715,6 +711,16 @@ public abstract class BaseAccountResourceTestCase {
 
 			if (Objects.equals("domains", additionalAssertFieldName)) {
 				if (account.getDomains() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (account.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

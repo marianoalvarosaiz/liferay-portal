@@ -391,22 +391,23 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 
 		DataRecordCollection getDataRecordCollection =
 			dataRecordCollectionResource.getDataDefinitionDataRecordCollection(
-				testGetDataDefinitionDataRecordCollection_getDataDefinitionId());
+				testGetDataDefinitionDataRecordCollection_getDataDefinitionId(
+					postDataRecordCollection));
 
 		assertEquals(postDataRecordCollection, getDataRecordCollection);
 		assertValid(getDataRecordCollection);
 	}
 
-	protected DataRecordCollection
-			testGetDataDefinitionDataRecordCollection_addDataRecordCollection()
+	protected Long
+			testGetDataDefinitionDataRecordCollection_getDataDefinitionId(
+				DataRecordCollection dataRecordCollection)
 		throws Exception {
 
-		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
-			randomDataRecordCollection());
+		return dataRecordCollection.getDataDefinitionId();
 	}
 
-	protected Long
-			testGetDataDefinitionDataRecordCollection_getDataDefinitionId()
+	protected DataRecordCollection
+			testGetDataDefinitionDataRecordCollection_addDataRecordCollection()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -434,7 +435,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 									{
 										put(
 											"dataDefinitionId",
-											testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId());
+											testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId(
+												dataRecordCollection));
 									}
 								},
 								getGraphQLFields())),
@@ -457,7 +459,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 										{
 											put(
 												"dataDefinitionId",
-												testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId());
+												testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId(
+													dataRecordCollection));
 										}
 									},
 									getGraphQLFields()))),
@@ -466,11 +469,11 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 	}
 
 	protected Long
-			testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId()
+			testGraphQLGetDataDefinitionDataRecordCollection_getDataDefinitionId(
+				DataRecordCollection dataRecordCollection)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return dataRecordCollection.getDataDefinitionId();
 	}
 
 	@Test
@@ -970,8 +973,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testGetDataRecordCollection_addDataRecordCollection()
 		throws Exception {
 
-		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
-			randomDataRecordCollection());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1084,7 +1087,6 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 
 	@Test
 	public void testGetDataRecordCollectionPermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		DataRecordCollection postDataRecordCollection =
 			testGetDataRecordCollectionPermissionsPage_addDataRecordCollection();
 
@@ -1099,8 +1101,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testGetDataRecordCollectionPermissionsPage_addDataRecordCollection()
 		throws Exception {
 
-		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
-			randomDataRecordCollection());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1124,8 +1126,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testGetSiteDataRecordCollectionByDataRecordCollectionKey_addDataRecordCollection()
 		throws Exception {
 
-		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
-			randomDataRecordCollection());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1152,6 +1154,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 											"\"" +
 												dataRecordCollection.
 													getSiteId() + "\"");
+
 										put(
 											"dataRecordCollectionKey",
 											"\"" +
@@ -1183,6 +1186,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 												"\"" +
 													dataRecordCollection.
 														getSiteId() + "\"");
+
 											put(
 												"dataRecordCollectionKey",
 												"\"" +
@@ -1309,8 +1313,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testPutDataRecordCollection_addDataRecordCollection()
 		throws Exception {
 
-		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
-			randomDataRecordCollection());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1356,8 +1360,8 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			testPutDataRecordCollectionPermissionsPage_addDataRecordCollection()
 		throws Exception {
 
-		return testPostDataDefinitionDataRecordCollection_addDataRecordCollection(
-			randomDataRecordCollection());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected DataRecordCollection

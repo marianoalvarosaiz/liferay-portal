@@ -198,74 +198,12 @@ public abstract class BaseOrderTypeChannelResourceTestCase {
 
 	@Test
 	public void testDeleteOrderTypeChannel() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		OrderTypeChannel orderTypeChannel =
-			testDeleteOrderTypeChannel_addOrderTypeChannel();
-
-		assertHttpResponseStatusCode(
-			204,
-			orderTypeChannelResource.deleteOrderTypeChannelHttpResponse(
-				orderTypeChannel.getOrderTypeChannelId()));
-	}
-
-	protected OrderTypeChannel testDeleteOrderTypeChannel_addOrderTypeChannel()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteOrderTypeChannel() throws Exception {
-
-		// No namespace
-
-		OrderTypeChannel orderTypeChannel1 =
-			testGraphQLDeleteOrderTypeChannel_addOrderTypeChannel();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteOrderTypeChannel",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"orderTypeChannelId",
-									orderTypeChannel1.getOrderTypeChannelId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteOrderTypeChannel"));
-
-		// Using the namespace headlessCommerceAdminOrder_v1_0
-
-		OrderTypeChannel orderTypeChannel2 =
-			testGraphQLDeleteOrderTypeChannel_addOrderTypeChannel();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminOrder_v1_0",
-						new GraphQLField(
-							"deleteOrderTypeChannel",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"orderTypeChannelId",
-										orderTypeChannel2.
-											getOrderTypeChannelId());
-								}
-							}))),
-				"JSONObject/data", "JSONObject/headlessCommerceAdminOrder_v1_0",
-				"Object/deleteOrderTypeChannel"));
-	}
-
-	protected OrderTypeChannel
-			testGraphQLDeleteOrderTypeChannel_addOrderTypeChannel()
-		throws Exception {
-
-		return testGraphQLOrderTypeChannel_addOrderTypeChannel();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -281,7 +219,8 @@ public abstract class BaseOrderTypeChannelResourceTestCase {
 			testDeleteOrderTypeChannelBatch_addOrderTypeChannel()
 		throws Exception {
 
-		return testDeleteOrderTypeChannel_addOrderTypeChannel();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteOrderTypeChannelBatch_deleteOrderTypeChannel(
@@ -367,12 +306,6 @@ public abstract class BaseOrderTypeChannelResourceTestCase {
 			page,
 			testGetOrderTypeByExternalReferenceCodeOrderTypeChannelsPage_getExpectedActions(
 				externalReferenceCode));
-
-		orderTypeChannelResource.deleteOrderTypeChannel(
-			orderTypeChannel1.getOrderTypeChannelId());
-
-		orderTypeChannelResource.deleteOrderTypeChannel(
-			orderTypeChannel2.getOrderTypeChannelId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -571,12 +504,6 @@ public abstract class BaseOrderTypeChannelResourceTestCase {
 		assertValid(
 			page,
 			testGetOrderTypeIdOrderTypeChannelsPage_getExpectedActions(id));
-
-		orderTypeChannelResource.deleteOrderTypeChannel(
-			orderTypeChannel1.getOrderTypeChannelId());
-
-		orderTypeChannelResource.deleteOrderTypeChannel(
-			orderTypeChannel2.getOrderTypeChannelId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -908,13 +835,6 @@ public abstract class BaseOrderTypeChannelResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected OrderTypeChannel testGraphQLOrderTypeChannel_addOrderTypeChannel()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		OrderTypeChannel orderTypeChannel,
 		List<OrderTypeChannel> orderTypeChannels) {
@@ -994,10 +914,6 @@ public abstract class BaseOrderTypeChannelResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (orderTypeChannel.getOrderTypeChannelId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

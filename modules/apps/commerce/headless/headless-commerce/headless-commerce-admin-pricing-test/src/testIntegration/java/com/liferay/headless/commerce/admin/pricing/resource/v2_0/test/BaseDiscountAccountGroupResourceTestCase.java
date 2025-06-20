@@ -203,77 +203,12 @@ public abstract class BaseDiscountAccountGroupResourceTestCase {
 
 	@Test
 	public void testDeleteDiscountAccountGroup() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		DiscountAccountGroup discountAccountGroup =
-			testDeleteDiscountAccountGroup_addDiscountAccountGroup();
-
-		assertHttpResponseStatusCode(
-			204,
-			discountAccountGroupResource.deleteDiscountAccountGroupHttpResponse(
-				discountAccountGroup.getDiscountAccountGroupId()));
-	}
-
-	protected DiscountAccountGroup
-			testDeleteDiscountAccountGroup_addDiscountAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteDiscountAccountGroup() throws Exception {
-
-		// No namespace
-
-		DiscountAccountGroup discountAccountGroup1 =
-			testGraphQLDeleteDiscountAccountGroup_addDiscountAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteDiscountAccountGroup",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"discountAccountGroupId",
-									discountAccountGroup1.
-										getDiscountAccountGroupId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteDiscountAccountGroup"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		DiscountAccountGroup discountAccountGroup2 =
-			testGraphQLDeleteDiscountAccountGroup_addDiscountAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deleteDiscountAccountGroup",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"discountAccountGroupId",
-										discountAccountGroup2.
-											getDiscountAccountGroupId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deleteDiscountAccountGroup"));
-	}
-
-	protected DiscountAccountGroup
-			testGraphQLDeleteDiscountAccountGroup_addDiscountAccountGroup()
-		throws Exception {
-
-		return testGraphQLDiscountAccountGroup_addDiscountAccountGroup();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -290,7 +225,8 @@ public abstract class BaseDiscountAccountGroupResourceTestCase {
 			testDeleteDiscountAccountGroupBatch_addDiscountAccountGroup()
 		throws Exception {
 
-		return testDeleteDiscountAccountGroup_addDiscountAccountGroup();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -379,12 +315,6 @@ public abstract class BaseDiscountAccountGroupResourceTestCase {
 			page,
 			testGetDiscountByExternalReferenceCodeDiscountAccountGroupsPage_getExpectedActions(
 				externalReferenceCode));
-
-		discountAccountGroupResource.deleteDiscountAccountGroup(
-			discountAccountGroup1.getDiscountAccountGroupId());
-
-		discountAccountGroupResource.deleteDiscountAccountGroup(
-			discountAccountGroup2.getDiscountAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -594,12 +524,6 @@ public abstract class BaseDiscountAccountGroupResourceTestCase {
 		assertValid(
 			page,
 			testGetDiscountIdDiscountAccountGroupsPage_getExpectedActions(id));
-
-		discountAccountGroupResource.deleteDiscountAccountGroup(
-			discountAccountGroup1.getDiscountAccountGroupId());
-
-		discountAccountGroupResource.deleteDiscountAccountGroup(
-			discountAccountGroup2.getDiscountAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1064,14 +988,6 @@ public abstract class BaseDiscountAccountGroupResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected DiscountAccountGroup
-			testGraphQLDiscountAccountGroup_addDiscountAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		DiscountAccountGroup discountAccountGroup,
 		List<DiscountAccountGroup> discountAccountGroups) {
@@ -1158,10 +1074,6 @@ public abstract class BaseDiscountAccountGroupResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (discountAccountGroup.getDiscountAccountGroupId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

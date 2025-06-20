@@ -191,12 +191,12 @@ public abstract class BaseSkuResourceTestCase {
 		assertValid(getSku);
 	}
 
-	protected Sku testGetDiscountSkuSku_addSku() throws Exception {
+	protected Long testGetDiscountSkuSku_getDiscountSkuId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetDiscountSkuSku_getDiscountSkuId() throws Exception {
+	protected Sku testGetDiscountSkuSku_addSku() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -315,12 +315,12 @@ public abstract class BaseSkuResourceTestCase {
 		assertValid(getSku);
 	}
 
-	protected Sku testGetPriceEntryIdSku_addSku() throws Exception {
+	protected Long testGetPriceEntryIdSku_getPriceEntryId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetPriceEntryIdSku_getPriceEntryId() throws Exception {
+	protected Sku testGetPriceEntryIdSku_addSku() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}

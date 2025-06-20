@@ -195,15 +195,15 @@ public abstract class BaseTestEntityAddressResourceTestCase {
 		assertValid(getTestEntityAddress);
 	}
 
-	protected TestEntityAddress
-			testGetTestEntityTestEntityAddress_addTestEntityAddress()
+	protected Long testGetTestEntityTestEntityAddress_getTestEntityId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetTestEntityTestEntityAddress_getTestEntityId()
+	protected TestEntityAddress
+			testGetTestEntityTestEntityAddress_addTestEntityAddress()
 		throws Exception {
 
 		throw new UnsupportedOperationException(

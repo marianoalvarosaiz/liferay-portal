@@ -1403,7 +1403,8 @@ public abstract class BaseShipmentItemResourceTestCase {
 
 		ShipmentItem putShipmentItem =
 			shipmentItemResource.putShipmentByExternalReferenceCodeItem(
-				testPutShipmentByExternalReferenceCodeItem_getExternalReferenceCode(),
+				testPutShipmentByExternalReferenceCodeItem_getExternalReferenceCode(
+					postShipmentItem),
 				randomShipmentItem);
 
 		assertEquals(randomShipmentItem, putShipmentItem);
@@ -1417,16 +1418,16 @@ public abstract class BaseShipmentItemResourceTestCase {
 		assertValid(getShipmentItem);
 	}
 
-	protected ShipmentItem
-			testPutShipmentByExternalReferenceCodeItem_addShipmentItem()
+	protected String
+			testPutShipmentByExternalReferenceCodeItem_getExternalReferenceCode(
+				ShipmentItem shipmentItem)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return shipmentItem.getExternalReferenceCode();
 	}
 
-	protected String
-			testPutShipmentByExternalReferenceCodeItem_getExternalReferenceCode()
+	protected ShipmentItem
+			testPutShipmentByExternalReferenceCodeItem_addShipmentItem()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1511,10 +1512,6 @@ public abstract class BaseShipmentItemResourceTestCase {
 	protected void assertValid(ShipmentItem shipmentItem) throws Exception {
 		boolean valid = true;
 
-		if (shipmentItem.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (shipmentItem.getId() == null) {
 			valid = false;
 		}
@@ -1532,6 +1529,16 @@ public abstract class BaseShipmentItemResourceTestCase {
 
 			if (Objects.equals("createDate", additionalAssertFieldName)) {
 				if (shipmentItem.getCreateDate() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (shipmentItem.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

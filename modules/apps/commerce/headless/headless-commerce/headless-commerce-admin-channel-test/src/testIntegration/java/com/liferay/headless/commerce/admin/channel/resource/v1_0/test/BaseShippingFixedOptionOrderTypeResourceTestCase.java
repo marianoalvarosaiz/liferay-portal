@@ -209,81 +209,14 @@ public abstract class BaseShippingFixedOptionOrderTypeResourceTestCase {
 
 	@Test
 	public void testDeleteShippingFixedOptionOrderType() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		ShippingFixedOptionOrderType shippingFixedOptionOrderType =
-			testDeleteShippingFixedOptionOrderType_addShippingFixedOptionOrderType();
-
-		assertHttpResponseStatusCode(
-			204,
-			shippingFixedOptionOrderTypeResource.
-				deleteShippingFixedOptionOrderTypeHttpResponse(
-					shippingFixedOptionOrderType.
-						getShippingFixedOptionOrderTypeId()));
-	}
-
-	protected ShippingFixedOptionOrderType
-			testDeleteShippingFixedOptionOrderType_addShippingFixedOptionOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteShippingFixedOptionOrderType()
 		throws Exception {
 
-		// No namespace
-
-		ShippingFixedOptionOrderType shippingFixedOptionOrderType1 =
-			testGraphQLDeleteShippingFixedOptionOrderType_addShippingFixedOptionOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteShippingFixedOptionOrderType",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"shippingFixedOptionOrderTypeId",
-									shippingFixedOptionOrderType1.
-										getShippingFixedOptionOrderTypeId());
-							}
-						})),
-				"JSONObject/data",
-				"Object/deleteShippingFixedOptionOrderType"));
-
-		// Using the namespace headlessCommerceAdminChannel_v1_0
-
-		ShippingFixedOptionOrderType shippingFixedOptionOrderType2 =
-			testGraphQLDeleteShippingFixedOptionOrderType_addShippingFixedOptionOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminChannel_v1_0",
-						new GraphQLField(
-							"deleteShippingFixedOptionOrderType",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"shippingFixedOptionOrderTypeId",
-										shippingFixedOptionOrderType2.
-											getShippingFixedOptionOrderTypeId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminChannel_v1_0",
-				"Object/deleteShippingFixedOptionOrderType"));
-	}
-
-	protected ShippingFixedOptionOrderType
-			testGraphQLDeleteShippingFixedOptionOrderType_addShippingFixedOptionOrderType()
-		throws Exception {
-
-		return testGraphQLShippingFixedOptionOrderType_addShippingFixedOptionOrderType();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -300,7 +233,8 @@ public abstract class BaseShippingFixedOptionOrderTypeResourceTestCase {
 			testDeleteShippingFixedOptionOrderTypeBatch_addShippingFixedOptionOrderType()
 		throws Exception {
 
-		return testDeleteShippingFixedOptionOrderType_addShippingFixedOptionOrderType();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -392,12 +326,6 @@ public abstract class BaseShippingFixedOptionOrderTypeResourceTestCase {
 			page,
 			testGetShippingFixedOptionIdShippingFixedOptionOrderTypesPage_getExpectedActions(
 				id));
-
-		shippingFixedOptionOrderTypeResource.deleteShippingFixedOptionOrderType(
-			shippingFixedOptionOrderType1.getShippingFixedOptionOrderTypeId());
-
-		shippingFixedOptionOrderTypeResource.deleteShippingFixedOptionOrderType(
-			shippingFixedOptionOrderType2.getShippingFixedOptionOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -864,14 +792,6 @@ public abstract class BaseShippingFixedOptionOrderTypeResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected ShippingFixedOptionOrderType
-			testGraphQLShippingFixedOptionOrderType_addShippingFixedOptionOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		ShippingFixedOptionOrderType shippingFixedOptionOrderType,
 		List<ShippingFixedOptionOrderType> shippingFixedOptionOrderTypes) {
@@ -970,12 +890,6 @@ public abstract class BaseShippingFixedOptionOrderTypeResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (shippingFixedOptionOrderType.getShippingFixedOptionOrderTypeId() ==
-				null) {
-
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

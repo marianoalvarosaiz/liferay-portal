@@ -188,78 +188,14 @@ public abstract class BasePageRuleConditionResourceTestCase {
 	public void testDeleteSiteSiteByExternalReferenceCodePageRuleCondition()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PageRuleCondition pageRuleCondition =
-			testDeleteSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition();
-
-		assertHttpResponseStatusCode(
-			204,
-			pageRuleConditionResource.
-				deleteSiteSiteByExternalReferenceCodePageRuleConditionHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode(),
-					pageRuleCondition.getExternalReferenceCode()));
-
-		assertHttpResponseStatusCode(
-			404,
-			pageRuleConditionResource.
-				getSiteSiteByExternalReferenceCodePageRuleConditionHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode(),
-					pageRuleCondition.getExternalReferenceCode()));
-		assertHttpResponseStatusCode(
-			404,
-			pageRuleConditionResource.
-				getSiteSiteByExternalReferenceCodePageRuleConditionHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode(),
-					"-"));
-	}
-
-	protected PageRuleCondition
-			testDeleteSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGetSiteSiteByExternalReferenceCodePageRuleCondition()
 		throws Exception {
 
-		PageRuleCondition postPageRuleCondition =
-			testGetSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition();
-
-		PageRuleCondition getPageRuleCondition =
-			pageRuleConditionResource.
-				getSiteSiteByExternalReferenceCodePageRuleCondition(
-					testGetSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode(),
-					postPageRuleCondition.getExternalReferenceCode());
-
-		assertEquals(postPageRuleCondition, getPageRuleCondition);
-		assertValid(getPageRuleCondition);
-	}
-
-	protected PageRuleCondition
-			testGetSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testGetSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -408,40 +344,7 @@ public abstract class BasePageRuleConditionResourceTestCase {
 	public void testPatchSiteSiteByExternalReferenceCodePageRuleCondition()
 		throws Exception {
 
-		PageRuleCondition postPageRuleCondition =
-			testPatchSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition();
-
-		PageRuleCondition randomPatchPageRuleCondition =
-			randomPatchPageRuleCondition();
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PageRuleCondition patchPageRuleCondition =
-			pageRuleConditionResource.
-				patchSiteSiteByExternalReferenceCodePageRuleCondition(
-					null, postPageRuleCondition.getExternalReferenceCode(),
-					randomPatchPageRuleCondition);
-
-		PageRuleCondition expectedPatchPageRuleCondition =
-			postPageRuleCondition.clone();
-
-		BeanTestUtil.copyProperties(
-			randomPatchPageRuleCondition, expectedPatchPageRuleCondition);
-
-		PageRuleCondition getPageRuleCondition =
-			pageRuleConditionResource.
-				getSiteSiteByExternalReferenceCodePageRuleCondition(
-					null, patchPageRuleCondition.getExternalReferenceCode());
-
-		assertEquals(expectedPatchPageRuleCondition, getPageRuleCondition);
-		assertValid(getPageRuleCondition);
-	}
-
-	protected PageRuleCondition
-			testPatchSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -471,45 +374,7 @@ public abstract class BasePageRuleConditionResourceTestCase {
 	public void testPutSiteSiteByExternalReferenceCodePageRuleCondition()
 		throws Exception {
 
-		PageRuleCondition postPageRuleCondition =
-			testPutSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition();
-
-		PageRuleCondition randomPageRuleCondition = randomPageRuleCondition();
-
-		PageRuleCondition putPageRuleCondition =
-			pageRuleConditionResource.
-				putSiteSiteByExternalReferenceCodePageRuleCondition(
-					testPutSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode(),
-					postPageRuleCondition.getExternalReferenceCode(),
-					randomPageRuleCondition);
-
-		assertEquals(randomPageRuleCondition, putPageRuleCondition);
-		assertValid(putPageRuleCondition);
-
-		PageRuleCondition getPageRuleCondition =
-			pageRuleConditionResource.
-				getSiteSiteByExternalReferenceCodePageRuleCondition(
-					testPutSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode(),
-					putPageRuleCondition.getExternalReferenceCode());
-
-		assertEquals(randomPageRuleCondition, getPageRuleCondition);
-		assertValid(getPageRuleCondition);
-	}
-
-	protected PageRuleCondition
-			testPutSiteSiteByExternalReferenceCodePageRuleCondition_addPageRuleCondition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testPutSiteSiteByExternalReferenceCodePageRuleCondition_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	protected void assertContains(
@@ -592,15 +457,21 @@ public abstract class BasePageRuleConditionResourceTestCase {
 
 		boolean valid = true;
 
-		if (pageRuleCondition.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("condition", additionalAssertFieldName)) {
 				if (pageRuleCondition.getCondition() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (pageRuleCondition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

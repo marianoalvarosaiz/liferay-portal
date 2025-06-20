@@ -417,6 +417,14 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 					"-"));
 	}
 
+	protected Long
+			testDeleteSiteBlogPostingImageByExternalReferenceCode_getSiteId()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected BlogPostingImage
 			testDeleteSiteBlogPostingImageByExternalReferenceCode_addBlogPostingImage()
 		throws Exception {
@@ -424,14 +432,6 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		return blogPostingImageResource.postSiteBlogPostingImage(
 			testGroup.getGroupId(), randomBlogPostingImage(),
 			getMultipartFiles());
-	}
-
-	protected Long
-			testDeleteSiteBlogPostingImageByExternalReferenceCode_getSiteId()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	@Test
@@ -765,6 +765,14 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		assertValid(getBlogPostingImage);
 	}
 
+	protected Long
+			testGetSiteBlogPostingImageByExternalReferenceCode_getSiteId()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected BlogPostingImage
 			testGetSiteBlogPostingImageByExternalReferenceCode_addBlogPostingImage()
 		throws Exception {
@@ -772,14 +780,6 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		return blogPostingImageResource.postSiteBlogPostingImage(
 			testGroup.getGroupId(), randomBlogPostingImage(),
 			getMultipartFiles());
-	}
-
-	protected Long
-			testGetSiteBlogPostingImageByExternalReferenceCode_getSiteId()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	@Test
@@ -806,6 +806,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 											"\"" +
 												testGraphQLGetSiteBlogPostingImageByExternalReferenceCode_getSiteId() +
 													"\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -837,6 +838,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 												"\"" +
 													testGraphQLGetSiteBlogPostingImageByExternalReferenceCode_getSiteId() +
 														"\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1667,10 +1669,6 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 
 		boolean valid = true;
 
-		if (blogPostingImage.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (blogPostingImage.getId() == null) {
 			valid = false;
 		}
@@ -1696,6 +1694,16 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (blogPostingImage.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (blogPostingImage.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

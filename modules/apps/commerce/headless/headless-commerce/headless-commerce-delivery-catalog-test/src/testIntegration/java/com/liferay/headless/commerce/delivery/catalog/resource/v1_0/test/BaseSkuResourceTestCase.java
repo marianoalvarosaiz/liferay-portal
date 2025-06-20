@@ -202,18 +202,11 @@ public abstract class BaseSkuResourceTestCase {
 				getChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode(
 					testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getChannelExternalReferenceCode(),
 					testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getProductExternalReferenceCode(),
-					postSku.getExternalReferenceCode(), null, null);
+					testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getSkuExternalReferenceCode(),
+					null, null);
 
 		assertEquals(postSku, getSku);
 		assertValid(getSku);
-	}
-
-	protected Sku
-			testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_addSku()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	protected String
@@ -226,6 +219,22 @@ public abstract class BaseSkuResourceTestCase {
 
 	protected String
 			testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getProductExternalReferenceCode()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected String
+			testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getSkuExternalReferenceCode()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Sku
+			testGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_addSku()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -648,16 +657,11 @@ public abstract class BaseSkuResourceTestCase {
 
 		Sku getSku = skuResource.getChannelProductSku(
 			testGetChannelProductSku_getChannelId(),
-			testGetChannelProductSku_getProductId(), postSku.getId(), null,
-			null);
+			testGetChannelProductSku_getProductId(postSku), postSku.getId(),
+			null, null);
 
 		assertEquals(postSku, getSku);
 		assertValid(getSku);
-	}
-
-	protected Sku testGetChannelProductSku_addSku() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	protected Long testGetChannelProductSku_getChannelId() throws Exception {
@@ -665,7 +669,13 @@ public abstract class BaseSkuResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetChannelProductSku_getProductId() throws Exception {
+	protected Long testGetChannelProductSku_getProductId(Sku sku)
+		throws Exception {
+
+		return sku.getProductId();
+	}
+
+	protected Sku testGetChannelProductSku_addSku() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -692,7 +702,9 @@ public abstract class BaseSkuResourceTestCase {
 
 										put(
 											"productId",
-											testGraphQLGetChannelProductSku_getProductId());
+											testGraphQLGetChannelProductSku_getProductId(
+												sku));
+
 										put("skuId", sku.getId());
 									}
 								},
@@ -719,7 +731,9 @@ public abstract class BaseSkuResourceTestCase {
 
 											put(
 												"productId",
-												testGraphQLGetChannelProductSku_getProductId());
+												testGraphQLGetChannelProductSku_getProductId(
+													sku));
+
 											put("skuId", sku.getId());
 										}
 									},
@@ -736,11 +750,10 @@ public abstract class BaseSkuResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected Long testGraphQLGetChannelProductSku_getProductId()
+	protected Long testGraphQLGetChannelProductSku_getProductId(Sku sku)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return sku.getProductId();
 	}
 
 	@Test
@@ -1110,10 +1123,6 @@ public abstract class BaseSkuResourceTestCase {
 	protected void assertValid(Sku sku) throws Exception {
 		boolean valid = true;
 
-		if (sku.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (sku.getId() == null) {
 			valid = false;
 		}
@@ -1207,6 +1216,16 @@ public abstract class BaseSkuResourceTestCase {
 
 			if (Objects.equals("expirationDate", additionalAssertFieldName)) {
 				if (sku.getExpirationDate() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (sku.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

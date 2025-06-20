@@ -210,16 +210,16 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 		assertValid(getProductVirtualSettings);
 	}
 
-	protected ProductVirtualSettings
-			testGetProductByExternalReferenceCodeProductVirtualSettings_addProductVirtualSettings()
+	protected String
+			testGetProductByExternalReferenceCodeProductVirtualSettings_getExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected String
-			testGetProductByExternalReferenceCodeProductVirtualSettings_getExternalReferenceCode()
+	protected ProductVirtualSettings
+			testGetProductByExternalReferenceCodeProductVirtualSettings_addProductVirtualSettings()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -353,21 +353,22 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 
 		ProductVirtualSettings getProductVirtualSettings =
 			productVirtualSettingsResource.getProductIdProductVirtualSettings(
-				testGetProductIdProductVirtualSettings_getId());
+				testGetProductIdProductVirtualSettings_getId(
+					postProductVirtualSettings));
 
 		assertEquals(postProductVirtualSettings, getProductVirtualSettings);
 		assertValid(getProductVirtualSettings);
 	}
 
-	protected ProductVirtualSettings
-			testGetProductIdProductVirtualSettings_addProductVirtualSettings()
+	protected Long testGetProductIdProductVirtualSettings_getId(
+			ProductVirtualSettings productVirtualSettings)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return productVirtualSettings.getId();
 	}
 
-	protected Long testGetProductIdProductVirtualSettings_getId()
+	protected ProductVirtualSettings
+			testGetProductIdProductVirtualSettings_addProductVirtualSettings()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -395,7 +396,8 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetProductIdProductVirtualSettings_getId());
+											testGraphQLGetProductIdProductVirtualSettings_getId(
+												productVirtualSettings));
 									}
 								},
 								getGraphQLFields())),
@@ -418,7 +420,8 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetProductIdProductVirtualSettings_getId());
+												testGraphQLGetProductIdProductVirtualSettings_getId(
+													productVirtualSettings));
 										}
 									},
 									getGraphQLFields()))),
@@ -427,11 +430,11 @@ public abstract class BaseProductVirtualSettingsResourceTestCase {
 						"Object/productIdProductVirtualSettings"))));
 	}
 
-	protected Long testGraphQLGetProductIdProductVirtualSettings_getId()
+	protected Long testGraphQLGetProductIdProductVirtualSettings_getId(
+			ProductVirtualSettings productVirtualSettings)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return productVirtualSettings.getId();
 	}
 
 	@Test

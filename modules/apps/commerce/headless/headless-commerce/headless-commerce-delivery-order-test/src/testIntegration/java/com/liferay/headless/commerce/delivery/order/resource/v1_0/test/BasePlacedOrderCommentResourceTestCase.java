@@ -1177,10 +1177,6 @@ public abstract class BasePlacedOrderCommentResourceTestCase {
 
 		boolean valid = true;
 
-		if (placedOrderComment.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (placedOrderComment.getId() == null) {
 			valid = false;
 		}
@@ -1198,6 +1194,16 @@ public abstract class BasePlacedOrderCommentResourceTestCase {
 
 			if (Objects.equals("content", additionalAssertFieldName)) {
 				if (placedOrderComment.getContent() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (placedOrderComment.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

@@ -1459,10 +1459,6 @@ public abstract class BaseWorkflowDefinitionResourceTestCase {
 			valid = false;
 		}
 
-		if (workflowDefinition.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (workflowDefinition.getId() == null) {
 			valid = false;
 		}
@@ -1504,6 +1500,16 @@ public abstract class BaseWorkflowDefinitionResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (workflowDefinition.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (workflowDefinition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

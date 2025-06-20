@@ -453,16 +453,16 @@ public abstract class BaseAccountGroupResourceTestCase {
 					accountGroup.getExternalReferenceCode()));
 	}
 
-	protected AccountGroup
-			testDeleteAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_addAccountGroup()
+	protected String
+			testDeleteAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_getAccountExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected String
-			testDeleteAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_getAccountExternalReferenceCode()
+	protected AccountGroup
+			testDeleteAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_addAccountGroup()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1807,23 +1807,13 @@ public abstract class BaseAccountGroupResourceTestCase {
 			204,
 			accountGroupResource.
 				postAccountGroupByExternalReferenceCodeAccountByExternalReferenceCodeHttpResponse(
-					testPostAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_getAccountExternalReferenceCode(),
-					accountGroup.getExternalReferenceCode()));
+					null, accountGroup.getExternalReferenceCode()));
 
 		assertHttpResponseStatusCode(
 			404,
 			accountGroupResource.
 				postAccountGroupByExternalReferenceCodeAccountByExternalReferenceCodeHttpResponse(
-					testPostAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_getAccountExternalReferenceCode(),
-					"-"));
-	}
-
-	protected String
-			testPostAccountGroupByExternalReferenceCodeAccountByExternalReferenceCode_getAccountExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+					null, accountGroup.getExternalReferenceCode()));
 	}
 
 	protected AccountGroup
@@ -1904,18 +1894,18 @@ public abstract class BaseAccountGroupResourceTestCase {
 	}
 
 	protected AccountGroup
+			testPutAccountGroupByExternalReferenceCode_createAccountGroup()
+		throws Exception {
+
+		return randomAccountGroup();
+	}
+
+	protected AccountGroup
 			testPutAccountGroupByExternalReferenceCode_addAccountGroup()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	protected AccountGroup
-			testPutAccountGroupByExternalReferenceCode_createAccountGroup()
-		throws Exception {
-
-		return randomAccountGroup();
 	}
 
 	@Rule
@@ -2007,10 +1997,6 @@ public abstract class BaseAccountGroupResourceTestCase {
 			valid = false;
 		}
 
-		if (accountGroup.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (accountGroup.getId() == null) {
 			valid = false;
 		}
@@ -2052,6 +2038,16 @@ public abstract class BaseAccountGroupResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (accountGroup.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (accountGroup.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

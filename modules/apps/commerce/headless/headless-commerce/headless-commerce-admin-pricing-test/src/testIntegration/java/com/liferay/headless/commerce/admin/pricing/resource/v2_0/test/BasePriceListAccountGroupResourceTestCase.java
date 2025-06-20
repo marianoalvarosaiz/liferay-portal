@@ -206,78 +206,12 @@ public abstract class BasePriceListAccountGroupResourceTestCase {
 
 	@Test
 	public void testDeletePriceListAccountGroup() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PriceListAccountGroup priceListAccountGroup =
-			testDeletePriceListAccountGroup_addPriceListAccountGroup();
-
-		assertHttpResponseStatusCode(
-			204,
-			priceListAccountGroupResource.
-				deletePriceListAccountGroupHttpResponse(
-					priceListAccountGroup.getPriceListAccountGroupId()));
-	}
-
-	protected PriceListAccountGroup
-			testDeletePriceListAccountGroup_addPriceListAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeletePriceListAccountGroup() throws Exception {
-
-		// No namespace
-
-		PriceListAccountGroup priceListAccountGroup1 =
-			testGraphQLDeletePriceListAccountGroup_addPriceListAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deletePriceListAccountGroup",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"priceListAccountGroupId",
-									priceListAccountGroup1.
-										getPriceListAccountGroupId());
-							}
-						})),
-				"JSONObject/data", "Object/deletePriceListAccountGroup"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		PriceListAccountGroup priceListAccountGroup2 =
-			testGraphQLDeletePriceListAccountGroup_addPriceListAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deletePriceListAccountGroup",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"priceListAccountGroupId",
-										priceListAccountGroup2.
-											getPriceListAccountGroupId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deletePriceListAccountGroup"));
-	}
-
-	protected PriceListAccountGroup
-			testGraphQLDeletePriceListAccountGroup_addPriceListAccountGroup()
-		throws Exception {
-
-		return testGraphQLPriceListAccountGroup_addPriceListAccountGroup();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -294,7 +228,8 @@ public abstract class BasePriceListAccountGroupResourceTestCase {
 			testDeletePriceListAccountGroupBatch_addPriceListAccountGroup()
 		throws Exception {
 
-		return testDeletePriceListAccountGroup_addPriceListAccountGroup();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -385,12 +320,6 @@ public abstract class BasePriceListAccountGroupResourceTestCase {
 			page,
 			testGetPriceListByExternalReferenceCodePriceListAccountGroupsPage_getExpectedActions(
 				externalReferenceCode));
-
-		priceListAccountGroupResource.deletePriceListAccountGroup(
-			priceListAccountGroup1.getPriceListAccountGroupId());
-
-		priceListAccountGroupResource.deletePriceListAccountGroup(
-			priceListAccountGroup2.getPriceListAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -607,12 +536,6 @@ public abstract class BasePriceListAccountGroupResourceTestCase {
 			page,
 			testGetPriceListIdPriceListAccountGroupsPage_getExpectedActions(
 				id));
-
-		priceListAccountGroupResource.deletePriceListAccountGroup(
-			priceListAccountGroup1.getPriceListAccountGroupId());
-
-		priceListAccountGroupResource.deletePriceListAccountGroup(
-			priceListAccountGroup2.getPriceListAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1080,14 +1003,6 @@ public abstract class BasePriceListAccountGroupResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected PriceListAccountGroup
-			testGraphQLPriceListAccountGroup_addPriceListAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		PriceListAccountGroup priceListAccountGroup,
 		List<PriceListAccountGroup> priceListAccountGroups) {
@@ -1176,10 +1091,6 @@ public abstract class BasePriceListAccountGroupResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (priceListAccountGroup.getPriceListAccountGroupId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

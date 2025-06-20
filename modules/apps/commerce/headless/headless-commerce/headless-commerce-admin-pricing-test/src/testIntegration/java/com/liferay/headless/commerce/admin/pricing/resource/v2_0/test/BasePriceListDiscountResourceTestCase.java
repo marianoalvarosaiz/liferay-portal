@@ -199,77 +199,12 @@ public abstract class BasePriceListDiscountResourceTestCase {
 
 	@Test
 	public void testDeletePriceListDiscount() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PriceListDiscount priceListDiscount =
-			testDeletePriceListDiscount_addPriceListDiscount();
-
-		assertHttpResponseStatusCode(
-			204,
-			priceListDiscountResource.deletePriceListDiscountHttpResponse(
-				priceListDiscount.getPriceListDiscountId()));
-	}
-
-	protected PriceListDiscount
-			testDeletePriceListDiscount_addPriceListDiscount()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeletePriceListDiscount() throws Exception {
-
-		// No namespace
-
-		PriceListDiscount priceListDiscount1 =
-			testGraphQLDeletePriceListDiscount_addPriceListDiscount();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deletePriceListDiscount",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"priceListDiscountId",
-									priceListDiscount1.
-										getPriceListDiscountId());
-							}
-						})),
-				"JSONObject/data", "Object/deletePriceListDiscount"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		PriceListDiscount priceListDiscount2 =
-			testGraphQLDeletePriceListDiscount_addPriceListDiscount();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deletePriceListDiscount",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"priceListDiscountId",
-										priceListDiscount2.
-											getPriceListDiscountId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deletePriceListDiscount"));
-	}
-
-	protected PriceListDiscount
-			testGraphQLDeletePriceListDiscount_addPriceListDiscount()
-		throws Exception {
-
-		return testGraphQLPriceListDiscount_addPriceListDiscount();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -285,7 +220,8 @@ public abstract class BasePriceListDiscountResourceTestCase {
 			testDeletePriceListDiscountBatch_addPriceListDiscount()
 		throws Exception {
 
-		return testDeletePriceListDiscount_addPriceListDiscount();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeletePriceListDiscountBatch_deletePriceListDiscount(
@@ -371,12 +307,6 @@ public abstract class BasePriceListDiscountResourceTestCase {
 			page,
 			testGetPriceListByExternalReferenceCodePriceListDiscountsPage_getExpectedActions(
 				externalReferenceCode));
-
-		priceListDiscountResource.deletePriceListDiscount(
-			priceListDiscount1.getPriceListDiscountId());
-
-		priceListDiscountResource.deletePriceListDiscount(
-			priceListDiscount2.getPriceListDiscountId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -576,12 +506,6 @@ public abstract class BasePriceListDiscountResourceTestCase {
 		assertValid(
 			page,
 			testGetPriceListIdPriceListDiscountsPage_getExpectedActions(id));
-
-		priceListDiscountResource.deletePriceListDiscount(
-			priceListDiscount1.getPriceListDiscountId());
-
-		priceListDiscountResource.deletePriceListDiscount(
-			priceListDiscount2.getPriceListDiscountId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -758,14 +682,6 @@ public abstract class BasePriceListDiscountResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected PriceListDiscount
-			testGraphQLPriceListDiscount_addPriceListDiscount()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		PriceListDiscount priceListDiscount,
 		List<PriceListDiscount> priceListDiscounts) {
@@ -845,10 +761,6 @@ public abstract class BasePriceListDiscountResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (priceListDiscount.getPriceListDiscountId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

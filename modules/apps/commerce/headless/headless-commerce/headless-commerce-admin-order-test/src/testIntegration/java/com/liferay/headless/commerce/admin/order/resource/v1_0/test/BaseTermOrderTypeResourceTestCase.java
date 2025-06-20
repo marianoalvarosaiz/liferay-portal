@@ -196,72 +196,12 @@ public abstract class BaseTermOrderTypeResourceTestCase {
 
 	@Test
 	public void testDeleteTermOrderType() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		TermOrderType termOrderType =
-			testDeleteTermOrderType_addTermOrderType();
-
-		assertHttpResponseStatusCode(
-			204,
-			termOrderTypeResource.deleteTermOrderTypeHttpResponse(
-				termOrderType.getTermOrderTypeId()));
-	}
-
-	protected TermOrderType testDeleteTermOrderType_addTermOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteTermOrderType() throws Exception {
-
-		// No namespace
-
-		TermOrderType termOrderType1 =
-			testGraphQLDeleteTermOrderType_addTermOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteTermOrderType",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"termOrderTypeId",
-									termOrderType1.getTermOrderTypeId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteTermOrderType"));
-
-		// Using the namespace headlessCommerceAdminOrder_v1_0
-
-		TermOrderType termOrderType2 =
-			testGraphQLDeleteTermOrderType_addTermOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminOrder_v1_0",
-						new GraphQLField(
-							"deleteTermOrderType",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"termOrderTypeId",
-										termOrderType2.getTermOrderTypeId());
-								}
-							}))),
-				"JSONObject/data", "JSONObject/headlessCommerceAdminOrder_v1_0",
-				"Object/deleteTermOrderType"));
-	}
-
-	protected TermOrderType testGraphQLDeleteTermOrderType_addTermOrderType()
-		throws Exception {
-
-		return testGraphQLTermOrderType_addTermOrderType();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -276,7 +216,8 @@ public abstract class BaseTermOrderTypeResourceTestCase {
 	protected TermOrderType testDeleteTermOrderTypeBatch_addTermOrderType()
 		throws Exception {
 
-		return testDeleteTermOrderType_addTermOrderType();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void testDeleteTermOrderTypeBatch_deleteTermOrderType(
@@ -359,12 +300,6 @@ public abstract class BaseTermOrderTypeResourceTestCase {
 			page,
 			testGetTermByExternalReferenceCodeTermOrderTypesPage_getExpectedActions(
 				externalReferenceCode));
-
-		termOrderTypeResource.deleteTermOrderType(
-			termOrderType1.getTermOrderTypeId());
-
-		termOrderTypeResource.deleteTermOrderType(
-			termOrderType2.getTermOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -557,12 +492,6 @@ public abstract class BaseTermOrderTypeResourceTestCase {
 		assertContains(termOrderType2, (List<TermOrderType>)page.getItems());
 		assertValid(
 			page, testGetTermIdTermOrderTypesPage_getExpectedActions(id));
-
-		termOrderTypeResource.deleteTermOrderType(
-			termOrderType1.getTermOrderTypeId());
-
-		termOrderTypeResource.deleteTermOrderType(
-			termOrderType2.getTermOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -733,13 +662,6 @@ public abstract class BaseTermOrderTypeResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected TermOrderType testGraphQLTermOrderType_addTermOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		TermOrderType termOrderType, List<TermOrderType> termOrderTypes) {
 
@@ -812,10 +734,6 @@ public abstract class BaseTermOrderTypeResourceTestCase {
 
 	protected void assertValid(TermOrderType termOrderType) throws Exception {
 		boolean valid = true;
-
-		if (termOrderType.getTermOrderTypeId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

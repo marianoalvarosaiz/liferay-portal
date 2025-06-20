@@ -1394,8 +1394,8 @@ public abstract class BaseObjectValidationRuleResourceTestCase {
 			testGetObjectValidationRule_addObjectValidationRule()
 		throws Exception {
 
-		return testPostObjectDefinitionObjectValidationRule_addObjectValidationRule(
-			randomObjectValidationRule());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1532,8 +1532,8 @@ public abstract class BaseObjectValidationRuleResourceTestCase {
 			testPatchObjectValidationRule_addObjectValidationRule()
 		throws Exception {
 
-		return testPostObjectDefinitionObjectValidationRule_addObjectValidationRule(
-			randomObjectValidationRule());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1613,8 +1613,8 @@ public abstract class BaseObjectValidationRuleResourceTestCase {
 			testPutObjectValidationRule_addObjectValidationRule()
 		throws Exception {
 
-		return testPostObjectDefinitionObjectValidationRule_addObjectValidationRule(
-			randomObjectValidationRule());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected ObjectValidationRule
@@ -1720,10 +1720,6 @@ public abstract class BaseObjectValidationRuleResourceTestCase {
 			valid = false;
 		}
 
-		if (objectValidationRule.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (objectValidationRule.getId() == null) {
 			valid = false;
 		}
@@ -1765,6 +1761,16 @@ public abstract class BaseObjectValidationRuleResourceTestCase {
 
 			if (Objects.equals("errorLabel", additionalAssertFieldName)) {
 				if (objectValidationRule.getErrorLabel() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (objectValidationRule.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

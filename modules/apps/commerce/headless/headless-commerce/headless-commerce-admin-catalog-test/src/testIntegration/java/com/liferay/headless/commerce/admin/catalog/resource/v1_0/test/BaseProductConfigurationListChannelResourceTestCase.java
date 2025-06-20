@@ -216,81 +216,14 @@ public abstract class BaseProductConfigurationListChannelResourceTestCase {
 
 	@Test
 	public void testDeleteProductConfigurationListChannel() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		ProductConfigurationListChannel productConfigurationListChannel =
-			testDeleteProductConfigurationListChannel_addProductConfigurationListChannel();
-
-		assertHttpResponseStatusCode(
-			204,
-			productConfigurationListChannelResource.
-				deleteProductConfigurationListChannelHttpResponse(
-					productConfigurationListChannel.
-						getProductConfigurationListChannelId()));
-	}
-
-	protected ProductConfigurationListChannel
-			testDeleteProductConfigurationListChannel_addProductConfigurationListChannel()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteProductConfigurationListChannel()
 		throws Exception {
 
-		// No namespace
-
-		ProductConfigurationListChannel productConfigurationListChannel1 =
-			testGraphQLDeleteProductConfigurationListChannel_addProductConfigurationListChannel();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteProductConfigurationListChannel",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"productConfigurationListChannelId",
-									productConfigurationListChannel1.
-										getProductConfigurationListChannelId());
-							}
-						})),
-				"JSONObject/data",
-				"Object/deleteProductConfigurationListChannel"));
-
-		// Using the namespace headlessCommerceAdminCatalog_v1_0
-
-		ProductConfigurationListChannel productConfigurationListChannel2 =
-			testGraphQLDeleteProductConfigurationListChannel_addProductConfigurationListChannel();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminCatalog_v1_0",
-						new GraphQLField(
-							"deleteProductConfigurationListChannel",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"productConfigurationListChannelId",
-										productConfigurationListChannel2.
-											getProductConfigurationListChannelId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminCatalog_v1_0",
-				"Object/deleteProductConfigurationListChannel"));
-	}
-
-	protected ProductConfigurationListChannel
-			testGraphQLDeleteProductConfigurationListChannel_addProductConfigurationListChannel()
-		throws Exception {
-
-		return testGraphQLProductConfigurationListChannel_addProductConfigurationListChannel();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -310,7 +243,8 @@ public abstract class BaseProductConfigurationListChannelResourceTestCase {
 			testDeleteProductConfigurationListChannelBatch_addProductConfigurationListChannel()
 		throws Exception {
 
-		return testDeleteProductConfigurationListChannel_addProductConfigurationListChannel();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -402,16 +336,6 @@ public abstract class BaseProductConfigurationListChannelResourceTestCase {
 			page,
 			testGetProductConfigurationListByExternalReferenceCodeProductConfigurationListChannelsPage_getExpectedActions(
 				externalReferenceCode));
-
-		productConfigurationListChannelResource.
-			deleteProductConfigurationListChannel(
-				productConfigurationListChannel1.
-					getProductConfigurationListChannelId());
-
-		productConfigurationListChannelResource.
-			deleteProductConfigurationListChannel(
-				productConfigurationListChannel2.
-					getProductConfigurationListChannelId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -634,16 +558,6 @@ public abstract class BaseProductConfigurationListChannelResourceTestCase {
 			page,
 			testGetProductConfigurationListIdProductConfigurationListChannelsPage_getExpectedActions(
 				id));
-
-		productConfigurationListChannelResource.
-			deleteProductConfigurationListChannel(
-				productConfigurationListChannel1.
-					getProductConfigurationListChannelId());
-
-		productConfigurationListChannelResource.
-			deleteProductConfigurationListChannel(
-				productConfigurationListChannel2.
-					getProductConfigurationListChannelId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1142,14 +1056,6 @@ public abstract class BaseProductConfigurationListChannelResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected ProductConfigurationListChannel
-			testGraphQLProductConfigurationListChannel_addProductConfigurationListChannel()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		ProductConfigurationListChannel productConfigurationListChannel,
 		List<ProductConfigurationListChannel>
@@ -1254,12 +1160,6 @@ public abstract class BaseProductConfigurationListChannelResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (productConfigurationListChannel.
-				getProductConfigurationListChannelId() == null) {
-
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

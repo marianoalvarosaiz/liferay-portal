@@ -199,78 +199,14 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 	public void testDeleteSiteSiteByExternalReferenceCodeFragmentComposition()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		FragmentComposition fragmentComposition =
-			testDeleteSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition();
-
-		assertHttpResponseStatusCode(
-			204,
-			fragmentCompositionResource.
-				deleteSiteSiteByExternalReferenceCodeFragmentCompositionHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode(),
-					fragmentComposition.getExternalReferenceCode()));
-
-		assertHttpResponseStatusCode(
-			404,
-			fragmentCompositionResource.
-				getSiteSiteByExternalReferenceCodeFragmentCompositionHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode(),
-					fragmentComposition.getExternalReferenceCode()));
-		assertHttpResponseStatusCode(
-			404,
-			fragmentCompositionResource.
-				getSiteSiteByExternalReferenceCodeFragmentCompositionHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode(),
-					"-"));
-	}
-
-	protected FragmentComposition
-			testDeleteSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGetSiteSiteByExternalReferenceCodeFragmentComposition()
 		throws Exception {
 
-		FragmentComposition postFragmentComposition =
-			testGetSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition();
-
-		FragmentComposition getFragmentComposition =
-			fragmentCompositionResource.
-				getSiteSiteByExternalReferenceCodeFragmentComposition(
-					testGetSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode(),
-					postFragmentComposition.getExternalReferenceCode());
-
-		assertEquals(postFragmentComposition, getFragmentComposition);
-		assertValid(getFragmentComposition);
-	}
-
-	protected FragmentComposition
-			testGetSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testGetSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -780,40 +716,7 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 	public void testPatchSiteSiteByExternalReferenceCodeFragmentComposition()
 		throws Exception {
 
-		FragmentComposition postFragmentComposition =
-			testPatchSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition();
-
-		FragmentComposition randomPatchFragmentComposition =
-			randomPatchFragmentComposition();
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		FragmentComposition patchFragmentComposition =
-			fragmentCompositionResource.
-				patchSiteSiteByExternalReferenceCodeFragmentComposition(
-					null, postFragmentComposition.getExternalReferenceCode(),
-					randomPatchFragmentComposition);
-
-		FragmentComposition expectedPatchFragmentComposition =
-			postFragmentComposition.clone();
-
-		BeanTestUtil.copyProperties(
-			randomPatchFragmentComposition, expectedPatchFragmentComposition);
-
-		FragmentComposition getFragmentComposition =
-			fragmentCompositionResource.
-				getSiteSiteByExternalReferenceCodeFragmentComposition(
-					null, patchFragmentComposition.getExternalReferenceCode());
-
-		assertEquals(expectedPatchFragmentComposition, getFragmentComposition);
-		assertValid(getFragmentComposition);
-	}
-
-	protected FragmentComposition
-			testPatchSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -844,46 +747,7 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 	public void testPutSiteSiteByExternalReferenceCodeFragmentComposition()
 		throws Exception {
 
-		FragmentComposition postFragmentComposition =
-			testPutSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition();
-
-		FragmentComposition randomFragmentComposition =
-			randomFragmentComposition();
-
-		FragmentComposition putFragmentComposition =
-			fragmentCompositionResource.
-				putSiteSiteByExternalReferenceCodeFragmentComposition(
-					testPutSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode(),
-					postFragmentComposition.getExternalReferenceCode(),
-					randomFragmentComposition);
-
-		assertEquals(randomFragmentComposition, putFragmentComposition);
-		assertValid(putFragmentComposition);
-
-		FragmentComposition getFragmentComposition =
-			fragmentCompositionResource.
-				getSiteSiteByExternalReferenceCodeFragmentComposition(
-					testPutSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode(),
-					putFragmentComposition.getExternalReferenceCode());
-
-		assertEquals(randomFragmentComposition, getFragmentComposition);
-		assertValid(getFragmentComposition);
-	}
-
-	protected FragmentComposition
-			testPutSiteSiteByExternalReferenceCodeFragmentComposition_addFragmentComposition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testPutSiteSiteByExternalReferenceCodeFragmentComposition_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Rule
@@ -982,10 +846,6 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 			valid = false;
 		}
 
-		if (fragmentComposition.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -1020,6 +880,16 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (fragmentComposition.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (fragmentComposition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

@@ -176,13 +176,6 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		Assert.assertEquals(regex, taxonomyCategory.getTaxonomyCategoryName());
 	}
 
-	protected TaxonomyCategory testGraphQLTaxonomyCategory_addTaxonomyCategory()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		TaxonomyCategory taxonomyCategory,
 		List<TaxonomyCategory> taxonomyCategories) {
@@ -262,10 +255,6 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (taxonomyCategory.getTaxonomyCategoryId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

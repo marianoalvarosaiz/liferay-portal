@@ -206,78 +206,12 @@ public abstract class BasePriceModifierCategoryResourceTestCase {
 
 	@Test
 	public void testDeletePriceModifierCategory() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PriceModifierCategory priceModifierCategory =
-			testDeletePriceModifierCategory_addPriceModifierCategory();
-
-		assertHttpResponseStatusCode(
-			204,
-			priceModifierCategoryResource.
-				deletePriceModifierCategoryHttpResponse(
-					priceModifierCategory.getPriceModifierCategoryId()));
-	}
-
-	protected PriceModifierCategory
-			testDeletePriceModifierCategory_addPriceModifierCategory()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeletePriceModifierCategory() throws Exception {
-
-		// No namespace
-
-		PriceModifierCategory priceModifierCategory1 =
-			testGraphQLDeletePriceModifierCategory_addPriceModifierCategory();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deletePriceModifierCategory",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"priceModifierCategoryId",
-									priceModifierCategory1.
-										getPriceModifierCategoryId());
-							}
-						})),
-				"JSONObject/data", "Object/deletePriceModifierCategory"));
-
-		// Using the namespace headlessCommerceAdminPricing_v2_0
-
-		PriceModifierCategory priceModifierCategory2 =
-			testGraphQLDeletePriceModifierCategory_addPriceModifierCategory();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminPricing_v2_0",
-						new GraphQLField(
-							"deletePriceModifierCategory",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"priceModifierCategoryId",
-										priceModifierCategory2.
-											getPriceModifierCategoryId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminPricing_v2_0",
-				"Object/deletePriceModifierCategory"));
-	}
-
-	protected PriceModifierCategory
-			testGraphQLDeletePriceModifierCategory_addPriceModifierCategory()
-		throws Exception {
-
-		return testGraphQLPriceModifierCategory_addPriceModifierCategory();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -294,7 +228,8 @@ public abstract class BasePriceModifierCategoryResourceTestCase {
 			testDeletePriceModifierCategoryBatch_addPriceModifierCategory()
 		throws Exception {
 
-		return testDeletePriceModifierCategory_addPriceModifierCategory();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -385,12 +320,6 @@ public abstract class BasePriceModifierCategoryResourceTestCase {
 			page,
 			testGetPriceModifierByExternalReferenceCodePriceModifierCategoriesPage_getExpectedActions(
 				externalReferenceCode));
-
-		priceModifierCategoryResource.deletePriceModifierCategory(
-			priceModifierCategory1.getPriceModifierCategoryId());
-
-		priceModifierCategoryResource.deletePriceModifierCategory(
-			priceModifierCategory2.getPriceModifierCategoryId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -607,12 +536,6 @@ public abstract class BasePriceModifierCategoryResourceTestCase {
 			page,
 			testGetPriceModifierIdPriceModifierCategoriesPage_getExpectedActions(
 				id));
-
-		priceModifierCategoryResource.deletePriceModifierCategory(
-			priceModifierCategory1.getPriceModifierCategoryId());
-
-		priceModifierCategoryResource.deletePriceModifierCategory(
-			priceModifierCategory2.getPriceModifierCategoryId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1082,14 +1005,6 @@ public abstract class BasePriceModifierCategoryResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected PriceModifierCategory
-			testGraphQLPriceModifierCategory_addPriceModifierCategory()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		PriceModifierCategory priceModifierCategory,
 		List<PriceModifierCategory> priceModifierCategories) {
@@ -1178,10 +1093,6 @@ public abstract class BasePriceModifierCategoryResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (priceModifierCategory.getPriceModifierCategoryId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

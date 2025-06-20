@@ -608,7 +608,6 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 
 	@Test
 	public void testGetSiteTestEntityPermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		SiteTestEntity postSiteTestEntity =
 			testGetSiteTestEntityPermissionsPage_addSiteTestEntity();
 
@@ -623,8 +622,8 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 			testGetSiteTestEntityPermissionsPage_addSiteTestEntity()
 		throws Exception {
 
-		return siteTestEntityResource.postSiteSiteTestEntity(
-			testGroup.getGroupId(), randomSiteTestEntity());
+		return testPostSiteSiteTestEntity_addSiteTestEntity(
+			randomSiteTestEntity());
 	}
 
 	@Test
@@ -779,18 +778,18 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 	}
 
 	protected SiteTestEntity
+			testPutSiteSiteTestEntityByExternalReferenceCode_createSiteTestEntity()
+		throws Exception {
+
+		return randomSiteTestEntity();
+	}
+
+	protected SiteTestEntity
 			testPutSiteSiteTestEntityByExternalReferenceCode_addSiteTestEntity()
 		throws Exception {
 
 		return siteTestEntityResource.postSiteSiteTestEntity(
 			testGroup.getGroupId(), randomSiteTestEntity());
-	}
-
-	protected SiteTestEntity
-			testPutSiteSiteTestEntityByExternalReferenceCode_createSiteTestEntity()
-		throws Exception {
-
-		return randomSiteTestEntity();
 	}
 
 	@Test
@@ -1071,10 +1070,6 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 			valid = false;
 		}
 
-		if (siteTestEntity.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (siteTestEntity.getId() == null) {
 			valid = false;
 		}
@@ -1090,6 +1085,16 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (siteTestEntity.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (siteTestEntity.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

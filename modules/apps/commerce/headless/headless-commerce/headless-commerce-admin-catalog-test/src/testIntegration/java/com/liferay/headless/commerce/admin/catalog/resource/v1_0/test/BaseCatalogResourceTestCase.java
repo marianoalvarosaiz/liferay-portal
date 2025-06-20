@@ -1218,22 +1218,23 @@ public abstract class BaseCatalogResourceTestCase {
 
 		Catalog getCatalog =
 			catalogResource.getProductByExternalReferenceCodeCatalog(
-				testGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode(),
+				testGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode(
+					postCatalog),
 				Pagination.of(1, 2));
 
 		assertEquals(postCatalog, getCatalog);
 		assertValid(getCatalog);
 	}
 
-	protected Catalog testGetProductByExternalReferenceCodeCatalog_addCatalog()
+	protected String
+			testGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode(
+				Catalog catalog)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return catalog.getExternalReferenceCode();
 	}
 
-	protected String
-			testGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode()
+	protected Catalog testGetProductByExternalReferenceCodeCatalog_addCatalog()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -1262,8 +1263,8 @@ public abstract class BaseCatalogResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode() +
-													"\"");
+												testGraphQLGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode(
+													catalog) + "\"");
 									}
 								},
 								getGraphQLFields())),
@@ -1287,8 +1288,8 @@ public abstract class BaseCatalogResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode() +
-														"\"");
+													testGraphQLGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode(
+														catalog) + "\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -1298,11 +1299,11 @@ public abstract class BaseCatalogResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode()
+			testGraphQLGetProductByExternalReferenceCodeCatalog_getExternalReferenceCode(
+				Catalog catalog)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return catalog.getExternalReferenceCode();
 	}
 
 	@Test
@@ -1365,18 +1366,19 @@ public abstract class BaseCatalogResourceTestCase {
 		Catalog postCatalog = testGetProductIdCatalog_addCatalog();
 
 		Catalog getCatalog = catalogResource.getProductIdCatalog(
-			testGetProductIdCatalog_getId(), Pagination.of(1, 2));
+			testGetProductIdCatalog_getId(postCatalog), Pagination.of(1, 2));
 
 		assertEquals(postCatalog, getCatalog);
 		assertValid(getCatalog);
 	}
 
-	protected Catalog testGetProductIdCatalog_addCatalog() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+	protected Long testGetProductIdCatalog_getId(Catalog catalog)
+		throws Exception {
+
+		return catalog.getId();
 	}
 
-	protected Long testGetProductIdCatalog_getId() throws Exception {
+	protected Catalog testGetProductIdCatalog_addCatalog() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -1399,7 +1401,8 @@ public abstract class BaseCatalogResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetProductIdCatalog_getId());
+											testGraphQLGetProductIdCatalog_getId(
+												catalog));
 									}
 								},
 								getGraphQLFields())),
@@ -1421,7 +1424,8 @@ public abstract class BaseCatalogResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetProductIdCatalog_getId());
+												testGraphQLGetProductIdCatalog_getId(
+													catalog));
 										}
 									},
 									getGraphQLFields()))),
@@ -1430,9 +1434,10 @@ public abstract class BaseCatalogResourceTestCase {
 						"Object/productIdCatalog"))));
 	}
 
-	protected Long testGraphQLGetProductIdCatalog_getId() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+	protected Long testGraphQLGetProductIdCatalog_getId(Catalog catalog)
+		throws Exception {
+
+		return catalog.getId();
 	}
 
 	@Test
@@ -1547,17 +1552,17 @@ public abstract class BaseCatalogResourceTestCase {
 			putCatalog.getExternalReferenceCode());
 	}
 
+	protected Catalog testPutCatalogByExternalReferenceCode_createCatalog()
+		throws Exception {
+
+		return randomCatalog();
+	}
+
 	protected Catalog testPutCatalogByExternalReferenceCode_addCatalog()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
-	}
-
-	protected Catalog testPutCatalogByExternalReferenceCode_createCatalog()
-		throws Exception {
-
-		return randomCatalog();
 	}
 
 	@Rule
@@ -1633,10 +1638,6 @@ public abstract class BaseCatalogResourceTestCase {
 	protected void assertValid(Catalog catalog) throws Exception {
 		boolean valid = true;
 
-		if (catalog.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (catalog.getId() == null) {
 			valid = false;
 		}
@@ -1691,6 +1692,16 @@ public abstract class BaseCatalogResourceTestCase {
 					"defaultLanguageId", additionalAssertFieldName)) {
 
 				if (catalog.getDefaultLanguageId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (catalog.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

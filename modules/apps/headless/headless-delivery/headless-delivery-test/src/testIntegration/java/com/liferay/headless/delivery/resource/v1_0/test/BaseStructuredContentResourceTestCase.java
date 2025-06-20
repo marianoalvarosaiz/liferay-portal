@@ -136,16 +136,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		irrelevantTestDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
-			Collections.singletonMap(
-				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
-			null,
-			new ServiceContext() {
-				{
-					setCompanyId(irrelevantGroup.getCompanyId());
-					setUserId(TestPropsValues.getUserId());
-				}
-			});
 		testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 			Collections.singletonMap(
 				LocaleUtil.getDefault(), RandomTestUtil.randomString()),
@@ -293,20 +283,20 @@ public abstract class BaseStructuredContentResourceTestCase {
 					"-"));
 	}
 
-	protected StructuredContent
-			testDeleteAssetLibraryStructuredContentByExternalReferenceCode_addStructuredContent()
-		throws Exception {
-
-		return structuredContentResource.postAssetLibraryStructuredContent(
-			testDepotEntry.getDepotEntryId(), randomStructuredContent());
-	}
-
 	protected Long
 			testDeleteAssetLibraryStructuredContentByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
+	}
+
+	protected StructuredContent
+			testDeleteAssetLibraryStructuredContentByExternalReferenceCode_addStructuredContent()
+		throws Exception {
+
+		return structuredContentResource.postAssetLibraryStructuredContent(
+			testDepotEntry.getDepotEntryId(), randomStructuredContent());
 	}
 
 	@Test
@@ -548,20 +538,20 @@ public abstract class BaseStructuredContentResourceTestCase {
 		assertValid(getStructuredContent);
 	}
 
-	protected StructuredContent
-			testGetAssetLibraryStructuredContentByExternalReferenceCode_addStructuredContent()
-		throws Exception {
-
-		return structuredContentResource.postAssetLibraryStructuredContent(
-			testDepotEntry.getDepotEntryId(), randomStructuredContent());
-	}
-
 	protected Long
 			testGetAssetLibraryStructuredContentByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
+	}
+
+	protected StructuredContent
+			testGetAssetLibraryStructuredContentByExternalReferenceCode_addStructuredContent()
+		throws Exception {
+
+		return structuredContentResource.postAssetLibraryStructuredContent(
+			testDepotEntry.getDepotEntryId(), randomStructuredContent());
 	}
 
 	@Test
@@ -588,6 +578,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 											"\"" +
 												testGraphQLGetAssetLibraryStructuredContentByExternalReferenceCode_getAssetLibraryId() +
 													"\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -619,6 +610,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 												"\"" +
 													testGraphQLGetAssetLibraryStructuredContentByExternalReferenceCode_getAssetLibraryId() +
 														"\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -709,10 +701,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 	public void testGetAssetLibraryStructuredContentPermissionsPage()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		StructuredContent postStructuredContent =
-			testGetAssetLibraryStructuredContentPermissionsPage_addStructuredContent();
-
 		Page<Permission> page =
 			structuredContentResource.
 				getAssetLibraryStructuredContentPermissionsPage(
@@ -725,8 +713,8 @@ public abstract class BaseStructuredContentResourceTestCase {
 			testGetAssetLibraryStructuredContentPermissionsPage_addStructuredContent()
 		throws Exception {
 
-		return structuredContentResource.postAssetLibraryStructuredContent(
-			testDepotEntry.getDepotEntryId(), randomStructuredContent());
+		return testPostAssetLibraryStructuredContent_addStructuredContent(
+			randomStructuredContent());
 	}
 
 	@Test
@@ -1730,6 +1718,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 											"\"" +
 												structuredContent.getSiteId() +
 													"\"");
+
 										put(
 											"externalReferenceCode",
 											"\"" +
@@ -1761,6 +1750,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 												"\"" +
 													structuredContent.
 														getSiteId() + "\"");
+
 											put(
 												"externalReferenceCode",
 												"\"" +
@@ -1880,6 +1870,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 											"\"" +
 												structuredContent.getSiteId() +
 													"\"");
+
 										put(
 											"key",
 											"\"" + structuredContent.getKey() +
@@ -1908,6 +1899,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 												"\"" +
 													structuredContent.
 														getSiteId() + "\"");
+
 											put(
 												"key",
 												"\"" +
@@ -2021,6 +2013,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 											"\"" +
 												structuredContent.getSiteId() +
 													"\"");
+
 										put(
 											"uuid",
 											"\"" + structuredContent.getUuid() +
@@ -2049,6 +2042,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 												"\"" +
 													structuredContent.
 														getSiteId() + "\"");
+
 											put(
 												"uuid",
 												"\"" +
@@ -2120,10 +2114,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 
 	@Test
 	public void testGetSiteStructuredContentPermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		StructuredContent postStructuredContent =
-			testGetSiteStructuredContentPermissionsPage_addStructuredContent();
-
 		Page<Permission> page =
 			structuredContentResource.getSiteStructuredContentPermissionsPage(
 				testGroup.getGroupId(), RoleConstants.GUEST);
@@ -2135,8 +2125,8 @@ public abstract class BaseStructuredContentResourceTestCase {
 			testGetSiteStructuredContentPermissionsPage_addStructuredContent()
 		throws Exception {
 
-		return structuredContentResource.postSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
+		return testPostSiteStructuredContent_addStructuredContent(
+			randomStructuredContent());
 	}
 
 	@Test
@@ -3493,7 +3483,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 
 	@Test
 	public void testGetStructuredContentPermissionsPage() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
 		StructuredContent postStructuredContent =
 			testGetStructuredContentPermissionsPage_addStructuredContent();
 
@@ -3508,8 +3497,8 @@ public abstract class BaseStructuredContentResourceTestCase {
 			testGetStructuredContentPermissionsPage_addStructuredContent()
 		throws Exception {
 
-		return structuredContentResource.postSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
+		return testPostSiteStructuredContent_addStructuredContent(
+			randomStructuredContent());
 	}
 
 	@Test
@@ -3694,14 +3683,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 			putStructuredContent.getExternalReferenceCode());
 	}
 
-	protected StructuredContent
-			testPutAssetLibraryStructuredContentByExternalReferenceCode_addStructuredContent()
-		throws Exception {
-
-		return structuredContentResource.postAssetLibraryStructuredContent(
-			testDepotEntry.getDepotEntryId(), randomStructuredContent());
-	}
-
 	protected Long
 			testPutAssetLibraryStructuredContentByExternalReferenceCode_getAssetLibraryId()
 		throws Exception {
@@ -3715,6 +3696,14 @@ public abstract class BaseStructuredContentResourceTestCase {
 		throws Exception {
 
 		return randomStructuredContent();
+	}
+
+	protected StructuredContent
+			testPutAssetLibraryStructuredContentByExternalReferenceCode_addStructuredContent()
+		throws Exception {
+
+		return structuredContentResource.postAssetLibraryStructuredContent(
+			testDepotEntry.getDepotEntryId(), randomStructuredContent());
 	}
 
 	@Test
@@ -3821,18 +3810,18 @@ public abstract class BaseStructuredContentResourceTestCase {
 	}
 
 	protected StructuredContent
+			testPutSiteStructuredContentByExternalReferenceCode_createStructuredContent()
+		throws Exception {
+
+		return randomStructuredContent();
+	}
+
+	protected StructuredContent
 			testPutSiteStructuredContentByExternalReferenceCode_addStructuredContent()
 		throws Exception {
 
 		return structuredContentResource.postSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	protected StructuredContent
-			testPutSiteStructuredContentByExternalReferenceCode_createStructuredContent()
-		throws Exception {
-
-		return randomStructuredContent();
 	}
 
 	@Test
@@ -4268,10 +4257,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 			valid = false;
 		}
 
-		if (structuredContent.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (structuredContent.getId() == null) {
 			valid = false;
 		}
@@ -4383,6 +4368,16 @@ public abstract class BaseStructuredContentResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (structuredContent.getDescription_i18n() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (structuredContent.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
@@ -6001,7 +5996,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 	protected StructuredContentResource structuredContentResource;
 	protected ImportTaskResource importTaskResource;
 	protected com.liferay.portal.kernel.model.Group irrelevantGroup;
-	protected DepotEntry irrelevantTestDepotEntry;
 	protected com.liferay.portal.kernel.model.Company testCompany;
 	protected DepotEntry testDepotEntry;
 	protected com.liferay.portal.kernel.model.Group testGroup;

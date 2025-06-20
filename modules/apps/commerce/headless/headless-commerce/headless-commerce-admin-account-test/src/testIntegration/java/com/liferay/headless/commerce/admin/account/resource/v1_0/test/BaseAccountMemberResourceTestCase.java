@@ -190,114 +190,19 @@ public abstract class BaseAccountMemberResourceTestCase {
 	public void testDeleteAccountByExternalReferenceCodeAccountMember()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		AccountMember accountMember =
-			testDeleteAccountByExternalReferenceCodeAccountMember_addAccountMember();
-
-		assertHttpResponseStatusCode(
-			204,
-			accountMemberResource.
-				deleteAccountByExternalReferenceCodeAccountMemberHttpResponse(
-					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
-					accountMember.getUserId()));
-
-		assertHttpResponseStatusCode(
-			404,
-			accountMemberResource.
-				getAccountByExternalReferenceCodeAccountMemberHttpResponse(
-					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
-					accountMember.getUserId()));
-		assertHttpResponseStatusCode(
-			404,
-			accountMemberResource.
-				getAccountByExternalReferenceCodeAccountMemberHttpResponse(
-					testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
-					accountMember.getUserId()));
-	}
-
-	protected AccountMember
-			testDeleteAccountByExternalReferenceCodeAccountMember_addAccountMember()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testDeleteAccountIdAccountMember() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		AccountMember accountMember =
-			testDeleteAccountIdAccountMember_addAccountMember();
-
-		assertHttpResponseStatusCode(
-			204,
-			accountMemberResource.deleteAccountIdAccountMemberHttpResponse(
-				testDeleteAccountIdAccountMember_getId(),
-				accountMember.getUserId()));
-
-		assertHttpResponseStatusCode(
-			404,
-			accountMemberResource.getAccountIdAccountMemberHttpResponse(
-				testDeleteAccountIdAccountMember_getId(),
-				accountMember.getUserId()));
-		assertHttpResponseStatusCode(
-			404,
-			accountMemberResource.getAccountIdAccountMemberHttpResponse(
-				testDeleteAccountIdAccountMember_getId(),
-				accountMember.getUserId()));
-	}
-
-	protected AccountMember testDeleteAccountIdAccountMember_addAccountMember()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long testDeleteAccountIdAccountMember_getId() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGetAccountByExternalReferenceCodeAccountMember()
 		throws Exception {
 
-		AccountMember postAccountMember =
-			testGetAccountByExternalReferenceCodeAccountMember_addAccountMember();
-
-		AccountMember getAccountMember =
-			accountMemberResource.
-				getAccountByExternalReferenceCodeAccountMember(
-					testGetAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode(),
-					postAccountMember.getUserId());
-
-		assertEquals(postAccountMember, getAccountMember);
-		assertValid(getAccountMember);
-	}
-
-	protected AccountMember
-			testGetAccountByExternalReferenceCodeAccountMember_addAccountMember()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testGetAccountByExternalReferenceCodeAccountMember_getExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -521,28 +426,7 @@ public abstract class BaseAccountMemberResourceTestCase {
 
 	@Test
 	public void testGetAccountIdAccountMember() throws Exception {
-		AccountMember postAccountMember =
-			testGetAccountIdAccountMember_addAccountMember();
-
-		AccountMember getAccountMember =
-			accountMemberResource.getAccountIdAccountMember(
-				testGetAccountIdAccountMember_getId(),
-				postAccountMember.getUserId());
-
-		assertEquals(postAccountMember, getAccountMember);
-		assertValid(getAccountMember);
-	}
-
-	protected AccountMember testGetAccountIdAccountMember_addAccountMember()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long testGetAccountIdAccountMember_getId() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -860,10 +744,6 @@ public abstract class BaseAccountMemberResourceTestCase {
 	protected void assertValid(AccountMember accountMember) throws Exception {
 		boolean valid = true;
 
-		if (accountMember.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -885,6 +765,16 @@ public abstract class BaseAccountMemberResourceTestCase {
 
 			if (Objects.equals("email", additionalAssertFieldName)) {
 				if (accountMember.getEmail() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (accountMember.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

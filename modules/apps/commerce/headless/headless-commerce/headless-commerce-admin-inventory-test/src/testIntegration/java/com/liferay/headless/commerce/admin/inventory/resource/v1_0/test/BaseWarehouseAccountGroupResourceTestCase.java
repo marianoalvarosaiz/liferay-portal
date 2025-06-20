@@ -206,78 +206,12 @@ public abstract class BaseWarehouseAccountGroupResourceTestCase {
 
 	@Test
 	public void testDeleteWarehouseAccountGroup() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		WarehouseAccountGroup warehouseAccountGroup =
-			testDeleteWarehouseAccountGroup_addWarehouseAccountGroup();
-
-		assertHttpResponseStatusCode(
-			204,
-			warehouseAccountGroupResource.
-				deleteWarehouseAccountGroupHttpResponse(
-					warehouseAccountGroup.getWarehouseAccountGroupId()));
-	}
-
-	protected WarehouseAccountGroup
-			testDeleteWarehouseAccountGroup_addWarehouseAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeleteWarehouseAccountGroup() throws Exception {
-
-		// No namespace
-
-		WarehouseAccountGroup warehouseAccountGroup1 =
-			testGraphQLDeleteWarehouseAccountGroup_addWarehouseAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deleteWarehouseAccountGroup",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"warehouseAccountGroupId",
-									warehouseAccountGroup1.
-										getWarehouseAccountGroupId());
-							}
-						})),
-				"JSONObject/data", "Object/deleteWarehouseAccountGroup"));
-
-		// Using the namespace headlessCommerceAdminInventory_v1_0
-
-		WarehouseAccountGroup warehouseAccountGroup2 =
-			testGraphQLDeleteWarehouseAccountGroup_addWarehouseAccountGroup();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminInventory_v1_0",
-						new GraphQLField(
-							"deleteWarehouseAccountGroup",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"warehouseAccountGroupId",
-										warehouseAccountGroup2.
-											getWarehouseAccountGroupId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminInventory_v1_0",
-				"Object/deleteWarehouseAccountGroup"));
-	}
-
-	protected WarehouseAccountGroup
-			testGraphQLDeleteWarehouseAccountGroup_addWarehouseAccountGroup()
-		throws Exception {
-
-		return testGraphQLWarehouseAccountGroup_addWarehouseAccountGroup();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -294,7 +228,8 @@ public abstract class BaseWarehouseAccountGroupResourceTestCase {
 			testDeleteWarehouseAccountGroupBatch_addWarehouseAccountGroup()
 		throws Exception {
 
-		return testDeleteWarehouseAccountGroup_addWarehouseAccountGroup();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -385,12 +320,6 @@ public abstract class BaseWarehouseAccountGroupResourceTestCase {
 			page,
 			testGetWarehouseByExternalReferenceCodeWarehouseAccountGroupsPage_getExpectedActions(
 				externalReferenceCode));
-
-		warehouseAccountGroupResource.deleteWarehouseAccountGroup(
-			warehouseAccountGroup1.getWarehouseAccountGroupId());
-
-		warehouseAccountGroupResource.deleteWarehouseAccountGroup(
-			warehouseAccountGroup2.getWarehouseAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -607,12 +536,6 @@ public abstract class BaseWarehouseAccountGroupResourceTestCase {
 			page,
 			testGetWarehouseIdWarehouseAccountGroupsPage_getExpectedActions(
 				id));
-
-		warehouseAccountGroupResource.deleteWarehouseAccountGroup(
-			warehouseAccountGroup1.getWarehouseAccountGroupId());
-
-		warehouseAccountGroupResource.deleteWarehouseAccountGroup(
-			warehouseAccountGroup2.getWarehouseAccountGroupId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -1080,14 +1003,6 @@ public abstract class BaseWarehouseAccountGroupResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected WarehouseAccountGroup
-			testGraphQLWarehouseAccountGroup_addWarehouseAccountGroup()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		WarehouseAccountGroup warehouseAccountGroup,
 		List<WarehouseAccountGroup> warehouseAccountGroups) {
@@ -1176,10 +1091,6 @@ public abstract class BaseWarehouseAccountGroupResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (warehouseAccountGroup.getWarehouseAccountGroupId() == null) {
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

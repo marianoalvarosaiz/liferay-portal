@@ -889,8 +889,8 @@ public abstract class BaseDataRecordResourceTestCase {
 	}
 
 	protected DataRecord testGetDataRecord_addDataRecord() throws Exception {
-		return testPostDataDefinitionDataRecord_addDataRecord(
-			randomDataRecord());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1358,8 +1358,8 @@ public abstract class BaseDataRecordResourceTestCase {
 	}
 
 	protected DataRecord testPatchDataRecord_addDataRecord() throws Exception {
-		return testPostDataRecordCollectionDataRecord_addDataRecord(
-			randomDataRecord());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1423,8 +1423,8 @@ public abstract class BaseDataRecordResourceTestCase {
 	}
 
 	protected DataRecord testPutDataRecord_addDataRecord() throws Exception {
-		return testPostDataRecordCollectionDataRecord_addDataRecord(
-			randomDataRecord());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected DataRecord testGraphQLDataRecord_addDataRecord()

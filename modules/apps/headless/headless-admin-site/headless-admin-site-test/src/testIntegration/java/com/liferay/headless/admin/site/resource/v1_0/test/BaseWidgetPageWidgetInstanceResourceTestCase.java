@@ -205,64 +205,7 @@ public abstract class BaseWidgetPageWidgetInstanceResourceTestCase {
 	public void testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode()
 		throws Exception {
 
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		WidgetPageWidgetInstance widgetPageWidgetInstance =
-			testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance();
-
-		assertHttpResponseStatusCode(
-			204,
-			widgetPageWidgetInstanceResource.
-				deleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCodeHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode(),
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode(),
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode()));
-
-		assertHttpResponseStatusCode(
-			404,
-			widgetPageWidgetInstanceResource.
-				getSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCodeHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode(),
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode(),
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode()));
-		assertHttpResponseStatusCode(
-			404,
-			widgetPageWidgetInstanceResource.
-				getSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCodeHttpResponse(
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode(),
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode(),
-					testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode()));
-	}
-
-	protected WidgetPageWidgetInstance
-			testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testDeleteSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -397,50 +340,7 @@ public abstract class BaseWidgetPageWidgetInstanceResourceTestCase {
 	public void testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode()
 		throws Exception {
 
-		WidgetPageWidgetInstance postWidgetPageWidgetInstance =
-			testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance();
-
-		WidgetPageWidgetInstance getWidgetPageWidgetInstance =
-			widgetPageWidgetInstanceResource.
-				getSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode(
-					testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode(),
-					testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode(),
-					testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode());
-
-		assertEquals(postWidgetPageWidgetInstance, getWidgetPageWidgetInstance);
-		assertValid(getWidgetPageWidgetInstance);
-	}
-
-	protected WidgetPageWidgetInstance
-			testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testGetSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -461,41 +361,7 @@ public abstract class BaseWidgetPageWidgetInstanceResourceTestCase {
 	public void testPatchSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode()
 		throws Exception {
 
-		WidgetPageWidgetInstance postWidgetPageWidgetInstance =
-			testPatchSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance();
-
-		WidgetPageWidgetInstance randomPatchWidgetPageWidgetInstance =
-			randomPatchWidgetPageWidgetInstance();
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		WidgetPageWidgetInstance patchWidgetPageWidgetInstance =
-			widgetPageWidgetInstanceResource.
-				patchSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode(
-					null, null, null, randomPatchWidgetPageWidgetInstance);
-
-		WidgetPageWidgetInstance expectedPatchWidgetPageWidgetInstance =
-			postWidgetPageWidgetInstance.clone();
-
-		BeanTestUtil.copyProperties(
-			randomPatchWidgetPageWidgetInstance,
-			expectedPatchWidgetPageWidgetInstance);
-
-		WidgetPageWidgetInstance getWidgetPageWidgetInstance =
-			widgetPageWidgetInstanceResource.
-				getSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode(
-					null, null, null);
-
-		assertEquals(
-			expectedPatchWidgetPageWidgetInstance, getWidgetPageWidgetInstance);
-		assertValid(getWidgetPageWidgetInstance);
-	}
-
-	protected WidgetPageWidgetInstance
-			testPatchSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -527,66 +393,7 @@ public abstract class BaseWidgetPageWidgetInstanceResourceTestCase {
 	public void testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode()
 		throws Exception {
 
-		WidgetPageWidgetInstance postWidgetPageWidgetInstance =
-			testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance();
-
-		WidgetPageWidgetInstance randomWidgetPageWidgetInstance =
-			randomWidgetPageWidgetInstance();
-
-		WidgetPageWidgetInstance putWidgetPageWidgetInstance =
-			widgetPageWidgetInstanceResource.
-				putSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode(
-					testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode(),
-					testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode(),
-					testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode(),
-					randomWidgetPageWidgetInstance);
-
-		assertEquals(
-			randomWidgetPageWidgetInstance, putWidgetPageWidgetInstance);
-		assertValid(putWidgetPageWidgetInstance);
-
-		WidgetPageWidgetInstance getWidgetPageWidgetInstance =
-			widgetPageWidgetInstanceResource.
-				getSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode(
-					testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode(),
-					testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode(),
-					testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode());
-
-		assertEquals(
-			randomWidgetPageWidgetInstance, getWidgetPageWidgetInstance);
-		assertValid(getWidgetPageWidgetInstance);
-	}
-
-	protected WidgetPageWidgetInstance
-			testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_addWidgetPageWidgetInstance()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getSitePageExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected String
-			testPutSiteSiteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode_getWidgetInstanceExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	protected void assertContains(
@@ -683,12 +490,20 @@ public abstract class BaseWidgetPageWidgetInstanceResourceTestCase {
 
 		boolean valid = true;
 
-		if (widgetPageWidgetInstance.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (widgetPageWidgetInstance.getExternalReferenceCode() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
 
 			if (Objects.equals("parentSectionId", additionalAssertFieldName)) {
 				if (widgetPageWidgetInstance.getParentSectionId() == null) {

@@ -207,19 +207,20 @@ public abstract class BaseFormRecordResourceTestCase {
 
 		FormRecord getFormRecord =
 			formRecordResource.getFormFormRecordByLatestDraft(
-				testGetFormFormRecordByLatestDraft_getFormId());
+				testGetFormFormRecordByLatestDraft_getFormId(postFormRecord));
 
 		assertEquals(postFormRecord, getFormRecord);
 		assertValid(getFormRecord);
 	}
 
-	protected FormRecord testGetFormFormRecordByLatestDraft_addFormRecord()
+	protected Long testGetFormFormRecordByLatestDraft_getFormId(
+			FormRecord formRecord)
 		throws Exception {
 
-		return testPostFormFormRecord_addFormRecord(randomFormRecord());
+		return formRecord.getFormId();
 	}
 
-	protected Long testGetFormFormRecordByLatestDraft_getFormId()
+	protected FormRecord testGetFormFormRecordByLatestDraft_addFormRecord()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -245,7 +246,8 @@ public abstract class BaseFormRecordResourceTestCase {
 									{
 										put(
 											"formId",
-											testGraphQLGetFormFormRecordByLatestDraft_getFormId());
+											testGraphQLGetFormFormRecordByLatestDraft_getFormId(
+												formRecord));
 									}
 								},
 								getGraphQLFields())),
@@ -268,7 +270,8 @@ public abstract class BaseFormRecordResourceTestCase {
 										{
 											put(
 												"formId",
-												testGraphQLGetFormFormRecordByLatestDraft_getFormId());
+												testGraphQLGetFormFormRecordByLatestDraft_getFormId(
+													formRecord));
 										}
 									},
 									getGraphQLFields()))),
@@ -276,11 +279,11 @@ public abstract class BaseFormRecordResourceTestCase {
 						"Object/formFormRecordByLatestDraft"))));
 	}
 
-	protected Long testGraphQLGetFormFormRecordByLatestDraft_getFormId()
+	protected Long testGraphQLGetFormFormRecordByLatestDraft_getFormId(
+			FormRecord formRecord)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return formRecord.getFormId();
 	}
 
 	@Test
@@ -691,7 +694,8 @@ public abstract class BaseFormRecordResourceTestCase {
 	}
 
 	protected FormRecord testGetFormRecord_addFormRecord() throws Exception {
-		return testPostFormFormRecord_addFormRecord(randomFormRecord());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -826,7 +830,8 @@ public abstract class BaseFormRecordResourceTestCase {
 	}
 
 	protected FormRecord testPutFormRecord_addFormRecord() throws Exception {
-		return testPostFormFormRecord_addFormRecord(randomFormRecord());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected FormRecord testGraphQLFormRecord_addFormRecord()

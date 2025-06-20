@@ -1520,8 +1520,8 @@ public abstract class BaseListTypeEntryResourceTestCase {
 	protected ListTypeEntry testGetListTypeEntry_addListTypeEntry()
 		throws Exception {
 
-		return testPostListTypeDefinitionListTypeEntry_addListTypeEntry(
-			randomListTypeEntry());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Test
@@ -1693,8 +1693,8 @@ public abstract class BaseListTypeEntryResourceTestCase {
 	protected ListTypeEntry testPutListTypeEntry_addListTypeEntry()
 		throws Exception {
 
-		return testPostListTypeDefinitionListTypeEntry_addListTypeEntry(
-			randomListTypeEntry());
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	@Rule
@@ -1788,10 +1788,6 @@ public abstract class BaseListTypeEntryResourceTestCase {
 			valid = false;
 		}
 
-		if (listTypeEntry.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (listTypeEntry.getId() == null) {
 			valid = false;
 		}
@@ -1801,6 +1797,16 @@ public abstract class BaseListTypeEntryResourceTestCase {
 
 			if (Objects.equals("actions", additionalAssertFieldName)) {
 				if (listTypeEntry.getActions() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (listTypeEntry.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

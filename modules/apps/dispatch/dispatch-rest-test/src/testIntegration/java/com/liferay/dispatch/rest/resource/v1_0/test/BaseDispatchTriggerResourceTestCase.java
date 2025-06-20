@@ -426,10 +426,6 @@ public abstract class BaseDispatchTriggerResourceTestCase {
 
 		boolean valid = true;
 
-		if (dispatchTrigger.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (dispatchTrigger.getId() == null) {
 			valid = false;
 		}
@@ -493,6 +489,16 @@ public abstract class BaseDispatchTriggerResourceTestCase {
 
 			if (Objects.equals("endDate", additionalAssertFieldName)) {
 				if (dispatchTrigger.getEndDate() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (dispatchTrigger.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

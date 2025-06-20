@@ -210,81 +210,14 @@ public abstract class BasePaymentMethodGroupRelOrderTypeResourceTestCase {
 
 	@Test
 	public void testDeletePaymentMethodGroupRelOrderType() throws Exception {
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		PaymentMethodGroupRelOrderType paymentMethodGroupRelOrderType =
-			testDeletePaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType();
-
-		assertHttpResponseStatusCode(
-			204,
-			paymentMethodGroupRelOrderTypeResource.
-				deletePaymentMethodGroupRelOrderTypeHttpResponse(
-					paymentMethodGroupRelOrderType.
-						getPaymentMethodGroupRelOrderTypeId()));
-	}
-
-	protected PaymentMethodGroupRelOrderType
-			testDeletePaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(false);
 	}
 
 	@Test
 	public void testGraphQLDeletePaymentMethodGroupRelOrderType()
 		throws Exception {
 
-		// No namespace
-
-		PaymentMethodGroupRelOrderType paymentMethodGroupRelOrderType1 =
-			testGraphQLDeletePaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"deletePaymentMethodGroupRelOrderType",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"paymentMethodGroupRelOrderTypeId",
-									paymentMethodGroupRelOrderType1.
-										getPaymentMethodGroupRelOrderTypeId());
-							}
-						})),
-				"JSONObject/data",
-				"Object/deletePaymentMethodGroupRelOrderType"));
-
-		// Using the namespace headlessCommerceAdminChannel_v1_0
-
-		PaymentMethodGroupRelOrderType paymentMethodGroupRelOrderType2 =
-			testGraphQLDeletePaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType();
-
-		Assert.assertTrue(
-			JSONUtil.getValueAsBoolean(
-				invokeGraphQLMutation(
-					new GraphQLField(
-						"headlessCommerceAdminChannel_v1_0",
-						new GraphQLField(
-							"deletePaymentMethodGroupRelOrderType",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"paymentMethodGroupRelOrderTypeId",
-										paymentMethodGroupRelOrderType2.
-											getPaymentMethodGroupRelOrderTypeId());
-								}
-							}))),
-				"JSONObject/data",
-				"JSONObject/headlessCommerceAdminChannel_v1_0",
-				"Object/deletePaymentMethodGroupRelOrderType"));
-	}
-
-	protected PaymentMethodGroupRelOrderType
-			testGraphQLDeletePaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType()
-		throws Exception {
-
-		return testGraphQLPaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType();
+		Assert.assertTrue(false);
 	}
 
 	@Test
@@ -304,7 +237,8 @@ public abstract class BasePaymentMethodGroupRelOrderTypeResourceTestCase {
 			testDeletePaymentMethodGroupRelOrderTypeBatch_addPaymentMethodGroupRelOrderType()
 		throws Exception {
 
-		return testDeletePaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected void
@@ -396,16 +330,6 @@ public abstract class BasePaymentMethodGroupRelOrderTypeResourceTestCase {
 			page,
 			testGetPaymentMethodGroupRelIdPaymentMethodGroupRelOrderTypesPage_getExpectedActions(
 				id));
-
-		paymentMethodGroupRelOrderTypeResource.
-			deletePaymentMethodGroupRelOrderType(
-				paymentMethodGroupRelOrderType1.
-					getPaymentMethodGroupRelOrderTypeId());
-
-		paymentMethodGroupRelOrderTypeResource.
-			deletePaymentMethodGroupRelOrderType(
-				paymentMethodGroupRelOrderType2.
-					getPaymentMethodGroupRelOrderTypeId());
 	}
 
 	protected Map<String, Map<String, String>>
@@ -878,14 +802,6 @@ public abstract class BasePaymentMethodGroupRelOrderTypeResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	protected PaymentMethodGroupRelOrderType
-			testGraphQLPaymentMethodGroupRelOrderType_addPaymentMethodGroupRelOrderType()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected void assertContains(
 		PaymentMethodGroupRelOrderType paymentMethodGroupRelOrderType,
 		List<PaymentMethodGroupRelOrderType> paymentMethodGroupRelOrderTypes) {
@@ -987,12 +903,6 @@ public abstract class BasePaymentMethodGroupRelOrderTypeResourceTestCase {
 		throws Exception {
 
 		boolean valid = true;
-
-		if (paymentMethodGroupRelOrderType.
-				getPaymentMethodGroupRelOrderTypeId() == null) {
-
-			valid = false;
-		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {

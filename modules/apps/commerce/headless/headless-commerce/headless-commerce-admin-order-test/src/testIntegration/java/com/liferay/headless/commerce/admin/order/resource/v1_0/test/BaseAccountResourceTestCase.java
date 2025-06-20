@@ -189,21 +189,22 @@ public abstract class BaseAccountResourceTestCase {
 
 		Account getAccount =
 			accountResource.getOrderByExternalReferenceCodeAccount(
-				testGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode());
+				testGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode(
+					postAccount));
 
 		assertEquals(postAccount, getAccount);
 		assertValid(getAccount);
 	}
 
-	protected Account testGetOrderByExternalReferenceCodeAccount_addAccount()
+	protected String
+			testGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode(
+				Account account)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return account.getExternalReferenceCode();
 	}
 
-	protected String
-			testGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode()
+	protected Account testGetOrderByExternalReferenceCodeAccount_addAccount()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -232,8 +233,8 @@ public abstract class BaseAccountResourceTestCase {
 										put(
 											"externalReferenceCode",
 											"\"" +
-												testGraphQLGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode() +
-													"\"");
+												testGraphQLGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode(
+													account) + "\"");
 									}
 								},
 								getGraphQLFields())),
@@ -257,8 +258,8 @@ public abstract class BaseAccountResourceTestCase {
 											put(
 												"externalReferenceCode",
 												"\"" +
-													testGraphQLGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode() +
-														"\"");
+													testGraphQLGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode(
+														account) + "\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -268,11 +269,11 @@ public abstract class BaseAccountResourceTestCase {
 	}
 
 	protected String
-			testGraphQLGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode()
+			testGraphQLGetOrderByExternalReferenceCodeAccount_getExternalReferenceCode(
+				Account account)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return account.getExternalReferenceCode();
 	}
 
 	@Test
@@ -335,18 +336,19 @@ public abstract class BaseAccountResourceTestCase {
 		Account postAccount = testGetOrderIdAccount_addAccount();
 
 		Account getAccount = accountResource.getOrderIdAccount(
-			testGetOrderIdAccount_getId());
+			testGetOrderIdAccount_getId(postAccount));
 
 		assertEquals(postAccount, getAccount);
 		assertValid(getAccount);
 	}
 
-	protected Account testGetOrderIdAccount_addAccount() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+	protected Long testGetOrderIdAccount_getId(Account account)
+		throws Exception {
+
+		return account.getId();
 	}
 
-	protected Long testGetOrderIdAccount_getId() throws Exception {
+	protected Account testGetOrderIdAccount_addAccount() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
@@ -369,7 +371,8 @@ public abstract class BaseAccountResourceTestCase {
 									{
 										put(
 											"id",
-											testGraphQLGetOrderIdAccount_getId());
+											testGraphQLGetOrderIdAccount_getId(
+												account));
 									}
 								},
 								getGraphQLFields())),
@@ -391,7 +394,8 @@ public abstract class BaseAccountResourceTestCase {
 										{
 											put(
 												"id",
-												testGraphQLGetOrderIdAccount_getId());
+												testGraphQLGetOrderIdAccount_getId(
+													account));
 										}
 									},
 									getGraphQLFields()))),
@@ -400,9 +404,10 @@ public abstract class BaseAccountResourceTestCase {
 						"Object/orderIdAccount"))));
 	}
 
-	protected Long testGraphQLGetOrderIdAccount_getId() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+	protected Long testGraphQLGetOrderIdAccount_getId(Account account)
+		throws Exception {
+
+		return account.getId();
 	}
 
 	@Test
@@ -463,14 +468,14 @@ public abstract class BaseAccountResourceTestCase {
 		assertValid(getAccount);
 	}
 
-	protected Account testGetOrderRuleAccountAccount_addAccount()
+	protected Long testGetOrderRuleAccountAccount_getOrderRuleAccountId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetOrderRuleAccountAccount_getOrderRuleAccountId()
+	protected Account testGetOrderRuleAccountAccount_addAccount()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -656,10 +661,6 @@ public abstract class BaseAccountResourceTestCase {
 	protected void assertValid(Account account) throws Exception {
 		boolean valid = true;
 
-		if (account.getExternalReferenceCode() == null) {
-			valid = false;
-		}
-
 		if (account.getId() == null) {
 			valid = false;
 		}
@@ -677,6 +678,16 @@ public abstract class BaseAccountResourceTestCase {
 
 			if (Objects.equals("emailAddress", additionalAssertFieldName)) {
 				if (account.getEmailAddress() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"externalReferenceCode", additionalAssertFieldName)) {
+
+				if (account.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
