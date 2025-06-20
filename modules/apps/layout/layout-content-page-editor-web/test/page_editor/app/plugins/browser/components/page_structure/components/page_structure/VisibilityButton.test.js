@@ -28,11 +28,7 @@ const renderComponent = () =>
 		>
 			<KeyboardMovementContextProvider>
 				<VisibilityButton
-					node={{
-						hidden: true,
-						id: 'fragment01',
-						name: 'Test Fragment',
-					}}
+					node={{hidden: true, id: 'fragment01'}}
 					selectedViewportSize="tablet"
 				/>
 			</KeyboardMovementContextProvider>
@@ -43,7 +39,7 @@ describe('VisibilityButton', () => {
 	it('calls updateItemStyle when the visibility button is pressed', async () => {
 		renderComponent();
 
-		await userEvent.click(screen.getByLabelText('show-Test Fragment'));
+		await userEvent.click(screen.getByLabelText('show-x'));
 
 		expect(updateItemStyle).toBeCalledWith(
 			expect.objectContaining({
