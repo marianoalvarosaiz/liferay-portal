@@ -199,8 +199,6 @@ public abstract class Base${schemaName}ResourceTestCase {
 						setUserId(TestPropsValues.getUserId());
 					}
 				});
-			irrelevantDepotEntryGroup = irrelevantDepotEntry.getGroup();
-
 			testDepotEntry = DepotEntryLocalServiceUtil.addDepotEntry(
 				Collections.singletonMap(LocaleUtil.getDefault(), RandomTestUtil.randomString()),
 				null, new ServiceContext() {
@@ -209,7 +207,6 @@ public abstract class Base${schemaName}ResourceTestCase {
 						setUserId(TestPropsValues.getUserId());
 					}
 				});
-			testDepotEntryGroup = testDepotEntry.getGroup();
 		</#if>
 
 		_${schemaVarName}Resource.setContextCompany(testCompany);
@@ -523,7 +520,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							<#elseif freeMarkerTool.isIdParameter(javaMethodParameter, schemaName) && freeMarkerTool.isParameterNameSchemaRelated(javaMethodParameter.parameterName, javaMethodSignature.path, schemaName)>
 								post${schemaName}.${getIdMethodName}()
 							<#elseif stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryExternalReferenceCode")>
-								testDepotEntryGroup.getExternalReferenceCode()
+								testDepotEntry.getGroup().getExternalReferenceCode()
 							<#elseif stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
 								testDepotEntry.getDepotEntryId()
 							<#elseif stringUtil.equals(javaMethodParameter.parameterName, "roleNames")>
@@ -1176,7 +1173,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 				<#list javaMethodSignature.pathJavaMethodParameters as javaMethodParameter>
 					protected ${javaMethodParameter.parameterType} test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}() throws Exception {
 						<#if generateDepotEntry && stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryExternalReferenceCode")>
-							return testDepotEntryGroup.getExternalReferenceCode();
+							return testDepotEntry.getGroup().getExternalReferenceCode();
 						<#elseif generateDepotEntry && stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
 							return testDepotEntry.getDepotEntryId();
 						<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteExternalReferenceCode")>
@@ -1190,7 +1187,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 					protected ${javaMethodParameter.parameterType} test${javaMethodSignature.methodName?cap_first}_getIrrelevant${javaMethodParameter.parameterName?cap_first}() throws Exception {
 						<#if generateDepotEntry && stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryExternalReferenceCode")>
-							return irrelevantDepotEntryGroup.getExternalReferenceCode();
+							return irrelevantDepotEntry.getGroup().getExternalReferenceCode();
 						<#elseif generateDepotEntry && stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
 							return irrelevantDepotEntry.getDepotEntryId();
 						<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteExternalReferenceCode")>
@@ -1568,7 +1565,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							{
 								<#list allChildProperties?keys as propertyName>
 									<#if generateDepotEntry && stringUtil.equals(propertyName, "assetLibraryExternalReferenceCode")>
-										${propertyName} = testDepotEntryGroup.getExternalReferenceCode();
+										${propertyName} = testDepotEntry.getGroup().getExternalReferenceCode();
 									<#elseif generateDepotEntry && stringUtil.equals(propertyName, "assetLibraryId")>
 										${propertyName} = testDepotEntry.getDepotEntryId();
 									<#elseif stringUtil.equals(propertyName, "siteExternalReferenceCode")>
@@ -2397,7 +2394,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 											<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
 												<#if freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation)>
 													<#if stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryExternalReferenceCode")>
-														put("assetLibraryExternalReferenceCode", <@getQuotedString unquotedString="irrelevantDepotEntryGroup.getExternalReferenceCode()" />);
+														put("assetLibraryExternalReferenceCode", <@getQuotedString unquotedString="irrelevantDepotEntry.getGroup().getExternalReferenceCode()" />);
 													<#elseif stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
 														put("assetLibraryId", <@getQuotedString unquotedString="irrelevantDepotEntry.getDepotEntryId()" />);
 													<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteExternalReferenceCode")>
@@ -2431,7 +2428,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 													<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
 														<#if freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation)>
 															<#if stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryExternalReferenceCode")>
-																put("assetLibraryExternalReferenceCode", <@getQuotedString unquotedString="irrelevantDepotEntryGroup.getExternalReferenceCode()" />);
+																put("assetLibraryExternalReferenceCode", <@getQuotedString unquotedString="irrelevantDepotEntry.getGroup().getExternalReferenceCode()" />);
 															<#elseif stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
 																put("assetLibraryId", <@getQuotedString unquotedString="irrelevantDepotEntry.getDepotEntryId()" />);
 															<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteExternalReferenceCode")>
@@ -2490,7 +2487,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 				<#if useDeleteAssetLibrary>
 					${schemaName} ${schemaVarName}1 = testBatchEngineDeleteImportTask_addAssetLibrary${schemaName}();
 
-					testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}1.getExternalReferenceCode(),<#if useDeleteById> null,</#if> "assetLibraryExternalReferenceCode", testDepotEntryGroup.getExternalReferenceCode());
+					testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}1.getExternalReferenceCode(),<#if useDeleteById> null,</#if> "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode());
 
 					<#if getAssetLibraryJavaMethodSignature?has_content>
 						assertHttpResponseStatusCode(
@@ -2566,7 +2563,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 						${schemaVarName}1 = testBatchEngineDeleteImportTask_addAssetLibrary${schemaName}();
 						${schemaName} ${schemaVarName}2 = testBatchEngineDeleteImportTask_addAssetLibrary${schemaName}();
 
-						testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntryGroup.getExternalReferenceCode());
+						testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode());
 
 						<#if getJavaMethodSignature?has_content>
 							assertHttpResponseStatusCode(
@@ -2587,7 +2584,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									/>));
 						</#if>
 
-						testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntryGroup.getExternalReferenceCode());
+						testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode());
 
 						<#if getJavaMethodSignature?has_content>
 							assertHttpResponseStatusCode(
@@ -2643,7 +2640,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 					<#if useDeleteAssetLibrary && useDeleteSite>
 						${schemaVarName}1 = testBatchEngineDeleteImportTask_addSite${schemaName}();
 
-						testBatchEngineDeleteImportTask_delete${schemaName}(400, ${schemaVarName}1.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntryGroup.getExternalReferenceCode(), "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
+						testBatchEngineDeleteImportTask_delete${schemaName}(400, ${schemaVarName}1.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode(), "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
 
 						<#if getJavaMethodSignature?has_content>
 							assertHttpResponseStatusCode(
@@ -3071,7 +3068,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 		<#if properties?keys?seq_contains("siteId")>
 			<#if generateDepotEntry>
-				if (!Objects.equals(${schemaVarName}.getAssetLibraryKey(), testDepotEntryGroup.getGroupKey()) && !Objects.equals(${schemaVarName}.getSiteId(), testGroup.getGroupId())) {
+				com.liferay.portal.kernel.model.Group group = testDepotEntry.getGroup();
+
+				if (!Objects.equals(${schemaVarName}.getAssetLibraryKey(), group.getGroupKey()) && !Objects.equals(${schemaVarName}.getSiteId(), testGroup.getGroupId())) {
 					valid = false;
 				}
 			<#else>
@@ -3687,7 +3686,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 					{
 						<#list properties?keys as propertyName>
 							<#if stringUtil.equals(propertyName, "assetLibraryExternalReferenceCode")>
-								${propertyName} = testDepotEntryGroup.getExternalReferenceCode();
+								${propertyName} = testDepotEntry.getGroup().getExternalReferenceCode();
 							<#elseif stringUtil.equals(propertyName, "assetLibraryId")>
 								${propertyName} = testDepotEntry.getDepotEntryId();
 							<#elseif stringUtil.equals(propertyName, "siteExternalReferenceCode")>
@@ -3715,7 +3714,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 			${schemaName} randomIrrelevant${schemaName} = random${schemaName}();
 
 			<#if properties?keys?seq_contains("assetLibraryExternalReferenceCode")>
-			   randomIrrelevant${schemaName}.setAssetLibraryExternalReferenceCode(irrelevantDepotEntryGroup.getExternalReferenceCode());
+			   randomIrrelevant${schemaName}.setAssetLibraryExternalReferenceCode(irrelevantDepotEntry.getGroup().getExternalReferenceCode());
 			</#if>
 			<#if properties?keys?seq_contains("assetLibraryId")>
 			   randomIrrelevant${schemaName}.setAssetLibraryId(irrelevantDepotEntry.getGroupId());
@@ -3807,9 +3806,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 	<#if generateDepotEntry>
 		protected DepotEntry irrelevantDepotEntry;
-		protected Group irrelevantDepotEntryGroup;
 		protected DepotEntry testDepotEntry;
-		protected Group testDepotEntryGroup;
 	</#if>
 
 	protected com.liferay.portal.kernel.model.Group testGroup;
@@ -4092,7 +4089,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 	<#elseif freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation) && properties?keys?seq_contains(javaMethodParameter.parameterName)>
 		${schemaVarName}.get${javaMethodParameter.parameterName?cap_first}()
 	<#elseif stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryExternalReferenceCode")>
-		testDepotEntryGroup.getExternalReferenceCode()
+		testDepotEntry.getGroup().getExternalReferenceCode()
 	<#elseif stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
 		testDepotEntry.getDepotEntryId()
 	<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteExternalReferenceCode")>
@@ -4171,7 +4168,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 				<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, "assetLibraryExternalReferenceCode", schemaName)>
 					<#assign postSchemaJavaMethodSignature = freeMarkerTool.getPostSchemaJavaMethodSignature(javaMethodSignatures, "assetLibraryExternalReferenceCode", schemaName) />
 
-					return ${schemaVarName}Resource.${postSchemaJavaMethodSignature.methodName}(testDepotEntryGroup.getExternalReferenceCode(), random${schemaName}()
+					return ${schemaVarName}Resource.${postSchemaJavaMethodSignature.methodName}(testDepotEntry.getGroup().getExternalReferenceCode(), random${schemaName}()
 
 					<#if freeMarkerTool.hasRequestBodyMediaType(postSchemaJavaMethodSignature, "multipart/form-data")>
 						<#assign generateGetMultipartFilesMethod = true />
