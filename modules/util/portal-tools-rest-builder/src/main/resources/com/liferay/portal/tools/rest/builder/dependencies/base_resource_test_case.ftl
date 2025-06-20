@@ -333,208 +333,70 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 		<#if freeMarkerTool.isVersionCompatible(configYAML, 8) && stringUtil.equals(javaMethodSignature.methodName, "delete" + schemaName + "Batch")>
 			<#assign
-				useDeleteAssetLibrary = freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteAssetLibrary" + schemaName) && properties?keys?seq_contains("externalReferenceCode")
+				hasGetJavaMethodSignature = freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "get" + schemaName)
 				useDeleteByExternalReferenceCode = (freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteByExternalReferenceCode") || freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "delete" + schemaName + "ByExternalReferenceCode")) && properties?keys?seq_contains("externalReferenceCode")
 				useDeleteById = freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "delete" + schemaName) && (properties?keys?seq_contains("id") || properties?keys?seq_contains(schemaVarName + "Id"))
-				useDeleteSite = freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteSite" + schemaName) && properties?keys?seq_contains("externalReferenceCode")
 			/>
 
-			<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode && !useDeleteById && !useDeleteSite>
+			<#if !useDeleteByExternalReferenceCode && !useDeleteById>
 				<#continue>
 			</#if>
 
+			<#assign deleteJavaMethodSignature = freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "delete" + schemaName) />
+
 			@Test
 			public void testDelete${schemaName}Batch() throws Exception {
-				<#assign
-					getAssetLibraryJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "getAssetLibrary" + schemaName))!""
-					getJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName))!""
-					getSiteJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "getSite" + schemaName))!""
-				/>
+				<#if hasGetJavaMethodSignature>
+					<#assign getJavaMethodSignature = freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName) />
+				</#if>
 
-				<#if useDeleteAssetLibrary>
-					${schemaName} ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_addAssetLibrary${schemaName}();
+				<#if useDeleteById>
+					${schemaName} ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
 
-					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}1.getExternalReferenceCode(), null, "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode());
+					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}("COMPLETED", null, ${schemaVarName}1.${getIdMethodName}());
 
-					<#if getAssetLibraryJavaMethodSignature?has_content>
+					<#if hasGetJavaMethodSignature>
 						assertHttpResponseStatusCode(
 							404,
-							${schemaVarName}Resource.${getAssetLibraryJavaMethodSignature.methodName}HttpResponse(
+							${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
 								<@getGetParameters
-									javaMethodSignature = getAssetLibraryJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
+									javaMethodSignature = getJavaMethodSignature
+									testJavaMethodSignature = deleteJavaMethodSignature
 									varName = schemaVarName + "1"
 								/>));
 					</#if>
 				</#if>
 
 				<#if useDeleteByExternalReferenceCode>
-					<#if !useDeleteAssetLibrary>
-						${schemaName}
-					</#if> ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
+					${schemaName} ${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
 
-					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}1.getExternalReferenceCode(), null);
+					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}("COMPLETED", ${schemaVarName}2.getExternalReferenceCode(), null);
 
-					<#if getJavaMethodSignature?has_content>
+					<#if hasGetJavaMethodSignature>
 						assertHttpResponseStatusCode(
 							404,
 							${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
 								<@getGetParameters
 									javaMethodSignature = getJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
-									varName = schemaVarName + "1"
+									testJavaMethodSignature = deleteJavaMethodSignature
+									varName = schemaVarName + "2"
 								/>));
-					</#if>
-				</#if>
-
-				<#if useDeleteById>
-					<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode>
-						${schemaName}
-					</#if> ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
-
-					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, null, ${schemaVarName}1.${getIdMethodName}());
-
-					<#if getJavaMethodSignature?has_content>
-						assertHttpResponseStatusCode(
-							404,
-							${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-								<@getGetParameters
-									javaMethodSignature = getJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
-									varName = schemaVarName + "1"
-								/>));
-					</#if>
-				</#if>
-
-				<#if useDeleteSite>
-					<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode && !useDeleteById>
-						${schemaName}
-					</#if> ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_addSite${schemaName}();
-
-					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}1.getExternalReferenceCode(), null, "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
-
-					<#if getSiteJavaMethodSignature?has_content>
-						assertHttpResponseStatusCode(
-							404,
-							${schemaVarName}Resource.${getSiteJavaMethodSignature.methodName}HttpResponse(
-								<@getGetParameters
-									javaMethodSignature = getJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
-									varName = schemaVarName + "1"
-								/>));
-					</#if>
-				</#if>
-
-				<#if (useDeleteAssetLibrary || useDeleteSite) && useDeleteById>
-					<#if useDeleteAssetLibrary>
-						${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_addAssetLibrary${schemaName}();
-						${schemaName} ${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_addAssetLibrary${schemaName}();
-
-						test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode());
-
-						<#if getJavaMethodSignature?has_content>
-							assertHttpResponseStatusCode(
-								404,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "1"
-									/>));
-							assertHttpResponseStatusCode(
-								200,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "2"
-									/>));
-						</#if>
-
-						test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode());
-
-						<#if getJavaMethodSignature?has_content>
-							assertHttpResponseStatusCode(
-								404,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "2"
-									/>));
-						</#if>
-					</#if>
-
-					<#if useDeleteSite>
-						${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_addSite${schemaName}();
-						<#if !useDeleteAssetLibrary>${schemaName}</#if> ${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_addSite${schemaName}();
-
-						test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
-
-						<#if getJavaMethodSignature?has_content>
-							assertHttpResponseStatusCode(
-								404,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "1"
-									/>));
-							assertHttpResponseStatusCode(
-								200,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "2"
-									/>));
-						</#if>
-
-						test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
-
-						<#if getJavaMethodSignature?has_content>
-							assertHttpResponseStatusCode(
-								404,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "2"
-									/>));
-						</#if>
-					</#if>
-
-					<#if useDeleteAssetLibrary && useDeleteSite>
-						${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_addSite${schemaName}();
-
-						test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(400, ${schemaVarName}1.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}(), "assetLibraryExternalReferenceCode", testDepotEntry.getGroup().getExternalReferenceCode(), "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
-
-						<#if getJavaMethodSignature?has_content>
-							assertHttpResponseStatusCode(
-								200,
-								${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
-									<@getGetParameters
-										javaMethodSignature = getJavaMethodSignature
-										testJavaMethodSignature = javaMethodSignature
-										varName = schemaVarName + "1"
-									/>));
-						</#if>
 					</#if>
 				</#if>
 
 				<#if useDeleteByExternalReferenceCode && useDeleteById>
 					${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
-					${schemaName} ${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
+					${schemaVarName}2 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
 
-					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}());
+					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}("COMPLETED", ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}());
 
-					<#if getJavaMethodSignature?has_content>
+					<#if hasGetJavaMethodSignature>
 						assertHttpResponseStatusCode(
 							404,
 							${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
 								<@getGetParameters
 									javaMethodSignature = getJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
+									testJavaMethodSignature = deleteJavaMethodSignature
 									varName = schemaVarName + "1"
 								/>));
 						assertHttpResponseStatusCode(
@@ -542,77 +404,43 @@ public abstract class Base${schemaName}ResourceTestCase {
 							${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
 								<@getGetParameters
 									javaMethodSignature = getJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
+									testJavaMethodSignature = deleteJavaMethodSignature
 									varName = schemaVarName + "2"
 								/>));
 					</#if>
 
-					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}());
+					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}("COMPLETED", ${schemaVarName}2.getExternalReferenceCode(), ${schemaVarName}1.${getIdMethodName}());
 
-					<#if getJavaMethodSignature?has_content>
+					<#if hasGetJavaMethodSignature>
 						assertHttpResponseStatusCode(
 							404,
 							${schemaVarName}Resource.${getJavaMethodSignature.methodName}HttpResponse(
 								<@getGetParameters
 									javaMethodSignature = getJavaMethodSignature
-									testJavaMethodSignature = javaMethodSignature
+									testJavaMethodSignature = deleteJavaMethodSignature
 									varName = schemaVarName + "2"
 								/>));
 					</#if>
 				</#if>
 			}
 
-			<#if useDeleteByExternalReferenceCode || useDeleteById>
-				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-					<#if (properties?keys?seq_contains("externalReferenceCode") || properties?keys?seq_contains("id") || properties?keys?seq_contains(schemaVarName + "Id")) && freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "delete" + schemaName)>
-						return testDelete${schemaName}_add${schemaName}();
-					<#else>
-						throw new UnsupportedOperationException("This method needs to be implemented");
-					</#if>
-				}
-			</#if>
-
-			<#if useDeleteAssetLibrary>
-				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_addAssetLibrary${schemaName}() throws Exception {
-					<#if (properties?keys?seq_contains("externalReferenceCode") || properties?keys?seq_contains("id") || properties?keys?seq_contains(schemaVarName + "Id")) && freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteAssetLibrary" + schemaName)>
-						return testDeleteAssetLibrary${schemaName}_add${schemaName}();
-					<#else>
-						throw new UnsupportedOperationException("This method needs to be implemented");
-					</#if>
-				}
-			</#if>
-
-			<#if useDeleteSite>
-				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_addSite${schemaName}() throws Exception {
-					<#if (properties?keys?seq_contains("externalReferenceCode") || properties?keys?seq_contains("id") || properties?keys?seq_contains(schemaVarName + "Id")) && freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "deleteSite" + schemaName)>
-						return testDeleteSite${schemaName}_add${schemaName}();
-					<#else>
-						throw new UnsupportedOperationException("This method needs to be implemented");
-					</#if>
-				}
-			</#if>
-
-			protected void test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(int expectedStatusCode, String externalReferenceCode, ${properties[idParameterName]} id<#if useDeleteAssetLibrary || useDeleteSite>, String... parameters</#if>) throws Exception {
-				<#if useDeleteAssetLibrary || useDeleteSite>
-					${schemaName}Resource ${schemaVarName}ScopedResource = ${schemaName}Resource.builder(
-					).authentication(
-						_testCompanyAdminUser.getEmailAddress(), PropsValues.DEFAULT_ADMIN_PASSWORD
-					).endpoint(
-						testCompany.getVirtualHostname(), 8080, "http"
-					).locale(
-						LocaleUtil.getDefault()
-					).parameters(
-						parameters
-					).build();
+			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
+				<#if (properties?keys?seq_contains("externalReferenceCode") || properties?keys?seq_contains("id") || properties?keys?seq_contains(schemaVarName + "Id")) && freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "delete" + schemaName)>
+					return testDelete${schemaName}_add${schemaName}();
+				<#else>
+					throw new UnsupportedOperationException("This method needs to be implemented");
 				</#if>
+			}
 
-				HttpInvoker.HttpResponse httpResponse = ${schemaVarName}<#if useDeleteAssetLibrary || useDeleteSite>Scoped</#if>Resource.${javaMethodSignature.methodName}HttpResponse(
-					<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
+			protected void test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(String expectedExecuteStatus, String externalReferenceCode, ${properties[idParameterName]} id) throws Exception {
+				HttpInvoker.HttpResponse httpResponse = ${schemaVarName}Resource.${javaMethodSignature.methodName}HttpResponse(
+					<#list deleteJavaMethodSignature.javaMethodParameters as javaMethodParameter>
 						<#if freeMarkerTool.isQueryParameter(javaMethodParameter, javaMethodSignature.operation)>
 							null,
 						</#if>
 					</#list>
 
+					null,
 					JSONUtil.putAll(
 						JSONUtil.put(
 							"externalReferenceCode", () -> externalReferenceCode
@@ -620,11 +448,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 							"${idParameterName}", () -> id
 						)));
 
-				Assert.assertEquals(expectedStatusCode, httpResponse.getStatusCode());
+				Assert.assertEquals(202, httpResponse.getStatusCode());
 
-				if (expectedStatusCode == 202) {
-					waitForFinish("COMPLETED", JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
-				}
+				waitForFinish(expectedExecuteStatus, JSONFactoryUtil.createJSONObject(httpResponse.getContent()));
 			}
 		<#elseif stringUtil.endsWith(javaMethodSignature.methodName, schemaName + "Batch") || stringUtil.endsWith(javaMethodSignature.methodName, schemaNames + "PageExportBatch")>
 			<#continue>
