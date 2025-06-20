@@ -34,6 +34,11 @@ jest.mock(
 	}
 );
 
+jest.mock('frontend-js-web', () => ({
+	...jest.requireActual('frontend-js-web'),
+	sub: jest.fn((key, arg) => key.replace('x', arg)),
+}));
+
 jest.mock('@liferay/marketplace-js-components-web', () => {
 	const mockGetProducts = {
 		getProducts: jest.fn(),
@@ -44,6 +49,17 @@ jest.mock('@liferay/marketplace-js-components-web', () => {
 	return {
 		MarketplaceRest: mockMarketplaceRest,
 		useMarketplaceConfiguration: jest.fn(),
+	};
+});
+
+jest.mock('@liferay/layout-js-components-web', () => {
+	return {
+		...jest.requireActual('@liferay/layout-js-components-web'),
+		MarketplaceButton: jest.fn(() => (
+			<div data-testid="mock-marketplace-button">
+				Mock Marketplace Button
+			</div>
+		)),
 	};
 });
 
@@ -571,7 +587,7 @@ describe('FragmentsSidebar', () => {
 			renderComponent({viewMarketplace: true});
 
 			expect(
-				screen.getByLabelText('open-marketplace-explorer')
+				screen.getByTestId('mock-marketplace-button')
 			).toBeInTheDocument();
 		});
 	});
