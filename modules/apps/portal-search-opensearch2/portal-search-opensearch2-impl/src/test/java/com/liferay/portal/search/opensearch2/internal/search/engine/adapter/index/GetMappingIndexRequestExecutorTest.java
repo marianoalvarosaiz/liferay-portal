@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
@@ -36,11 +37,15 @@ public class GetMappingIndexRequestExecutorTest extends BaseOpenSearchTestCase {
 			new GetMappingIndexRequest(
 				new String[] {TEST_INDEX_NAME}, _MAPPING_NAME);
 
-		GetMappingIndexRequestExecutor getMappingIndexRequestExecutor =
-			new GetMappingIndexRequestExecutor(openSearchConnectionManager);
+		GetMappingIndexRequestExecutorImpl getMappingIndexRequestExecutorImpl =
+			new GetMappingIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getMappingIndexRequestExecutorImpl, "_openSearchConnectionManager",
+			openSearchConnectionManager);
 
 		GetMappingRequest getMappingRequest =
-			getMappingIndexRequestExecutor.createGetMappingRequest(
+			getMappingIndexRequestExecutorImpl.createGetMappingRequest(
 				getMappingIndexRequest);
 
 		Assert.assertArrayEquals(
