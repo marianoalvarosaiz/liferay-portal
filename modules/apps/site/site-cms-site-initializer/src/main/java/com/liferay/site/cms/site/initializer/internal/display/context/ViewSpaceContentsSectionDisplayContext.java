@@ -38,11 +38,8 @@ public class ViewSpaceContentsSectionDisplayContext
 	}
 
 	@Override
-	protected String getCMSSectionFilterString() {
-		return String.format(
-			"groupIds/any(g:g eq %s) and cmsSection eq 'contents' and " +
-				"cmsRoot eq true",
-			groupId);
+	protected String getFilterByGroupString() {
+		return String.format("groupIds/any(g:g eq %s) and ", groupId);
 	}
 
 	protected final long groupId;

@@ -39,14 +39,7 @@ public class ViewSpaceFilesSectionDisplayContext
 
 	@Override
 	protected String getFilterByGroupString() {
-	}
-
-	@Override
-	protected String getCMSSectionFilterString() {
-		return String.format(
-			"groupIds/any(g:g eq %s) and cmsSection eq 'files' and cmsRoot " +
-				"eq true",
-			groupId);
+		return String.format("groupIds/any(g:g eq %s) and ", groupId);
 	}
 
 	@Override
