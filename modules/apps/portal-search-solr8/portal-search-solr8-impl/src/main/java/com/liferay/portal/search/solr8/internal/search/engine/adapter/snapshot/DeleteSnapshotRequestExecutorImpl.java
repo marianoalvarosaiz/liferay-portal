@@ -8,12 +8,20 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.snapshot;
 import com.liferay.portal.search.engine.adapter.snapshot.DeleteSnapshotRequest;
 import com.liferay.portal.search.engine.adapter.snapshot.DeleteSnapshotResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface DeleteSnapshotRequestExecutor {
+@Component(service = DeleteSnapshotRequestExecutor.class)
+public class DeleteSnapshotRequestExecutorImpl
+	implements DeleteSnapshotRequestExecutor {
 
+	@Override
 	public DeleteSnapshotResponse execute(
-		DeleteSnapshotRequest deleteSnapshotRequest);
+		DeleteSnapshotRequest deleteSnapshotRequest) {
+
+		throw new UnsupportedOperationException();
+	}
 
 }
