@@ -8,11 +8,18 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.index;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface CreateIndexRequestExecutor {
+@Component(service = CreateIndexRequestExecutor.class)
+public class CreateIndexRequestExecutorImpl
+	implements CreateIndexRequestExecutor {
 
-	public CreateIndexResponse execute(CreateIndexRequest createIndexRequest);
+	@Override
+	public CreateIndexResponse execute(CreateIndexRequest createIndexRequest) {
+		throw new UnsupportedOperationException();
+	}
 
 }
