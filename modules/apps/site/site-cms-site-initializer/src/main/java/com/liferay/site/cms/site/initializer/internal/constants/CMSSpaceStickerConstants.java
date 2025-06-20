@@ -14,4 +14,6 @@ public class CMSSpaceStickerConstants {
 
 	public static final String SM = "sm";
 
+	public static final String XL = "xl";
+
 }
