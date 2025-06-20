@@ -190,7 +190,13 @@
 							/>
 						</#list>
 
-						<#assign structuredContentHowTo = restClient.get("/c/p2s3knowledgearticles/?" + queryParts?join('&')) />
+						<#assign
+							queryString = queryParts?join('&')
+
+							howToRequestUrl = "/c/p2s3knowledgearticles/?" + queryString
+
+							structuredContentHowTo = restClient.get(howToRequestUrl)
+						/>
 
 						<#if (structuredContentHowTo.totalCount)?has_content && (structuredContentHowTo.totalCount > 0)>
 							<div class="how-to-container">
