@@ -34,6 +34,8 @@ public class DeleteIndexRequestExecutorTest {
 			DeleteIndexRequestExecutorTest.class.getSimpleName());
 
 		_elasticsearchFixture.setUp();
+
+		_indicesOptionsTranslator = new IndicesOptionsTranslatorImpl();
 	}
 
 	@After
@@ -61,6 +63,9 @@ public class DeleteIndexRequestExecutorTest {
 		ReflectionTestUtil.setFieldValue(
 			deleteIndexRequestExecutorImpl, "_elasticsearchClientResolver",
 			_elasticsearchFixture);
+		ReflectionTestUtil.setFieldValue(
+			deleteIndexRequestExecutorImpl, "_indicesOptionsTranslator",
+			_indicesOptionsTranslator);
 
 		org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 			elasticsearchDeleteIndexRequest =
@@ -100,5 +105,6 @@ public class DeleteIndexRequestExecutorTest {
 	private static final String _INDEX_NAME_2 = "test_request_index2";
 
 	private ElasticsearchFixture _elasticsearchFixture;
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
 
 }
