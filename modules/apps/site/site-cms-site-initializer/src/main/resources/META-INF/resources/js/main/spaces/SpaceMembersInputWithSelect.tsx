@@ -22,7 +22,9 @@ export enum SelectOptions {
 
 export interface SpaceMembersInputWithSelectProps {
 	className?: string;
+	inputValue?: string;
 	onAutocompleteItemSelected?: (item: UserAccount | UserGroup) => void;
+	onInputChange?: (value: string) => void;
 	onSelectChange?: (value: SelectOptions) => void;
 	selectValue?: SelectOptions;
 }
