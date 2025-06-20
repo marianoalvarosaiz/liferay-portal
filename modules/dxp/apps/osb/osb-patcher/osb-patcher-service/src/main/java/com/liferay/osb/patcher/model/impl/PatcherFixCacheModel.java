@@ -301,7 +301,7 @@ public class PatcherFixCacheModel
 		keyVersion = objectInput.readDouble();
 
 		latestFix = objectInput.readBoolean();
-		name = objectInput.readUTF();
+		name = (String)objectInput.readObject();
 
 		notified = objectInput.readBoolean();
 
@@ -400,10 +400,10 @@ public class PatcherFixCacheModel
 		objectOutput.writeBoolean(latestFix);
 
 		if (name == null) {
-			objectOutput.writeUTF("");
+			objectOutput.writeObject("");
 		}
 		else {
-			objectOutput.writeUTF(name);
+			objectOutput.writeObject(name);
 		}
 
 		objectOutput.writeBoolean(notified);
