@@ -185,7 +185,9 @@ public abstract class BaseERCSiteTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testDeleteSiteERCSiteTestEntity() throws Exception {
+	public void testDeleteSiteERCSiteTestEntityErcSiteTestEntityExternalReferenceCode()
+		throws Exception {
+
 		Assert.assertTrue(false);
 	}
 
@@ -292,7 +294,9 @@ public abstract class BaseERCSiteTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testGetSiteERCSiteTestEntity() throws Exception {
+	public void testGetSiteERCSiteTestEntityErcSiteTestEntityExternalReferenceCode()
+		throws Exception {
+
 		Assert.assertTrue(false);
 	}
 
@@ -318,7 +322,9 @@ public abstract class BaseERCSiteTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testPutSiteERCSiteTestEntity() throws Exception {
+	public void testPutSiteERCSiteTestEntityErcSiteTestEntityExternalReferenceCode()
+		throws Exception {
+
 		Assert.assertTrue(false);
 	}
 

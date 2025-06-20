@@ -210,7 +210,7 @@ public abstract class BaseERCAssetLibraryTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testDeleteAssetLibraryERCAssetLibraryTestEntity()
+	public void testDeleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode()
 		throws Exception {
 
 		Assert.assertTrue(false);
@@ -331,7 +331,7 @@ public abstract class BaseERCAssetLibraryTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testGetAssetLibraryERCAssetLibraryTestEntity()
+	public void testGetAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode()
 		throws Exception {
 
 		Assert.assertTrue(false);
@@ -363,7 +363,7 @@ public abstract class BaseERCAssetLibraryTestEntityResourceTestCase {
 	}
 
 	@Test
-	public void testPutAssetLibraryERCAssetLibraryTestEntity()
+	public void testPutAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode()
 		throws Exception {
 
 		Assert.assertTrue(false);

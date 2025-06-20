@@ -49,9 +49,10 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface ERCAssetLibraryTestEntityResource {
 
-	public void deleteAssetLibraryERCAssetLibraryTestEntity(
-			String assetLibraryExternalReferenceCode,
-			String ercAssetLibraryTestEntityExternalReferenceCode)
+	public void
+			deleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+				String assetLibraryExternalReferenceCode,
+				String ercAssetLibraryTestEntityExternalReferenceCode)
 		throws Exception;
 
 	public Page<ERCAssetLibraryTestEntity>
@@ -59,9 +60,10 @@ public interface ERCAssetLibraryTestEntityResource {
 				String assetLibraryExternalReferenceCode)
 		throws Exception;
 
-	public ERCAssetLibraryTestEntity getAssetLibraryERCAssetLibraryTestEntity(
-			String assetLibraryExternalReferenceCode,
-			String ercAssetLibraryTestEntityExternalReferenceCode)
+	public ERCAssetLibraryTestEntity
+			getAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+				String assetLibraryExternalReferenceCode,
+				String ercAssetLibraryTestEntityExternalReferenceCode)
 		throws Exception;
 
 	public Response postAssetLibraryERCAssetLibraryTestEntitiesPageExportBatch(
@@ -79,10 +81,11 @@ public interface ERCAssetLibraryTestEntityResource {
 			Object object)
 		throws Exception;
 
-	public ERCAssetLibraryTestEntity putAssetLibraryERCAssetLibraryTestEntity(
-			String assetLibraryExternalReferenceCode,
-			String ercAssetLibraryTestEntityExternalReferenceCode,
-			ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
+	public ERCAssetLibraryTestEntity
+			putAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+				String assetLibraryExternalReferenceCode,
+				String ercAssetLibraryTestEntityExternalReferenceCode,
+				ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(

@@ -33,13 +33,14 @@ public interface ERCAssetLibraryTestEntityResource {
 		return new Builder();
 	}
 
-	public void deleteAssetLibraryERCAssetLibraryTestEntity(
-			String assetLibraryExternalReferenceCode,
-			String ercAssetLibraryTestEntityExternalReferenceCode)
+	public void
+			deleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+				String assetLibraryExternalReferenceCode,
+				String ercAssetLibraryTestEntityExternalReferenceCode)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse
-			deleteAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+			deleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 				String assetLibraryExternalReferenceCode,
 				String ercAssetLibraryTestEntityExternalReferenceCode)
 		throws Exception;
@@ -54,13 +55,14 @@ public interface ERCAssetLibraryTestEntityResource {
 				String assetLibraryExternalReferenceCode)
 		throws Exception;
 
-	public ERCAssetLibraryTestEntity getAssetLibraryERCAssetLibraryTestEntity(
-			String assetLibraryExternalReferenceCode,
-			String ercAssetLibraryTestEntityExternalReferenceCode)
+	public ERCAssetLibraryTestEntity
+			getAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+				String assetLibraryExternalReferenceCode,
+				String ercAssetLibraryTestEntityExternalReferenceCode)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse
-			getAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+			getAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 				String assetLibraryExternalReferenceCode,
 				String ercAssetLibraryTestEntityExternalReferenceCode)
 		throws Exception;
@@ -98,14 +100,15 @@ public interface ERCAssetLibraryTestEntityResource {
 				Object object)
 		throws Exception;
 
-	public ERCAssetLibraryTestEntity putAssetLibraryERCAssetLibraryTestEntity(
-			String assetLibraryExternalReferenceCode,
-			String ercAssetLibraryTestEntityExternalReferenceCode,
-			ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
+	public ERCAssetLibraryTestEntity
+			putAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+				String assetLibraryExternalReferenceCode,
+				String ercAssetLibraryTestEntityExternalReferenceCode,
+				ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse
-			putAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+			putAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 				String assetLibraryExternalReferenceCode,
 				String ercAssetLibraryTestEntityExternalReferenceCode,
 				ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
@@ -220,13 +223,14 @@ public interface ERCAssetLibraryTestEntityResource {
 	public static class ERCAssetLibraryTestEntityResourceImpl
 		implements ERCAssetLibraryTestEntityResource {
 
-		public void deleteAssetLibraryERCAssetLibraryTestEntity(
-				String assetLibraryExternalReferenceCode,
-				String ercAssetLibraryTestEntityExternalReferenceCode)
+		public void
+				deleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
+					String assetLibraryExternalReferenceCode,
+					String ercAssetLibraryTestEntityExternalReferenceCode)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				deleteAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+				deleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 					assetLibraryExternalReferenceCode,
 					ercAssetLibraryTestEntityExternalReferenceCode);
 
@@ -290,7 +294,7 @@ public interface ERCAssetLibraryTestEntityResource {
 		}
 
 		public HttpInvoker.HttpResponse
-				deleteAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+				deleteAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 					String assetLibraryExternalReferenceCode,
 					String ercAssetLibraryTestEntityExternalReferenceCode)
 			throws Exception {
@@ -448,13 +452,13 @@ public interface ERCAssetLibraryTestEntityResource {
 		}
 
 		public ERCAssetLibraryTestEntity
-				getAssetLibraryERCAssetLibraryTestEntity(
+				getAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
 					String assetLibraryExternalReferenceCode,
 					String ercAssetLibraryTestEntityExternalReferenceCode)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+				getAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 					assetLibraryExternalReferenceCode,
 					ercAssetLibraryTestEntityExternalReferenceCode);
 
@@ -518,7 +522,7 @@ public interface ERCAssetLibraryTestEntityResource {
 		}
 
 		public HttpInvoker.HttpResponse
-				getAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+				getAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 					String assetLibraryExternalReferenceCode,
 					String ercAssetLibraryTestEntityExternalReferenceCode)
 			throws Exception {
@@ -908,14 +912,14 @@ public interface ERCAssetLibraryTestEntityResource {
 		}
 
 		public ERCAssetLibraryTestEntity
-				putAssetLibraryERCAssetLibraryTestEntity(
+				putAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCode(
 					String assetLibraryExternalReferenceCode,
 					String ercAssetLibraryTestEntityExternalReferenceCode,
 					ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				putAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+				putAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 					assetLibraryExternalReferenceCode,
 					ercAssetLibraryTestEntityExternalReferenceCode,
 					ercAssetLibraryTestEntity);
@@ -980,7 +984,7 @@ public interface ERCAssetLibraryTestEntityResource {
 		}
 
 		public HttpInvoker.HttpResponse
-				putAssetLibraryERCAssetLibraryTestEntityHttpResponse(
+				putAssetLibraryERCAssetLibraryTestEntityErcAssetLibraryTestEntityExternalReferenceCodeHttpResponse(
 					String assetLibraryExternalReferenceCode,
 					String ercAssetLibraryTestEntityExternalReferenceCode,
 					ERCAssetLibraryTestEntity ercAssetLibraryTestEntity)
