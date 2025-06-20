@@ -55,7 +55,7 @@ describe('CollectionSelector', () => {
 			</StoreAPIContextProvider>
 		);
 
-		const button = screen.getByLabelText('select-something');
+		const button = screen.getByLabelText('select-x');
 
 		await userEvent.click(button);
 
@@ -79,7 +79,7 @@ describe('CollectionSelector', () => {
 			</StoreAPIContextProvider>
 		);
 
-		const button = screen.getByLabelText('select-something');
+		const button = screen.getByLabelText('select-x');
 
 		await userEvent.click(button);
 

@@ -163,7 +163,7 @@ describe('Collection', () => {
 		});
 
 		expect(
-			screen.getByText('showing-1-to-2-of-2-entries')
+			screen.getByText('showing-x-to-x-of-x-entries')
 		).toBeInTheDocument();
 	});
 
@@ -217,7 +217,7 @@ describe('Collection', () => {
 
 		expect(
 			screen.getByText(
-				'in-edit-mode,-the-number-of-elements-displayed-is-limited-to-2-due-to-performance'
+				'in-edit-mode,-the-number-of-elements-displayed-is-limited-to-x-due-to-performance'
 			)
 		).toBeInTheDocument();
 	});

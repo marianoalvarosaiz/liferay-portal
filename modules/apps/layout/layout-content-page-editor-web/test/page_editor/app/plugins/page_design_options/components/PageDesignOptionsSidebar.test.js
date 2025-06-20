@@ -44,7 +44,6 @@ const DEFAULT_CONFIG = {
 			styleBookEntryId: '3',
 		},
 	],
-	themeName: 'Test Theme',
 };
 
 const mockConfigGetter = jest.fn(() => DEFAULT_CONFIG);
@@ -91,7 +90,7 @@ describe('PageDesignOptionsSidebar', () => {
 
 		expect(
 			screen.getByText(
-				'only-style-books-based-on-the-frontend-token-definition-provided-by-Test Theme-are-visible'
+				'only-style-books-based-on-the-frontend-token-definition-provided-by-x-are-visible'
 			)
 		).toBeInTheDocument();
 

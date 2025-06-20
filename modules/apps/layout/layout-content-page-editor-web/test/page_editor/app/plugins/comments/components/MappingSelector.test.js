@@ -74,6 +74,11 @@ const EMPTY_COLLECTION_CONFIG = {
 
 const onMappingSelect = jest.fn();
 
+jest.mock('frontend-js-web', () => ({
+	...jest.requireActual('frontend-js-web'),
+	sub: jest.fn((key, arg) => key.replace('x', arg)),
+}));
+
 jest.mock(
 	'../../../../../../src/main/resources/META-INF/resources/page_editor/app/config/index',
 	() => ({

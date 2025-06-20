@@ -35,6 +35,11 @@ jest.mock(
 	})
 );
 
+jest.mock('frontend-js-web', () => ({
+	...jest.requireActual('frontend-js-web'),
+	sub: jest.fn((langKey, arg) => langKey.replace('x', arg)),
+}));
+
 jest.mock(
 	'../../../../../../../../src/main/resources/META-INF/resources/page_editor/app/config',
 	() => ({
