@@ -248,7 +248,7 @@ public class RelationshipObjectFieldBusinessType
 					objectDefinition2.getScope(),
 					ObjectDefinitionConstants.SCOPE_SITE)) {
 
-				objectDefinition1GroupId = GetterUtil.getLong(groupId);
+				objectDefinition1GroupId = groupId;
 			}
 
 			ObjectEntry objectEntry =
