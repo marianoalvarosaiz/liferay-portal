@@ -858,9 +858,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 	private ExpandoColumnLocalService _mockExpandoColumnLocalService()
 		throws Exception {
 
-		ExpandoColumnLocalService expandoColumnLocalService = Mockito.mock(
-			ExpandoColumnLocalService.class);
-
 		ExpandoColumn expandoColumn = Mockito.mock(ExpandoColumn.class);
 
 		Mockito.when(
@@ -875,6 +872,9 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 			_EXPANDO_TABLE_ID
 		);
 
+		ExpandoColumnLocalService expandoColumnLocalService = Mockito.mock(
+			ExpandoColumnLocalService.class);
+
 		Mockito.when(
 			expandoColumnLocalService.fetchColumn(
 				Mockito.any(Long.class), Mockito.any(String.class))
@@ -888,9 +888,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 	private ExpandoTableLocalService _mockExpandoTableLocalService()
 		throws Exception {
 
-		ExpandoTableLocalService expandoTableLocalService = Mockito.mock(
-			ExpandoTableLocalService.class);
-
 		ExpandoTable expandoTable = Mockito.mock(ExpandoTable.class);
 
 		Mockito.when(
@@ -898,6 +895,9 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 		).thenReturn(
 			_EXPANDO_TABLE_ID
 		);
+
+		ExpandoTableLocalService expandoTableLocalService = Mockito.mock(
+			ExpandoTableLocalService.class);
 
 		Mockito.when(
 			expandoTableLocalService.fetchTable(
