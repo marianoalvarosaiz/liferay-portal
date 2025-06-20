@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
@@ -54,12 +55,16 @@ public class DeleteIndexRequestExecutorTest {
 
 		deleteIndexRequest.setIndicesOptions(indicesOptions);
 
-		DeleteIndexRequestExecutor deleteIndexRequestExecutor =
-			new DeleteIndexRequestExecutor(_elasticsearchFixture);
+		DeleteIndexRequestExecutorImpl deleteIndexRequestExecutorImpl =
+			new DeleteIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			deleteIndexRequestExecutorImpl, "_elasticsearchClientResolver",
+			_elasticsearchFixture);
 
 		org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 			elasticsearchDeleteIndexRequest =
-				deleteIndexRequestExecutor.createDeleteIndexRequest(
+				deleteIndexRequestExecutorImpl.createDeleteIndexRequest(
 					deleteIndexRequest);
 
 		String[] indices = elasticsearchDeleteIndexRequest.indices();
