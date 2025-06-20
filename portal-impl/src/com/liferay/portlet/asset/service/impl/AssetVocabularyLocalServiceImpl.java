@@ -404,10 +404,12 @@ public class AssetVocabularyLocalServiceImpl
 			String externalReferenceCode, long userId, long groupId)
 		throws PortalException {
 
+		User user = _userLocalService.getUser(userId);
+
 		return IncompleteModelManagerUtil.getOrAddIncompleteModel(
-			AssetVocabulary.class, externalReferenceCode,
+			AssetVocabulary.class, user.getCompanyId(), externalReferenceCode,
 			this::fetchAssetVocabularyByExternalReferenceCode,
-			this::getAssetVocabularyByExternalReferenceCode, groupId,
+			this::getAssetVocabularyByExternalReferenceCode,
 			() -> assetVocabularyLocalService.addVocabulary(
 				externalReferenceCode, userId, groupId, externalReferenceCode,
 				externalReferenceCode,
