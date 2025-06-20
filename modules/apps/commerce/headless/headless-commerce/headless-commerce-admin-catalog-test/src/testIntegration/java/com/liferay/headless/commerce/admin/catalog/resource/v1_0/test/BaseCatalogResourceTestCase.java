@@ -1720,6 +1720,10 @@ public abstract class BaseCatalogResourceTestCase {
 	protected void assertValid(Catalog catalog) throws Exception {
 		boolean valid = true;
 
+		if (catalog.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (catalog.getId() == null) {
 			valid = false;
 		}
@@ -1774,16 +1778,6 @@ public abstract class BaseCatalogResourceTestCase {
 					"defaultLanguageId", additionalAssertFieldName)) {
 
 				if (catalog.getDefaultLanguageId() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (catalog.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

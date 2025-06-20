@@ -1237,6 +1237,10 @@ public abstract class BaseDisplayPageTemplateResourceTestCase {
 			valid = false;
 		}
 
+		if (displayPageTemplate.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -1285,16 +1289,6 @@ public abstract class BaseDisplayPageTemplateResourceTestCase {
 				if (displayPageTemplate.getDisplayPageTemplateSettings() ==
 						null) {
 
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (displayPageTemplate.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

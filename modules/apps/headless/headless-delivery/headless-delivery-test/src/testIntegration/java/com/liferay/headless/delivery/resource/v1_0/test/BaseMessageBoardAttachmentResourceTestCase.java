@@ -1434,6 +1434,10 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 
 		boolean valid = true;
 
+		if (messageBoardAttachment.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (messageBoardAttachment.getId() == null) {
 			valid = false;
 		}
@@ -1467,16 +1471,6 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (messageBoardAttachment.getEncodingFormat() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (messageBoardAttachment.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

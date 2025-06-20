@@ -1389,6 +1389,10 @@ public abstract class BaseOrderNoteResourceTestCase {
 	protected void assertValid(OrderNote orderNote) throws Exception {
 		boolean valid = true;
 
+		if (orderNote.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (orderNote.getId() == null) {
 			valid = false;
 		}
@@ -1406,16 +1410,6 @@ public abstract class BaseOrderNoteResourceTestCase {
 
 			if (Objects.equals("content", additionalAssertFieldName)) {
 				if (orderNote.getContent() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (orderNote.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

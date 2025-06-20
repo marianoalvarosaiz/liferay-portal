@@ -1632,6 +1632,10 @@ public abstract class BaseSpecificationResourceTestCase {
 	protected void assertValid(Specification specification) throws Exception {
 		boolean valid = true;
 
+		if (specification.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (specification.getId() == null) {
 			valid = false;
 		}
@@ -1641,16 +1645,6 @@ public abstract class BaseSpecificationResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (specification.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (specification.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

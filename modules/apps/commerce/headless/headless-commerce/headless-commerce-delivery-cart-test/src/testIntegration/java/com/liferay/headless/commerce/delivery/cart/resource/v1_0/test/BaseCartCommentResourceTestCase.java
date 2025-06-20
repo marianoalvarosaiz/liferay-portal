@@ -1643,6 +1643,10 @@ public abstract class BaseCartCommentResourceTestCase {
 	protected void assertValid(CartComment cartComment) throws Exception {
 		boolean valid = true;
 
+		if (cartComment.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (cartComment.getId() == null) {
 			valid = false;
 		}
@@ -1678,16 +1682,6 @@ public abstract class BaseCartCommentResourceTestCase {
 
 			if (Objects.equals("content", additionalAssertFieldName)) {
 				if (cartComment.getContent() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (cartComment.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

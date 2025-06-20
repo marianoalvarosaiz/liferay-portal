@@ -1076,6 +1076,10 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 			valid = false;
 		}
 
+		if (siteTestEntity.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (siteTestEntity.getId() == null) {
 			valid = false;
 		}
@@ -1091,16 +1095,6 @@ public abstract class BaseSiteTestEntityResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (siteTestEntity.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (siteTestEntity.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

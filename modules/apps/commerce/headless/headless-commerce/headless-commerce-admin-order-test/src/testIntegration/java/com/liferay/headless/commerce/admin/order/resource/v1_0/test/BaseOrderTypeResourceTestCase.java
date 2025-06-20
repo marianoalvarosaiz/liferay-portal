@@ -1803,6 +1803,10 @@ public abstract class BaseOrderTypeResourceTestCase {
 	protected void assertValid(OrderType orderType) throws Exception {
 		boolean valid = true;
 
+		if (orderType.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (orderType.getId() == null) {
 			valid = false;
 		}
@@ -1860,16 +1864,6 @@ public abstract class BaseOrderTypeResourceTestCase {
 
 			if (Objects.equals("expirationDate", additionalAssertFieldName)) {
 				if (orderType.getExpirationDate() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (orderType.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

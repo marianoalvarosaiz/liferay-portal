@@ -2244,6 +2244,10 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			valid = false;
 		}
 
+		if (dataDefinition.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (dataDefinition.getId() == null) {
 			valid = false;
 		}
@@ -2325,16 +2329,6 @@ public abstract class BaseDataDefinitionResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (dataDefinition.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (dataDefinition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

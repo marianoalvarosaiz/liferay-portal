@@ -2014,6 +2014,10 @@ public abstract class BaseObjectRelationshipResourceTestCase {
 
 		boolean valid = true;
 
+		if (objectRelationship.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (objectRelationship.getId() == null) {
 			valid = false;
 		}
@@ -2039,16 +2043,6 @@ public abstract class BaseObjectRelationshipResourceTestCase {
 
 			if (Objects.equals("edge", additionalAssertFieldName)) {
 				if (objectRelationship.getEdge() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (objectRelationship.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

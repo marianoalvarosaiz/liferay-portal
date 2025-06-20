@@ -6083,6 +6083,10 @@ public abstract class BaseUserAccountResourceTestCase {
 			valid = false;
 		}
 
+		if (userAccount.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (userAccount.getId() == null) {
 			valid = false;
 		}
@@ -6174,16 +6178,6 @@ public abstract class BaseUserAccountResourceTestCase {
 
 			if (Objects.equals("emailAddress", additionalAssertFieldName)) {
 				if (userAccount.getEmailAddress() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (userAccount.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

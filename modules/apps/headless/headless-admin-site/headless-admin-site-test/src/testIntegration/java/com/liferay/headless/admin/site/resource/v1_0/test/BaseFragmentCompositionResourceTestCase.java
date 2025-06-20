@@ -987,6 +987,10 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 			valid = false;
 		}
 
+		if (fragmentComposition.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -1021,16 +1025,6 @@ public abstract class BaseFragmentCompositionResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (fragmentComposition.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (fragmentComposition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

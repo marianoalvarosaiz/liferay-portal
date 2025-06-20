@@ -1555,6 +1555,10 @@ public abstract class BaseProductGroupResourceTestCase {
 	protected void assertValid(ProductGroup productGroup) throws Exception {
 		boolean valid = true;
 
+		if (productGroup.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (productGroup.getId() == null) {
 			valid = false;
 		}
@@ -1572,16 +1576,6 @@ public abstract class BaseProductGroupResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (productGroup.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (productGroup.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

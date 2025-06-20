@@ -1662,6 +1662,10 @@ public abstract class BaseEmailAddressResourceTestCase {
 	protected void assertValid(EmailAddress emailAddress) throws Exception {
 		boolean valid = true;
 
+		if (emailAddress.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (emailAddress.getId() == null) {
 			valid = false;
 		}
@@ -1671,16 +1675,6 @@ public abstract class BaseEmailAddressResourceTestCase {
 
 			if (Objects.equals("emailAddress", additionalAssertFieldName)) {
 				if (emailAddress.getEmailAddress() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (emailAddress.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

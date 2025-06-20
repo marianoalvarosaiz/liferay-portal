@@ -3605,6 +3605,10 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			valid = false;
 		}
 
+		if (taxonomyVocabulary.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (taxonomyVocabulary.getId() == null) {
 			valid = false;
 		}
@@ -3682,16 +3686,6 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getDescription_i18n() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (taxonomyVocabulary.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

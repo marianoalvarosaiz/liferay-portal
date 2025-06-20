@@ -832,6 +832,10 @@ public abstract class BaseAddressResourceTestCase {
 	protected void assertValid(Address address) throws Exception {
 		boolean valid = true;
 
+		if (address.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (address.getId() == null) {
 			valid = false;
 		}
@@ -865,16 +869,6 @@ public abstract class BaseAddressResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (address.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (address.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

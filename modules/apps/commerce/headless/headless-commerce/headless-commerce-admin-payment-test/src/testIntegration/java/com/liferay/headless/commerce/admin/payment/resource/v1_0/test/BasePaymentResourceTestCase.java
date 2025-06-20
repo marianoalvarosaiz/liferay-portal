@@ -1548,6 +1548,10 @@ public abstract class BasePaymentResourceTestCase {
 	protected void assertValid(Payment payment) throws Exception {
 		boolean valid = true;
 
+		if (payment.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (payment.getId() == null) {
 			valid = false;
 		}
@@ -1656,16 +1660,6 @@ public abstract class BasePaymentResourceTestCase {
 
 			if (Objects.equals("errorMessages", additionalAssertFieldName)) {
 				if (payment.getErrorMessages() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (payment.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

@@ -4326,6 +4326,10 @@ public abstract class BaseStructuredContentResourceTestCase {
 			valid = false;
 		}
 
+		if (structuredContent.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (structuredContent.getId() == null) {
 			valid = false;
 		}
@@ -4437,16 +4441,6 @@ public abstract class BaseStructuredContentResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (structuredContent.getDescription_i18n() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (structuredContent.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

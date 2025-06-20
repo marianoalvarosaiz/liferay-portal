@@ -654,6 +654,10 @@ public abstract class BaseERCAssetLibraryTestEntityResourceTestCase {
 			valid = false;
 		}
 
+		if (ercAssetLibraryTestEntity.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -672,18 +676,6 @@ public abstract class BaseERCAssetLibraryTestEntityResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (ercAssetLibraryTestEntity.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (ercAssetLibraryTestEntity.getExternalReferenceCode() ==
-						null) {
-
 					valid = false;
 				}
 

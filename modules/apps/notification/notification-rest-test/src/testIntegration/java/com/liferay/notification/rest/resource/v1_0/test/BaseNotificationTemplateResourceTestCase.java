@@ -1684,6 +1684,10 @@ public abstract class BaseNotificationTemplateResourceTestCase {
 			valid = false;
 		}
 
+		if (notificationTemplate.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (notificationTemplate.getId() == null) {
 			valid = false;
 		}
@@ -1743,16 +1747,6 @@ public abstract class BaseNotificationTemplateResourceTestCase {
 
 			if (Objects.equals("editorType", additionalAssertFieldName)) {
 				if (notificationTemplate.getEditorType() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (notificationTemplate.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

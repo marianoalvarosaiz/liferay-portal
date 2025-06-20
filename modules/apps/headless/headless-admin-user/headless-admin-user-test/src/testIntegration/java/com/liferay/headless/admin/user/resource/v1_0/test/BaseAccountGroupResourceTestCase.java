@@ -2100,6 +2100,10 @@ public abstract class BaseAccountGroupResourceTestCase {
 			valid = false;
 		}
 
+		if (accountGroup.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (accountGroup.getId() == null) {
 			valid = false;
 		}
@@ -2141,16 +2145,6 @@ public abstract class BaseAccountGroupResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (accountGroup.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (accountGroup.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

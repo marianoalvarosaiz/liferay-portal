@@ -649,6 +649,10 @@ public abstract class BaseAttachmentResourceTestCase {
 	protected void assertValid(Attachment attachment) throws Exception {
 		boolean valid = true;
 
+		if (attachment.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (attachment.getId() == null) {
 			valid = false;
 		}
@@ -698,16 +702,6 @@ public abstract class BaseAttachmentResourceTestCase {
 
 			if (Objects.equals("expirationDate", additionalAssertFieldName)) {
 				if (attachment.getExpirationDate() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (attachment.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

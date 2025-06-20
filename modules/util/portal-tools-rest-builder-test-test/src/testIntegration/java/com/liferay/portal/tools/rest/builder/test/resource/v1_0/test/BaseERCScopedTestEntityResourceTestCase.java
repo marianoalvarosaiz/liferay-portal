@@ -839,6 +839,10 @@ public abstract class BaseERCScopedTestEntityResourceTestCase {
 			valid = false;
 		}
 
+		if (ercScopedTestEntity.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -857,16 +861,6 @@ public abstract class BaseERCScopedTestEntityResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (ercScopedTestEntity.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (ercScopedTestEntity.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

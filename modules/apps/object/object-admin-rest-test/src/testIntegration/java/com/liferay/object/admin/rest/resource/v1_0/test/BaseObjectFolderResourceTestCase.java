@@ -1280,6 +1280,10 @@ public abstract class BaseObjectFolderResourceTestCase {
 			valid = false;
 		}
 
+		if (objectFolder.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (objectFolder.getId() == null) {
 			valid = false;
 		}
@@ -1289,16 +1293,6 @@ public abstract class BaseObjectFolderResourceTestCase {
 
 			if (Objects.equals("actions", additionalAssertFieldName)) {
 				if (objectFolder.getActions() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (objectFolder.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

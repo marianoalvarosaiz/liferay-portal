@@ -1818,6 +1818,10 @@ public abstract class BaseRoleResourceTestCase {
 			valid = false;
 		}
 
+		if (role.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (role.getId() == null) {
 			valid = false;
 		}
@@ -1861,16 +1865,6 @@ public abstract class BaseRoleResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (role.getDescription_i18n() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (role.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

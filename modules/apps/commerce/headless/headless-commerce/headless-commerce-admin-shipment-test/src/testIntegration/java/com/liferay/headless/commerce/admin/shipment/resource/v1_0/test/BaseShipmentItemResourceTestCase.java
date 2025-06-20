@@ -1606,6 +1606,10 @@ public abstract class BaseShipmentItemResourceTestCase {
 	protected void assertValid(ShipmentItem shipmentItem) throws Exception {
 		boolean valid = true;
 
+		if (shipmentItem.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (shipmentItem.getId() == null) {
 			valid = false;
 		}
@@ -1623,16 +1627,6 @@ public abstract class BaseShipmentItemResourceTestCase {
 
 			if (Objects.equals("createDate", additionalAssertFieldName)) {
 				if (shipmentItem.getCreateDate() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (shipmentItem.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

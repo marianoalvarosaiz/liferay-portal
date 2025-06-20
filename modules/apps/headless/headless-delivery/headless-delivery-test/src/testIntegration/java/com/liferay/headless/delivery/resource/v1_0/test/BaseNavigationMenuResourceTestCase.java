@@ -1899,6 +1899,10 @@ public abstract class BaseNavigationMenuResourceTestCase {
 			valid = false;
 		}
 
+		if (navigationMenu.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (navigationMenu.getId() == null) {
 			valid = false;
 		}
@@ -1922,16 +1926,6 @@ public abstract class BaseNavigationMenuResourceTestCase {
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (navigationMenu.getCreator() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (navigationMenu.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

@@ -2364,6 +2364,10 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 			valid = false;
 		}
 
+		if (taxonomyCategory.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (taxonomyCategory.getId() == null) {
 			valid = false;
 		}
@@ -2413,16 +2417,6 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 
 			if (Objects.equals("description_i18n", additionalAssertFieldName)) {
 				if (taxonomyCategory.getDescription_i18n() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (taxonomyCategory.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

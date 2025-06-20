@@ -1421,6 +1421,10 @@ public abstract class BaseOptionResourceTestCase {
 	protected void assertValid(Option option) throws Exception {
 		boolean valid = true;
 
+		if (option.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (option.getId() == null) {
 			valid = false;
 		}
@@ -1454,16 +1458,6 @@ public abstract class BaseOptionResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (option.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (option.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

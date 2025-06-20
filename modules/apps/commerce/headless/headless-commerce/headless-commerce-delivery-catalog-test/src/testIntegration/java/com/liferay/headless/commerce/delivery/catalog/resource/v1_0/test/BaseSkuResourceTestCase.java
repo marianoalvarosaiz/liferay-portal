@@ -1119,6 +1119,10 @@ public abstract class BaseSkuResourceTestCase {
 	protected void assertValid(Sku sku) throws Exception {
 		boolean valid = true;
 
+		if (sku.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (sku.getId() == null) {
 			valid = false;
 		}
@@ -1212,16 +1216,6 @@ public abstract class BaseSkuResourceTestCase {
 
 			if (Objects.equals("expirationDate", additionalAssertFieldName)) {
 				if (sku.getExpirationDate() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (sku.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

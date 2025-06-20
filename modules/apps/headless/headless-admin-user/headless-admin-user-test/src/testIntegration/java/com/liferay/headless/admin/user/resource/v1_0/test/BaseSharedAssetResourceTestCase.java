@@ -1066,6 +1066,10 @@ public abstract class BaseSharedAssetResourceTestCase {
 			valid = false;
 		}
 
+		if (sharedAsset.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (sharedAsset.getId() == null) {
 			valid = false;
 		}
@@ -1115,16 +1119,6 @@ public abstract class BaseSharedAssetResourceTestCase {
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (sharedAsset.getCreator() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (sharedAsset.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

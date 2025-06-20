@@ -4321,6 +4321,10 @@ public abstract class BaseOrganizationResourceTestCase {
 			valid = false;
 		}
 
+		if (organization.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (organization.getId() == null) {
 			valid = false;
 		}
@@ -4372,16 +4376,6 @@ public abstract class BaseOrganizationResourceTestCase {
 
 			if (Objects.equals("customFields", additionalAssertFieldName)) {
 				if (organization.getCustomFields() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (organization.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
@@ -4720,16 +4714,6 @@ public abstract class BaseOrganizationResourceTestCase {
 
 			if (Objects.equals("emailAddress", additionalAssertFieldName)) {
 				if (userAccount.getEmailAddress() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (userAccount.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

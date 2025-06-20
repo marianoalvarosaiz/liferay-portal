@@ -1801,6 +1801,10 @@ public abstract class BasePostalAddressResourceTestCase {
 	protected void assertValid(PostalAddress postalAddress) throws Exception {
 		boolean valid = true;
 
+		if (postalAddress.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (postalAddress.getId() == null) {
 			valid = false;
 		}
@@ -1852,16 +1856,6 @@ public abstract class BasePostalAddressResourceTestCase {
 
 			if (Objects.equals("addressType", additionalAssertFieldName)) {
 				if (postalAddress.getAddressType() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (postalAddress.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

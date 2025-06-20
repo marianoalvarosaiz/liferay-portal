@@ -1821,6 +1821,10 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 			valid = false;
 		}
 
+		if (documentShortcut.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (documentShortcut.getId() == null) {
 			valid = false;
 		}
@@ -1848,16 +1852,6 @@ public abstract class BaseDocumentShortcutResourceTestCase {
 
 			if (Objects.equals("assetLibraryKey", additionalAssertFieldName)) {
 				if (documentShortcut.getAssetLibraryKey() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (documentShortcut.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

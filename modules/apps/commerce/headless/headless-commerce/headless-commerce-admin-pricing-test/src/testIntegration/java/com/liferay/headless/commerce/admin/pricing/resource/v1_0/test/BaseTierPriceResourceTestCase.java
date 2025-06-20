@@ -1410,6 +1410,10 @@ public abstract class BaseTierPriceResourceTestCase {
 	protected void assertValid(TierPrice tierPrice) throws Exception {
 		boolean valid = true;
 
+		if (tierPrice.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (tierPrice.getId() == null) {
 			valid = false;
 		}
@@ -1419,16 +1423,6 @@ public abstract class BaseTierPriceResourceTestCase {
 
 			if (Objects.equals("customFields", additionalAssertFieldName)) {
 				if (tierPrice.getCustomFields() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (tierPrice.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

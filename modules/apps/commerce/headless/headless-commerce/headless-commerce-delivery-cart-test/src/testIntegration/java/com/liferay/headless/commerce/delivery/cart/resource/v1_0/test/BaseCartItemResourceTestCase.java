@@ -1574,6 +1574,10 @@ public abstract class BaseCartItemResourceTestCase {
 	protected void assertValid(CartItem cartItem) throws Exception {
 		boolean valid = true;
 
+		if (cartItem.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (cartItem.getId() == null) {
 			valid = false;
 		}
@@ -1627,16 +1631,6 @@ public abstract class BaseCartItemResourceTestCase {
 
 			if (Objects.equals("errorMessages", additionalAssertFieldName)) {
 				if (cartItem.getErrorMessages() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (cartItem.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

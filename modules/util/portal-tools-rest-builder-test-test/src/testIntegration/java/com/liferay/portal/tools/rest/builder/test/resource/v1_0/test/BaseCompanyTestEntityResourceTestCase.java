@@ -922,6 +922,10 @@ public abstract class BaseCompanyTestEntityResourceTestCase {
 			valid = false;
 		}
 
+		if (companyTestEntity.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (companyTestEntity.getId() == null) {
 			valid = false;
 		}
@@ -931,16 +935,6 @@ public abstract class BaseCompanyTestEntityResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (companyTestEntity.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (companyTestEntity.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

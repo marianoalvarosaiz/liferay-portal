@@ -1998,6 +1998,10 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			valid = false;
 		}
 
+		if (knowledgeBaseFolder.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (knowledgeBaseFolder.getId() == null) {
 			valid = false;
 		}
@@ -2037,16 +2041,6 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (knowledgeBaseFolder.getDescription() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (knowledgeBaseFolder.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

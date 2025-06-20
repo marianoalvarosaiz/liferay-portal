@@ -3510,6 +3510,10 @@ public abstract class BaseDocumentResourceTestCase {
 			valid = false;
 		}
 
+		if (document.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		if (document.getId() == null) {
 			valid = false;
 		}
@@ -3643,16 +3647,6 @@ public abstract class BaseDocumentResourceTestCase {
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (document.getEncodingFormat() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (document.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

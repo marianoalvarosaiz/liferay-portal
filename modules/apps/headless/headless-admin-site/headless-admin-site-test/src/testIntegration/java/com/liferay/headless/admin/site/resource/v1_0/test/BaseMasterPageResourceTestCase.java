@@ -1009,6 +1009,10 @@ public abstract class BaseMasterPageResourceTestCase {
 			valid = false;
 		}
 
+		if (masterPage.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
@@ -1033,16 +1037,6 @@ public abstract class BaseMasterPageResourceTestCase {
 
 			if (Objects.equals("datePublished", additionalAssertFieldName)) {
 				if (masterPage.getDatePublished() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (masterPage.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 

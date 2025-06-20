@@ -1528,16 +1528,6 @@ public abstract class BaseAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (account.getExternalReferenceCode() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("logoId", additionalAssertFieldName)) {
 				if (account.getLogoId() == null) {
 					valid = false;

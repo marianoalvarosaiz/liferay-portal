@@ -597,21 +597,15 @@ public abstract class BasePageRuleConditionResourceTestCase {
 
 		boolean valid = true;
 
+		if (pageRuleCondition.getExternalReferenceCode() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("condition", additionalAssertFieldName)) {
 				if (pageRuleCondition.getCondition() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"externalReferenceCode", additionalAssertFieldName)) {
-
-				if (pageRuleCondition.getExternalReferenceCode() == null) {
 					valid = false;
 				}
 
