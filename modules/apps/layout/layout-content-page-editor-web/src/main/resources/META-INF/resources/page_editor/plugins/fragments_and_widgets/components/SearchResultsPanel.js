@@ -61,7 +61,8 @@ export default function SearchResultsPanel({
 				/>
 			)}
 
-			{permissions.VIEW_MARKETPLACE ? (
+			{Liferay.FeatureFlags['LPD-34938'] &&
+			permissions.VIEW_MARKETPLACE ? (
 				<MarketplaceSearchResults searchValue={searchValue} />
 			) : null}
 		</div>

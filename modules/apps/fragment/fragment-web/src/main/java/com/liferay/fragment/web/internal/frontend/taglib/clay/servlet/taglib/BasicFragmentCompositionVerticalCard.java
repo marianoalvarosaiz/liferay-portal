@@ -13,6 +13,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItemListBuilder;
 import com.liferay.portal.kernel.dao.search.RowChecker;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -72,7 +73,10 @@ public class BasicFragmentCompositionVerticalCard
 
 	@Override
 	public String getIcon() {
-		if (_fragmentComposition.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				_themeDisplay.getCompanyId(), "LPD-34938") &&
+			_fragmentComposition.isMarketplace()) {
+
 			return "marketplace";
 		}
 
@@ -97,7 +101,10 @@ public class BasicFragmentCompositionVerticalCard
 
 	@Override
 	public List<LabelItem> getLabels() {
-		if (_fragmentComposition.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				_themeDisplay.getCompanyId(), "LPD-34938") &&
+			_fragmentComposition.isMarketplace()) {
+
 			return null;
 		}
 
@@ -108,7 +115,10 @@ public class BasicFragmentCompositionVerticalCard
 
 	@Override
 	public String getStickerCssClass() {
-		if (_fragmentComposition.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				_themeDisplay.getCompanyId(), "LPD-34938") &&
+			_fragmentComposition.isMarketplace()) {
+
 			return "fragment-marketplace-sticker";
 		}
 
@@ -117,7 +127,10 @@ public class BasicFragmentCompositionVerticalCard
 
 	@Override
 	public String getStickerIcon() {
-		if (_fragmentComposition.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				_themeDisplay.getCompanyId(), "LPD-34938") &&
+			_fragmentComposition.isMarketplace()) {
+
 			return "marketplace";
 		}
 
@@ -126,7 +139,10 @@ public class BasicFragmentCompositionVerticalCard
 
 	@Override
 	public String getSubtitle() {
-		if (_fragmentComposition.isMarketplace()) {
+		if (FeatureFlagManagerUtil.isEnabled(
+				_themeDisplay.getCompanyId(), "LPD-34938") &&
+			_fragmentComposition.isMarketplace()) {
+
 			return null;
 		}
 
