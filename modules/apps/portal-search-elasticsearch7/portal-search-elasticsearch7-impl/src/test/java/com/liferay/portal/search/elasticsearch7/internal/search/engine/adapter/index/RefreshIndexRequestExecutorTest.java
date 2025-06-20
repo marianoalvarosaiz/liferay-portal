@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
@@ -44,11 +45,15 @@ public class RefreshIndexRequestExecutorTest {
 		RefreshIndexRequest refreshIndexRequest = new RefreshIndexRequest(
 			_INDEX_NAME);
 
-		RefreshIndexRequestExecutor refreshIndexRequestExecutor =
-			new RefreshIndexRequestExecutor(_elasticsearchFixture);
+		RefreshIndexRequestExecutorImpl refreshIndexRequestExecutorImpl =
+			new RefreshIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			refreshIndexRequestExecutorImpl, "_elasticsearchClientResolver",
+			_elasticsearchFixture);
 
 		RefreshRequest refreshRequest =
-			refreshIndexRequestExecutor.createRefreshRequest(
+			refreshIndexRequestExecutorImpl.createRefreshRequest(
 				refreshIndexRequest);
 
 		Assert.assertArrayEquals(

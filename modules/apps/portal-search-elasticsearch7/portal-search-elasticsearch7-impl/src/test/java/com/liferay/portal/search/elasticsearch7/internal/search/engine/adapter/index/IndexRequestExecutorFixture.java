@@ -62,7 +62,7 @@ public class IndexRequestExecutorFixture {
 				_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_refreshIndexRequestExecutor",
-			new RefreshIndexRequestExecutor(_elasticsearchClientResolver));
+			_createRefreshIndexRequestExecutor(_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_updateIndexSettingsIndexRequestExecutor",
 			new UpdateIndexSettingsIndexRequestExecutor(
@@ -113,6 +113,19 @@ public class IndexRequestExecutorFixture {
 			elasticsearchClientResolver);
 
 		return putMappingIndexRequestExecutor;
+	}
+
+	private RefreshIndexRequestExecutor _createRefreshIndexRequestExecutor(
+		ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		RefreshIndexRequestExecutor refreshIndexRequestExecutor =
+			new RefreshIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			refreshIndexRequestExecutor, "_elasticsearchClientResolver",
+			elasticsearchClientResolver);
+
+		return refreshIndexRequestExecutor;
 	}
 
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
