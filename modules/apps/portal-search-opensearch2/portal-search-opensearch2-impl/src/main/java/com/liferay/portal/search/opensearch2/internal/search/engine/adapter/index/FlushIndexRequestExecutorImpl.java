@@ -42,8 +42,7 @@ public class FlushIndexRequestExecutorImpl
 		ListUtil.isNotEmptyForEach(
 			shardStatistics.failures(),
 			shardFailure -> flushIndexResponse.addIndexRequestShardFailure(
-				IndexRequestShardFailureTranslatorUtil.translate(
-					shardFailure)));
+				_indexRequestShardFailureTranslator.translate(shardFailure)));
 
 		flushIndexResponse.setFailedShards(
 			ConversionUtil.toInt(shardStatistics.failed()));
@@ -86,6 +85,10 @@ public class FlushIndexRequestExecutorImpl
 			throw new RuntimeException(ioException);
 		}
 	}
+
+	@Reference
+	private IndexRequestShardFailureTranslator
+		_indexRequestShardFailureTranslator;
 
 	@Reference
 	private OpenSearchConnectionManager _openSearchConnectionManager;
