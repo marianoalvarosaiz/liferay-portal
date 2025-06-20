@@ -54,6 +54,15 @@ public class KoroneikiService {
 		).build();
 	}
 
+	public AccountResource getKoroneikiAccountResource() throws Exception {
+		return AccountResource.builder(
+		).header(
+			"API_TOKEN", _koroneikiAuthToken
+		).endpoint(
+			new URL(_koroneikiAuthURL)
+		).build();
+	}
+
 	public ProductPurchase getProductPurchase(String productPurchaseKey)
 		throws Exception {
 
@@ -164,15 +173,18 @@ public class KoroneikiService {
 			StringPool.SPACE, StringPool.BLANK
 		).toUpperCase();
 
-		AccountResource accountResource = _getAccountService();
+		AccountResource koroneikiAccountResource =
+			getKoroneikiAccountResource();
 
 		com.liferay.osb.koroneiki.phloem.rest.client.pagination.Page
 			<com.liferay.osb.koroneiki.phloem.rest.client.dto.v1_0.Account>
-				page = accountResource.getAccountsPage(
-					"", "code eq '" + code + "'", Pagination.of(1, 5), "");
+				koroneikiAccountResourceAccountsPage =
+					koroneikiAccountResource.getAccountsPage(
+						"", "code eq '" + code + "'", Pagination.of(1, 5), "");
 
 		com.liferay.osb.koroneiki.phloem.rest.client.dto.v1_0.Account
-			koroneikiAccount = page.fetchFirstItem();
+			koroneikiAccount =
+				koroneikiAccountResourceAccountsPage.fetchFirstItem();
 
 		if (koroneikiAccount != null) {
 			return koroneikiAccount;
@@ -236,17 +248,8 @@ public class KoroneikiService {
 				Status.ACTIVE);
 		koroneikiAccount.setWebsite(customFieldsMap.get("Homepage URL"));
 
-		return accountResource.postAccount(
+		return koroneikiAccountResource.postAccount(
 			jwt.getClaim("username"), jwt.getClaim("sub"), koroneikiAccount);
-	}
-
-	private AccountResource _getAccountService() throws Exception {
-		return AccountResource.builder(
-		).header(
-			"API_TOKEN", _koroneikiAuthToken
-		).endpoint(
-			new URL(_koroneikiAuthURL)
-		).build();
 	}
 
 	private static final Log _log = LogFactory.getLog(KoroneikiService.class);
