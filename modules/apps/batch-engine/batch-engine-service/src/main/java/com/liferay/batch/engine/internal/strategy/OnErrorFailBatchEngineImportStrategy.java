@@ -5,7 +5,6 @@
 
 package com.liferay.batch.engine.internal.strategy;
 
-import com.liferay.batch.engine.BatchEngineTaskItemDelegate;
 import com.liferay.batch.engine.action.ImportTaskPostAction;
 import com.liferay.batch.engine.action.ImportTaskPreAction;
 import com.liferay.batch.engine.exception.handler.BatchEngineImportTaskExceptionHandler;
@@ -35,8 +34,7 @@ public class OnErrorFailBatchEngineImportStrategy
 
 	@Override
 	public <T> T importItem(
-			BatchEngineTaskItemDelegate<T> batchEngineTaskItemDelegate, T item,
-			UnsafeFunction<T, T, Exception> unsafeFunction)
+			T item, UnsafeFunction<T, T, Exception> unsafeFunction)
 		throws Exception {
 
 		try {
@@ -44,8 +42,8 @@ public class OnErrorFailBatchEngineImportStrategy
 		}
 		catch (Exception exception) {
 			addBatchEngineImportTaskError(
-				batchEngineImportTask, batchEngineTaskItemDelegate, item,
-				ItemIndexThreadLocal.get(), exception);
+				batchEngineImportTask, item, ItemIndexThreadLocal.get(),
+				exception);
 
 			throw exception;
 		}
