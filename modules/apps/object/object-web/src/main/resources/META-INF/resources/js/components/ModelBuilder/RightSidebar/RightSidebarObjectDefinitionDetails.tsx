@@ -189,6 +189,30 @@ export function RightSidebarObjectDefinitionDetails({
 		}
 	};
 
+	const handleScheduleToggleChange = async (toggled: boolean) => {
+		if (toggled) {
+			setValues({
+				...values,
+				enableObjectEntrySchedule: true,
+			});
+		}
+		else {
+			Liferay.fire('openModalDisableScheduleConfiguration', {
+				handleDisable: async () => {
+					setValues({
+						...values,
+						enableObjectEntrySchedule: false,
+					});
+
+					await onSubmit({
+						...values,
+						enableObjectEntrySchedule: false,
+					});
+				},
+			});
+		}
+	};
+
 	const objectDefinitionNodeDetailsTitle = sub(
 		Liferay.Language.get('x-details'),
 		stringUtils.getLocalizableLabel({
@@ -301,6 +325,7 @@ export function RightSidebarObjectDefinitionDetails({
 							?.linkedObjectDefinition ?? false
 					}
 					isRootDescendantNode={isRootDescendantNode}
+					onScheduleToggleChange={handleScheduleToggleChange}
 					onSubmit={onSubmit}
 					setValues={setValues}
 					values={values as ObjectDefinition}
