@@ -896,6 +896,14 @@ public class AccountRoleResourceTest extends BaseAccountRoleResourceTestCase {
 	}
 
 	@Override
+	protected AccountRole testGraphQLAccountRole_addAccountRole()
+		throws Exception {
+
+		return accountRoleResource.postAccountAccountRole(
+			_account.getId(), randomAccountRole());
+	}
+
+	@Override
 	protected AccountRole testPostAccountAccountRole_addAccountRole(
 			AccountRole accountRole)
 		throws Exception {

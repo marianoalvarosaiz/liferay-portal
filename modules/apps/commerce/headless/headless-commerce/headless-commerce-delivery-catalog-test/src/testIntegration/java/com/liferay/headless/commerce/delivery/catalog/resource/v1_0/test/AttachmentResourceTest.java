@@ -118,6 +118,13 @@ public class AttachmentResourceTest extends BaseAttachmentResourceTestCase {
 		return _cpDefinition.getCProductId();
 	}
 
+	@Override
+	protected Attachment testGraphQLAttachment_addAttachment()
+		throws Exception {
+
+		return _addCPAttachmentFileEntry(randomAttachment());
+	}
+
 	private Attachment _addCPAttachmentFileEntry(Attachment attachment)
 		throws Exception {
 

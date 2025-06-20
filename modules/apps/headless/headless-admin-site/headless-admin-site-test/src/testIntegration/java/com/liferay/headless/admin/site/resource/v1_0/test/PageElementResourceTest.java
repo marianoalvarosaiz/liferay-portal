@@ -152,25 +152,6 @@ public class PageElementResourceTest extends BasePageElementResourceTestCase {
 		}
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetSiteSiteByExternalReferenceCodePageElement()
-		throws Exception {
-
-		super.testGraphQLGetSiteSiteByExternalReferenceCodePageElement();
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetSiteSiteByExternalReferenceCodePageElementNotFound()
-		throws Exception {
-
-		super.
-			testGraphQLGetSiteSiteByExternalReferenceCodePageElementNotFound();
-	}
-
 	@Override
 	@Test
 	public void testPatchSiteSiteByExternalReferenceCodePageElement()

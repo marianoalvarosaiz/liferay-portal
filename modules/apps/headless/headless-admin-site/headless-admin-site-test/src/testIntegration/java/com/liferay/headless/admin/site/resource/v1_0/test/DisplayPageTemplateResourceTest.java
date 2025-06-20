@@ -271,16 +271,6 @@ public class DisplayPageTemplateResourceTest
 			testGetSiteSiteByExternalReferenceCodeDisplayPageTemplatesPageWithSortString();
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetSiteSiteByExternalReferenceCodeDisplayPageTemplate()
-		throws Exception {
-
-		super.
-			testGraphQLGetSiteSiteByExternalReferenceCodeDisplayPageTemplate();
-	}
-
 	@Override
 	@Test
 	public void testPatchSiteSiteByExternalReferenceCodeDisplayPageTemplate()

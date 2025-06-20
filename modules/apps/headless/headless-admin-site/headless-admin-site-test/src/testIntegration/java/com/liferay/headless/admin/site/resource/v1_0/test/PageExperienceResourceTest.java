@@ -23,7 +23,6 @@ import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -119,15 +118,6 @@ public class PageExperienceResourceTest
 			Assert.assertEquals("NOT_FOUND", problem.getStatus());
 			Assert.assertNull(problem.getTitle());
 		}
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetSiteSiteByExternalReferenceCodePageExperience()
-		throws Exception {
-
-		super.testGraphQLGetSiteSiteByExternalReferenceCodePageExperience();
 	}
 
 	@Override

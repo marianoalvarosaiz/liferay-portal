@@ -196,15 +196,6 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		super.testGetSiteSitePagePermissionsPage();
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetSiteSiteByExternalReferenceCodeSitePage()
-		throws Exception {
-
-		super.testGraphQLGetSiteSiteByExternalReferenceCodeSitePage();
-	}
-
 	@Override
 	@Test
 	public void testPatchSiteSiteByExternalReferenceCodeSitePage()
