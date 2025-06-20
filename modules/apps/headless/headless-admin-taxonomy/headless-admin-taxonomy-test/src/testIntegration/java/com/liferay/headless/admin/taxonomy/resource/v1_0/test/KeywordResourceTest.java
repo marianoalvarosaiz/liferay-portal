@@ -90,7 +90,8 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
 		try {
 			keywordResource.deleteSiteKeywordByExternalReferenceCode(
-				keyword.getSiteId(), externalReferenceCode);
+				testDeleteSiteKeywordByExternalReferenceCode_getSiteId(keyword),
+				externalReferenceCode);
 
 			Assert.fail();
 		}
@@ -374,7 +375,9 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
 		try {
 			keywordResource.getSiteKeywordByExternalReferenceCode(
-				randomKeyword().getSiteId(), externalReferenceCode);
+				testGetSiteKeywordByExternalReferenceCode_getSiteId(
+					randomKeyword()),
+				externalReferenceCode);
 
 			Assert.fail();
 		}
@@ -500,7 +503,8 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
 		Keyword putKeyword =
 			keywordResource.putSiteKeywordByExternalReferenceCode(
-				keyword.getSiteId(), externalReferenceCode, keyword);
+				testPutSiteKeywordByExternalReferenceCode_getSiteId(keyword),
+				externalReferenceCode, keyword);
 
 		Assert.assertEquals(
 			externalReferenceCode, putKeyword.getExternalReferenceCode());

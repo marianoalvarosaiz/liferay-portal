@@ -453,13 +453,6 @@ public class DataLayoutResourceTest extends BaseDataLayoutResourceTestCase {
 	}
 
 	@Override
-	protected Long testDeleteDataDefinitionDataLayout_getDataDefinitionId(
-		DataLayout dataLayout) {
-
-		return dataLayout.getDataDefinitionId();
-	}
-
-	@Override
 	protected DataLayout testDeleteDataLayout_addDataLayout() throws Exception {
 		return dataLayoutResource.postDataDefinitionDataLayout(
 			_dataDefinition.getId(), randomDataLayout());

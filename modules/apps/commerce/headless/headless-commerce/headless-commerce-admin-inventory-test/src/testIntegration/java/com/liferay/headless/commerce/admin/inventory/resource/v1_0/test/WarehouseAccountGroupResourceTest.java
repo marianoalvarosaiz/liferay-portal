@@ -158,9 +158,15 @@ public class WarehouseAccountGroupResourceTest
 				WarehouseAccountGroup warehouseAccountGroup)
 		throws Exception {
 
-		return warehouseAccountGroupResource.
-			postWarehouseByExternalReferenceCodeWarehouseAccountGroup(
-				externalReferenceCode, warehouseAccountGroup);
+		WarehouseAccountGroup postWarehouseAccountGroup =
+			warehouseAccountGroupResource.
+				postWarehouseByExternalReferenceCodeWarehouseAccountGroup(
+					externalReferenceCode, warehouseAccountGroup);
+
+		_warehouseAccountGroupIds.add(
+			postWarehouseAccountGroup.getWarehouseAccountGroupId());
+
+		return postWarehouseAccountGroup;
 	}
 
 	@Override
@@ -177,8 +183,14 @@ public class WarehouseAccountGroupResourceTest
 				Long id, WarehouseAccountGroup warehouseAccountGroup)
 		throws Exception {
 
-		return warehouseAccountGroupResource.
-			postWarehouseIdWarehouseAccountGroup(id, warehouseAccountGroup);
+		WarehouseAccountGroup postWarehouseAccountGroup =
+			warehouseAccountGroupResource.postWarehouseIdWarehouseAccountGroup(
+				id, warehouseAccountGroup);
+
+		_warehouseAccountGroupIds.add(
+			postWarehouseAccountGroup.getWarehouseAccountGroupId());
+
+		return postWarehouseAccountGroup;
 	}
 
 	@Override

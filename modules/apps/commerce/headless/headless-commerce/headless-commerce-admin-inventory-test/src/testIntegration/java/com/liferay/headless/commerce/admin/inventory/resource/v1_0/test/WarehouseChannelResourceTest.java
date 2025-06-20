@@ -191,9 +191,14 @@ public class WarehouseChannelResourceTest
 				String externalReferenceCode, WarehouseChannel warehouseChannel)
 		throws Exception {
 
-		return warehouseChannelResource.
-			postWarehouseByExternalReferenceCodeWarehouseChannel(
-				externalReferenceCode, warehouseChannel);
+		WarehouseChannel postWarehouseChannel =
+			warehouseChannelResource.
+				postWarehouseByExternalReferenceCodeWarehouseChannel(
+					externalReferenceCode, warehouseChannel);
+
+		_warehouseChannelIds.add(postWarehouseChannel.getWarehouseChannelId());
+
+		return postWarehouseChannel;
 	}
 
 	@Override
@@ -210,8 +215,13 @@ public class WarehouseChannelResourceTest
 				Long id, WarehouseChannel warehouseChannel)
 		throws Exception {
 
-		return warehouseChannelResource.postWarehouseIdWarehouseChannel(
-			id, warehouseChannel);
+		WarehouseChannel postWarehouseChannel =
+			warehouseChannelResource.postWarehouseIdWarehouseChannel(
+				id, warehouseChannel);
+
+		_warehouseChannelIds.add(postWarehouseChannel.getWarehouseChannelId());
+
+		return postWarehouseChannel;
 	}
 
 	@Override

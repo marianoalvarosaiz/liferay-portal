@@ -201,9 +201,15 @@ public class WarehouseOrderTypeResourceTest
 				WarehouseOrderType warehouseOrderType)
 		throws Exception {
 
-		return warehouseOrderTypeResource.
-			postWarehouseByExternalReferenceCodeWarehouseOrderType(
-				externalReferenceCode, warehouseOrderType);
+		WarehouseOrderType postWarehouseOrderType =
+			warehouseOrderTypeResource.
+				postWarehouseByExternalReferenceCodeWarehouseOrderType(
+					externalReferenceCode, warehouseOrderType);
+
+		_warehouseOrderTypeIds.add(
+			postWarehouseOrderType.getWarehouseOrderTypeId());
+
+		return postWarehouseOrderType;
 	}
 
 	@Override
@@ -220,8 +226,14 @@ public class WarehouseOrderTypeResourceTest
 				Long id, WarehouseOrderType warehouseOrderType)
 		throws Exception {
 
-		return warehouseOrderTypeResource.postWarehouseIdWarehouseOrderType(
-			id, warehouseOrderType);
+		WarehouseOrderType postWarehouseOrderType =
+			warehouseOrderTypeResource.postWarehouseIdWarehouseOrderType(
+				id, warehouseOrderType);
+
+		_warehouseOrderTypeIds.add(
+			postWarehouseOrderType.getWarehouseOrderTypeId());
+
+		return postWarehouseOrderType;
 	}
 
 	@Override

@@ -169,9 +169,16 @@ public class ProductConfigurationListAccountResourceTest
 				ProductConfigurationListAccount productConfigurationListAccount)
 		throws Exception {
 
-		return productConfigurationListAccountResource.
-			postProductConfigurationListByExternalReferenceCodeProductConfigurationListAccount(
-				externalReferenceCode, productConfigurationListAccount);
+		ProductConfigurationListAccount postProductConfigurationListAccount =
+			productConfigurationListAccountResource.
+				postProductConfigurationListByExternalReferenceCodeProductConfigurationListAccount(
+					externalReferenceCode, productConfigurationListAccount);
+
+		_productConfigurationListAccountIds.add(
+			postProductConfigurationListAccount.
+				getProductConfigurationListAccountId());
+
+		return postProductConfigurationListAccount;
 	}
 
 	@Override
@@ -189,9 +196,16 @@ public class ProductConfigurationListAccountResourceTest
 				ProductConfigurationListAccount productConfigurationListAccount)
 		throws Exception {
 
-		return productConfigurationListAccountResource.
-			postProductConfigurationListIdProductConfigurationListAccount(
-				id, productConfigurationListAccount);
+		ProductConfigurationListAccount postProductConfigurationListAccount =
+			productConfigurationListAccountResource.
+				postProductConfigurationListIdProductConfigurationListAccount(
+					id, productConfigurationListAccount);
+
+		_productConfigurationListAccountIds.add(
+			postProductConfigurationListAccount.
+				getProductConfigurationListAccountId());
+
+		return postProductConfigurationListAccount;
 	}
 
 	@Override

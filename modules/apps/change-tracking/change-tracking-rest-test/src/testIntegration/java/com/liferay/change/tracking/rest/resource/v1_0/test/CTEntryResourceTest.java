@@ -369,15 +369,6 @@ public class CTEntryResourceTest extends BaseCTEntryResourceTestCase {
 	}
 
 	@Override
-	protected Long
-			testGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-				CTEntry ctEntry)
-		throws Exception {
-
-		return ctEntry.getCtCollectionId();
-	}
-
-	@Override
 	protected void testGetCTEntriesHistoryPageWithFilter(
 			String operator, EntityField.Type type)
 		throws Exception {
@@ -474,15 +465,6 @@ public class CTEntryResourceTest extends BaseCTEntryResourceTestCase {
 	@Override
 	protected CTEntry testGraphQLCTEntry_addCTEntry() throws Exception {
 		return _addCTEntry(_getCTCollectionId(), RandomTestUtil.randomString());
-	}
-
-	@Override
-	protected Long
-			testGraphQLGetCtCollectionCTEntryByModelClassNameByModelClassPkModelClassPK_getCtCollectionId(
-				CTEntry ctEntry)
-		throws Exception {
-
-		return ctEntry.getCtCollectionId();
 	}
 
 	private CTEntry _addCTEntry(long ctCollectionId, String name)

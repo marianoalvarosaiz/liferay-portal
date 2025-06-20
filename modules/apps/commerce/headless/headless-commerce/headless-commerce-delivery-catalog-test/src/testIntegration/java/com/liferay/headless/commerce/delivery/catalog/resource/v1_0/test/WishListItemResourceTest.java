@@ -83,20 +83,6 @@ public class WishListItemResourceTest extends BaseWishListItemResourceTestCase {
 	}
 
 	@Override
-	protected Long testBatchEngineDeleteImportTask_getAccountId()
-		throws Exception {
-
-		return _accountEntry.getAccountEntryId();
-	}
-
-	@Override
-	protected String testBatchEngineDeleteImportTask_getCurrencyCode()
-		throws Exception {
-
-		return null;
-	}
-
-	@Override
 	protected WishListItem testDeleteWishListItem_addWishListItem()
 		throws Exception {
 
@@ -112,18 +98,6 @@ public class WishListItemResourceTest extends BaseWishListItemResourceTestCase {
 
 	@Override
 	protected String testDeleteWishListItem_getCurrencyCode() throws Exception {
-		return null;
-	}
-
-	@Override
-	protected Long testDeleteWishListItemBatch_getAccountId() throws Exception {
-		return _accountEntry.getAccountEntryId();
-	}
-
-	@Override
-	protected String testDeleteWishListItemBatch_getCurrencyCode()
-		throws Exception {
-
 		return null;
 	}
 

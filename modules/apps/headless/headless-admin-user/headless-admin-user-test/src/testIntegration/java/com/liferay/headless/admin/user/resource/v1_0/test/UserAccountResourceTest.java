@@ -1332,7 +1332,7 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 				UserAccount userAccount)
 		throws Exception {
 
-		return userAccount.getExternalReferenceCode();
+		return _accountEntry.getExternalReferenceCode();
 	}
 
 	@Override

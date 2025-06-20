@@ -115,13 +115,6 @@ public class DataListViewResourceTest extends BaseDataListViewResourceTestCase {
 	}
 
 	@Override
-	protected Long testDeleteDataDefinitionDataListView_getDataDefinitionId(
-		DataListView dataListView) {
-
-		return dataListView.getDataDefinitionId();
-	}
-
-	@Override
 	protected DataListView testDeleteDataListView_addDataListView()
 		throws Exception {
 
