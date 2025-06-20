@@ -155,8 +155,6 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 	protected void activate() {
 		_analyzeIndexRequestExecutor = new AnalyzeIndexRequestExecutor(
 			_elasticsearchClientResolver);
-		_deleteIndexRequestExecutor = new DeleteIndexRequestExecutor(
-			_elasticsearchClientResolver);
 		_getMappingIndexRequestExecutor = new GetMappingIndexRequestExecutor(
 			_elasticsearchClientResolver);
 		_openIndexRequestExecutor = new OpenIndexRequestExecutor(
@@ -173,6 +171,7 @@ public class ElasticsearchIndexRequestExecutor implements IndexRequestExecutor {
 	@Reference
 	private CreateIndexRequestExecutor _createIndexRequestExecutor;
 
+	@Reference
 	private DeleteIndexRequestExecutor _deleteIndexRequestExecutor;
 
 	@Reference
