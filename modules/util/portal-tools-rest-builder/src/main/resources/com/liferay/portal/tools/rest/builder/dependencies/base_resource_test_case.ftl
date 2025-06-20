@@ -344,10 +344,8 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			@Test
 			public void testDelete${schemaName}Batch() throws Exception {
-				<#assign
-					getJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName))!""
-					getterJavaMethodParametersMap = {}
-				 />
+				<#assign getJavaMethodSignature = (freeMarkerTool.getJavaMethodSignature(javaMethodSignatures, "get" + schemaName))!""
+				 getterJavaMethodParametersMap = {} />
 
 				<#if useDeleteByExternalReferenceCode>
 					${schemaName} ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
@@ -367,7 +365,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 
 				<#if useDeleteById>
-					<#if !useDeleteByExternalReferenceCode>${schemaName}</#if> ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
+					<#if !useDeleteByExternalReferenceCode>
+						${schemaName}
+					</#if> ${schemaVarName}1 = test${javaMethodSignature.methodName?cap_first}_add${schemaName}();
 
 					test${javaMethodSignature.methodName?cap_first}_delete${schemaName}(202, null, ${schemaVarName}1.${getIdMethodName}());
 
@@ -537,8 +537,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							</#if>
 
 							<#sep>, </#sep>
-						</#list>
-					);
+						</#list>);
 
 					Assert.assertNotNull(page);
 				}
@@ -577,8 +576,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							</#if>
 
 							<#sep>, </#sep>
-						</#list>
-					);
+						</#list>);
 
 					long totalCount = page.getTotalCount();
 
@@ -607,8 +605,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							Assert.assertEquals(totalCount + 1, page.getTotalCount());
 
@@ -618,8 +615,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 								test${javaMethodSignature.methodName?cap_first}_getExpectedActions(
 									<#list javaMethodSignature.pathJavaMethodParameters as javaMethodParameter>
 										irrelevant${javaMethodParameter.parameterName?cap_first}<#sep>, </#sep>
-									</#list>
-								));
+									</#list>));
 						}
 					</#if>
 
@@ -648,8 +644,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							</#if>
 
 							<#sep>, </#sep>
-						</#list>
-					);
+						</#list>);
 
 					Assert.assertEquals(totalCount + 2, page.getTotalCount());
 
@@ -677,8 +672,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 								</#if>
 
 								<#sep>, </#sep>
-							</#list>
-						);
+							</#list>);
 
 						for (${schemaName} ${schemaVarName} : page.getItems()) {
 							Assert.assertNotNull(${schemaVarName}.getPermissions());
@@ -700,8 +694,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							${schemaVarName}Resource.delete${schemaName}(
 								<#list deleteJavaMethodSignature.javaMethodParameters as javaMethodParameter>
@@ -714,8 +707,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 						</#if>
 					</#if>
 				}
@@ -766,20 +758,20 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 						for (EntityField entityField : entityFields) {
 							Page<${schemaName}> page = ${schemaVarName}Resource.${javaMethodSignature.methodName}(
-								<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
-									<#if stringUtil.equals(javaMethodParameter.parameterName, "filter")>
-										getFilterString(entityField, "between", ${schemaVarName}1)
-									<#elseif stringUtil.equals(javaMethodParameter.parameterName, "pagination")>
-										Pagination.of(1, 2)
-									<#elseif freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation)>
-										${javaMethodParameter.parameterName}
-									<#else>
-										null
-									</#if>
 
-									<#sep>, </#sep>
-								</#list>
-							);
+							<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
+								<#if stringUtil.equals(javaMethodParameter.parameterName, "filter")>
+									getFilterString(entityField, "between", ${schemaVarName}1)
+								<#elseif stringUtil.equals(javaMethodParameter.parameterName, "pagination")>
+									Pagination.of(1, 2)
+								<#elseif freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation)>
+									${javaMethodParameter.parameterName}
+								<#else>
+									null
+								</#if>
+
+								<#sep>, </#sep>
+							</#list>);
 
 							assertEquals(Collections.singletonList(${schemaVarName}1), (List<${schemaName}>)page.getItems());
 						}
@@ -848,8 +840,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							assertEquals(Collections.singletonList(${schemaVarName}1), (List<${schemaName}>)page.getItems());
 						}
@@ -872,8 +863,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 								</#if>
 
 								<#sep>, </#sep>
-							</#list>
-						);
+							</#list>);
 
 						int totalCount = GetterUtil.getInteger(${schemaVarNames}Page.getTotalCount());
 
@@ -914,8 +904,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							Assert.assertEquals(totalCount + 3, page1.getTotalCount());
 
@@ -932,8 +921,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							assertContains(${schemaVarName}2, (List<${schemaName}>)page2.getItems());
 
@@ -948,8 +936,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							assertContains(${schemaVarName}3, (List<${schemaName}>)page3.getItems());
 						}
@@ -965,8 +952,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							List<${schemaName}> ${schemaVarNames}1 = (List<${schemaName}>)page1.getItems();
 
@@ -983,8 +969,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							Assert.assertEquals(totalCount + 3, page2.getTotalCount());
 
@@ -1003,8 +988,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							assertContains(${schemaVarName}1, (List<${schemaName}>)page3.getItems());
 							assertContains(${schemaVarName}2, (List<${schemaName}>)page3.getItems());
@@ -1117,8 +1101,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 								</#if>
 
 								<#sep>, </#sep>
-							</#list>
-						);
+							</#list>);
 
 						for (EntityField entityField : entityFields) {
 							Page<${schemaName}> ascPage = ${schemaVarName}Resource.${javaMethodSignature.methodName}(
@@ -1134,8 +1117,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							assertContains(${schemaVarName}1, (List<${schemaName}>)ascPage.getItems());
 							assertContains(${schemaVarName}2, (List<${schemaName}>)ascPage.getItems());
@@ -1153,8 +1135,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 									</#if>
 
 									<#sep>, </#sep>
-								</#list>
-							);
+								</#list>);
 
 							assertContains(${schemaVarName}2, (List<${schemaName}>)descPage.getItems());
 							assertContains(${schemaVarName}1, (List<${schemaName}>)descPage.getItems());
@@ -1273,8 +1254,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							</#if>
 
 							<#sep>, </#sep>
-						</#list>
-					);
+						</#list>);
 
 					VulcanCRUDItemDelegate vulcanCRUDItemDelegate = _vulcanCRUDItemDelegateBuilderRegistry.builder(
 						testCompany,
@@ -1931,8 +1911,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							</#if>
 
 							<#sep>, </#sep>
-						</#list>
-					));
+						</#list>));
 
 				assertHttpResponseStatusCode(
 					404,
@@ -1959,8 +1938,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 							</#if>
 
 							<#sep>, </#sep>
-						</#list>
-					));
+						</#list>));
 			}
 
 			<@getTestGetterMethods
@@ -2527,7 +2505,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 
 				<#if useDeleteByExternalReferenceCode>
-					<#if !useDeleteAssetLibrary>${schemaName}</#if> ${schemaVarName}1 = testBatchEngineDeleteImportTask_add${schemaName}();
+					<#if !useDeleteAssetLibrary>
+						${schemaName}
+					</#if> ${schemaVarName}1 = testBatchEngineDeleteImportTask_add${schemaName}();
 
 					testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}1.getExternalReferenceCode()<#if useDeleteById>, null</#if> );
 
@@ -2544,7 +2524,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 
 				<#if useDeleteById>
-					<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode>${schemaName}</#if> ${schemaVarName}1 = testBatchEngineDeleteImportTask_add${schemaName}();
+					<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode>
+						${schemaName}
+					</#if> ${schemaVarName}1 = testBatchEngineDeleteImportTask_add${schemaName}();
 
 					testBatchEngineDeleteImportTask_delete${schemaName}(200, null, ${schemaVarName}1.${getIdMethodName}());
 
@@ -2561,7 +2543,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 
 				<#if useDeleteSite>
-					<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode && !useDeleteById>${schemaName}</#if> ${schemaVarName}1 = testBatchEngineDeleteImportTask_addSite${schemaName}();
+					<#if !useDeleteAssetLibrary && !useDeleteByExternalReferenceCode && !useDeleteById>
+						${schemaName}
+					</#if> ${schemaVarName}1 = testBatchEngineDeleteImportTask_addSite${schemaName}();
 
 					testBatchEngineDeleteImportTask_delete${schemaName}(200, ${schemaVarName}1.getExternalReferenceCode(),<#if useDeleteById> null,</#if> "siteExternalReferenceCode", testGroup.getExternalReferenceCode());
 
