@@ -12,7 +12,7 @@ import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.model.AssetVocabularyConstants;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.exportimport.kernel.incomplete.model.IncompleteModelManagerUtil;
+import com.liferay.exportimport.kernel.incomplete.model.IncompleteModelManager;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -206,7 +206,7 @@ public class AssetVocabularyLocalServiceImpl
 		vocabulary.setSettings(settings);
 		vocabulary.setVisibilityType(visibilityType);
 
-		if (IncompleteModelManagerUtil.isIncompleteModel()) {
+		if (_incompleteModelManager.isIncompleteModel()) {
 			vocabulary.setStatus(WorkflowConstants.STATUS_INCOMPLETE);
 		}
 		else {
@@ -406,7 +406,7 @@ public class AssetVocabularyLocalServiceImpl
 
 		User user = _userLocalService.getUser(userId);
 
-		return IncompleteModelManagerUtil.getOrAddIncompleteModel(
+		return _incompleteModelManager.getOrAddIncompleteModel(
 			AssetVocabulary.class, user.getCompanyId(), externalReferenceCode,
 			this::fetchAssetVocabularyByExternalReferenceCode,
 			this::getAssetVocabularyByExternalReferenceCode,
@@ -686,6 +686,9 @@ public class AssetVocabularyLocalServiceImpl
 
 	@BeanReference(type = GroupLocalService.class)
 	private GroupLocalService _groupLocalService;
+
+	@BeanReference(type = IncompleteModelManager.class)
+	private IncompleteModelManager _incompleteModelManager;
 
 	@BeanReference(type = ResourceLocalService.class)
 	private ResourceLocalService _resourceLocalService;
