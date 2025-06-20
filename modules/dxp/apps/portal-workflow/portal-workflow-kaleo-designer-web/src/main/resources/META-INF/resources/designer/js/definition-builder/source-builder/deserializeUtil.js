@@ -175,7 +175,10 @@ DeserializeUtil.prototype = {
 							return;
 						}
 
-						if (transitionsNames.includes(transitionName)) {
+						if (
+							transitionsNames.includes(transitionName) ||
+							nodesNames.includes(transitionName)
+						) {
 							transitionName = `${nodeName}_${transitionName}_${transition.target}`;
 						}
 						else {
