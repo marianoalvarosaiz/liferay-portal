@@ -6,6 +6,7 @@
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRequest;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
@@ -55,14 +56,17 @@ public class UpdateIndexSettingsIndexRequestExecutorTest {
 				"                \"type\": \"custom\"\n", "            }\n",
 				"        }\n", "    }\n", "}"));
 
-		UpdateIndexSettingsIndexRequestExecutor
-			updateIndexSettingsIndexRequestExecutor =
-				new UpdateIndexSettingsIndexRequestExecutor(
-					_elasticsearchFixture);
+		UpdateIndexSettingsIndexRequestExecutorImpl
+			updateIndexSettingsIndexRequestExecutorImpl =
+				new UpdateIndexSettingsIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			updateIndexSettingsIndexRequestExecutorImpl,
+			"_elasticsearchClientResolver", _elasticsearchFixture);
 
 		UpdateSettingsRequest updateSettingsRequest =
-			updateIndexSettingsIndexRequestExecutor.createUpdateSettingsRequest(
-				updateIndexSettingsIndexRequest);
+			updateIndexSettingsIndexRequestExecutorImpl.
+				createUpdateSettingsRequest(updateIndexSettingsIndexRequest);
 
 		String[] indices = updateSettingsRequest.indices();
 
