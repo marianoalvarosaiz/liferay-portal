@@ -10,15 +10,17 @@ import com.liferay.portal.search.engine.adapter.index.IndexRequestShardFailure;
 import org.opensearch.client.opensearch._types.ErrorCause;
 import org.opensearch.client.opensearch._types.ShardFailure;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Michael C. Han
- * @author Petteri Karttunen
  */
-public class IndexRequestShardFailureTranslatorUtil {
+@Component(service = IndexRequestShardFailureTranslator.class)
+public class IndexRequestShardFailureTranslatorImpl
+	implements IndexRequestShardFailureTranslator {
 
-	public static IndexRequestShardFailure translate(
-		ShardFailure shardFailure) {
-
+	@Override
+	public IndexRequestShardFailure translate(ShardFailure shardFailure) {
 		IndexRequestShardFailure indexRequestShardFailure =
 			new IndexRequestShardFailure();
 
