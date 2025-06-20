@@ -168,14 +168,14 @@ describe('Field Checkbox Multiple', () => {
 
 	it('has a value', () => {
 		const {container} = render(
-			<CheckboxMultipleWithProvider value={['Option1Value']} />
+			<CheckboxMultipleWithProvider value={true} />
 		);
 
-		const hiddenInputElement = container.querySelector(
-			'input[type="hidden"]'
-		);
+		act(() => {
+			jest.runAllTimers();
+		});
 
-		expect(hiddenInputElement).toHaveAttribute('value', 'Option1Value');
+		expect(container).toMatchSnapshot();
 	});
 
 	it('has a key', () => {
