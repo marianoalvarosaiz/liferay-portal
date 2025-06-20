@@ -19,16 +19,9 @@ import {formatDate} from '../../../utils/date';
 
 export default function Solutions() {
 	const navigate = useNavigate();
-
 	return (
 		<Page pageRendererProps={{className: 'border py-2'}} title="Solutions">
 			<ListView<Product>
-				defaultFilters={{
-					filter: `${SearchBuilder.lambda(
-						'categoryNames',
-						ProductTypeVocabulary.SOLUTION
-					)}`,
-				}}
 				id="administrator-solutions"
 				managementToolbarProps={{
 					filterSchema: 'administratorDashboardSolutionsTable',
@@ -98,6 +91,12 @@ export default function Solutions() {
 						},
 					],
 					navigateTo: ({productId}) => `/solutions/${productId}`,
+				}}
+				defaultFilters={{
+					filter: `${SearchBuilder.lambda(
+						'categoryNames',
+						ProductTypeVocabulary.SOLUTION
+					)}`,
 				}}
 			/>
 		</Page>

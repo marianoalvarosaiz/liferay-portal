@@ -203,7 +203,7 @@ export default class SearchBuilder {
 
 		for (const key in appliedFilter) {
 			let searchCondition = '';
-			const rawValue = appliedFilter[key];
+			let rawValue = appliedFilter[key];
 
 			if (!rawValue) {
 				continue;
@@ -236,24 +236,19 @@ export default class SearchBuilder {
 			const customOperator = schema?.operator;
 
 			if (customOperator && SearchBuilder[customOperator]) {
-				const [filterKey] = key.split('|');
+				const [filterKey] = key.split("|")
 				const formattedKey = filterKey.replace('$', '');
 
 				if (customOperator === 'lambda') {
 					if (Array.isArray(value)) {
 						const lambdas = value
-							.map((filter) =>
-								SearchBuilder.lambda(filterKey, filter)
-							)
+							.map((filter) => SearchBuilder.lambda(filterKey, filter))
 							.join(' or ');
 
 						searchCondition = lambdas;
 					}
 					else {
-						searchCondition = SearchBuilder.lambda(
-							filterKey,
-							value
-						);
+						searchCondition = SearchBuilder.lambda(filterKey, value);
 					}
 				}
 				else {
@@ -284,6 +279,7 @@ export default class SearchBuilder {
 
 					searchCondition = getOptionalSearchCondition();
 				}
+
 			}
 			else {
 				if (schema?.type === 'date-range' && Array.isArray(value)) {

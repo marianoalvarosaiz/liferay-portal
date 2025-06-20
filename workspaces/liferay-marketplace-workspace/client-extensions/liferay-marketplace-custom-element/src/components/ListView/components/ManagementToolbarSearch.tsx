@@ -7,9 +7,8 @@ import {ClayButtonWithIcon} from '@clayui/button';
 import {ClayInput} from '@clayui/form';
 import ClayManagementToolbar from '@clayui/management-toolbar';
 import {useCallback, useContext, useEffect, useRef, useState} from 'react';
-
-import i18n from '../../../i18n';
 import {ListViewContext, ListViewTypes} from '../hooks/ListViewContext';
+import i18n from '../../../i18n';
 
 const ManagementToolbarSearch = () => {
 	const [{keywords}, dispatch] = useContext(ListViewContext);
@@ -53,8 +52,8 @@ const ManagementToolbarSearch = () => {
 							aria-label="Search"
 							className="bg-white form-control input-group-inset input-group-inset-after"
 							onChange={({target: {value}}) => setSearch(value)}
-							placeholder={i18n.translate('search')}
 							ref={inputRef}
+							placeholder={i18n.translate('search')}
 							type="text"
 							value={search}
 						/>

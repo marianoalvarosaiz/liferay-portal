@@ -50,15 +50,6 @@ const Apps = () => {
 			title={i18n.translate('apps')}
 		>
 			<ListView<Product>
-				defaultFilters={{
-					filter: new SearchBuilder()
-						.eq('catalogId', (catalogId || 0) as number, {
-							unquote: true,
-						})
-						.and()
-						.lambda('categoryNames', ProductTypeVocabulary.APP)
-						.build(),
-				}}
 				emptyStateProps={{
 					className:
 						'border px-4 py-6 d-flex align-items-center flex-column justify-content-center',
@@ -191,6 +182,15 @@ const Apps = () => {
 						},
 					],
 					navigateTo: (item) => `/app/${item.productId}`,
+				}}
+				defaultFilters={{
+					filter: new SearchBuilder()
+						.eq('catalogId', (catalogId || 0) as number, {
+							unquote: true,
+						})
+						.and()
+						.lambda('categoryNames', ProductTypeVocabulary.APP)
+						.build(),
 				}}
 			/>
 		</Page>

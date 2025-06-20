@@ -5,7 +5,6 @@
 
 import classNames from 'classnames';
 import {InputHTMLAttributes} from 'react';
-
 import BaseWrapper from './BaseWrapper';
 
 type InputSelectProps = {

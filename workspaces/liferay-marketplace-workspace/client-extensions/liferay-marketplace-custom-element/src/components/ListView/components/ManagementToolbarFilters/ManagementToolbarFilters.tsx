@@ -18,15 +18,14 @@ import {
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import useSWR from 'swr';
-
-import SearchBuilder from '../../../../core/SearchBuilder';
-import i18n from '../../../../i18n';
 import {FilterSchema, RendererFields} from '../../../../schema/filters';
+import useUpdateUrlParams from '../../hooks/useUpdateUrlParams';
+import {ListViewContext, ListViewTypes} from '../../hooks/ListViewContext';
+import i18n from '../../../../i18n';
+import SearchBuilder from '../../../../core/SearchBuilder';
 import fetcher from '../../../../services/fetcher';
 import {safeJSONParse} from '../../../../utils/util';
 import Form from '../../../Form/index';
-import {ListViewContext, ListViewTypes} from '../../hooks/ListViewContext';
-import useUpdateUrlParams from '../../hooks/useUpdateUrlParams';
 
 import './ManagementToolbarFilters.scss';
 
@@ -284,7 +283,7 @@ const FilterBody: React.FC<FilterBodyProps> = ({
 						<p className="font-weight-bold my-2">
 							{i18n.translate('filter')}
 						</p>
-						<div className="align-items-center d-flex justify-content-between">
+						<div className="d-flex justify-content-between align-items-center">
 							<Form.Input
 								name="search-filter"
 								onChange={({target: {value}}) => {
@@ -325,7 +324,7 @@ const FilterBody: React.FC<FilterBodyProps> = ({
 					</div>
 				</div>
 			</ClayDropDown.Section>
-			<ClayDropDown.Section className="d-flex dropdown-footer justify-content-center">
+			<ClayDropDown.Section className="dropdown-footer d-flex justify-content-center">
 				<ClayButton className="mt-2" onClick={onApply}>
 					{i18n.translate('apply')}
 				</ClayButton>
@@ -362,9 +361,9 @@ const ManagementToolbarFilter: React.FC<ManagementToolbarFilterProps> = ({
 
 	return (
 		<>
-			<div className="align-items-center d-flex justify-content-between">
+			<div className="justify-content-between align-items-center d-flex">
 				<ClayButton
-					className="align-items-center btn-secondary d-flex justify-content-between management-toolbar-filter-button ml-3 mr-2 px-2"
+					className="management-toolbar-filter-button d-flex justify-content-between align-items-center px-2 mr-2 ml-3 btn-secondary"
 					displayType="unstyled"
 					onClick={handleExpand}
 				>
