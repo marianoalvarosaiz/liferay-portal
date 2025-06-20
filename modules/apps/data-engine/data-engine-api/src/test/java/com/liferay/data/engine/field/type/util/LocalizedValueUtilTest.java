@@ -102,6 +102,7 @@ public class LocalizedValueUtilTest {
 				Assert.assertNull(localizedValuesMap.getDefaultValue());
 				Assert.assertNull(localizedValuesMap.get(LocaleUtil.US));
 			});
+
 		_testToLocalizedValuesMapWithLocaleStringMap(
 			HashMapBuilder.put(
 				LocaleUtil.BRAZIL, "pt_BR"
@@ -125,11 +126,12 @@ public class LocalizedValueUtilTest {
 					addString(LocaleUtil.BRAZIL, "[\"por\"]");
 				}
 			},
-			localizedValuesMap -> JSONAssert.assertEquals(
+			map -> JSONAssert.assertEquals(
 				JSONUtil.put(
 					"eng"
 				).toString(),
-				String.valueOf(localizedValuesMap.get("en_US")), false));
+				String.valueOf(map.get("en_US")), false));
+
 		_testToLocalizedValuesMapWithLocalizedValue(
 			new LocalizedValue() {
 				{
@@ -137,8 +139,8 @@ public class LocalizedValueUtilTest {
 					addString(LocaleUtil.BRAZIL, "pt_BR");
 				}
 			},
-			localizedValuesMap -> Assert.assertEquals(
-				"en_US", localizedValuesMap.get("en_US")));
+			map -> Assert.assertEquals("en_US", map.get("en_US")));
+
 		_testToLocalizedValuesMapWithLocalizedValue(
 			new LocalizedValue() {
 				{
@@ -146,10 +148,11 @@ public class LocalizedValueUtilTest {
 					addString(LocaleUtil.BRAZIL, "false");
 				}
 			},
-			localizedValuesMap -> {
-				Assert.assertEquals("true", localizedValuesMap.get("en_US"));
-				Assert.assertEquals("false", localizedValuesMap.get("pt_BR"));
+			map -> {
+				Assert.assertEquals("true", map.get("en_US"));
+				Assert.assertEquals("false", map.get("pt_BR"));
 			});
+
 		_testToLocalizedValuesMapWithLocalizedValue(
 			new LocalizedValue() {
 				{
@@ -157,11 +160,11 @@ public class LocalizedValueUtilTest {
 					addString(LocaleUtil.BRAZIL, "{\"language\": \"por\"}");
 				}
 			},
-			localizedValuesMap -> JSONAssert.assertEquals(
+			map -> JSONAssert.assertEquals(
 				JSONUtil.put(
 					"language", "eng"
 				).toString(),
-				String.valueOf(localizedValuesMap.get("en_US")), false));
+				String.valueOf(map.get("en_US")), false));
 	}
 
 	@Test
@@ -225,12 +228,12 @@ public class LocalizedValueUtilTest {
 	}
 
 	private void _testToLocalizedValuesMapWithLocaleStringMap(
-			Map<Locale, String> localeStringMap,
+			Map<Locale, String> map,
 			UnsafeConsumer<LocalizedValuesMap, Exception> unsafeConsumer)
 		throws Exception {
 
 		LocalizedValuesMap localizedValuesMap =
-			LocalizedValueUtil.toLocalizedValuesMap(localeStringMap);
+			LocalizedValueUtil.toLocalizedValuesMap(map);
 
 		unsafeConsumer.accept(localizedValuesMap);
 	}
@@ -240,10 +243,10 @@ public class LocalizedValueUtilTest {
 			UnsafeConsumer<Map<String, Object>, Exception> unsafeConsumer)
 		throws Exception {
 
-		Map<String, Object> localizedValuesMap =
-			LocalizedValueUtil.toLocalizedValuesMap(localizedValue);
+		Map<String, Object> map = LocalizedValueUtil.toLocalizedValuesMap(
+			localizedValue);
 
-		unsafeConsumer.accept(localizedValuesMap);
+		unsafeConsumer.accept(map);
 	}
 
 }
