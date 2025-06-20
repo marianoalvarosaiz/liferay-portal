@@ -5,7 +5,15 @@
 
 import {useSearchParams} from 'react-router-dom';
 
+import {
+	AppActions,
+	ListViewTypes,
+} from '../../../../components/ListView/hooks/ListViewContext';
 import Page from '../../../../components/Page';
+import {ProductType, ProductTypeLabels} from '../../../../enums/Product';
+import useListTypeDefinition from '../../../../hooks/useListTypeDefinition';
+import i18n from '../../../../i18n';
+import {LIFERAY_VERSION_PICKLIST} from '../../../PublisherDashboard/pages/NewAppFlow/constants';
 import InfoCard from '../../components/InfoCard';
 import useAppsMetrics from '../../hooks/useAppsMetrics';
 import {percentage} from '../../util';
@@ -13,8 +21,12 @@ import AdministratorAppsListView from './AdministratorAppsListView';
 
 export default function Apps() {
 	const [searchParams] = useSearchParams();
-	const {
+	const {data} = useListTypeDefinition(LIFERAY_VERSION_PICKLIST);
 
+	const liferayVersions =
+		data?.listTypeEntries?.map((version) => version.name).reverse() ?? [];
+
+	const {
 		approved = 0,
 		approvedBeforeLastWeek = 0,
 		approvedLastWeek = 0,
@@ -59,14 +71,59 @@ export default function Apps() {
 			>
 				<AdministratorAppsListView
 					filter={searchParams.get('filter') as string}
-					isSortable
 					listViewProps={{
+						managementToolbarProps: {
+							filterItems: [
+								{
+									children: Object.values(ProductType).map(
+										(productType) => ({
+											name: ProductTypeLabels[
+												productType
+											],
+											onClick: (
+												dispatch: React.Dispatch<AppActions>
+											) =>
+												dispatch({
+													payload: {
+														filters: {
+															filter: {
+																specificationValues:
+																	productType,
+															},
+														},
+													},
+													type: ListViewTypes.SET_FILTERS,
+												}),
+										})
+									),
+									name: i18n.translate('app-type'),
+								},
+								{
+									children: liferayVersions.map(
+										(liferayVersion) => ({
+											name: liferayVersion,
+											onClick: (
+												dispatch: React.Dispatch<AppActions>
+											) =>
+												dispatch({
+													payload: {
+														filters: {
+															filter: {
+																specificationValues:
+																	liferayVersion,
+															},
+														},
+													},
+													type: ListViewTypes.SET_FILTERS,
+												}),
+										})
+									),
+									name: i18n.translate('liferay-version'),
+								},
+							],
+							visible: true,
+						},
 						paginationOptions: {displayType: 'always'},
-					}}
-					managementToolbarProps={{
-						visible: true,
-						hasFilters: true,
-						hasSearch: true,
 					}}
 				/>
 			</Page>
