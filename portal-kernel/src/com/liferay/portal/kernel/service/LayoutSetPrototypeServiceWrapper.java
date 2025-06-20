@@ -5,8 +5,6 @@
 
 package com.liferay.portal.kernel.service;
 
-import com.liferay.portal.kernel.model.LayoutSetPrototype;
-
 /**
  * Provides a wrapper for {@link LayoutSetPrototypeService}.
  *
@@ -29,11 +27,13 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype addLayoutSetPrototype(
-			java.util.Map<java.util.Locale, String> nameMap,
-			java.util.Map<java.util.Locale, String> descriptionMap,
-			boolean active, boolean layoutsUpdateable,
-			boolean readyForPropagation, ServiceContext serviceContext)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			addLayoutSetPrototype(
+				java.util.Map<java.util.Locale, java.lang.String> nameMap,
+				java.util.Map<java.util.Locale, java.lang.String>
+					descriptionMap,
+				boolean active, boolean layoutsUpdateable,
+				boolean readyForPropagation, ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.addLayoutSetPrototype(
@@ -42,11 +42,13 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype addLayoutSetPrototype(
-			java.util.Map<java.util.Locale, String> nameMap,
-			java.util.Map<java.util.Locale, String> descriptionMap,
-			boolean active, boolean layoutsUpdateable,
-			ServiceContext serviceContext)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			addLayoutSetPrototype(
+				java.util.Map<java.util.Locale, java.lang.String> nameMap,
+				java.util.Map<java.util.Locale, java.lang.String>
+					descriptionMap,
+				boolean active, boolean layoutsUpdateable,
+				ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.addLayoutSetPrototype(
@@ -54,10 +56,11 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype addLayoutSetPrototype(
-			String name, String description, boolean active,
-			boolean layoutsUpdateable, boolean readyForPropagation,
-			ServiceContext serviceContext)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			addLayoutSetPrototype(
+				java.lang.String name, java.lang.String description,
+				boolean active, boolean layoutsUpdateable,
+				boolean readyForPropagation, ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.addLayoutSetPrototype(
@@ -82,7 +85,8 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype fetchLayoutSetPrototype(long layoutSetPrototypeId)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			fetchLayoutSetPrototype(long layoutSetPrototypeId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.fetchLayoutSetPrototype(
@@ -90,7 +94,8 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype getLayoutSetPrototype(long layoutSetPrototypeId)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			getLayoutSetPrototype(long layoutSetPrototypeId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.getLayoutSetPrototype(
@@ -98,8 +103,8 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public java.util.List<LayoutSetPrototype> getLayoutSetPrototypes(
-			long companyId)
+	public java.util.List<com.liferay.portal.kernel.model.LayoutSetPrototype>
+			getLayoutSetPrototypes(long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.getLayoutSetPrototypes(companyId);
@@ -111,15 +116,17 @@ public class LayoutSetPrototypeServiceWrapper
 	 * @return the OSGi service identifier
 	 */
 	@Override
-	public String getOSGiServiceIdentifier() {
+	public java.lang.String getOSGiServiceIdentifier() {
 		return _layoutSetPrototypeService.getOSGiServiceIdentifier();
 	}
 
 	@Override
-	public java.util.List<LayoutSetPrototype> search(
-			long companyId, Boolean active,
-			com.liferay.portal.kernel.util.OrderByComparator<LayoutSetPrototype>
-				orderByComparator)
+	public java.util.List<com.liferay.portal.kernel.model.LayoutSetPrototype>
+			search(
+				long companyId, java.lang.Boolean active,
+				com.liferay.portal.kernel.util.OrderByComparator
+					<com.liferay.portal.kernel.model.LayoutSetPrototype>
+						orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.search(
@@ -127,12 +134,14 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype updateLayoutSetPrototype(
-			long layoutSetPrototypeId,
-			java.util.Map<java.util.Locale, String> nameMap,
-			java.util.Map<java.util.Locale, String> descriptionMap,
-			boolean active, boolean layoutsUpdateable,
-			boolean readyForPropagation, ServiceContext serviceContext)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			updateLayoutSetPrototype(
+				long layoutSetPrototypeId,
+				java.util.Map<java.util.Locale, java.lang.String> nameMap,
+				java.util.Map<java.util.Locale, java.lang.String>
+					descriptionMap,
+				boolean active, boolean layoutsUpdateable,
+				boolean readyForPropagation, ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.updateLayoutSetPrototype(
@@ -141,12 +150,14 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype updateLayoutSetPrototype(
-			long layoutSetPrototypeId,
-			java.util.Map<java.util.Locale, String> nameMap,
-			java.util.Map<java.util.Locale, String> descriptionMap,
-			boolean active, boolean layoutsUpdateable,
-			ServiceContext serviceContext)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			updateLayoutSetPrototype(
+				long layoutSetPrototypeId,
+				java.util.Map<java.util.Locale, java.lang.String> nameMap,
+				java.util.Map<java.util.Locale, java.lang.String>
+					descriptionMap,
+				boolean active, boolean layoutsUpdateable,
+				ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.updateLayoutSetPrototype(
@@ -155,8 +166,9 @@ public class LayoutSetPrototypeServiceWrapper
 	}
 
 	@Override
-	public LayoutSetPrototype updateLayoutSetPrototype(
-			long layoutSetPrototypeId, String settings)
+	public com.liferay.portal.kernel.model.LayoutSetPrototype
+			updateLayoutSetPrototype(
+				long layoutSetPrototypeId, java.lang.String settings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutSetPrototypeService.updateLayoutSetPrototype(
