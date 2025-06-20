@@ -80,17 +80,16 @@ describe('Field Checkbox Multiple', () => {
 		expect(helpTextElements[1]).toHaveClass('sr-only');
 	});
 
-	it('appends id to field-feedback element id', () => {
+	it('has an id', () => {
 		const {container} = render(
-			<CheckboxMultipleWithProvider
-				id="CheckboxMultipleId"
-				spritemap={spritemap}
-			/>
+			<CheckboxMultipleWithProvider id="ID" spritemap={spritemap} />
 		);
 
-		expect(
-			container.querySelector('#CheckboxMultipleId_fieldFeedback')
-		).toBeInTheDocument();
+		act(() => {
+			jest.runAllTimers();
+		});
+
+		expect(container).toMatchSnapshot();
 	});
 
 	it('has a label', () => {
