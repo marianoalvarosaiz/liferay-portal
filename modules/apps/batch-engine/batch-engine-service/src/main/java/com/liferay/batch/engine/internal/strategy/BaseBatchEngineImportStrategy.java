@@ -52,7 +52,7 @@ public abstract class BaseBatchEngineImportStrategy
 
 		for (T item : collection) {
 			importItem(
-				batchEngineTaskItemDelegate, item,
+				item,
 				element -> {
 					ImportTaskContext importTaskContext =
 						new ImportTaskContext();
@@ -85,9 +85,8 @@ public abstract class BaseBatchEngineImportStrategy
 	}
 
 	protected <T> void addBatchEngineImportTaskError(
-		BatchEngineImportTask batchEngineImportTask,
-		BatchEngineTaskItemDelegate<T> batchEngineTaskItemDelegate, T item,
-		int itemIndex, Exception exception) {
+		BatchEngineImportTask batchEngineImportTask, T item, int itemIndex,
+		Exception exception) {
 
 		try {
 			TransactionInvokerUtil.invoke(
@@ -105,8 +104,7 @@ public abstract class BaseBatchEngineImportStrategy
 					batchEngineImportTaskExceptionHandlers.forEach(
 						batchEngineImportTaskExceptionHandler ->
 							batchEngineImportTaskExceptionHandler.handle(
-								batchEngineImportTask,
-								batchEngineTaskItemDelegate, exception, item));
+								batchEngineImportTask, exception, item));
 
 					return null;
 				});
@@ -117,8 +115,7 @@ public abstract class BaseBatchEngineImportStrategy
 	}
 
 	protected abstract <T> T importItem(
-			BatchEngineTaskItemDelegate<T> batchEngineTaskItemDelegate, T item,
-			UnsafeFunction<T, T, Exception> unsafeFunction)
+			T item, UnsafeFunction<T, T, Exception> unsafeFunction)
 		throws Exception;
 
 	protected final BatchEngineImportTask batchEngineImportTask;
