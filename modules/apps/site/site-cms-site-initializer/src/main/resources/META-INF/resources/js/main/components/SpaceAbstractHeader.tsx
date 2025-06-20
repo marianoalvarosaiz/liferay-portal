@@ -6,22 +6,26 @@
 import ClayLink from '@clayui/link';
 import React from 'react';
 
-interface SpaceAbstractHeaderProps {
-	label: string;
-	title: string;
-	viewAllContentUrl: string;
-}
-
 export default function SpaceAbstractHeader({
 	label,
 	title,
-	viewAllContentUrl,
-}: SpaceAbstractHeaderProps) {
+	url,
+}: {
+	label: string;
+	title: string;
+	url: string;
+}) {
 	return (
-		<div className="align-items-center d-flex justify-content-between">
-			<h2 className="m-0">{title}</h2>
+		<div>
+			<div>
+				<h2>{title}</h2>
+			</div>
 
-			<ClayLink href={viewAllContentUrl}>{label}</ClayLink>
+			<div>
+				<ClayLink displayType="secondary" href={url}>
+					{label}
+				</ClayLink>
+			</div>
 		</div>
 	);
 }
