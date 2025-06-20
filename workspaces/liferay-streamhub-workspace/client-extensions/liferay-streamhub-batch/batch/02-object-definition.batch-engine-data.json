@@ -27,48 +27,10 @@
 			"objectActions": [
 				{
 					"active": true,
-					"errorMessage": {
-						"en_US": "Error while configuring event stream."
-					},
 					"label": {
-						"en_US": "Configure event stream."
+						"en_US": "Stream Event On Update"
 					},
-					"name": "ConfigureEventStream",
-					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
-					"objectActionTriggerKey": "standalone",
-					"parameters": {
-					},
-					"status": {
-						"code": 0,
-						"label": "never-ran",
-						"label_i18n": "Never Ran"
-					},
-					"system": false
-				},
-				{
-					"active": true,
-					"description": "",
-					"label": {
-						"en_US": "Configure event stream on create"
-					},
-					"name": "ConfigureEventStreamOnCreate",
-					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
-					"objectActionTriggerKey": "onAfterAdd",
-					"parameters": {
-					},
-					"status": {
-						"code": 0,
-						"label": "never-ran",
-						"label_i18n": "Never Ran"
-					},
-					"system": false
-				},
-				{
-					"active": true,
-					"label": {
-						"en_US": "Configure event stream on update."
-					},
-					"name": "ConfigureEventStreamOnUpdate",
+					"name": "StreamEventOnUpdate",
 					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
 					"objectActionTriggerKey": "onAfterUpdate",
 					"parameters": {
@@ -84,11 +46,49 @@
 					"active": true,
 					"description": "",
 					"label": {
-						"en_US": "Unconfigure event stream."
+						"en_US": "Stream Event On Add"
 					},
-					"name": "UnconfigureEventStream",
+					"name": "StreamEventOnAdd",
+					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
+					"objectActionTriggerKey": "onAfterAdd",
+					"parameters": {
+					},
+					"status": {
+						"code": 0,
+						"label": "never-ran",
+						"label_i18n": "Never Ran"
+					},
+					"system": false
+				},
+				{
+					"active": true,
+					"description": "",
+					"label": {
+						"en_US": "Stream Event On Delete"
+					},
+					"name": "StreamEventOnDelete",
 					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-6",
 					"objectActionTriggerKey": "onAfterDelete",
+					"parameters": {
+					},
+					"status": {
+						"code": 0,
+						"label": "never-ran",
+						"label_i18n": "Never Ran"
+					},
+					"system": false
+				},
+				{
+					"active": true,
+					"errorMessage": {
+						"en_US": "Error while configuring object instant notification "
+					},
+					"label": {
+						"en_US": "Stream Event"
+					},
+					"name": "StreamEvent",
+					"objectActionExecutorKey": "function#liferay-streamhub-etc-spring-boot-object-action-5",
+					"objectActionTriggerKey": "standalone",
 					"parameters": {
 					},
 					"status": {
