@@ -6,11 +6,10 @@
 import '../../../css/spaces/SpaceMembersInputWithSelect.scss';
 
 import Autocomplete from '@clayui/autocomplete';
-import {FetchPolicy, useResource} from '@clayui/data-provider';
+import {useResource} from '@clayui/data-provider';
 import ClayForm, {ClayInput, ClaySelectWithOption} from '@clayui/form';
 import ClaySticker from '@clayui/sticker';
 import classNames from 'classnames';
-import {fetch} from 'frontend-js-web';
 import React, {useId, useState} from 'react';
 
 import {UserAccount, UserGroup} from '../../types/UserAccount';
@@ -31,7 +30,9 @@ export interface SpaceMembersInputWithSelectProps {
 
 export function SpaceMembersInputWithSelect({
 	className,
+	inputValue,
 	onAutocompleteItemSelected,
+	onInputChange,
 	onSelectChange,
 	selectValue,
 }: SpaceMembersInputWithSelectProps) {
@@ -45,7 +46,7 @@ export function SpaceMembersInputWithSelect({
 	const [value, setValue] = useState('');
 	const [networkStatus, setNetworkStatus] = useState(4);
 
-	const {refetch, resource} = useResource({
+	const {resource} = useResource({
 		fetch: async (link, options) => {
 			const result = await fetch(link, {
 				...options,
@@ -54,7 +55,6 @@ export function SpaceMembersInputWithSelect({
 					'x-csrf-token': Liferay.authToken,
 				},
 			});
-
 			const json = await result.json();
 
 			return {
@@ -62,7 +62,6 @@ export function SpaceMembersInputWithSelect({
 				items: json.items,
 			};
 		},
-		fetchPolicy: 'no-cache' as FetchPolicy.NoCache,
 		link: `${window.location.origin}${endpoint}`,
 		onNetworkStatusChange: setNetworkStatus,
 		variables: {search: value},
@@ -75,11 +74,11 @@ export function SpaceMembersInputWithSelect({
 					<Autocomplete.Item
 						className="align-items-center d-flex"
 						key={item.id}
-						onClick={() => {
-							onAutocompleteItemSelected?.(item);
-							setValue('');
-						}}
 						textValue={item.name}
+						onClick={() => {
+							onAutocompleteItemSelected?.(item)
+							onInputChange?.('');
+						}}
 					>
 						<ClaySticker
 							displayType="primary"
@@ -92,7 +91,6 @@ export function SpaceMembersInputWithSelect({
 								src={item.image || '/image/user_portrait'}
 							/>
 						</ClaySticker>
-
 						<span className="ml-2">
 							{item.name} ({item.emailAddress?.split('@')[0]})
 						</span>
@@ -106,24 +104,27 @@ export function SpaceMembersInputWithSelect({
 				<Autocomplete.Item
 					className="align-items-center d-flex"
 					key={item.id}
+					textValue={item.name}
 					onClick={() => {
 						onAutocompleteItemSelected?.(item);
-						setValue('');
+						onInputChange?.('');
 					}}
-					textValue={item.name}
 				>
-					<ClaySticker displayType="primary" shape="circle" size="sm">
+					<ClaySticker
+						displayType="primary"
+						shape="circle"
+						size="sm"
+					>
 						<img
 							alt={item.name}
 							className="sticker-img"
-							src="/image/user_portrait"
+							src={'/image/user_portrait'}
 						/>
 					</ClaySticker>
-
 					<span className="ml-2">{item.name}</span>
 				</Autocomplete.Item>
 			);
-		};
+		}
 	};
 
 	return (
@@ -160,17 +161,17 @@ export function SpaceMembersInputWithSelect({
 				<ClayInput.GroupItem append>
 					<Autocomplete
 						id="autocomplete"
-						items={(resource?.items ?? []) as any}
+						items={resource?.items ?? []}
 						loadingState={networkStatus}
 						menuTrigger="focus"
 						onChange={(value: string) => {
+							onInputChange?.(value);
 							setValue(value);
 						}}
-						onFocus={refetch}
 						placeholder={Liferay.Language.get(
 							'enter-name-or-email'
 						)}
-						value={value}
+						value={inputValue}
 					>
 						{renderAutocompleteItem()}
 					</Autocomplete>

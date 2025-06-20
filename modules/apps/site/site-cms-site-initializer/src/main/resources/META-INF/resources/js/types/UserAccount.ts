@@ -6,12 +6,12 @@
 export interface UserAccount {
 	emailAddress: string;
 	id: string;
-	image?: string;
 	imageId: string;
+	image?: string;
 	name: string;
 }
 
 export interface UserGroup {
-	id: string;
-	name: string;
+  id: string;
+  name: string;
 }
