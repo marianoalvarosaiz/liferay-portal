@@ -31,7 +31,8 @@ export default function Solutions() {
 				}}
 				id="administrator-solutions"
 				managementToolbarProps={{
-					filterSchema: 'administratorSolutions',
+					filterSchema: 'administratorDashboardSolutionsTable',
+					filtersVisible: true,
 					searchVisible: true,
 					visible: true,
 				}}

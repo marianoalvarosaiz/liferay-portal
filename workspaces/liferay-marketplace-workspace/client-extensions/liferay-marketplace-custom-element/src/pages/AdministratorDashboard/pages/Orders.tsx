@@ -99,7 +99,7 @@ export function AdministratorOrdersListView({
 					);
 				},
 
-				filterSchema: 'administratorOrders',
+				filterSchema: 'administratorDashboardOrdersTable',
 				...managementToolbarProps,
 			}}
 			resource={`/o/headless-commerce-admin-order/v1.0/orders?${new URLSearchParams(
@@ -339,6 +339,7 @@ export default function Orders() {
 				<AdministratorOrdersListView
 					isSortable
 					managementToolbarProps={{
+						filtersVisible: true,
 						searchVisible: true,
 						visible: true,
 					}}
