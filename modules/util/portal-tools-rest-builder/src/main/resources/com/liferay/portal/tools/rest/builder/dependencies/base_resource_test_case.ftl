@@ -1882,11 +1882,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 								<#else>
 									<#assign getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter} />
 
-									<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-										test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${schemaVarName})
-									<#else>
-										test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
-									</#if>
+									test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
 								</#if>
 							<#else>
 								null
@@ -1907,11 +1903,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 								<#else>
 									<#assign getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter} />
 
-									<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-										test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${schemaVarName})
-									<#else>
-										test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
-									</#if>
+									test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
 								</#if>
 							<#else>
 								null
@@ -2191,25 +2183,18 @@ public abstract class Base${schemaName}ResourceTestCase {
 																);
 															</#if>
 														<#else>
-															<#assign
-																getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter}
-																getterMethodArgument = ""
-															/>
-
-															<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-																<#assign getterMethodArgument = "${schemaVarName}" />
-															</#if>
+															<#assign getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter} />
 
 															<#if stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
-																put("${javaMethodParameter.parameterName}", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})" />);
+																put("${javaMethodParameter.parameterName}", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()" />);
 															<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteId")>
-																put("siteKey", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})" />);
+																put("siteKey", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()" />);
 															<#else>
 																put("${javaMethodParameter.parameterName}",
 																<#if stringUtil.equals(javaMethodParameter.parameterType, "java.lang.String")>
-																	<@getQuotedString unquotedString = "testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})" />
+																	<@getQuotedString unquotedString = "testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()" />
 																<#else>
-																	testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})
+																	testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
 																</#if>
 																);
 															</#if>
@@ -2260,24 +2245,18 @@ public abstract class Base${schemaName}ResourceTestCase {
 																		);
 																	</#if>
 																<#else>
-																	<#assign getterMethodArgument = "" />
-
-																	<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-																		<#assign getterMethodArgument = "${schemaVarName}" />
-																	</#if>
-
 																	<#if stringUtil.equals(javaMethodParameter.parameterName, "assetLibraryId")>
-																		put("${javaMethodParameter.parameterName}", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})" />);
+																		put("${javaMethodParameter.parameterName}", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()" />);
 																	<#elseif stringUtil.equals(javaMethodParameter.parameterName, "siteId")>
-																		put("siteKey", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})" />);
+																		put("siteKey", <@getQuotedString unquotedString="testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()" />);
 																	<#else>
 																		<#assign getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter} />
 
 																		put("${javaMethodParameter.parameterName}",
 																		<#if stringUtil.equals(javaMethodParameter.parameterType, "java.lang.String")>
-																			<@getQuotedString unquotedString = "testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})" />
+																			<@getQuotedString unquotedString = "testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()" />
 																		<#else>
-																			testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(${getterMethodArgument})
+																			testGraphQL${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
 																		</#if>
 																		);
 																	</#if>
@@ -3990,13 +3969,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 					${varName}.get${javaMethodParameter.parameterName?cap_first}()
 				<#else>
 					<#assign getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter} />
-
-					test${testJavaMethodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(
-
-						<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-							${varName}
-						</#if>
-					)
+					test${testJavaMethodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
 				</#if>
 			<#else>
 				null
@@ -4057,15 +4030,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 		<#elseif stringUtil.equals(javaMethodParameter.parameterName, "multipartBody") || stringUtil.equals(javaMethodParameter.parameterName, schemaVarName)>
 			${newSchemaVarNamePrefix}${schemaName}
 		<#else>
-
 			<#assign getterJavaMethodParametersMap = getterJavaMethodParametersMap + {javaMethodParameter.parameterName: javaMethodParameter} />
 
-			test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(
-
-				<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-					${schemaVarNamePrefix}${schemaName}
-				</#if>
-			)
+			test${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}()
 		</#if>
 
 		<#sep>, </#sep>
@@ -4174,11 +4141,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 	testNamePrefix = "test"
 >
 	<#list getterJavaMethodParametersMap?values as javaMethodParameter>
-		protected ${javaMethodParameter.parameterType} ${testNamePrefix}${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}(
-			<#if properties?keys?seq_contains(javaMethodParameter.parameterName)>
-				${schemaName} ${schemaVarName}
-			</#if>
-		) throws Exception {
+		protected ${javaMethodParameter.parameterType} ${testNamePrefix}${javaMethodSignature.methodName?cap_first}_get${javaMethodParameter.parameterName?cap_first}() throws Exception {
 			throw new UnsupportedOperationException("This method needs to be implemented");
 		}
 	</#list>
