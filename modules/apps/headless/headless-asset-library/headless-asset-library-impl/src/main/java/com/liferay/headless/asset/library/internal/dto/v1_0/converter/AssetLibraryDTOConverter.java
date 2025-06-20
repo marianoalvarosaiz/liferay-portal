@@ -75,7 +75,6 @@ public class AssetLibraryDTOConverter
 			{
 				setActions(dtoConverterContext::getActions);
 				setAssetLibraryKey(group::getGroupKey);
-				setCreatorUserId(group::getCreatorUserId);
 				setDateCreated(depotEntry::getCreateDate);
 				setDateModified(
 					() -> GetterUtil.getObject(
