@@ -15,7 +15,7 @@ interface MembersListItemProps<T extends UserAccount | UserGroup> {
 	assetLibraryCreatorUserId?: string;
 	currentUserId?: string;
 	emptyMessage: string;
-	itemType: 'user' | 'group';
+	itemType: string;
 	items: T[];
 	onRemoveItem: (item: T) => Promise<void>;
 }
@@ -30,12 +30,14 @@ export function MembersListItem<T extends UserAccount | UserGroup>({
 }: MembersListItemProps<T>) {
 	if (!items || !items.length) {
 		return (
-			<li className="d-flex justify-content-center">{emptyMessage}</li>
+			<li className="d-flex justify-content-center">
+				{emptyMessage}
+			</li>
 		);
 	}
 
 	return items.map((item) => {
-		const isUser = itemType === 'user';
+		const isUser = itemType === Liferay.Language.get('user');
 		const isOwner = isUser && assetLibraryCreatorUserId === String(item.id);
 
 		return (
@@ -80,9 +82,7 @@ export function MembersListItem<T extends UserAccount | UserGroup>({
 					<ClayButtonWithIcon
 						aria-label={sub(
 							Liferay.Language.get('remove-x'),
-							isUser
-								? Liferay.Language.get('user')
-								: Liferay.Language.get('group')
+							itemType
 						)}
 						borderless
 						displayType="secondary"

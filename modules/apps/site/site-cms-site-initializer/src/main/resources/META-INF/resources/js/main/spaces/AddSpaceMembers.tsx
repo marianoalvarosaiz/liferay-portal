@@ -142,9 +142,7 @@ export function AddSpaceMembers({
 			if (error) {
 				openToast({
 					message: sub(
-						Liferay.Language.get(
-							'unable-to-remove-user-x-from-space'
-						),
+						Liferay.Language.get('unable-to-remove-user-x-from-space'),
 						[`<strong>${user.name}</strong>`]
 					),
 					type: 'success',
@@ -161,10 +159,10 @@ export function AddSpaceMembers({
 					type: 'success',
 				});
 			}
-		}
+		};
 
 		return;
-	};
+	}
 
 	const onContinueBtnClick = () => {
 		navigate(baseSpaceUrl + assetLibraryId);
@@ -204,19 +202,15 @@ export function AddSpaceMembers({
 									assetLibraryCreatorUserId
 								}
 								currentUserId={currentUserId}
-								emptyMessage={Liferay.Language.get(
-									'this-space-has-no-user-yet'
-								)}
-								itemType="user"
+								emptyMessage={Liferay.Language.get("this-space-has-no-user-yet")}
+								itemType={Liferay.Language.get("user")}
 								items={selectedUsers}
 								onRemoveItem={onRemoveItem}
 							/>
 						) : (
 							<MembersListItem<UserGroup>
-								emptyMessage={Liferay.Language.get(
-									'this-space-has-no-group-yet'
-								)}
-								itemType="group"
+								emptyMessage={Liferay.Language.get("this-space-has-no-group-yet")}
+								itemType={Liferay.Language.get("group")}
 								items={selectedUserGroups}
 								onRemoveItem={onRemoveItem}
 							/>
