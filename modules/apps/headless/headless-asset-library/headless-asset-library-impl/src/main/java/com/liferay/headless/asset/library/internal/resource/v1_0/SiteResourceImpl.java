@@ -9,7 +9,6 @@ import com.liferay.depot.model.DepotEntry;
 import com.liferay.depot.model.DepotEntryGroupRel;
 import com.liferay.depot.service.DepotEntryGroupRelService;
 import com.liferay.depot.service.DepotEntryService;
-import com.liferay.headless.asset.library.dto.v1_0.AssetLibrary;
 import com.liferay.headless.asset.library.dto.v1_0.Site;
 import com.liferay.headless.asset.library.resource.v1_0.SiteResource;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
@@ -20,8 +19,6 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
-import com.liferay.portal.vulcan.fields.NestedField;
-import com.liferay.portal.vulcan.fields.NestedFieldId;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 
@@ -34,8 +31,7 @@ import org.osgi.service.component.annotations.ServiceScope;
  */
 @Component(
 	properties = "OSGI-INF/liferay/rest/v1_0/site.properties",
-	property = "nested.field.support=true", scope = ServiceScope.PROTOTYPE,
-	service = SiteResource.class
+	scope = ServiceScope.PROTOTYPE, service = SiteResource.class
 )
 public class SiteResourceImpl extends BaseSiteResourceImpl {
 
@@ -137,10 +133,9 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 		return _toSite(depotEntry, depotEntryGroupRel);
 	}
 
-	@NestedField(parentClass = AssetLibrary.class, value = "sites")
 	@Override
 	public Page<Site> getAssetLibrarySitesPage(
-			@NestedFieldId("siteId") Long assetLibraryId, Pagination pagination)
+			Long assetLibraryId, Pagination pagination)
 		throws Exception {
 
 		if (!FeatureFlagManagerUtil.isEnabled("LPD-17564")) {
