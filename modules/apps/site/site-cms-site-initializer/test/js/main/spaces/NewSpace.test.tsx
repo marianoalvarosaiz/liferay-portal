@@ -15,8 +15,7 @@ import ApiHelper from '../../../../src/main/resources/META-INF/resources/js/serv
 
 describe('NewSpace', () => {
 	const props: NewSpaceProps = {
-		baseAddMembersUrl: 'fake-add-member-url/',
-		baseSpaceUrl: 'fake-redirect-url/',
+		baseRedirectUrl: 'fake-redirect-url/',
 	};
 
 	let apiPostSpy: jest.SpyInstance;
