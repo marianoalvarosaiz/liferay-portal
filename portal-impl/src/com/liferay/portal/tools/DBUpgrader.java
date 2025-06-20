@@ -329,9 +329,9 @@ public class DBUpgrader {
 				preupgradeVerifyProcessSuite.verify();
 			}
 			catch (VerifyException verifyException) {
-				_log.error(verifyException);
-
 				StartupHelperUtil.setUpgrading(false);
+
+				_log.error(verifyException.getMessage());
 
 				System.exit(1);
 			}
