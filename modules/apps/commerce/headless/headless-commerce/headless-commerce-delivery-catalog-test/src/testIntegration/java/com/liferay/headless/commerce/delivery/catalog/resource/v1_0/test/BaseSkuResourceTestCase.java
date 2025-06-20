@@ -262,10 +262,11 @@ public abstract class BaseSkuResourceTestCase {
 											"\"" +
 												testGraphQLGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getProductExternalReferenceCode() +
 													"\"");
+
 										put(
 											"skuExternalReferenceCode",
 											"\"" +
-												sku.getExternalReferenceCode() +
+												testGraphQLGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getSkuExternalReferenceCode() +
 													"\"");
 									}
 								},
@@ -298,12 +299,12 @@ public abstract class BaseSkuResourceTestCase {
 												"\"" +
 													testGraphQLGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getProductExternalReferenceCode() +
 														"\"");
+
 											put(
 												"skuExternalReferenceCode",
 												"\"" +
-													sku.
-														getExternalReferenceCode() +
-															"\"");
+													testGraphQLGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getSkuExternalReferenceCode() +
+														"\"");
 										}
 									},
 									getGraphQLFields()))),
@@ -322,6 +323,14 @@ public abstract class BaseSkuResourceTestCase {
 
 	protected String
 			testGraphQLGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getProductExternalReferenceCode()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected String
+			testGraphQLGetChannelByExternalReferenceCodeChannelExternalReferenceCodeProductByExternalReferenceCodeProductExternalReferenceCodeSkuByExternalReferenceCodeSkuExternalReferenceCode_getSkuExternalReferenceCode()
 		throws Exception {
 
 		throw new UnsupportedOperationException(

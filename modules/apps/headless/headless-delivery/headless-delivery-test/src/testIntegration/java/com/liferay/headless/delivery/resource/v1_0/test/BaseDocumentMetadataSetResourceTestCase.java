@@ -620,8 +620,8 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 								put(
 									"assetLibraryId",
 									"\"" +
-										irrelevantTestDepotEntry.
-											getDepotEntryId() + "\"");
+										testGraphQLGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId() +
+											"\"");
 								put(
 									"externalReferenceCode",
 									irrelevantExternalReferenceCode);
@@ -646,8 +646,8 @@ public abstract class BaseDocumentMetadataSetResourceTestCase {
 									put(
 										"assetLibraryId",
 										"\"" +
-											irrelevantTestDepotEntry.
-												getDepotEntryId() + "\"");
+											testGraphQLGetAssetLibraryDocumentMetadataSetByExternalReferenceCode_getAssetLibraryId() +
+												"\"");
 									put(
 										"externalReferenceCode",
 										irrelevantExternalReferenceCode);

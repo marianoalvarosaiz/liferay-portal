@@ -644,6 +644,13 @@ public abstract class BaseProductOptionResourceTestCase {
 		Assert.assertTrue(true);
 	}
 
+	protected ProductOption testGraphQLProductOption_addProductOption()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(
 		ProductOption productOption, List<ProductOption> productOptions) {
 

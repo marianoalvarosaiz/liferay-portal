@@ -634,8 +634,8 @@ public abstract class BaseDocumentResourceTestCase {
 								put(
 									"assetLibraryId",
 									"\"" +
-										irrelevantTestDepotEntry.
-											getDepotEntryId() + "\"");
+										testGraphQLGetAssetLibraryDocumentByExternalReferenceCode_getAssetLibraryId() +
+											"\"");
 								put(
 									"externalReferenceCode",
 									irrelevantExternalReferenceCode);
@@ -660,8 +660,8 @@ public abstract class BaseDocumentResourceTestCase {
 									put(
 										"assetLibraryId",
 										"\"" +
-											irrelevantTestDepotEntry.
-												getDepotEntryId() + "\"");
+											testGraphQLGetAssetLibraryDocumentByExternalReferenceCode_getAssetLibraryId() +
+												"\"");
 									put(
 										"externalReferenceCode",
 										irrelevantExternalReferenceCode);

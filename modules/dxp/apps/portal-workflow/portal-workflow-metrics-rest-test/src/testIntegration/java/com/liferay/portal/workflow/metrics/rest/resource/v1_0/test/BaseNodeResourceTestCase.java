@@ -299,6 +299,11 @@ public abstract class BaseNodeResourceTestCase {
 		Assert.assertTrue(true);
 	}
 
+	protected Node testGraphQLNode_addNode() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(Node node, List<Node> nodes) {
 		boolean contains = false;
 

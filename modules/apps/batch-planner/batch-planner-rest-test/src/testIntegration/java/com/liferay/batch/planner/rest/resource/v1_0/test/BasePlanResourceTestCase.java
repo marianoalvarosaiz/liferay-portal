@@ -582,6 +582,11 @@ public abstract class BasePlanResourceTestCase {
 			"This method needs to be implemented");
 	}
 
+	protected Plan testGraphQLPlan_addPlan() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(Plan plan, List<Plan> plans) {
 		boolean contains = false;
 

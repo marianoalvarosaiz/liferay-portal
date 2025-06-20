@@ -266,142 +266,14 @@ public abstract class BasePageExperienceResourceTestCase {
 	public void testGraphQLGetSiteSiteByExternalReferenceCodePageExperience()
 		throws Exception {
 
-		PageExperience pageExperience =
-			testGraphQLGetSiteSiteByExternalReferenceCodePageExperience_addPageExperience();
-
-		// No namespace
-
-		Assert.assertTrue(
-			equals(
-				pageExperience,
-				PageExperienceSerDes.toDTO(
-					JSONUtil.getValueAsString(
-						invokeGraphQLQuery(
-							new GraphQLField(
-								"siteByExternalReferenceCodePageExperience",
-								new HashMap<String, Object>() {
-									{
-										put(
-											"siteExternalReferenceCode",
-											"\"" +
-												testGraphQLGetSiteSiteByExternalReferenceCodePageExperience_getSiteExternalReferenceCode() +
-													"\"");
-										put(
-											"pageExperienceExternalReferenceCode",
-											"\"" +
-												pageExperience.
-													getExternalReferenceCode() +
-														"\"");
-									}
-								},
-								getGraphQLFields())),
-						"JSONObject/data",
-						"Object/siteByExternalReferenceCodePageExperience"))));
-
-		// Using the namespace headlessAdminSite_v1_0
-
-		Assert.assertTrue(
-			equals(
-				pageExperience,
-				PageExperienceSerDes.toDTO(
-					JSONUtil.getValueAsString(
-						invokeGraphQLQuery(
-							new GraphQLField(
-								"headlessAdminSite_v1_0",
-								new GraphQLField(
-									"siteByExternalReferenceCodePageExperience",
-									new HashMap<String, Object>() {
-										{
-											put(
-												"siteExternalReferenceCode",
-												"\"" +
-													testGraphQLGetSiteSiteByExternalReferenceCodePageExperience_getSiteExternalReferenceCode() +
-														"\"");
-											put(
-												"pageExperienceExternalReferenceCode",
-												"\"" +
-													pageExperience.
-														getExternalReferenceCode() +
-															"\"");
-										}
-									},
-									getGraphQLFields()))),
-						"JSONObject/data", "JSONObject/headlessAdminSite_v1_0",
-						"Object/siteByExternalReferenceCodePageExperience"))));
-	}
-
-	protected String
-			testGraphQLGetSiteSiteByExternalReferenceCodePageExperience_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void testGraphQLGetSiteSiteByExternalReferenceCodePageExperienceNotFound()
 		throws Exception {
 
-		String irrelevantPageExperienceExternalReferenceCode =
-			"\"" + RandomTestUtil.randomString() + "\"";
-
-		// No namespace
-
-		Assert.assertEquals(
-			"Not Found",
-			JSONUtil.getValueAsString(
-				invokeGraphQLQuery(
-					new GraphQLField(
-						"siteByExternalReferenceCodePageExperience",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"siteExternalReferenceCode",
-									"\"" +
-										irrelevantGroup.
-											getExternalReferenceCode() + "\"");
-								put(
-									"pageExperienceExternalReferenceCode",
-									irrelevantPageExperienceExternalReferenceCode);
-							}
-						},
-						getGraphQLFields())),
-				"JSONArray/errors", "Object/0", "JSONObject/extensions",
-				"Object/code"));
-
-		// Using the namespace headlessAdminSite_v1_0
-
-		Assert.assertEquals(
-			"Not Found",
-			JSONUtil.getValueAsString(
-				invokeGraphQLQuery(
-					new GraphQLField(
-						"headlessAdminSite_v1_0",
-						new GraphQLField(
-							"siteByExternalReferenceCodePageExperience",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"siteExternalReferenceCode",
-										"\"" +
-											irrelevantGroup.
-												getExternalReferenceCode() +
-													"\"");
-									put(
-										"pageExperienceExternalReferenceCode",
-										irrelevantPageExperienceExternalReferenceCode);
-								}
-							},
-							getGraphQLFields()))),
-				"JSONArray/errors", "Object/0", "JSONObject/extensions",
-				"Object/code"));
-	}
-
-	protected PageExperience
-			testGraphQLGetSiteSiteByExternalReferenceCodePageExperience_addPageExperience()
-		throws Exception {
-
-		return testGraphQLPageExperience_addPageExperience();
+		Assert.assertTrue(true);
 	}
 
 	@Test
@@ -639,13 +511,6 @@ public abstract class BasePageExperienceResourceTestCase {
 	@Test
 	public void testBatchEngineDeleteImportTask() throws Exception {
 		Assert.assertTrue(true);
-	}
-
-	protected PageExperience testGraphQLPageExperience_addPageExperience()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	protected void assertContains(

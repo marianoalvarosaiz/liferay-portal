@@ -225,6 +225,11 @@ public abstract class BaseGroupResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
+	protected Group testGraphQLGroup_addGroup() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(Group group, List<Group> groups) {
 		boolean contains = false;
 

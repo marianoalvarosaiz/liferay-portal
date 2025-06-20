@@ -1167,6 +1167,13 @@ public abstract class BaseUserAccountResourceTestCase {
 			"This method needs to be implemented");
 	}
 
+	protected UserAccount testGraphQLUserAccount_addUserAccount()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(
 		UserAccount userAccount, List<UserAccount> userAccounts) {
 

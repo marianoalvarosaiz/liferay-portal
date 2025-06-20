@@ -54,8 +54,6 @@ import jakarta.annotation.Generated;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import jakarta.validation.constraints.NotEmpty;
-
 import jakarta.ws.rs.core.UriInfo;
 
 import java.util.List;
@@ -208,7 +206,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public DisplayPageTemplatePage displayPageTemplatePermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("displayPageTemplateExternalReferenceCode") String
 				displayPageTemplateExternalReferenceCode,
@@ -234,7 +232,7 @@ public class Query {
 		description = "Retrieves a specific display page template of a site."
 	)
 	public DisplayPageTemplate siteByExternalReferenceCodeDisplayPageTemplate(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("displayPageTemplateExternalReferenceCode") String
 				displayPageTemplateExternalReferenceCode)
@@ -260,7 +258,7 @@ public class Query {
 	)
 	public DisplayPageTemplatePage
 			siteByExternalReferenceCodeDisplayPageTemplateFolderDisplayPageTemplates(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("displayPageTemplateFolderExternalReferenceCode")
 					String displayPageTemplateFolderExternalReferenceCode,
@@ -288,7 +286,7 @@ public class Query {
 	)
 	public DisplayPageTemplatePage
 			siteByExternalReferenceCodeDisplayPageTemplates(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("search") String search,
 				@GraphQLName("aggregation") List<String> aggregations,
@@ -321,7 +319,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public DisplayPageTemplateFolderPage displayPageTemplateFolderPermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("displayPageTemplateFolderExternalReferenceCode")
 				String displayPageTemplateFolderExternalReferenceCode,
@@ -350,7 +348,7 @@ public class Query {
 	)
 	public DisplayPageTemplateFolder
 			siteByExternalReferenceCodeDisplayPageTemplateFolder(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("displayPageTemplateFolderExternalReferenceCode")
 					String displayPageTemplateFolderExternalReferenceCode)
@@ -376,7 +374,7 @@ public class Query {
 	)
 	public DisplayPageTemplateFolderPage
 			siteByExternalReferenceCodeDisplayPageTemplateFolders(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("search") String search,
 				@GraphQLName("aggregation") List<String> aggregations,
@@ -415,7 +413,7 @@ public class Query {
 		description = "Retrieves a specific fragment composition of a site."
 	)
 	public FragmentComposition siteByExternalReferenceCodeFragmentComposition(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("fragmentCompositionExternalReferenceCode") String
 				fragmentCompositionExternalReferenceCode)
@@ -441,7 +439,7 @@ public class Query {
 	)
 	public FragmentCompositionPage
 			siteByExternalReferenceCodeFragmentCompositions(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("search") String search,
 				@GraphQLName("filter") String filterString,
@@ -474,7 +472,7 @@ public class Query {
 	)
 	public FriendlyUrlHistory
 			siteByExternalReferenceCodeDisplayPageTemplateFriendlyUrlHistory(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("displayPageTemplateExternalReferenceCode") String
 					displayPageTemplateExternalReferenceCode)
@@ -500,7 +498,7 @@ public class Query {
 	)
 	public FriendlyUrlHistory
 			siteByExternalReferenceCodeSitePageFriendlyUrlHistory(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("sitePageExternalReferenceCode") String
 					sitePageExternalReferenceCode)
@@ -526,7 +524,7 @@ public class Query {
 	)
 	public FriendlyUrlHistory
 			siteByExternalReferenceCodeUtilityPageFriendlyUrlHistory(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("utilityPageExternalReferenceCode") String
 					utilityPageExternalReferenceCode)
@@ -549,7 +547,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public MasterPagePage masterPagePermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("masterPageExternalReferenceCode") String
 				masterPageExternalReferenceCode,
@@ -572,7 +570,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves a specific master page of a site.")
 	public MasterPage siteByExternalReferenceCodeMasterPage(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("masterPageExternalReferenceCode") String
 				masterPageExternalReferenceCode)
@@ -594,7 +592,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves the master pages of the site.")
 	public MasterPagePage siteByExternalReferenceCodeMasterPages(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("search") String search,
 			@GraphQLName("aggregation") List<String> aggregations,
@@ -629,7 +627,7 @@ public class Query {
 		description = "Retrieves a page element within an experience of a specific page specification of a site page within a site."
 	)
 	public PageElement siteByExternalReferenceCodePageElement(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageSpecificationExternalReferenceCode") String
 				pageSpecificationExternalReferenceCode,
@@ -660,7 +658,7 @@ public class Query {
 		description = "Retrieves all the descendant page elements of a page element within an experience in a page specification of a site page."
 	)
 	public PageElementPage siteByExternalReferenceCodePageElementPageElements(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageSpecificationExternalReferenceCode") String
 				pageSpecificationExternalReferenceCode,
@@ -693,7 +691,7 @@ public class Query {
 	)
 	public PageElementPage
 			siteByExternalReferenceCodePageExperiencePageElements(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("pageSpecificationExternalReferenceCode") String
 					pageSpecificationExternalReferenceCode,
@@ -722,7 +720,7 @@ public class Query {
 		description = "Retrieves an experience of a specific page specification of a site page within a site."
 	)
 	public PageExperience siteByExternalReferenceCodePageExperience(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageExperienceExternalReferenceCode") String
 				pageExperienceExternalReferenceCode)
@@ -748,7 +746,7 @@ public class Query {
 	)
 	public PageExperiencePage
 			siteByExternalReferenceCodePageSpecificationPageExperiences(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("pageSpecificationExternalReferenceCode") String
 					pageSpecificationExternalReferenceCode)
@@ -773,7 +771,7 @@ public class Query {
 		description = "Retrieves all the page rules within an experience in a page specification of a site page."
 	)
 	public PageRulePage siteByExternalReferenceCodePageExperiencePageRules(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageExperienceExternalReferenceCode") String
 				pageExperienceExternalReferenceCode,
@@ -799,7 +797,7 @@ public class Query {
 		description = "Retrieves page rule within an experience of a specific page specification of a site page within a site."
 	)
 	public PageRule siteByExternalReferenceCodePageRule(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageRuleExternalReferenceCode") String
 				pageRuleExternalReferenceCode)
@@ -822,7 +820,7 @@ public class Query {
 		description = "Retrieves a page rule action within a page rule of an experience of a specific page specification of a site page within a site."
 	)
 	public PageRuleAction siteByExternalReferenceCodePageRuleAction(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageRuleActionExternalReferenceCode") String
 				pageRuleActionExternalReferenceCode)
@@ -848,7 +846,7 @@ public class Query {
 	)
 	public PageRuleActionPage
 			siteByExternalReferenceCodePageRulePageRuleActions(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("pageRuleExternalReferenceCode") String
 					pageRuleExternalReferenceCode,
@@ -874,7 +872,7 @@ public class Query {
 		description = "Retrieves a page rule condition within a page rule of an experience of a specific page specification of a site page within a site."
 	)
 	public PageRuleCondition siteByExternalReferenceCodePageRuleCondition(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageRuleConditionExternalReferenceCode") String
 				pageRuleConditionExternalReferenceCode)
@@ -900,7 +898,7 @@ public class Query {
 	)
 	public PageRuleConditionPage
 			siteByExternalReferenceCodePageRulePageRuleConditions(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("pageRuleExternalReferenceCode") String
 					pageRuleExternalReferenceCode,
@@ -927,7 +925,7 @@ public class Query {
 	)
 	public PageSpecificationPage
 			siteByExternalReferenceCodeDisplayPageTemplatePageSpecifications(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("displayPageTemplateExternalReferenceCode") String
 					displayPageTemplateExternalReferenceCode)
@@ -953,7 +951,7 @@ public class Query {
 	)
 	public PageSpecificationPage
 			siteByExternalReferenceCodeMasterPagePageSpecifications(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("masterPageExternalReferenceCode") String
 					masterPageExternalReferenceCode)
@@ -978,7 +976,7 @@ public class Query {
 		description = "Retrieves a page specification of a site page."
 	)
 	public PageSpecification siteByExternalReferenceCodePageSpecification(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageSpecificationExternalReferenceCode") String
 				pageSpecificationExternalReferenceCode)
@@ -1004,7 +1002,7 @@ public class Query {
 	)
 	public PageSpecificationPage
 			siteByExternalReferenceCodePageTemplatePageSpecifications(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("pageTemplateExternalReferenceCode") String
 					pageTemplateExternalReferenceCode)
@@ -1030,7 +1028,7 @@ public class Query {
 	)
 	public PageSpecificationPage
 			siteByExternalReferenceCodeSitePagePageSpecifications(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("sitePageExternalReferenceCode") String
 					sitePageExternalReferenceCode)
@@ -1056,7 +1054,7 @@ public class Query {
 	)
 	public PageSpecificationPage
 			siteByExternalReferenceCodeUtilityPagePageSpecifications(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("utilityPageExternalReferenceCode") String
 					utilityPageExternalReferenceCode)
@@ -1079,7 +1077,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public PageTemplatePage pageTemplatePermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageTemplateExternalReferenceCode") String
 				pageTemplateExternalReferenceCode,
@@ -1102,7 +1100,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves a specific page template of a site.")
 	public PageTemplate siteByExternalReferenceCodePageTemplate(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageTemplateExternalReferenceCode") String
 				pageTemplateExternalReferenceCode)
@@ -1128,7 +1126,7 @@ public class Query {
 	)
 	public PageTemplatePage
 			siteByExternalReferenceCodePageTemplateSetPageTemplates(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("pageTemplateSetExternalReferenceCode") String
 					pageTemplateSetExternalReferenceCode,
@@ -1152,7 +1150,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves the page templates of the site")
 	public PageTemplatePage siteByExternalReferenceCodePageTemplates(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("search") String search,
 			@GraphQLName("aggregation") List<String> aggregations,
@@ -1185,7 +1183,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public PageTemplateSetPage pageTemplateSetPermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageTemplateSetExternalReferenceCode") String
 				pageTemplateSetExternalReferenceCode,
@@ -1210,7 +1208,7 @@ public class Query {
 		description = "Retrieves a specific page template set of a site."
 	)
 	public PageTemplateSet siteByExternalReferenceCodePageTemplateSet(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("pageTemplateSetExternalReferenceCode") String
 				pageTemplateSetExternalReferenceCode)
@@ -1233,7 +1231,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves the page template sets of the site")
 	public PageTemplateSetPage siteByExternalReferenceCodePageTemplateSets(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("search") String search,
 			@GraphQLName("aggregation") List<String> aggregations,
@@ -1266,7 +1264,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves a specific public page of a site.")
 	public SitePage siteByExternalReferenceCodeSitePage(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("sitePageExternalReferenceCode") String
 				sitePageExternalReferenceCode)
@@ -1287,7 +1285,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves the public pages of the site")
 	public SitePagePage siteByExternalReferenceCodeSitePages(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("search") String search,
 			@GraphQLName("aggregation") List<String> aggregations,
@@ -1319,7 +1317,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public SitePagePage sitePagePermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("sitePageExternalReferenceCode") String
 				sitePageExternalReferenceCode,
@@ -1342,7 +1340,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves a specific utility page of a site.")
 	public UtilityPage siteByExternalReferenceCodeUtilityPage(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("utilityPageExternalReferenceCode") String
 				utilityPageExternalReferenceCode)
@@ -1365,7 +1363,7 @@ public class Query {
 	 */
 	@GraphQLField(description = "Retrieves the utility pages of the site.")
 	public UtilityPagePage siteByExternalReferenceCodeUtilityPages(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("search") String search,
 			@GraphQLName("aggregation") List<String> aggregations,
@@ -1398,7 +1396,7 @@ public class Query {
 	 */
 	@GraphQLField
 	public UtilityPagePage utilityPagePermissions(
-			@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+			@GraphQLName("siteExternalReferenceCode") String
 				siteExternalReferenceCode,
 			@GraphQLName("utilityPageExternalReferenceCode") String
 				utilityPageExternalReferenceCode,
@@ -1424,7 +1422,7 @@ public class Query {
 	)
 	public WidgetPageWidgetInstancePage
 			siteByExternalReferenceCodeSitePageWidgetInstances(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("sitePageExternalReferenceCode") String
 					sitePageExternalReferenceCode)
@@ -1451,7 +1449,7 @@ public class Query {
 	)
 	public WidgetPageWidgetInstance
 			siteByExternalReferenceCodeWidgetInstanceWidgetInstanceExternalReferenceCode(
-				@GraphQLName("siteExternalReferenceCode") @NotEmpty String
+				@GraphQLName("siteExternalReferenceCode") String
 					siteExternalReferenceCode,
 				@GraphQLName("sitePageExternalReferenceCode") String
 					sitePageExternalReferenceCode,

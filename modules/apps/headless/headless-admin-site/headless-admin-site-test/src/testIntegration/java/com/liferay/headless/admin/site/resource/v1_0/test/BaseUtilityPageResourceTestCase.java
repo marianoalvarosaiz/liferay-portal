@@ -273,142 +273,14 @@ public abstract class BaseUtilityPageResourceTestCase {
 	public void testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPage()
 		throws Exception {
 
-		UtilityPage utilityPage =
-			testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPage_addUtilityPage();
-
-		// No namespace
-
-		Assert.assertTrue(
-			equals(
-				utilityPage,
-				UtilityPageSerDes.toDTO(
-					JSONUtil.getValueAsString(
-						invokeGraphQLQuery(
-							new GraphQLField(
-								"siteByExternalReferenceCodeUtilityPage",
-								new HashMap<String, Object>() {
-									{
-										put(
-											"siteExternalReferenceCode",
-											"\"" +
-												testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPage_getSiteExternalReferenceCode() +
-													"\"");
-										put(
-											"utilityPageExternalReferenceCode",
-											"\"" +
-												utilityPage.
-													getExternalReferenceCode() +
-														"\"");
-									}
-								},
-								getGraphQLFields())),
-						"JSONObject/data",
-						"Object/siteByExternalReferenceCodeUtilityPage"))));
-
-		// Using the namespace headlessAdminSite_v1_0
-
-		Assert.assertTrue(
-			equals(
-				utilityPage,
-				UtilityPageSerDes.toDTO(
-					JSONUtil.getValueAsString(
-						invokeGraphQLQuery(
-							new GraphQLField(
-								"headlessAdminSite_v1_0",
-								new GraphQLField(
-									"siteByExternalReferenceCodeUtilityPage",
-									new HashMap<String, Object>() {
-										{
-											put(
-												"siteExternalReferenceCode",
-												"\"" +
-													testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPage_getSiteExternalReferenceCode() +
-														"\"");
-											put(
-												"utilityPageExternalReferenceCode",
-												"\"" +
-													utilityPage.
-														getExternalReferenceCode() +
-															"\"");
-										}
-									},
-									getGraphQLFields()))),
-						"JSONObject/data", "JSONObject/headlessAdminSite_v1_0",
-						"Object/siteByExternalReferenceCodeUtilityPage"))));
-	}
-
-	protected String
-			testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPage_getSiteExternalReferenceCode()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPageNotFound()
 		throws Exception {
 
-		String irrelevantUtilityPageExternalReferenceCode =
-			"\"" + RandomTestUtil.randomString() + "\"";
-
-		// No namespace
-
-		Assert.assertEquals(
-			"Not Found",
-			JSONUtil.getValueAsString(
-				invokeGraphQLQuery(
-					new GraphQLField(
-						"siteByExternalReferenceCodeUtilityPage",
-						new HashMap<String, Object>() {
-							{
-								put(
-									"siteExternalReferenceCode",
-									"\"" +
-										irrelevantGroup.
-											getExternalReferenceCode() + "\"");
-								put(
-									"utilityPageExternalReferenceCode",
-									irrelevantUtilityPageExternalReferenceCode);
-							}
-						},
-						getGraphQLFields())),
-				"JSONArray/errors", "Object/0", "JSONObject/extensions",
-				"Object/code"));
-
-		// Using the namespace headlessAdminSite_v1_0
-
-		Assert.assertEquals(
-			"Not Found",
-			JSONUtil.getValueAsString(
-				invokeGraphQLQuery(
-					new GraphQLField(
-						"headlessAdminSite_v1_0",
-						new GraphQLField(
-							"siteByExternalReferenceCodeUtilityPage",
-							new HashMap<String, Object>() {
-								{
-									put(
-										"siteExternalReferenceCode",
-										"\"" +
-											irrelevantGroup.
-												getExternalReferenceCode() +
-													"\"");
-									put(
-										"utilityPageExternalReferenceCode",
-										irrelevantUtilityPageExternalReferenceCode);
-								}
-							},
-							getGraphQLFields()))),
-				"JSONArray/errors", "Object/0", "JSONObject/extensions",
-				"Object/code"));
-	}
-
-	protected UtilityPage
-			testGraphQLGetSiteSiteByExternalReferenceCodeUtilityPage_addUtilityPage()
-		throws Exception {
-
-		return testGraphQLUtilityPage_addUtilityPage();
+		Assert.assertTrue(true);
 	}
 
 	@Test
@@ -1052,13 +924,6 @@ public abstract class BaseUtilityPageResourceTestCase {
 		throws Exception {
 
 		Assert.assertTrue(true);
-	}
-
-	protected UtilityPage testGraphQLUtilityPage_addUtilityPage()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
 	}
 
 	protected void assertContains(

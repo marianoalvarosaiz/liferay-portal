@@ -1795,6 +1795,13 @@ public abstract class BaseAccountRoleResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
+	protected AccountRole testGraphQLAccountRole_addAccountRole()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(
 		AccountRole accountRole, List<AccountRole> accountRoles) {
 

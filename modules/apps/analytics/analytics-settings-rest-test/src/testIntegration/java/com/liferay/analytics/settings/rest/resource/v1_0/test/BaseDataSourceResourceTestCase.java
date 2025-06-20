@@ -202,6 +202,13 @@ public abstract class BaseDataSourceResourceTestCase {
 		Assert.assertTrue(true);
 	}
 
+	protected DataSource testGraphQLDataSource_addDataSource()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(
 		DataSource dataSource, List<DataSource> dataSources) {
 

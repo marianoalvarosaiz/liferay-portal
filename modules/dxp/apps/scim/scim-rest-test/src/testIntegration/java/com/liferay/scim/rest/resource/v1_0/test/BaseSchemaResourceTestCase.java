@@ -192,6 +192,11 @@ public abstract class BaseSchemaResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
+	protected Schema testGraphQLSchema_addSchema() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(Schema schema, List<Schema> schemas) {
 		boolean contains = false;
 

@@ -825,6 +825,14 @@ public abstract class BaseCompanyTestEntityResourceTestCase {
 		Assert.assertTrue(true);
 	}
 
+	protected CompanyTestEntity
+			testGraphQLCompanyTestEntity_addCompanyTestEntity()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(
 		CompanyTestEntity companyTestEntity,
 		List<CompanyTestEntity> companyTestEntities) {

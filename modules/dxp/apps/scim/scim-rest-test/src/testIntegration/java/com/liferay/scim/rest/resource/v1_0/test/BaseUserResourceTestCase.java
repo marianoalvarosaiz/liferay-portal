@@ -243,6 +243,11 @@ public abstract class BaseUserResourceTestCase {
 		Assert.assertTrue(false);
 	}
 
+	protected User testGraphQLUser_addUser() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(User user, List<User> users) {
 		boolean contains = false;
 

@@ -750,6 +750,13 @@ public abstract class BaseTestEntityResourceTestCase {
 		}
 	}
 
+	protected TestEntity testGraphQLTestEntity_addTestEntity()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	protected void assertContains(
 		TestEntity testEntity, List<TestEntity> testEntities) {
 
