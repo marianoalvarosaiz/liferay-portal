@@ -165,9 +165,13 @@ public class UpgradeRecorder {
 				_log.info("No pending upgrades to run");
 			}
 			else {
-				if (!_errorMessages.containsKey(
-						PreupgradeVerifyProcessSuite.class.getName())) {
-
+				if (_errorMessages.containsKey(
+					PreupgradeVerifyProcessSuite.class.getName())) {
+					_log.info(
+						"A preupgrade verification process has failed. " +
+						"Please fix the reported issues and re-run the upgrade.");
+				}
+				else{
 					_log.info(
 						StringBundler.concat(
 							StringUtil.upperCaseFirstLetter(_type),
@@ -175,10 +179,11 @@ public class UpgradeRecorder {
 
 					if (!_result.equals("failure") &&
 						!_errorMessages.isEmpty()) {
-
 						_log.info("Unrelated errors occur during the upgrade");
 					}
 				}
+
+
 			}
 		}
 
