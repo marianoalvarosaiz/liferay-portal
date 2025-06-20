@@ -313,7 +313,7 @@ public class ObjectEntryLocalServiceImpl
 
 	@Override
 	public ObjectEntry addObjectEntry(
-			long groupId, long userId, long objectDefinitionId,
+			long userId, long groupId, long objectDefinitionId,
 			long objectEntryFolderId, String defaultLanguageId,
 			Map<String, Serializable> values, ServiceContext serviceContext)
 		throws PortalException {
@@ -537,7 +537,7 @@ public class ObjectEntryLocalServiceImpl
 
 	@Override
 	public ObjectEntry addOrUpdateObjectEntry(
-			String externalReferenceCode, long groupId, long userId,
+			String externalReferenceCode, long userId, long groupId,
 			long objectDefinitionId, long objectEntryFolderId,
 			Map<String, Serializable> values, ServiceContext serviceContext)
 		throws PortalException {
@@ -566,7 +566,7 @@ public class ObjectEntryLocalServiceImpl
 		}
 
 		objectEntry = objectEntryLocalService.addObjectEntry(
-			groupId, userId, objectDefinitionId, objectEntryFolderId, null,
+			userId, groupId, objectDefinitionId, objectEntryFolderId, null,
 			values, serviceContext);
 
 		if (Validator.isNotNull(externalReferenceCode)) {
