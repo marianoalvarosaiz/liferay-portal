@@ -5,15 +5,10 @@
 
 package com.liferay.site.cms.site.initializer.internal.fragment.renderer;
 
-import com.liferay.depot.model.DepotEntry;
-import com.liferay.depot.service.DepotEntryLocalService;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.frontend.taglib.react.servlet.taglib.ComponentTag;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.Language;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -71,34 +66,16 @@ public class AddSpaceMembersFragmentRenderer
 				PageContextFactoryUtil.create(
 					httpServletRequest, httpServletResponse));
 
+			long assetLibraryId = ParamUtil.getLong(
+				httpServletRequest, "assetLibraryId");
+
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)httpServletRequest.getAttribute(
 					WebKeys.THEME_DISPLAY);
 
-			long assetLibraryId = ParamUtil.getLong(
-				httpServletRequest, "assetLibraryId");
-
-			String assetLibraryName = StringPool.BLANK;
-			long creatorUserId = 0;
-			DepotEntry depotEntry = _depotEntryLocalService.fetchDepotEntry(
-				assetLibraryId);
-
-			if (depotEntry != null) {
-				Group group = _groupLocalService.fetchGroup(
-					depotEntry.getGroupId());
-
-				assetLibraryName = group.getDescriptiveName(
-					themeDisplay.getLocale());
-				creatorUserId = group.getCreatorUserId();
-			}
-
 			componentTag.setProps(
 				HashMapBuilder.<String, Object>put(
-					"assetLibraryCreatorUserId", creatorUserId
-				).put(
 					"assetLibraryId", assetLibraryId
-				).put(
-					"assetLibraryName", assetLibraryName
 				).put(
 					"baseSpaceUrl", ActionUtil.getBaseSpaceURL(themeDisplay)
 				).build());
@@ -115,12 +92,6 @@ public class AddSpaceMembersFragmentRenderer
 			throw new RuntimeException(exception);
 		}
 	}
-
-	@Reference
-	private DepotEntryLocalService _depotEntryLocalService;
-
-	@Reference
-	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private Language _language;
