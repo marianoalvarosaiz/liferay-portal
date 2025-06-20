@@ -1,14 +1,7 @@
 @import 'atlas-variables';
-@import 'cadmin-variables';
 
-html#{$cadmin-selector} {
-	.field-base {
-		&-tooltip-icon {
-			color: $gray-600;
-		}
-
-		&-disabled-icon {
-			color: $gray-500;
-		}
+.field-base {
+	&-tooltip-icon {
+		color: $gray-600;
 	}
 }
