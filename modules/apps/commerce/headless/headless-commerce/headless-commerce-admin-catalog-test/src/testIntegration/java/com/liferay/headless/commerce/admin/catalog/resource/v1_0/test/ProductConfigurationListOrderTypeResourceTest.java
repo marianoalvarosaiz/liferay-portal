@@ -91,13 +91,6 @@ public class ProductConfigurationListOrderTypeResourceTest
 		}
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
 	@Override
 	@Test
 	public void testDeleteProductConfigurationListOrderType() throws Exception {

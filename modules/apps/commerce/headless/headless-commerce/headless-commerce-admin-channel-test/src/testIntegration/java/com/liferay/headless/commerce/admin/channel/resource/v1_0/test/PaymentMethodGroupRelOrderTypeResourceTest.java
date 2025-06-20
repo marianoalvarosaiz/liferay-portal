@@ -60,13 +60,6 @@ public class PaymentMethodGroupRelOrderTypeResourceTest
 			testGroup.getGroupId(), _commerceCurrency.getCode());
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
 	@Override
 	@Test
 	public void testDeletePaymentMethodGroupRelOrderType() throws Exception {

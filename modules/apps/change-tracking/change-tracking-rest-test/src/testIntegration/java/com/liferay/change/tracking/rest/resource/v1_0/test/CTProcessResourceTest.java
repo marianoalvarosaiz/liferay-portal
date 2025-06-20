@@ -34,13 +34,6 @@ public class CTProcessResourceTest extends BaseCTProcessResourceTestCase {
 	@Ignore
 	@Override
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
-	@Ignore
-	@Override
-	@Test
 	public void testDeleteCTProcessBatch() throws Exception {
 		super.testDeleteCTProcessBatch();
 	}

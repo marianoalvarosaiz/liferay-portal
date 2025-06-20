@@ -60,13 +60,6 @@ public class CTCollectionResourceTest extends BaseCTCollectionResourceTestCase {
 	@Ignore
 	@Override
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
-	@Ignore
-	@Override
-	@Test
 	public void testDeleteCTCollectionBatch() throws Exception {
 		super.testDeleteCTCollectionBatch();
 	}

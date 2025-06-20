@@ -79,11 +79,6 @@ public class PriceListOrderTypeResourceTest
 
 	@Override
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-	}
-
-	@Override
-	@Test
 	public void testDeletePriceListOrderType() throws Exception {
 	}
 

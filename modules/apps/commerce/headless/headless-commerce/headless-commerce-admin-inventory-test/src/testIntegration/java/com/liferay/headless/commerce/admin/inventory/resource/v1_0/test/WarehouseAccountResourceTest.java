@@ -72,13 +72,6 @@ public class WarehouseAccountResourceTest
 		}
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
 	@Override
 	@Test
 	public void testDeleteWarehouseAccount() throws Exception {

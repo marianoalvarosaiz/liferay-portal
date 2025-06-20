@@ -26,13 +26,6 @@ public class TestEntityResourceTest extends BaseTestEntityResourceTestCase {
 	@Ignore
 	@Override
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
-	@Ignore
-	@Override
-	@Test
 	public void testDeleteTestEntityBatch() throws Exception {
 		super.testDeleteTestEntityBatch();
 	}

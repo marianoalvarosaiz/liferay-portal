@@ -59,13 +59,6 @@ public class OrderTypeChannelResourceTest
 	@Ignore
 	@Override
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
-	@Ignore
-	@Override
-	@Test
 	public void testDeleteOrderTypeChannel() throws Exception {
 		super.testDeleteOrderTypeChannel();
 	}

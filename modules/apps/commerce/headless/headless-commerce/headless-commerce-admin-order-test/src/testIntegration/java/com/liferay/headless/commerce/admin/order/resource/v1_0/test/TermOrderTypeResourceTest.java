@@ -61,13 +61,6 @@ public class TermOrderTypeResourceTest
 	@Ignore
 	@Override
 	@Test
-	public void testBatchEngineDeleteImportTask() throws Exception {
-		super.testBatchEngineDeleteImportTask();
-	}
-
-	@Ignore
-	@Override
-	@Test
 	public void testDeleteTermOrderType() throws Exception {
 		super.testDeleteTermOrderType();
 	}
