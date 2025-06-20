@@ -27,6 +27,7 @@ import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -111,7 +112,9 @@ public class InfoRequestFieldValuesProviderHelper {
 				continue;
 			}
 
-			if (infoField.isLocalizable()) {
+			if (FeatureFlagManagerUtil.isEnabled("LPD-37927") &&
+				infoField.isLocalizable()) {
+
 				infoFieldValues.put(
 					infoField.getUniqueId(),
 					new InfoFieldValue<>(

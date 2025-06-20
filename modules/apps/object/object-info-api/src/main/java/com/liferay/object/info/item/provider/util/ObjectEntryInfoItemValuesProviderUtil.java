@@ -127,7 +127,9 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 
 			Object value = values.get(objectField.getName());
 
-			if (objectField.isLocalized()) {
+			if (FeatureFlagManagerUtil.isEnabled("LPD-37927") &&
+				objectField.isLocalized()) {
+
 				value = values.get(objectField.getI18nObjectFieldName());
 			}
 
@@ -177,7 +179,9 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 
 				value = properties.get(relatedObjectField.getName());
 
-				if (relatedObjectField.isLocalized()) {
+				if (FeatureFlagManagerUtil.isEnabled("LPD-37927") &
+					relatedObjectField.isLocalized()) {
+
 					value = properties.get(
 						relatedObjectField.getI18nObjectFieldName());
 				}

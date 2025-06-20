@@ -11,7 +11,7 @@ if (inputElement) {
 	else if (layoutMode === 'edit') {
 		inputElement.setAttribute('disabled', true);
 	}
-	else {
+	else if (Liferay.FeatureFlags['LPD-37927']) {
 		const defaultLanguageId = themeDisplay.getDefaultLanguageId();
 
 		import('@liferay/fragment-impl/api').then(

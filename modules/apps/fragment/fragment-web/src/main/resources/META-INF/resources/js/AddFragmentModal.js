@@ -37,7 +37,9 @@ export default function AddFragmentModal({
 	});
 
 	const fieldTypes = initialFieldTypes.filter(
-		(fieldType) => fieldType.key !== 'localizationSelect'
+		(fieldType) =>
+			fieldType.key !== 'localizationSelect' ||
+			Liferay.FeatureFlags['LPD-37927']
 	);
 
 	return (

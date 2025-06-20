@@ -102,10 +102,12 @@ export function FormGeneralPanel({item}) {
 						</ClayPanel>
 					</div>
 
-					<LocalizationOptions
-						item={item}
-						onValueSelect={saveFormConfig}
-					/>
+					{Liferay.FeatureFlags['LPD-37927'] ? (
+						<LocalizationOptions
+							item={item}
+							onValueSelect={saveFormConfig}
+						/>
+					) : null}
 				</>
 			)}
 

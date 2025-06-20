@@ -43,7 +43,7 @@ else {
 			}
 		});
 	}
-	else {
+	else if (Liferay.FeatureFlags['LPD-37927']) {
 		const inputContainer = document.getElementById(
 			`${fragmentEntryLinkNamespace}-rich-text-input`
 		);

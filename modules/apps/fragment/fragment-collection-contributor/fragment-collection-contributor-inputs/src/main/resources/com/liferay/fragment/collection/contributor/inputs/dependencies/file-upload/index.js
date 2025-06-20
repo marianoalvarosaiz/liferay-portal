@@ -138,216 +138,226 @@ else {
 		showRemoveButton();
 	}
 
-	const defaultLanguageId = themeDisplay.getDefaultLanguageId();
-	const inputElement = fileInput;
+	if (Liferay.FeatureFlags['LPD-37927']) {
+		const defaultLanguageId = themeDisplay.getDefaultLanguageId();
+		const inputElement = fileInput;
 
-	let currentLanguageId = defaultLanguageId;
+		let currentLanguageId = defaultLanguageId;
 
-	import('@liferay/fragment-impl/api').then(
-		({
-			getOrCreateTranslationInput,
-			registerLocalizedInput,
-			registerUnlocalizedInput,
-		}) => {
-			if (input.localizable) {
+		import('@liferay/fragment-impl/api').then(
+			({
+				getOrCreateTranslationInput,
+				registerLocalizedInput,
+				registerUnlocalizedInput,
+			}) => {
+				if (input.localizable) {
 
-				// Set initial values
+					// Set initial values
 
-				const initialValues = Object.keys(input.valueI18n).map(
-					(key) => [
-						key,
-						{
-							fileEntryId: input.valueI18n[key],
-							name: input.attributes.fileNameI18n[key] || '',
-						},
-					]
-				);
-
-				initialValues.forEach(([languageId, value]) => {
-					const translationInput = getOrCreateTranslationInput(
-						inputElement.id,
-						input.name,
-						languageId,
-						inputElement.parentNode,
-						fragmentNamespace
+					const initialValues = Object.keys(input.valueI18n).map(
+						(key) => [
+							key,
+							{
+								fileEntryId: input.valueI18n[key],
+								name: input.attributes.fileNameI18n[key] || '',
+							},
+						]
 					);
 
-					translationInput.value = value.fileEntryId;
-					translationInput.dataset.fileName = value.name;
-				});
-
-				const isFromDocumentLibrary =
-					input.attributes.selectFromDocumentLibrary;
-
-				const {onChange} = registerLocalizedInput({
-					changeTextDirection: false,
-					customLocaleChangeHandler: true,
-					defaultLanguageId,
-					onLocaleChange: ({languageId}) => {
-						currentLanguageId = languageId;
-
-						const translationInput = getTranslationInput(
-							fragmentNamespace,
+					initialValues.forEach(([languageId, value]) => {
+						const translationInput = getOrCreateTranslationInput(
+							inputElement.id,
+							input.name,
 							languageId,
-							inputElement.id
+							inputElement.parentNode,
+							fragmentNamespace
 						);
 
-						if (translationInput) {
-							setFileName(translationInput);
-						}
-						else {
-							const defaultTranslationInput = getTranslationInput(
+						translationInput.value = value.fileEntryId;
+						translationInput.dataset.fileName = value.name;
+					});
+
+					const isFromDocumentLibrary =
+						input.attributes.selectFromDocumentLibrary;
+
+					const {onChange} = registerLocalizedInput({
+						changeTextDirection: false,
+						customLocaleChangeHandler: true,
+						defaultLanguageId,
+						onLocaleChange: ({languageId}) => {
+							currentLanguageId = languageId;
+
+							const translationInput = getTranslationInput(
 								fragmentNamespace,
-								defaultLanguageId,
+								languageId,
 								inputElement.id
 							);
 
-							setFileName(defaultTranslationInput);
+							if (translationInput) {
+								setFileName(translationInput);
+							}
+							else {
+								const defaultTranslationInput =
+									getTranslationInput(
+										fragmentNamespace,
+										defaultLanguageId,
+										inputElement.id
+									);
+
+								setFileName(defaultTranslationInput);
+							}
+						},
+					});
+
+					const setTranslationInputValue = ({fileName, value}) => {
+						const type =
+							isFromDocumentLibrary === false ? 'file' : 'hidden';
+
+						const translationInput = getOrCreateTranslationInput(
+							inputElement.id,
+							input.name,
+							currentLanguageId,
+							inputElement.parentNode,
+							fragmentNamespace,
+							type
+						);
+
+						if (isFromDocumentLibrary) {
+							translationInput.value = value;
+							translationInput.dataset.fileName = fileName;
 						}
-					},
-				});
-
-				const setTranslationInputValue = ({fileName, value}) => {
-					const type =
-						isFromDocumentLibrary === false ? 'file' : 'hidden';
-
-					const translationInput = getOrCreateTranslationInput(
-						inputElement.id,
-						input.name,
-						currentLanguageId,
-						inputElement.parentNode,
-						fragmentNamespace,
-						type
-					);
-
-					if (isFromDocumentLibrary) {
-						translationInput.value = value;
-						translationInput.dataset.fileName = fileName;
-					}
-					else {
-						const files = value;
-
-						if (files?.length) {
-							const dataTransfer = new DataTransfer();
+						else {
+							const files = value;
 
 							if (files?.length) {
-								[...files].forEach((file) => {
-									dataTransfer.items.add(file);
-								});
+								const dataTransfer = new DataTransfer();
+
+								if (files?.length) {
+									[...files].forEach((file) => {
+										dataTransfer.items.add(file);
+									});
+								}
+
+								translationInput.files = dataTransfer.files;
+								translationInput.dataset.fileName =
+									dataTransfer.files[0].name;
 							}
-
-							translationInput.files = dataTransfer.files;
-							translationInput.dataset.fileName =
-								dataTransfer.files[0].name;
 						}
-					}
-				};
+					};
 
-				if (isFromDocumentLibrary) {
-					selectButton.addEventListener('click', (event) => {
-						onSelectFile(event, onChange, setTranslationInputValue);
+					if (isFromDocumentLibrary) {
+						selectButton.addEventListener('click', (event) => {
+							onSelectFile(
+								event,
+								onChange,
+								setTranslationInputValue
+							);
+						});
+					}
+					else {
+						inputElement.addEventListener('change', (event) => {
+							setTranslationInputValue({
+								value: event.target.files,
+							});
+
+							onChange();
+						});
+
+						selectButton.addEventListener(
+							'click',
+							onSelectFromUserComputer
+						);
+					}
+
+					removeButton.addEventListener('click', () => {
+						fileName.innerText = '';
+
+						removeButton.classList.add('d-none');
+
+						const translationInput = getOrCreateTranslationInput(
+							inputElement.id,
+							input.name,
+							currentLanguageId,
+							inputElement.parentNode,
+							fragmentNamespace
+						);
+
+						translationInput.value = '';
+						translationInput.dataset.fileName = '';
 					});
 				}
 				else {
-					inputElement.addEventListener('change', (event) => {
-						setTranslationInputValue({
-							value: event.target.files,
-						});
+					const unlocalizedFieldsState =
+						input.attributes.unlocalizedFieldsState;
 
-						onChange();
+					registerUnlocalizedInput({
+						changeTextDirection: false,
+						customLocaleChangeHandler: true,
+						defaultLanguageId,
+						inputElement,
+						onLocaleChange: (languageId) => {
+							if (defaultLanguageId !== languageId) {
+								if (unlocalizedFieldsState === 'read-only') {
+									selectButton.classList.add('d-none');
+
+									fileName.setAttribute('readonly', 'true');
+									fileName.setAttribute('tabindex', '0');
+									fileName.classList.add('form-control');
+
+									if (!fileName.innerText) {
+										fileName.innerText =
+											fileName.dataset.placeholder;
+									}
+								}
+								else {
+									selectButton.setAttribute('disabled', true);
+
+									fileName.classList.add('text-secondary');
+								}
+
+								removeButton.classList.add('d-none');
+							}
+							else {
+								if (unlocalizedFieldsState === 'read-only') {
+									selectButton.classList.remove('d-none');
+
+									fileName.removeAttribute('readonly');
+									fileName.removeAttribute('tabindex');
+									fileName.classList.remove('form-control');
+
+									if (
+										fileName.innerText ===
+										fileName.dataset.placeholder
+									) {
+										fileName.innerText = '';
+									}
+								}
+								else {
+									selectButton.removeAttribute('disabled');
+
+									fileName.classList.remove('text-secondary');
+								}
+
+								if (fileName.innerText) {
+									removeButton.classList.remove('d-none');
+								}
+							}
+						},
+						readOnlyInputLabel: document.getElementById(
+							`${fragmentNamespace}-file-upload-read-only`
+						),
+						unlocalizedFieldsState,
+						unlocalizedMessageContainer: document.getElementById(
+							`${fragmentNamespace}-unlocalized-info`
+						),
 					});
 
-					selectButton.addEventListener(
-						'click',
-						onSelectFromUserComputer
-					);
+					selectButton.addEventListener('click', selectFileEvent);
 				}
-
-				removeButton.addEventListener('click', () => {
-					fileName.innerText = '';
-
-					removeButton.classList.add('d-none');
-
-					const translationInput = getOrCreateTranslationInput(
-						inputElement.id,
-						input.name,
-						currentLanguageId,
-						inputElement.parentNode,
-						fragmentNamespace
-					);
-
-					translationInput.value = '';
-					translationInput.dataset.fileName = '';
-				});
 			}
-			else {
-				const unlocalizedFieldsState =
-					input.attributes.unlocalizedFieldsState;
-
-				registerUnlocalizedInput({
-					changeTextDirection: false,
-					customLocaleChangeHandler: true,
-					defaultLanguageId,
-					inputElement,
-					onLocaleChange: (languageId) => {
-						if (defaultLanguageId !== languageId) {
-							if (unlocalizedFieldsState === 'read-only') {
-								selectButton.classList.add('d-none');
-
-								fileName.setAttribute('readonly', 'true');
-								fileName.setAttribute('tabindex', '0');
-								fileName.classList.add('form-control');
-
-								if (!fileName.innerText) {
-									fileName.innerText =
-										fileName.dataset.placeholder;
-								}
-							}
-							else {
-								selectButton.setAttribute('disabled', true);
-
-								fileName.classList.add('text-secondary');
-							}
-
-							removeButton.classList.add('d-none');
-						}
-						else {
-							if (unlocalizedFieldsState === 'read-only') {
-								selectButton.classList.remove('d-none');
-
-								fileName.removeAttribute('readonly');
-								fileName.removeAttribute('tabindex');
-								fileName.classList.remove('form-control');
-
-								if (
-									fileName.innerText ===
-									fileName.dataset.placeholder
-								) {
-									fileName.innerText = '';
-								}
-							}
-							else {
-								selectButton.removeAttribute('disabled');
-
-								fileName.classList.remove('text-secondary');
-							}
-
-							if (fileName.innerText) {
-								removeButton.classList.remove('d-none');
-							}
-						}
-					},
-					readOnlyInputLabel: document.getElementById(
-						`${fragmentNamespace}-file-upload-read-only`
-					),
-					unlocalizedFieldsState,
-					unlocalizedMessageContainer: document.getElementById(
-						`${fragmentNamespace}-unlocalized-info`
-					),
-				});
-
-				selectButton.addEventListener('click', selectFileEvent);
-			}
-		}
-	);
+		);
+	}
+	else {
+		selectButton.addEventListener('click', selectFileEvent);
+	}
 }

@@ -53,6 +53,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.InfoFormException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.Language;
@@ -192,7 +193,10 @@ public class FragmentEntryInputTemplateNodeContextHelperImpl
 		if (infoField != null) {
 			name = infoField.getName();
 			readOnly = infoField.isReadOnly();
-			localizable = infoField.isLocalizable();
+
+			if (FeatureFlagManagerUtil.isEnabled("LPD-37927")) {
+				localizable = infoField.isLocalizable();
+			}
 		}
 
 		boolean required = false;
@@ -339,7 +343,7 @@ public class FragmentEntryInputTemplateNodeContextHelperImpl
 			attributes, fragmentEntryLink, httpServletRequest, infoField,
 			inputTemplateNode, label, locale, value, valueI18n);
 
-		if (!localizable) {
+		if (!localizable && FeatureFlagManagerUtil.isEnabled("LPD-37927")) {
 			_addLocalizationOptionsAttributes(
 				fragmentEntryLink, httpServletRequest, inputLabel,
 				inputTemplateNode, locale);

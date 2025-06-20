@@ -7,22 +7,24 @@ function main() {
 		inputElement.setAttribute('disabled', true);
 	}
 	else {
-		import('@liferay/fragment-impl/api').then(
-			({registerLocalizedInput}) => {
-				const {onChange} = registerLocalizedInput({
-					defaultLanguageId: themeDisplay.getDefaultLanguageId(),
-					initialValues: input.valueI18n,
-					inputElement,
-					inputName: input.name,
-					localizationInputsContainer: inputElement.parentNode,
-					namespace: fragmentNamespace,
-				});
+		if (Liferay.FeatureFlags['LPD-37927']) {
+			import('@liferay/fragment-impl/api').then(
+				({registerLocalizedInput}) => {
+					const {onChange} = registerLocalizedInput({
+						defaultLanguageId: themeDisplay.getDefaultLanguageId(),
+						initialValues: input.valueI18n,
+						inputElement,
+						inputName: input.name,
+						localizationInputsContainer: inputElement.parentNode,
+						namespace: fragmentNamespace,
+					});
 
-				inputElement.addEventListener('change', (event) => {
-					onChange(event.target.value);
-				});
-			}
-		);
+					inputElement.addEventListener('change', (event) => {
+						onChange(event.target.value);
+					});
+				}
+			);
+		}
 	}
 }
 

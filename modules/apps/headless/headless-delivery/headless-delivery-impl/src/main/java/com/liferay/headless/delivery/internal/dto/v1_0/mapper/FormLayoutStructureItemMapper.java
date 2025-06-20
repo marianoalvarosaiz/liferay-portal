@@ -27,6 +27,7 @@ import com.liferay.layout.converter.JustifyConverter;
 import com.liferay.layout.util.constants.StyledLayoutStructureConstants;
 import com.liferay.layout.util.structure.FormStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -88,9 +89,13 @@ public class FormLayoutStructureItemMapper
 											() -> _toFormType(
 												formStyledLayoutStructureItem));
 
-										setLocalizationConfig(
-											() -> _toLocalizationConfig(
-												formStyledLayoutStructureItem));
+										if (FeatureFlagManagerUtil.isEnabled(
+												"LPD-37927")) {
+
+											setLocalizationConfig(
+												() -> _toLocalizationConfig(
+													formStyledLayoutStructureItem));
+										}
 
 										setNumberOfSteps(
 											formStyledLayoutStructureItem::
