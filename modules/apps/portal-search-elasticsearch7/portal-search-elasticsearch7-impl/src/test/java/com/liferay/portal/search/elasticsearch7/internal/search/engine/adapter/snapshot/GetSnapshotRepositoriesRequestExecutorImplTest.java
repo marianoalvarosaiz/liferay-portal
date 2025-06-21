@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.AnalyzeIndexRequestExecutorTest;
 import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotRepositoriesRequest;
@@ -45,14 +46,17 @@ public class GetSnapshotRepositoriesRequestExecutorImplTest {
 		GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest =
 			new GetSnapshotRepositoriesRequest("repository1", "repository2");
 
-		GetSnapshotRepositoriesRequestExecutor
-			getSnapshotRepositoriesRequestExecutor =
-				new GetSnapshotRepositoriesRequestExecutor(
-					_elasticsearchFixture);
+		GetSnapshotRepositoriesRequestExecutorImpl
+			getSnapshotRepositoriesRequestExecutorImpl =
+				new GetSnapshotRepositoriesRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getSnapshotRepositoriesRequestExecutorImpl,
+			"_elasticsearchClientResolver", _elasticsearchFixture);
 
 		GetRepositoriesRequest getRepositoriesRequest =
-			getSnapshotRepositoriesRequestExecutor.createGetRepositoriesRequest(
-				getSnapshotRepositoriesRequest);
+			getSnapshotRepositoriesRequestExecutorImpl.
+				createGetRepositoriesRequest(getSnapshotRepositoriesRequest);
 
 		Assert.assertArrayEquals(
 			getSnapshotRepositoriesRequest.getRepositoryNames(),

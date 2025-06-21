@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.engine.adapter.snapshot.GetSnapshotRepositoriesRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
@@ -37,14 +38,17 @@ public class GetSnapshotRepositoriesRequestExecutorImplTest
 			new GetSnapshotRepositoriesRequest(
 				"repositoryName1", "repositoryName2");
 
-		GetSnapshotRepositoriesRequestExecutor
-			getSnapshotRepositoriesRequestExecutor =
-				new GetSnapshotRepositoriesRequestExecutor(
-					openSearchConnectionManager);
+		GetSnapshotRepositoriesRequestExecutorImpl
+			getSnapshotRepositoriesRequestExecutorImpl =
+				new GetSnapshotRepositoriesRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getSnapshotRepositoriesRequestExecutorImpl,
+			"_openSearchConnectionManager", openSearchConnectionManager);
 
 		GetRepositoryRequest getRepositoriesRequest =
-			getSnapshotRepositoriesRequestExecutor.createGetRepositoryRequest(
-				getSnapshotRepositoriesRequest);
+			getSnapshotRepositoriesRequestExecutorImpl.
+				createGetRepositoryRequest(getSnapshotRepositoriesRequest);
 
 		Assert.assertArrayEquals(
 			getSnapshotRepositoriesRequest.getRepositoryNames(),
