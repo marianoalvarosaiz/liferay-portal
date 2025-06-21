@@ -136,8 +136,21 @@ public class ExportImportReportEntryCacheModel
 		}
 
 		exportImportReportEntryImpl.setClassNameId(classNameId);
-		exportImportReportEntryImpl.setError(error);
-		exportImportReportEntryImpl.setErrorStacktrace(errorStacktrace);
+
+		if (error == null) {
+			exportImportReportEntryImpl.setError("");
+		}
+		else {
+			exportImportReportEntryImpl.setError(error);
+		}
+
+		if (errorStacktrace == null) {
+			exportImportReportEntryImpl.setErrorStacktrace("");
+		}
+		else {
+			exportImportReportEntryImpl.setErrorStacktrace(errorStacktrace);
+		}
+
 		exportImportReportEntryImpl.setExportImportConfigurationId(
 			exportImportConfigurationId);
 		exportImportReportEntryImpl.setResolved(resolved);
@@ -149,9 +162,7 @@ public class ExportImportReportEntryCacheModel
 	}
 
 	@Override
-	public void readExternal(ObjectInput objectInput)
-		throws ClassNotFoundException, IOException {
-
+	public void readExternal(ObjectInput objectInput) throws IOException {
 		mvccVersion = objectInput.readLong();
 
 		exportImportReportEntryId = objectInput.readLong();
@@ -164,8 +175,8 @@ public class ExportImportReportEntryCacheModel
 		classExternalReferenceCode = objectInput.readUTF();
 
 		classNameId = objectInput.readLong();
-		error = (String)objectInput.readObject();
-		errorStacktrace = (String)objectInput.readObject();
+		error = objectInput.readUTF();
+		errorStacktrace = objectInput.readUTF();
 
 		exportImportConfigurationId = objectInput.readLong();
 
@@ -196,17 +207,17 @@ public class ExportImportReportEntryCacheModel
 		objectOutput.writeLong(classNameId);
 
 		if (error == null) {
-			objectOutput.writeObject("");
+			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeObject(error);
+			objectOutput.writeUTF(error);
 		}
 
 		if (errorStacktrace == null) {
-			objectOutput.writeObject("");
+			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeObject(errorStacktrace);
+			objectOutput.writeUTF(errorStacktrace);
 		}
 
 		objectOutput.writeLong(exportImportConfigurationId);
