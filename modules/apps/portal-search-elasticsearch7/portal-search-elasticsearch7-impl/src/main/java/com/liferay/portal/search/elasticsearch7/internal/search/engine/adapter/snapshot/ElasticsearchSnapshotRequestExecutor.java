@@ -82,8 +82,6 @@ public class ElasticsearchSnapshotRequestExecutor
 	protected void activate() {
 		createSnapshotRequestExecutor = new CreateSnapshotRequestExecutor(
 			_elasticsearchClientResolver);
-		restoreSnapshotRequestExecutor = new RestoreSnapshotRequestExecutor(
-			_elasticsearchClientResolver);
 	}
 
 	@Reference
@@ -102,6 +100,7 @@ public class ElasticsearchSnapshotRequestExecutor
 	@Reference
 	protected GetSnapshotsRequestExecutor getSnapshotsRequestExecutor;
 
+	@Reference
 	protected RestoreSnapshotRequestExecutor restoreSnapshotRequestExecutor;
 
 	@Reference
