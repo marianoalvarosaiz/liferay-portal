@@ -7,7 +7,7 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.expando.kernel.service.ExpandoRowLocalService;
-import com.liferay.exportimport.kernel.incomplete.model.IncompleteModelManagerUtil;
+import com.liferay.exportimport.kernel.incomplete.model.IncompleteModelManager;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -322,7 +322,7 @@ public class OrganizationLocalServiceImpl
 		organization.setStatusListTypeId(statusListTypeId);
 		organization.setComments(comments);
 
-		if (IncompleteModelManagerUtil.isIncompleteModel()) {
+		if (_incompleteModelManager.isIncompleteModel()) {
 			organization.setStatus(WorkflowConstants.STATUS_INCOMPLETE);
 		}
 		else {
@@ -719,7 +719,7 @@ public class OrganizationLocalServiceImpl
 			String name)
 		throws Exception {
 
-		return IncompleteModelManagerUtil.getOrAddIncompleteModel(
+		return _incompleteModelManager.getOrAddIncompleteModel(
 			Organization.class, companyId, externalReferenceCode,
 			this::fetchOrganizationByExternalReferenceCode,
 			this::getOrganizationByExternalReferenceCode,
@@ -2689,8 +2689,7 @@ public class OrganizationLocalServiceImpl
 		boolean countryRequired = organizationTypesSettings.isCountryRequired(
 			type);
 
-		if ((countryRequired &&
-			 !IncompleteModelManagerUtil.isIncompleteModel()) ||
+		if ((countryRequired && !_incompleteModelManager.isIncompleteModel()) ||
 			(countryId > 0)) {
 
 			_countryPersistence.findByPrimaryKey(countryId);
@@ -2761,6 +2760,9 @@ public class OrganizationLocalServiceImpl
 
 	@BeanReference(type = GroupPersistence.class)
 	private GroupPersistence _groupPersistence;
+
+	@BeanReference(type = IncompleteModelManager.class)
+	private IncompleteModelManager _incompleteModelManager;
 
 	@BeanReference(type = ListTypeLocalService.class)
 	private ListTypeLocalService _listTypeLocalService;
