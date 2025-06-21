@@ -7,20 +7,22 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.expando.kernel.service.ExpandoRowLocalService;
-import com.liferay.exportimport.kernel.incomplete.model.IncompleteModelManager;
 import com.liferay.petra.function.transform.TransformUtil;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.DuplicateOrganizationException;
+import com.liferay.portal.kernel.exception.NoSuchOrganizationException;
 import com.liferay.portal.kernel.exception.OrganizationNameException;
 import com.liferay.portal.kernel.exception.OrganizationParentException;
 import com.liferay.portal.kernel.exception.OrganizationTypeException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.RequiredOrganizationException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lazy.referencing.LazyReferencingThreadLocal;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
@@ -322,7 +324,7 @@ public class OrganizationLocalServiceImpl
 		organization.setStatusListTypeId(statusListTypeId);
 		organization.setComments(comments);
 
-		if (_incompleteModelManager.isIncompleteModel()) {
+		if (LazyReferencingThreadLocal.isIncompleteModel()) {
 			organization.setStatus(WorkflowConstants.STATUS_INCOMPLETE);
 		}
 		else {
@@ -719,30 +721,40 @@ public class OrganizationLocalServiceImpl
 			String name)
 		throws Exception {
 
-		return _incompleteModelManager.getOrAddIncompleteModel(
-			Organization.class, companyId, externalReferenceCode,
-			this::fetchOrganizationByExternalReferenceCode,
-			this::getOrganizationByExternalReferenceCode,
-			() -> {
-				String organizationName = name;
+		Organization organization = fetchOrganizationByExternalReferenceCode(
+			externalReferenceCode, companyId);
 
-				if (Validator.isNull(name) ||
-					(fetchOrganization(companyId, name) != null)) {
+		if (organization != null) {
+			return organization;
+		}
 
-					organizationName = externalReferenceCode;
-				}
+		if (!LazyReferencingThreadLocal.isEnabled()) {
+			throw new NoSuchOrganizationException(
+				StringBundler.concat(
+					"Unable to find organization with external reference code ",
+					externalReferenceCode, " and company ", companyId));
+		}
 
-				String[] types = getTypes();
+		if (Validator.isNull(name) ||
+			(fetchOrganization(companyId, name) != null)) {
 
-				ListType listType = _listTypeLocalService.getListType(
-					companyId, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
-					ListTypeConstants.ORGANIZATION_STATUS);
+			name = externalReferenceCode;
+		}
 
-				return addOrganization(
-					externalReferenceCode, userId, 0, organizationName,
-					types[0], 0, 0, listType.getListTypeId(), StringPool.BLANK,
-					false, null);
-			});
+		try (SafeCloseable safeCloseable =
+				LazyReferencingThreadLocal.setIncompleteModelWithSafeCloseable(
+					true)) {
+
+			String[] types = getTypes();
+
+			ListType listType = _listTypeLocalService.getListType(
+				companyId, ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
+				ListTypeConstants.ORGANIZATION_STATUS);
+
+			return addOrganization(
+				externalReferenceCode, userId, 0, name, types[0], 0, 0,
+				listType.getListTypeId(), StringPool.BLANK, false, null);
+		}
 	}
 
 	/**
@@ -2689,7 +2701,8 @@ public class OrganizationLocalServiceImpl
 		boolean countryRequired = organizationTypesSettings.isCountryRequired(
 			type);
 
-		if ((countryRequired && !_incompleteModelManager.isIncompleteModel()) ||
+		if ((countryRequired &&
+			 !LazyReferencingThreadLocal.isIncompleteModel()) ||
 			(countryId > 0)) {
 
 			_countryPersistence.findByPrimaryKey(countryId);
@@ -2760,9 +2773,6 @@ public class OrganizationLocalServiceImpl
 
 	@BeanReference(type = GroupPersistence.class)
 	private GroupPersistence _groupPersistence;
-
-	@BeanReference(type = IncompleteModelManager.class)
-	private IncompleteModelManager _incompleteModelManager;
 
 	@BeanReference(type = ListTypeLocalService.class)
 	private ListTypeLocalService _listTypeLocalService;
