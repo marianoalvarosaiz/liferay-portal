@@ -20,6 +20,7 @@ import com.liferay.portal.search.engine.adapter.snapshot.RestoreSnapshotResponse
 import com.liferay.portal.search.engine.adapter.snapshot.SnapshotRequestExecutor;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bryan Engler
@@ -74,9 +75,10 @@ public class SolrSnapshotRequestExecutor implements SnapshotRequestExecutor {
 		return _restoreSnapshotRequestExecutor.execute(restoreSnapshotRequest);
 	}
 
-	private final CreateSnapshotRepositoryRequestExecutor
-		_createSnapshotRepositoryRequestExecutor =
-			new CreateSnapshotRepositoryRequestExecutor();
+	@Reference
+	private CreateSnapshotRepositoryRequestExecutor
+		_createSnapshotRepositoryRequestExecutor;
+
 	private final CreateSnapshotRequestExecutor _createSnapshotRequestExecutor =
 		new CreateSnapshotRequestExecutor();
 	private final DeleteSnapshotRequestExecutor _deleteSnapshotRequestExecutor =
