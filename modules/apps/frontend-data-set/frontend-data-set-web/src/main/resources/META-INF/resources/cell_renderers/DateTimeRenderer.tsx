@@ -6,15 +6,7 @@
 import {ETimeZoneBehaviors} from '../constants';
 
 interface IDateTimeRendererOptions {
-	format?: {
-		day?: 'numeric' | '2-digit';
-		hour?: 'numeric' | '2-digit';
-		minute?: 'numeric' | '2-digit';
-		month?: 'numeric' | '2-digit' | 'short' | 'long' | 'narrow';
-		second?: 'numeric' | '2-digit';
-		timeZone?: string;
-		year?: 'numeric' | '2-digit';
-	};
+	format?: any;
 	timeZoneBehavior?: ETimeZoneBehaviors;
 }
 
