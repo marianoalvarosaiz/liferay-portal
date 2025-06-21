@@ -5,7 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index;
 
-import com.liferay.portal.json.JSONFactoryImpl;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.engine.adapter.index.GetFieldMappingIndexRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
@@ -38,14 +38,17 @@ public class GetFieldMappingIndexRequestExecutorTest
 			new GetFieldMappingIndexRequest(
 				new String[] {TEST_INDEX_NAME}, new String[] {_FIELD_NAME});
 
-		GetFieldMappingIndexRequestExecutor
-			getFieldMappingIndexRequestExecutor =
-				new GetFieldMappingIndexRequestExecutor(
-					new JSONFactoryImpl(), openSearchConnectionManager);
+		GetFieldMappingIndexRequestExecutorImpl
+			getFieldMappingIndexRequestExecutorImpl =
+				new GetFieldMappingIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getFieldMappingIndexRequestExecutorImpl,
+			"_openSearchConnectionManager", openSearchConnectionManager);
 
 		GetFieldMappingRequest getFieldMappingRequest =
-			getFieldMappingIndexRequestExecutor.createGetFieldMappingRequest(
-				getFieldMappingIndexRequest);
+			getFieldMappingIndexRequestExecutorImpl.
+				createGetFieldMappingRequest(getFieldMappingIndexRequest);
 
 		Assert.assertArrayEquals(
 			new String[] {TEST_INDEX_NAME},
