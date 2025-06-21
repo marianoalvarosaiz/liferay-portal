@@ -110,9 +110,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 
 		_company = _mockCompany();
 		_prefsProps = _mockPrefsProps();
-
-		_expandoValueLocalService = _mockExpandoValueLocalService();
-
 		_samlProviderConfigurationHelper =
 			_mockSamlProviderConfigurationHelper();
 		_samlSpIdpConnection = _mockSamlSpIdConnection();
@@ -148,7 +145,7 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 			_mockExpandoTableLocalService());
 		ReflectionTestUtil.setFieldValue(
 			_defaultUserResolver, "_expandoValueLocalService",
-			_expandoValueLocalService);
+			_mockExpandoValueLocalService());
 		ReflectionTestUtil.setFieldValue(
 			_defaultUserResolver, "_samlPeerBindingLocalService",
 			_mockSamlPeerBindingLocalService());
@@ -169,40 +166,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 		ReflectionTestUtil.setFieldValue(
 			_defaultUserResolver, "_userProcessorFactory",
 			new UserProcessorFactoryImpl());
-	}
-
-	@Test
-	public void testAddUserProvisioningSource() throws Exception {
-		Mockito.when(
-			_company.isStrangers()
-		).thenReturn(
-			true
-		);
-
-		Mockito.when(
-			_company.isStrangersWithMx()
-		).thenReturn(
-			true
-		);
-
-		_initMessageContext(
-			true, NameIDType.EMAIL, _SUBJECT_NAME_IDENTIFIER_EMAIL_ADDRESS);
-		_initUnknownUserHandling(false);
-
-		_testUserFieldExpressionResolver.setUserFieldExpression("emailAddress");
-
-		User resolvedUser = _defaultUserResolver.resolveUser(
-			new UserResolverSAMLContextImpl(_messageContext),
-			new ServiceContext());
-
-		Assert.assertNotNull(resolvedUser);
-
-		Mockito.verify(
-			_expandoValueLocalService, Mockito.times(1)
-		).addValue(
-			_USER_CLASS_NAME_ID, _EXPANDO_TABLE_ID, _EXPANDO_COLUMN_ID,
-			resolvedUser.getUserId(), _SAML_IDP_ENTITY_ID
-		);
 	}
 
 	@Test
@@ -790,7 +753,7 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 		Mockito.when(
 			classNameLocalService.getClassNameId(User.class.getName())
 		).thenReturn(
-			_USER_CLASS_NAME_ID
+			0L
 		);
 
 		return classNameLocalService;
@@ -875,18 +838,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 
 		ExpandoColumn expandoColumn = Mockito.mock(ExpandoColumn.class);
 
-		Mockito.when(
-			expandoColumn.getColumnId()
-		).thenReturn(
-			_EXPANDO_COLUMN_ID
-		);
-
-		Mockito.when(
-			expandoColumn.getTableId()
-		).thenReturn(
-			_EXPANDO_TABLE_ID
-		);
-
 		ExpandoColumnLocalService expandoColumnLocalService = Mockito.mock(
 			ExpandoColumnLocalService.class);
 
@@ -904,12 +855,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 		throws Exception {
 
 		ExpandoTable expandoTable = Mockito.mock(ExpandoTable.class);
-
-		Mockito.when(
-			expandoTable.getTableId()
-		).thenReturn(
-			_EXPANDO_TABLE_ID
-		);
 
 		ExpandoTableLocalService expandoTableLocalService = Mockito.mock(
 			ExpandoTableLocalService.class);
@@ -992,12 +937,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 			samlSpIdpConnection.getNormalizedUserAttributeMappings()
 		).thenReturn(
 			PropertiesUtil.load(_ATTRIBUTE_MAPPINGS)
-		);
-
-		Mockito.when(
-			samlSpIdpConnection.getSamlIdpEntityId()
-		).thenReturn(
-			_SAML_IDP_ENTITY_ID
 		);
 
 		Mockito.when(
@@ -1127,21 +1066,12 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 		"emailAddress=emailAddress\nfirstName=firstName\nlastName=lastName\n" +
 			"screenName=screenName";
 
-	private static final long _EXPANDO_COLUMN_ID = RandomTestUtil.randomLong();
-
-	private static final long _EXPANDO_TABLE_ID = RandomTestUtil.randomLong();
-
-	private static final String _SAML_IDP_ENTITY_ID =
-		RandomTestUtil.randomString();
-
 	private static final String _SAML_NAME_IDENTIFIER_VALUE = "testNameIdValue";
 
 	private static final String _SUBJECT_NAME_IDENTIFIER_EMAIL_ADDRESS =
 		"test@liferay.com";
 
 	private static final String _SUBJECT_NAME_IDENTIFIER_SCREEN_NAME = "test";
-
-	private static final long _USER_CLASS_NAME_ID = RandomTestUtil.randomLong();
 
 	private static final String _USER_GROUP_NAME_EXISTING =
 		RandomTestUtil.randomString();
@@ -1153,7 +1083,6 @@ public class DefaultUserResolverTest extends BaseSamlTestCase {
 	private Company _company;
 	private final DefaultUserResolver _defaultUserResolver =
 		new DefaultUserResolver();
-	private ExpandoValueLocalService _expandoValueLocalService;
 	private MessageContext<Response> _messageContext;
 	private PrefsProps _prefsProps;
 	private SamlProviderConfigurationHelper _samlProviderConfigurationHelper;
