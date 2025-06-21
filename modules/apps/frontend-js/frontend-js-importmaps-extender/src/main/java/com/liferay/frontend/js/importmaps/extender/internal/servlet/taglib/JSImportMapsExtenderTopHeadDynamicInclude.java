@@ -130,15 +130,15 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 
 	@Deactivate
 	protected void deactivate() {
-		_bundleContext = null;
+		_jsImportMapsContributorServiceTracker.close();
+
+		_jsImportMapsContributorServiceTracker = null;
 
 		_dynamicJSImportMapsContributorServiceTracker.close();
 
 		_dynamicJSImportMapsContributorServiceTracker = null;
 
-		_jsImportMapsContributorServiceTracker.close();
-
-		_jsImportMapsContributorServiceTracker = null;
+		_bundleContext = null;
 	}
 
 	@Modified
