@@ -87,12 +87,12 @@ public class ExportImportReportEntryCacheModel
 		sb.append(classExternalReferenceCode);
 		sb.append(", classNameId=");
 		sb.append(classNameId);
-		sb.append(", exportImportConfigurationId=");
-		sb.append(exportImportConfigurationId);
 		sb.append(", error=");
 		sb.append(error);
 		sb.append(", errorStacktrace=");
 		sb.append(errorStacktrace);
+		sb.append(", exportImportConfigurationId=");
+		sb.append(exportImportConfigurationId);
 		sb.append(", resolved=");
 		sb.append(resolved);
 		sb.append(", type=");
@@ -136,10 +136,10 @@ public class ExportImportReportEntryCacheModel
 		}
 
 		exportImportReportEntryImpl.setClassNameId(classNameId);
-		exportImportReportEntryImpl.setExportImportConfigurationId(
-			exportImportConfigurationId);
 		exportImportReportEntryImpl.setError(error);
 		exportImportReportEntryImpl.setErrorStacktrace(errorStacktrace);
+		exportImportReportEntryImpl.setExportImportConfigurationId(
+			exportImportConfigurationId);
 		exportImportReportEntryImpl.setResolved(resolved);
 		exportImportReportEntryImpl.setType(type);
 
@@ -164,10 +164,10 @@ public class ExportImportReportEntryCacheModel
 		classExternalReferenceCode = objectInput.readUTF();
 
 		classNameId = objectInput.readLong();
-
-		exportImportConfigurationId = objectInput.readLong();
 		error = (String)objectInput.readObject();
 		errorStacktrace = (String)objectInput.readObject();
+
+		exportImportConfigurationId = objectInput.readLong();
 
 		resolved = objectInput.readBoolean();
 
@@ -195,8 +195,6 @@ public class ExportImportReportEntryCacheModel
 
 		objectOutput.writeLong(classNameId);
 
-		objectOutput.writeLong(exportImportConfigurationId);
-
 		if (error == null) {
 			objectOutput.writeObject("");
 		}
@@ -211,6 +209,8 @@ public class ExportImportReportEntryCacheModel
 			objectOutput.writeObject(errorStacktrace);
 		}
 
+		objectOutput.writeLong(exportImportConfigurationId);
+
 		objectOutput.writeBoolean(resolved);
 
 		objectOutput.writeInt(type);
@@ -224,9 +224,9 @@ public class ExportImportReportEntryCacheModel
 	public long modifiedDate;
 	public String classExternalReferenceCode;
 	public long classNameId;
-	public long exportImportConfigurationId;
 	public String error;
 	public String errorStacktrace;
+	public long exportImportConfigurationId;
 	public boolean resolved;
 	public int type;
 
