@@ -26,7 +26,6 @@ type Field = {
 };
 
 type FieldsProps = {
-	disabled?: boolean;
 	errors?: Feedback;
 	fields: Field[];
 	hideReset?: boolean;
@@ -35,7 +34,6 @@ type FieldsProps = {
 };
 
 export default function SeparatorFields({
-	disabled,
 	errors,
 	fields,
 	hideReset,
@@ -46,7 +44,6 @@ export default function SeparatorFields({
 		<>
 			{fields.map((field) => (
 				<Field
-					disabled={disabled}
 					errors={errors}
 					field={field}
 					hideReset={hideReset}
@@ -60,7 +57,6 @@ export default function SeparatorFields({
 }
 
 type FieldProps = {
-	disabled?: boolean;
 	errors?: Feedback;
 	field: Field;
 	hideReset?: boolean;
@@ -68,14 +64,7 @@ type FieldProps = {
 	warnings?: Feedback;
 };
 
-function Field({
-	disabled,
-	errors,
-	field,
-	hideReset,
-	url,
-	warnings,
-}: FieldProps) {
+function Field({errors, field, hideReset, url, warnings}: FieldProps) {
 	const descriptionId = useId();
 	const ref = useRef<HTMLInputElement>(null);
 
@@ -118,7 +107,6 @@ function Field({
 				<ClayInput.GroupItem append>
 					<ClayInput
 						aria-describedby={descriptionId}
-						disabled={disabled}
 						id={name}
 						name={name}
 						onBlur={(event) => {
