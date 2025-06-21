@@ -5,17 +5,12 @@
 
 package com.liferay.frontend.js.importmaps.extender.internal.servlet.taglib;
 
-import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.Portal;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -30,25 +25,6 @@ public class JSImportMapsCache {
 
 	public static final long COMPANY_ID_ALL = 0;
 
-	public JSImportMapsCache(Portal portal) {
-		_portal = portal;
-	}
-
-	public JSImportMapsRegistration register(
-		long companyId,
-		DynamicJSImportMapsContributor dynamicJSImportMapsContributor) {
-
-		Map<Long, DynamicJSImportMapsContributor>
-			dynamicJSImportMapsContributors =
-				_getDynamicJSImportMapsContributors(companyId);
-
-		long id = _nextId.getAndIncrement();
-
-		dynamicJSImportMapsContributors.put(id, dynamicJSImportMapsContributor);
-
-		return () -> dynamicJSImportMapsContributors.remove(id);
-	}
-
 	public JSImportMapsRegistration register(
 		long companyId, JSONObject jsonObject, String scope) {
 
@@ -56,15 +32,15 @@ public class JSImportMapsCache {
 			Map<Long, String> globalImportMapsValues =
 				_getGlobalImportMapsValues(companyId);
 
-			long id = _nextId.getAndIncrement();
+			long globalId = _nextGlobalId.getAndIncrement();
 
 			String value = jsonObject.toString();
 
 			value = value.substring(1, value.length() - 1);
 
-			globalImportMapsValues.put(id, value);
+			globalImportMapsValues.put(globalId, value);
 
-			return () -> globalImportMapsValues.remove(id);
+			return () -> globalImportMapsValues.remove(globalId);
 		}
 
 		Map<String, String> scopedImportMapsValues = _getScopedImportMapsValues(
@@ -87,77 +63,51 @@ public class JSImportMapsCache {
 		return () -> scopedImportMapsValues.remove(scope);
 	}
 
-	public void writeImportMaps(
-			HttpServletRequest httpServletRequest, Writer writer)
+	public void writeImportMaps(long companyId, Writer writer)
 		throws IOException {
-
-		long companyId = _portal.getCompanyId(httpServletRequest);
 
 		if (companyId == COMPANY_ID_ALL) {
 			throw new IllegalArgumentException(
 				"Company ID cannot be " + COMPANY_ID_ALL);
 		}
 
-		StringBuilder importsSB = new StringBuilder();
-
-		_writeStaticImports(
-			_getGlobalImportMapsValues(COMPANY_ID_ALL), importsSB);
-
-		_writeStaticImports(_getGlobalImportMapsValues(companyId), importsSB);
-
-		Map<Long, DynamicJSImportMapsContributor>
-			dynamicJSImportMapsContributors1 =
-				_getDynamicJSImportMapsContributors(COMPANY_ID_ALL);
-
-		_writeDynamicImports(
-			dynamicJSImportMapsContributors1, httpServletRequest, importsSB);
-
-		Map<Long, DynamicJSImportMapsContributor>
-			dynamicJSImportMapsContributors2 =
-				_getDynamicJSImportMapsContributors(companyId);
-
-		_writeDynamicImports(
-			dynamicJSImportMapsContributors2, httpServletRequest, importsSB);
-
-		StringBuilder scopesSB = new StringBuilder();
-
-		_writeStaticScopes(
-			_getScopedImportMapsValues(COMPANY_ID_ALL), scopesSB);
-
-		_writeStaticScopes(_getScopedImportMapsValues(companyId), scopesSB);
-
-		_writeDynamicScopes(
-			dynamicJSImportMapsContributors1, httpServletRequest, scopesSB);
-
-		_writeDynamicScopes(
-			dynamicJSImportMapsContributors2, httpServletRequest, scopesSB);
-
 		writer.write("{\"imports\": {");
 
-		writer.write(importsSB.toString());
+		Map<Long, String> globalImportMapsValues1 = _getGlobalImportMapsValues(
+			COMPANY_ID_ALL);
+
+		_writeImports(globalImportMapsValues1, writer);
+
+		Map<Long, String> globalImportMapsValues2 = _getGlobalImportMapsValues(
+			companyId);
+
+		if (!globalImportMapsValues1.isEmpty() &&
+			!globalImportMapsValues2.isEmpty()) {
+
+			writer.write(StringPool.COMMA);
+		}
+
+		_writeImports(globalImportMapsValues2, writer);
 
 		writer.write("}, \"scopes\": {");
 
-		writer.write(scopesSB.toString());
+		Map<String, String> scopedImportMapsValues1 =
+			_getScopedImportMapsValues(COMPANY_ID_ALL);
 
-		writer.write("}}");
-	}
+		_writeScopes(scopedImportMapsValues1, writer);
 
-	private Map<Long, DynamicJSImportMapsContributor>
-		_getDynamicJSImportMapsContributors(Long companyId) {
+		Map<String, String> scopedImportMapsValues2 =
+			_getScopedImportMapsValues(companyId);
 
-		Map<Long, DynamicJSImportMapsContributor>
-			dynamicJSImportMapsContributors =
-				_dynamicJSImportMapsContributorsMap.get(companyId);
+		if (!scopedImportMapsValues1.isEmpty() &&
+			!scopedImportMapsValues2.isEmpty()) {
 
-		if (dynamicJSImportMapsContributors != null) {
-			return dynamicJSImportMapsContributors;
+			writer.write(StringPool.COMMA);
 		}
 
-		_dynamicJSImportMapsContributorsMap.putIfAbsent(
-			companyId, new ConcurrentHashMap<>());
+		_writeScopes(scopedImportMapsValues2, writer);
 
-		return _dynamicJSImportMapsContributorsMap.get(companyId);
+		writer.write("}}");
 	}
 
 	private Map<Long, String> _getGlobalImportMapsValues(Long companyId) {
@@ -188,132 +138,53 @@ public class JSImportMapsCache {
 		return _scopedImportMapsValuesMap.get(companyId);
 	}
 
-	private void _writeDynamicImports(
-			Map<Long, DynamicJSImportMapsContributor>
-				dynamicJSImportMapsContributors,
-			HttpServletRequest httpServletRequest, StringBuilder sb)
+	private void _writeImports(
+			Map<Long, String> globalImportMapsValues, Writer writer)
 		throws IOException {
-
-		boolean first = true;
-
-		for (DynamicJSImportMapsContributor dynamicJSImportMapsContributor :
-				dynamicJSImportMapsContributors.values()) {
-
-			CharArrayWriter charArrayWriter = new CharArrayWriter();
-
-			dynamicJSImportMapsContributor.writeGlobalImports(
-				httpServletRequest, charArrayWriter);
-
-			if (charArrayWriter.size() == 0) {
-				continue;
-			}
-
-			if (first) {
-				first = false;
-
-				if (!sb.isEmpty()) {
-					sb.append(StringPool.COMMA);
-				}
-			}
-			else {
-				sb.append(StringPool.COMMA);
-			}
-
-			sb.append(charArrayWriter);
-		}
-	}
-
-	private void _writeDynamicScopes(
-			Map<Long, DynamicJSImportMapsContributor>
-				dynamicJSImportMapsContributors,
-			HttpServletRequest httpServletRequest, StringBuilder sb)
-		throws IOException {
-
-		boolean first = true;
-
-		for (DynamicJSImportMapsContributor dynamicJSImportMapsContributor :
-				dynamicJSImportMapsContributors.values()) {
-
-			CharArrayWriter charArrayWriter = new CharArrayWriter();
-
-			dynamicJSImportMapsContributor.writeScopedImports(
-				httpServletRequest, charArrayWriter);
-
-			if (charArrayWriter.size() == 0) {
-				continue;
-			}
-
-			if (first) {
-				first = false;
-
-				if (!sb.isEmpty()) {
-					sb.append(StringPool.COMMA);
-				}
-			}
-			else {
-				sb.append(StringPool.COMMA);
-			}
-
-			sb.append(charArrayWriter);
-		}
-	}
-
-	private void _writeStaticImports(
-		Map<Long, String> globalImportMapsValues, StringBuilder sb) {
 
 		boolean first = true;
 
 		for (String value : globalImportMapsValues.values()) {
-			if (first) {
-				first = false;
-
-				if (!sb.isEmpty()) {
-					sb.append(StringPool.COMMA);
-				}
+			if (!first) {
+				writer.write(StringPool.COMMA);
 			}
 			else {
-				sb.append(StringPool.COMMA);
+				first = false;
 			}
 
-			sb.append(value);
+			writer.write(value);
 		}
 	}
 
-	private void _writeStaticScopes(
-		Map<String, String> scopedImportMapsValues, StringBuilder sb) {
+	private void _writeScopes(
+			Map<String, String> scopedImportMapsValues, Writer writer)
+		throws IOException {
 
 		boolean first = true;
 
 		for (Map.Entry<String, String> entry :
 				scopedImportMapsValues.entrySet()) {
 
-			if (first) {
-				first = false;
-
-				if (!sb.isEmpty()) {
-					sb.append(StringPool.COMMA);
-				}
+			if (!first) {
+				writer.write(StringPool.COMMA);
 			}
 			else {
-				sb.append(StringPool.COMMA);
+				first = false;
 			}
 
-			sb.append(StringPool.QUOTE);
-			sb.append(entry.getKey());
-			sb.append("\": ");
-			sb.append(entry.getValue());
+			writer.write(StringPool.QUOTE);
+			writer.write(entry.getKey());
+			writer.write("\": ");
+			writer.write(entry.getValue());
 		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JSImportMapsCache.class);
 
-	private final Map<Long, Map<Long, DynamicJSImportMapsContributor>>
-		_dynamicJSImportMapsContributorsMap = new ConcurrentHashMap<>();
 	private final Map<Long, Map<Long, String>> _globalImportMapsValuesMap =
 		new ConcurrentHashMap<>();
-	private final AtomicLong _nextId = new AtomicLong();
-	private final Portal _portal;
+	private final AtomicLong _nextGlobalId = new AtomicLong();
 	private final Map<Long, Map<String, String>> _scopedImportMapsValuesMap =
 		new ConcurrentHashMap<>();
 

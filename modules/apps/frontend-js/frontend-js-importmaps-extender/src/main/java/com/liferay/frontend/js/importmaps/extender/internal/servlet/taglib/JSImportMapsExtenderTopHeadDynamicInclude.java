@@ -5,11 +5,8 @@
 
 package com.liferay.frontend.js.importmaps.extender.internal.servlet.taglib;
 
-import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.frontend.js.importmaps.extender.JSImportMapsContributor;
 import com.liferay.frontend.js.importmaps.extender.internal.configuration.JSImportMapsConfiguration;
-import com.liferay.frontend.js.importmaps.extender.internal.osgi.util.tracker.DynamicJSImportMapsContributorServiceTrackerCustomizer;
-import com.liferay.frontend.js.importmaps.extender.internal.osgi.util.tracker.JSImportMapsContributorServiceTrackerCustomizer;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.content.security.policy.ContentSecurityPolicyNonceProviderUtil;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
@@ -27,12 +24,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Iván Zaera Avellón
@@ -69,7 +68,8 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 
 			printWriter.print("\">");
 
-			_jsImportMapsCache.writeImportMaps(httpServletRequest, printWriter);
+			_jsImportMapsCache.writeImportMaps(
+				_portal.getCompanyId(httpServletRequest), printWriter);
 
 			printWriter.print("</script>");
 		}
@@ -111,32 +111,20 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 
 		modified();
 
-		_jsImportMapsCache = new JSImportMapsCache(_portal);
+		_jsImportMapsCache = new JSImportMapsCache();
 
-		_dynamicJSImportMapsContributorServiceTracker = new ServiceTracker<>(
-			bundleContext, DynamicJSImportMapsContributor.class,
-			new DynamicJSImportMapsContributorServiceTrackerCustomizer(
-				_bundleContext, _jsImportMapsCache));
-
-		_dynamicJSImportMapsContributorServiceTracker.open();
-
-		_jsImportMapsContributorServiceTracker = new ServiceTracker<>(
+		_serviceTracker = new ServiceTracker<>(
 			bundleContext, JSImportMapsContributor.class,
-			new JSImportMapsContributorServiceTrackerCustomizer(
-				_bundleContext, _jsImportMapsCache));
+			_serviceTrackerCustomizer);
 
-		_jsImportMapsContributorServiceTracker.open();
+		_serviceTracker.open();
 	}
 
 	@Deactivate
 	protected void deactivate() {
-		_jsImportMapsContributorServiceTracker.close();
+		_serviceTracker.close();
 
-		_jsImportMapsContributorServiceTracker = null;
-
-		_dynamicJSImportMapsContributorServiceTracker.close();
-
-		_dynamicJSImportMapsContributorServiceTracker = null;
+		_serviceTracker = null;
 
 		_bundleContext = null;
 	}
@@ -163,15 +151,59 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 	private volatile BundleContext _bundleContext;
-	private ServiceTracker
-		<DynamicJSImportMapsContributor, JSImportMapsRegistration>
-			_dynamicJSImportMapsContributorServiceTracker;
 	private JSImportMapsCache _jsImportMapsCache;
 	private volatile JSImportMapsConfiguration _jsImportMapsConfiguration;
-	private ServiceTracker<JSImportMapsContributor, JSImportMapsRegistration>
-		_jsImportMapsContributorServiceTracker;
 
 	@Reference
 	private Portal _portal;
+
+	private ServiceTracker<JSImportMapsContributor, JSImportMapsRegistration>
+		_serviceTracker;
+
+	private final ServiceTrackerCustomizer
+		<JSImportMapsContributor, JSImportMapsRegistration>
+			_serviceTrackerCustomizer =
+				new ServiceTrackerCustomizer
+					<JSImportMapsContributor, JSImportMapsRegistration>() {
+
+					@Override
+					public JSImportMapsRegistration addingService(
+						ServiceReference<JSImportMapsContributor>
+							serviceReference) {
+
+						Long companyId = (Long)serviceReference.getProperty(
+							"com.liferay.frontend.js.importmaps.company.id");
+
+						if (companyId == null) {
+							companyId = Long.valueOf(
+								JSImportMapsCache.COMPANY_ID_ALL);
+						}
+
+						JSImportMapsContributor jsImportMapsContributor =
+							_bundleContext.getService(serviceReference);
+
+						return _jsImportMapsCache.register(
+							companyId,
+							jsImportMapsContributor.getImportMapsJSONObject(),
+							jsImportMapsContributor.getScope());
+					}
+
+					@Override
+					public void modifiedService(
+						ServiceReference serviceReference,
+						JSImportMapsRegistration jsImportMapsRegistration) {
+					}
+
+					@Override
+					public void removedService(
+						ServiceReference serviceReference,
+						JSImportMapsRegistration jsImportMapsRegistration) {
+
+						jsImportMapsRegistration.unregister();
+
+						_bundleContext.ungetService(serviceReference);
+					}
+
+				};
 
 }

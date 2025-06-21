@@ -8,26 +8,16 @@ package com.liferay.frontend.js.importmaps.extender.internal.servlet.taglib;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
-import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.CharArrayWriter;
 
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author Iván Zaera Avellón
@@ -38,25 +28,6 @@ public class JSImportMapsCacheTest {
 	@Rule
 	public static final LiferayUnitTestRule liferayUnitTestRule =
 		LiferayUnitTestRule.INSTANCE;
-
-	@Before
-	public void setUp() {
-		Portal portal = Mockito.mock(Portal.class);
-
-		Mockito.when(
-			portal.getCompanyId(Mockito.any(HttpServletRequest.class))
-		).thenAnswer(
-			(Answer<Long>)invocationOnMock -> {
-				HttpServletRequest httpServletRequest =
-					invocationOnMock.getArgument(0, HttpServletRequest.class);
-
-				return (Long)httpServletRequest.getAttribute(
-					WebKeys.COMPANY_ID);
-			}
-		);
-
-		_jsImportMapsCache = new JSImportMapsCache(portal);
-	}
 
 	@Test
 	public void testWriteImportMapsForAllCompanies() throws Exception {
@@ -251,19 +222,14 @@ public class JSImportMapsCacheTest {
 	}
 
 	private String _getImportMaps(long companyId) throws Exception {
-		MockHttpServletRequest mockHttpServletRequest =
-			new MockHttpServletRequest();
-
-		mockHttpServletRequest.setAttribute(WebKeys.COMPANY_ID, companyId);
-
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 
-		_jsImportMapsCache.writeImportMaps(
-			mockHttpServletRequest, charArrayWriter);
+		_jsImportMapsCache.writeImportMaps(companyId, charArrayWriter);
 
 		return charArrayWriter.toString();
 	}
 
-	private JSImportMapsCache _jsImportMapsCache;
+	private final JSImportMapsCache _jsImportMapsCache =
+		new JSImportMapsCache();
 
 }
