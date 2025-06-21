@@ -42,7 +42,7 @@ public class HashedFilesRegistry {
 	}
 
 	public void forEach(BiConsumer<String, String> biConsumer) {
-		_openServiceTracker();
+		_loadMap();
 
 		for (Map.Entry<String, String> entry : _map.entrySet()) {
 			biConsumer.accept(entry.getKey(), entry.getValue());
@@ -50,7 +50,7 @@ public class HashedFilesRegistry {
 	}
 
 	public String get(String unhashedFileURI) {
-		_openServiceTracker();
+		_loadMap();
 
 		return _map.get(unhashedFileURI);
 	}
@@ -150,7 +150,7 @@ public class HashedFilesRegistry {
 		return hashedResourcePaths;
 	}
 
-	private void _openServiceTracker() {
+	private void _loadMap() {
 		if (_serviceTracker != null) {
 			return;
 		}
