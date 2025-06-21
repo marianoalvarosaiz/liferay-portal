@@ -184,8 +184,9 @@ public class SolrIndexRequestExecutor implements IndexRequestExecutor {
 
 	private final StatsIndexRequestExecutor _statsIndexRequestExecutor =
 		new StatsIndexRequestExecutor();
-	private final UpdateIndexSettingsIndexRequestExecutor
-		_updateIndexSettingsIndexRequestExecutor =
-			new UpdateIndexSettingsIndexRequestExecutor();
+
+	@Reference
+	private UpdateIndexSettingsIndexRequestExecutor
+		_updateIndexSettingsIndexRequestExecutor;
 
 }
