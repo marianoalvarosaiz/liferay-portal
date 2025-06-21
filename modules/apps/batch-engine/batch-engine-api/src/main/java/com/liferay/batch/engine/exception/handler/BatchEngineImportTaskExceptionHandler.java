@@ -5,7 +5,6 @@
 
 package com.liferay.batch.engine.exception.handler;
 
-import com.liferay.batch.engine.BatchEngineTaskItemDelegate;
 import com.liferay.batch.engine.model.BatchEngineImportTask;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -17,8 +16,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface BatchEngineImportTaskExceptionHandler {
 
 	public void handle(
-		BatchEngineImportTask batchEngineImportTask,
-		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate,
-		Exception exception, Object item);
+		BatchEngineImportTask batchEngineImportTask, Exception exception,
+		Object item);
 
 }
