@@ -54,8 +54,8 @@ public class IncompleteModelManagerImpl implements IncompleteModelManager {
 					true)) {
 
 			_exportImportReportEntryLocalService.
-				addIncompleteExportImportReportEntry(
-					0L, companyId, externalReferenceCode,
+				addExportImportReportEntryIncompleteType(
+					companyId, 0L, externalReferenceCode,
 					_classNameLocalService.getClassNameId(clazz.getName()),
 					GetterUtil.getLong(
 						ExportImportThreadLocal.
@@ -93,8 +93,8 @@ public class IncompleteModelManagerImpl implements IncompleteModelManager {
 					true)) {
 
 			_exportImportReportEntryLocalService.
-				addIncompleteExportImportReportEntry(
-					groupId, group.getCompanyId(), externalReferenceCode,
+				addExportImportReportEntryIncompleteType(
+					group.getCompanyId(), groupId, externalReferenceCode,
 					_classNameLocalService.getClassNameId(clazz.getName()),
 					GetterUtil.getLong(
 						ExportImportThreadLocal.
