@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
@@ -44,12 +45,16 @@ public class CloseIndexRequestExecutorTest extends BaseOpenSearchTestCase {
 
 		closeIndexRequest.setTimeout(100);
 
-		CloseIndexRequestExecutor closeIndexRequestExecutor =
-			new CloseIndexRequestExecutor(openSearchConnectionManager);
+		CloseIndexRequestExecutorImpl closeIndexRequestExecutorImpl =
+			new CloseIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			closeIndexRequestExecutorImpl, "_openSearchConnectionManager",
+			openSearchConnectionManager);
 
 		org.opensearch.client.opensearch.indices.CloseIndexRequest
 			openSearchCloseIndexRequest =
-				closeIndexRequestExecutor.createCloseIndexRequest(
+				closeIndexRequestExecutorImpl.createCloseIndexRequest(
 					closeIndexRequest);
 
 		Assert.assertArrayEquals(
