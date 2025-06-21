@@ -143,6 +143,51 @@ public class JSImportMapsCache {
 		writer.write("}}");
 	}
 
+	private Map<Long, DynamicJSImportMapsContributor>
+		_getDynamicJSImportMapsContributors(Long companyId) {
+
+		Map<Long, DynamicJSImportMapsContributor>
+			dynamicJSImportMapsContributors =
+				_dynamicJSImportMapsContributorsMap.get(companyId);
+
+		if (dynamicJSImportMapsContributors != null) {
+			return dynamicJSImportMapsContributors;
+		}
+
+		_dynamicJSImportMapsContributorsMap.putIfAbsent(
+			companyId, new ConcurrentHashMap<>());
+
+		return _dynamicJSImportMapsContributorsMap.get(companyId);
+	}
+
+	private Map<Long, String> _getGlobalImportMapsValues(Long companyId) {
+		Map<Long, String> globalImportMapsValues1 =
+			_globalImportMapsValuesMap.get(companyId);
+
+		if (globalImportMapsValues1 != null) {
+			return globalImportMapsValues1;
+		}
+
+		_globalImportMapsValuesMap.putIfAbsent(
+			companyId, new ConcurrentHashMap<>());
+
+		return _globalImportMapsValuesMap.get(companyId);
+	}
+
+	private Map<String, String> _getScopedImportMapsValues(Long companyId) {
+		Map<String, String> scopedImportMapsValues1 =
+			_scopedImportMapsValuesMap.get(companyId);
+
+		if (scopedImportMapsValues1 != null) {
+			return scopedImportMapsValues1;
+		}
+
+		_scopedImportMapsValuesMap.putIfAbsent(
+			companyId, new ConcurrentHashMap<>());
+
+		return _scopedImportMapsValuesMap.get(companyId);
+	}
+
 	private void _appendDynamicImports(
 			Map<Long, DynamicJSImportMapsContributor>
 				dynamicJSImportMapsContributors,
@@ -258,51 +303,6 @@ public class JSImportMapsCache {
 			sb.append("\": ");
 			sb.append(entry.getValue());
 		}
-	}
-
-	private Map<Long, DynamicJSImportMapsContributor>
-		_getDynamicJSImportMapsContributors(Long companyId) {
-
-		Map<Long, DynamicJSImportMapsContributor>
-			dynamicJSImportMapsContributors =
-				_dynamicJSImportMapsContributorsMap.get(companyId);
-
-		if (dynamicJSImportMapsContributors != null) {
-			return dynamicJSImportMapsContributors;
-		}
-
-		_dynamicJSImportMapsContributorsMap.putIfAbsent(
-			companyId, new ConcurrentHashMap<>());
-
-		return _dynamicJSImportMapsContributorsMap.get(companyId);
-	}
-
-	private Map<Long, String> _getGlobalImportMapsValues(Long companyId) {
-		Map<Long, String> globalImportMapsValues1 =
-			_globalImportMapsValuesMap.get(companyId);
-
-		if (globalImportMapsValues1 != null) {
-			return globalImportMapsValues1;
-		}
-
-		_globalImportMapsValuesMap.putIfAbsent(
-			companyId, new ConcurrentHashMap<>());
-
-		return _globalImportMapsValuesMap.get(companyId);
-	}
-
-	private Map<String, String> _getScopedImportMapsValues(Long companyId) {
-		Map<String, String> scopedImportMapsValues1 =
-			_scopedImportMapsValuesMap.get(companyId);
-
-		if (scopedImportMapsValues1 != null) {
-			return scopedImportMapsValues1;
-		}
-
-		_scopedImportMapsValuesMap.putIfAbsent(
-			companyId, new ConcurrentHashMap<>());
-
-		return _scopedImportMapsValuesMap.get(companyId);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

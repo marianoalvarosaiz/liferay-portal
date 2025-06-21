@@ -18,7 +18,6 @@ import java.io.Writer;
  * {@code JSImportMapsContributor} instead of this interface.
  *
  * @author Iván Zaera Avellón
- * @review
  */
 public interface DynamicJSImportMapsContributor {
 
