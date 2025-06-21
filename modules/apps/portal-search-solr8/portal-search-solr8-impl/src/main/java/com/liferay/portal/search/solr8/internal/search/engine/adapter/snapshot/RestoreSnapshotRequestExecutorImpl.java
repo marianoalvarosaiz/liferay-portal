@@ -8,12 +8,20 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.snapshot;
 import com.liferay.portal.search.engine.adapter.snapshot.RestoreSnapshotRequest;
 import com.liferay.portal.search.engine.adapter.snapshot.RestoreSnapshotResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface RestoreSnapshotRequestExecutor {
+@Component(service = RestoreSnapshotRequestExecutor.class)
+public class RestoreSnapshotRequestExecutorImpl
+	implements RestoreSnapshotRequestExecutor {
 
+	@Override
 	public RestoreSnapshotResponse execute(
-		RestoreSnapshotRequest restoreSnapshotRequest);
+		RestoreSnapshotRequest restoreSnapshotRequest) {
+
+		throw new UnsupportedOperationException();
+	}
 
 }
