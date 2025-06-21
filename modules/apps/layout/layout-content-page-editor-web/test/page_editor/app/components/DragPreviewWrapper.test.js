@@ -144,7 +144,7 @@ describe('DragPreviewWrapper', () => {
 					activeItemIds: ['item01', 'item02'],
 					item,
 				})
-			).toBe('2-items');
+			).toBe('x-items');
 		});
 	});
 });

@@ -257,7 +257,7 @@ describe('ReorderSetsModal', () => {
 	});
 
 	it('allows moving items using keyboard', () => {
-		const {getByRole, getByText} = renderComponent();
+		const {getAllByText, getByRole, getByText} = renderComponent();
 
 		act(() => jest.runAllTimers());
 
@@ -271,13 +271,11 @@ describe('ReorderSetsModal', () => {
 		expect(getByText(/use-up-and-down-arrows/i)).toBeInTheDocument();
 		dispatchKey(reorderButton, 'keyup', 'ArrowDown');
 
-		expect(
-			screen.queryByText('targeting-top-of-Category 2')
-		).toBeInTheDocument();
+		getAllByText(/targeting-x-of-x/i).forEach((element) =>
+			expect(element).toBeInTheDocument()
+		);
 
 		dispatchKey(reorderButton, 'keyup', 'Enter');
-		expect(
-			getByText('Category 1-placed-on-top-of-Category 2')
-		).toBeInTheDocument();
+		expect(getByText(/x-placed-on-x-of-x/i)).toBeInTheDocument();
 	});
 });
