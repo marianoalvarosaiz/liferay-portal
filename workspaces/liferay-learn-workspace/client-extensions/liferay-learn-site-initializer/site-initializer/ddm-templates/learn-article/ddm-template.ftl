@@ -206,9 +206,13 @@
 											</div>
 
 											<div class="how-to-card-date-published">
-												<#assign date = knowledgeArticle.dateModified?datetime("yyyy-MM-dd'T'HH:mm:ss'Z'") />
+												<#assign
+													date = knowledgeArticle.dateModified?datetime("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
-												${languageUtil.get(locale, 'published-date')}: ${date?string["MMM dd, yy hh:mm a"]}
+													formattedDate = date?string["MMM dd, yy hh:mm a"]
+												/>
+
+												${languageUtil.get(locale, 'published-date')}: ${formattedDate}
 											</div>
 										</a>
 									</#list>
