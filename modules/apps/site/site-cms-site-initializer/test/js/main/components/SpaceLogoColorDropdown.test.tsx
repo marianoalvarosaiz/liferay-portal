@@ -8,7 +8,7 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import SpaceLogoColorDropdown from '../../../../src/main/resources/META-INF/resources/js/main/spaces/SpaceLogoColorDropdown';
+import SpaceLogoColorDropdown from '../../../../src/main/resources/META-INF/resources/js/main/components/SpaceLogoColorDropdown';
 
 describe('SpaceLogoColorDropdown', () => {
 	it('renders outline-0 as default selected option', () => {
