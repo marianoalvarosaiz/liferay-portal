@@ -28,6 +28,7 @@ describe('The ConfigurationContainer component should', () => {
 				<ConfigurationContainer
 					hasUpdateObjectDefinitionPermission
 					isRootDescendantNode={false}
+					onScheduleToggleChange={jest.fn()}
 					setValues={jest.fn()}
 					values={{enableObjectEntrySchedule}}
 				/>
