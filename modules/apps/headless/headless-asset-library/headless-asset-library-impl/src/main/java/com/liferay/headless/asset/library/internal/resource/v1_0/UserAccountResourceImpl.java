@@ -5,7 +5,6 @@
 
 package com.liferay.headless.asset.library.internal.resource.v1_0;
 
-import com.liferay.headless.asset.library.dto.v1_0.AssetLibrary;
 import com.liferay.headless.asset.library.dto.v1_0.UserAccount;
 import com.liferay.headless.asset.library.resource.v1_0.UserAccountResource;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
@@ -31,8 +30,6 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
-import com.liferay.portal.vulcan.fields.NestedField;
-import com.liferay.portal.vulcan.fields.NestedFieldId;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.SearchUtil;
@@ -50,8 +47,7 @@ import org.osgi.service.component.annotations.ServiceScope;
  */
 @Component(
 	properties = "OSGI-INF/liferay/rest/v1_0/user-account.properties",
-	property = "nested.field.support=true", scope = ServiceScope.PROTOTYPE,
-	service = UserAccountResource.class
+	scope = ServiceScope.PROTOTYPE, service = UserAccountResource.class
 )
 public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 
@@ -136,11 +132,10 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 		return _toUserAccount(_userService.getUserById(userId));
 	}
 
-	@NestedField(parentClass = AssetLibrary.class, value = "userAccounts")
 	@Override
 	public Page<UserAccount> getAssetLibraryUserAccountsPage(
-			@NestedFieldId("siteId") Long assetLibraryId, String keywords,
-			String search, Pagination pagination, Sort[] sorts)
+			Long assetLibraryId, String keywords, String search,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
 		if (!FeatureFlagManagerUtil.isEnabled("LPD-17564")) {
