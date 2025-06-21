@@ -8,12 +8,20 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.index;
 import com.liferay.portal.search.engine.adapter.index.AnalyzeIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.AnalyzeIndexResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface AnalyzeIndexRequestExecutor {
+@Component(service = AnalyzeIndexRequestExecutor.class)
+public class AnalyzeIndexRequestExecutorImpl
+	implements AnalyzeIndexRequestExecutor {
 
+	@Override
 	public AnalyzeIndexResponse execute(
-		AnalyzeIndexRequest analyzeIndexRequest);
+		AnalyzeIndexRequest analyzeIndexRequest) {
+
+		throw new UnsupportedOperationException();
+	}
 
 }

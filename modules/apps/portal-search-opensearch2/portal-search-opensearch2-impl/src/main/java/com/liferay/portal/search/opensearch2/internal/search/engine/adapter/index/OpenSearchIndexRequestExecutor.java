@@ -153,12 +153,11 @@ public class OpenSearchIndexRequestExecutor implements IndexRequestExecutor {
 
 	@Activate
 	protected void activate() {
-		_analyzeIndexRequestExecutor = new AnalyzeIndexRequestExecutor(
-			_openSearchConnectionManager);
 		_statsIndexRequestExecutor = new StatsIndexRequestExecutor(
 			_openSearchConnectionManager);
 	}
 
+	@Reference
 	private AnalyzeIndexRequestExecutor _analyzeIndexRequestExecutor;
 
 	@Reference
