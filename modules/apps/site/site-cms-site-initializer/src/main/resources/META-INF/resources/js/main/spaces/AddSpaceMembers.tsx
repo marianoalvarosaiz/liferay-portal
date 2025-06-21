@@ -25,14 +25,15 @@ export interface AddSpaceMembersProps {
 	assetLibraryCreatorUserId: string;
 	assetLibraryId: string;
 	assetLibraryName: string;
-	baseAssetLibraryURL: string;
+	baseSpaceUrl: string;
+	depotEntryName: string;
 }
 
 export function AddSpaceMembers({
 	assetLibraryCreatorUserId,
 	assetLibraryId,
 	assetLibraryName,
-	baseAssetLibraryURL,
+	baseSpaceUrl,
 }: AddSpaceMembersProps) {
 	const currentUserId = Liferay.ThemeDisplay.getUserId();
 	const [selectedOption, setSelectedOption] = useState(SelectOptions.USERS);
@@ -198,7 +199,7 @@ export function AddSpaceMembers({
 	};
 
 	const onContinueBtnClick = () => {
-		navigate(baseAssetLibraryURL + assetLibraryId);
+		navigate(baseSpaceUrl + assetLibraryId);
 	};
 
 	const hasMembers = selectedUsers?.length > 1 || selectedUserGroups?.length;
