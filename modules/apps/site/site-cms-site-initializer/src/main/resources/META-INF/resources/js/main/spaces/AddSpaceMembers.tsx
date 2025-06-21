@@ -230,7 +230,7 @@ export function AddSpaceMembers({
 
 					<ul aria-labelledby={listLabelId} className="members-list">
 						{selectedOption === SelectOptions.USERS ? (
-							<MembersListItem
+							<MembersListItem<UserAccount>
 								assetLibraryCreatorUserId={
 									assetLibraryCreatorUserId
 								}
@@ -243,7 +243,7 @@ export function AddSpaceMembers({
 								onRemoveItem={onRemoveItem}
 							/>
 						) : (
-							<MembersListItem
+							<MembersListItem<UserGroup>
 								emptyMessage={Liferay.Language.get(
 									'this-space-has-no-group-yet'
 								)}

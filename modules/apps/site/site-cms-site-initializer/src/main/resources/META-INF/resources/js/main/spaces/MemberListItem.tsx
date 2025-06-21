@@ -11,23 +11,23 @@ import React from 'react';
 
 import {UserAccount, UserGroup} from '../../types/UserAccount';
 
-interface MembersListItemProps {
+interface MembersListItemProps<T extends UserAccount | UserGroup> {
 	assetLibraryCreatorUserId?: string;
 	currentUserId?: string;
 	emptyMessage: string;
 	itemType: 'user' | 'group';
-	items: (UserAccount | UserGroup)[];
-	onRemoveItem: (item: UserAccount | UserGroup) => Promise<void>;
+	items: T[];
+	onRemoveItem: (item: T) => Promise<void>;
 }
 
-export function MembersListItem({
+export function MembersListItem<T extends UserAccount | UserGroup>({
 	assetLibraryCreatorUserId,
 	currentUserId,
 	emptyMessage,
 	itemType,
 	items,
 	onRemoveItem,
-}: MembersListItemProps) {
+}: MembersListItemProps<T>) {
 	if (!items || !items.length) {
 		return (
 			<li className="d-flex justify-content-center">{emptyMessage}</li>
