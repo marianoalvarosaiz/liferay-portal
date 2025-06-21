@@ -69,12 +69,10 @@ public class LayoutSetPrototypeCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
-		sb.append(", ctCollectionId=");
-		sb.append(ctCollectionId);
 		sb.append(", uuid=");
 		sb.append(uuid);
 		sb.append(", layoutSetPrototypeId=");
@@ -108,7 +106,6 @@ public class LayoutSetPrototypeCacheModel
 			new LayoutSetPrototypeImpl();
 
 		layoutSetPrototypeImpl.setMvccVersion(mvccVersion);
-		layoutSetPrototypeImpl.setCtCollectionId(ctCollectionId);
 
 		if (uuid == null) {
 			layoutSetPrototypeImpl.setUuid("");
@@ -175,8 +172,6 @@ public class LayoutSetPrototypeCacheModel
 		throws ClassNotFoundException, IOException {
 
 		mvccVersion = objectInput.readLong();
-
-		ctCollectionId = objectInput.readLong();
 		uuid = objectInput.readUTF();
 
 		layoutSetPrototypeId = objectInput.readLong();
@@ -197,8 +192,6 @@ public class LayoutSetPrototypeCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(mvccVersion);
-
-		objectOutput.writeLong(ctCollectionId);
 
 		if (uuid == null) {
 			objectOutput.writeUTF("");
@@ -248,7 +241,6 @@ public class LayoutSetPrototypeCacheModel
 	}
 
 	public long mvccVersion;
-	public long ctCollectionId;
 	public String uuid;
 	public long layoutSetPrototypeId;
 	public long companyId;
