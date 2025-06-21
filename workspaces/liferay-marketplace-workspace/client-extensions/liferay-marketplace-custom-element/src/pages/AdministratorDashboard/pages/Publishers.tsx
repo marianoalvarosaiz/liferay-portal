@@ -4,14 +4,23 @@
  */
 
 import Label from '@clayui/label';
+import {useSearchParams} from 'react-router-dom';
 
 import ListView from '../../../components/ListView';
+import {ListViewTypes} from '../../../components/ListView/hooks/ListViewContext';
 import Page from '../../../components/Page';
-import i18n from '../../../i18n';
-import {formatDate} from '../../../utils/date';
 import SearchBuilder from '../../../core/SearchBuilder';
+import i18n from '../../../i18n';
+import HeadlessAdminUser from '../../../services/rest/HeadlessAdminUser';
+import {formatDate} from '../../../utils/date';
 
 export function Publishers() {
+	const [searchParams] = useSearchParams();
+
+	const filter = searchParams.get('filter');
+
+	const [key, value] = filter?.split(':') || [];
+
 	return (
 		<Page
 			pageRendererProps={{className: 'border py-2 rounded-lg'}}
@@ -19,14 +28,96 @@ export function Publishers() {
 		>
 			<ListView<Account>
 				id="administrator-publishers"
+				initialContext={
+					filter
+						? {
+								filters: {
+									entries: [],
+									filter: {
+										[key]: value,
+									},
+								},
+							}
+						: undefined
+				}
 				managementToolbarProps={{
-					filterSchema: 'administratorDashboardPublishersTable',
-					hasFilters: true,
-					hasSearch: true,
+					filterItems: [
+						{
+							children: [
+								{
+									name: 'Technology Partner',
+									onClick: (dispatch) => {
+										dispatch({
+											payload: {
+												filters: {
+													filter: {
+														'customFields/AccountType':
+															'Technology Partner',
+													},
+												},
+											},
+											type: ListViewTypes.SET_FILTERS,
+										});
+									},
+								},
+								{
+									name: 'Strategic Partner',
+									onClick: (dispatch) => {
+										dispatch({
+											payload: {
+												filters: {
+													filter: {
+														'customFields/AccountType':
+															'Strategic Partner',
+													},
+												},
+											},
+											type: ListViewTypes.SET_FILTERS,
+										});
+									},
+								},
+							],
+							name: i18n.translate('account-type'),
+						},
+					],
 					visible: true,
 				}}
 				paginationOptions={{displayType: 'always'}}
-				resource={`/o/headless-admin-user/v1.0/accounts?${new URLSearchParams({sort: 'dateCreated:desc'})}`}
+				resource={async function getAccounts({
+					filters,
+					keywords,
+					page,
+					pageSize,
+					sort,
+				}) {
+					const searchBuilder = new SearchBuilder().eq(
+						'type',
+						'supplier'
+					);
+
+					if (filters.filter) {
+						for (const [key, value] of Object.entries(
+							filters.filter
+						)) {
+							searchBuilder.and().eq(key, String(value));
+						}
+					}
+
+					if (keywords) {
+						searchBuilder.and().contains('name', keywords);
+					}
+
+					return HeadlessAdminUser.getAccounts(
+						new URLSearchParams({
+							filter: searchBuilder.build(),
+							page: page.toString(),
+							pageSize: pageSize.toString(),
+							sort: sort.key
+								? `${sort.key}:${sort.direction}`
+								: 'dateCreated:desc',
+						})
+					);
+				}}
 				tableProps={{
 					columns: [
 						{
@@ -69,13 +160,11 @@ export function Publishers() {
 									'Marketplace Publisher'
 								);
 							},
-							sortable: true,
 						},
 						{
 							id: 'dateCreated',
 							name: 'Created at',
 							render: formatDate,
-							sortable: true,
 						},
 						{
 							id: 'status',
@@ -93,9 +182,6 @@ export function Publishers() {
 							},
 						},
 					],
-				}}
-				defaultFilters={{
-					filter: `${SearchBuilder.eq('type', 'supplier')}`,
 				}}
 			/>
 		</Page>
