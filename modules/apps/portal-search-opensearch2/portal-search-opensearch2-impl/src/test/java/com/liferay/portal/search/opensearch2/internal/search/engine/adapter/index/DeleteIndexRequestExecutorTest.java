@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesOptions;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
@@ -44,12 +45,16 @@ public class DeleteIndexRequestExecutorTest extends BaseOpenSearchTestCase {
 
 		deleteIndexRequest.setIndicesOptions(indicesOptions);
 
-		DeleteIndexRequestExecutor deleteIndexRequestExecutor =
-			new DeleteIndexRequestExecutor(openSearchConnectionManager);
+		DeleteIndexRequestExecutorImpl deleteIndexRequestExecutorImpl =
+			new DeleteIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			deleteIndexRequestExecutorImpl, "_openSearchConnectionManager",
+			openSearchConnectionManager);
 
 		org.opensearch.client.opensearch.indices.DeleteIndexRequest
 			openSearchDeleteIndexRequest =
-				deleteIndexRequestExecutor.createDeleteIndexRequest(
+				deleteIndexRequestExecutorImpl.createDeleteIndexRequest(
 					deleteIndexRequest);
 
 		List<String> indices = openSearchDeleteIndexRequest.index();
