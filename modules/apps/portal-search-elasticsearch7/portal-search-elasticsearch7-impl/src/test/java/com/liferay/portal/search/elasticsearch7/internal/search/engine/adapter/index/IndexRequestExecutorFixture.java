@@ -36,9 +36,16 @@ public class IndexRequestExecutorFixture {
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_deleteIndexRequestExecutor",
 			_createDeleteIndexRequestExecutor(_elasticsearchClientResolver));
+
+		IndexRequestShardFailureTranslator indexRequestShardFailureTranslator =
+			new IndexRequestShardFailureTranslatorImpl();
+
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_flushIndexRequestExecutor",
-			_createFlushIndexRequestExecutor(_elasticsearchClientResolver));
+			_createFlushIndexRequestExecutor(
+				_elasticsearchClientResolver,
+				indexRequestShardFailureTranslator));
+
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_getFieldMappingIndexRequestExecutor",
 			_createGetFieldMappingIndexRequestExecutor(
@@ -63,7 +70,9 @@ public class IndexRequestExecutorFixture {
 				_elasticsearchClientResolver));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_refreshIndexRequestExecutor",
-			_createRefreshIndexRequestExecutor(_elasticsearchClientResolver));
+			_createRefreshIndexRequestExecutor(
+				_elasticsearchClientResolver,
+				indexRequestShardFailureTranslator));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_updateIndexSettingsIndexRequestExecutor",
 			_createUpdateIndexSettingsIndexRequestExecutor(
@@ -129,7 +138,8 @@ public class IndexRequestExecutorFixture {
 	}
 
 	private FlushIndexRequestExecutor _createFlushIndexRequestExecutor(
-		ElasticsearchClientResolver elasticsearchClientResolver) {
+		ElasticsearchClientResolver elasticsearchClientResolver,
+		IndexRequestShardFailureTranslator indexRequestShardFailureTranslator) {
 
 		FlushIndexRequestExecutor flushIndexRequestExecutor =
 			new FlushIndexRequestExecutorImpl();
@@ -137,6 +147,9 @@ public class IndexRequestExecutorFixture {
 		ReflectionTestUtil.setFieldValue(
 			flushIndexRequestExecutor, "_elasticsearchClientResolver",
 			elasticsearchClientResolver);
+		ReflectionTestUtil.setFieldValue(
+			flushIndexRequestExecutor, "_indexRequestShardFailureTranslator",
+			indexRequestShardFailureTranslator);
 
 		return flushIndexRequestExecutor;
 	}
@@ -229,7 +242,8 @@ public class IndexRequestExecutorFixture {
 	}
 
 	private RefreshIndexRequestExecutor _createRefreshIndexRequestExecutor(
-		ElasticsearchClientResolver elasticsearchClientResolver) {
+		ElasticsearchClientResolver elasticsearchClientResolver,
+		IndexRequestShardFailureTranslator indexRequestShardFailureTranslator) {
 
 		RefreshIndexRequestExecutor refreshIndexRequestExecutor =
 			new RefreshIndexRequestExecutorImpl();
@@ -237,6 +251,9 @@ public class IndexRequestExecutorFixture {
 		ReflectionTestUtil.setFieldValue(
 			refreshIndexRequestExecutor, "_elasticsearchClientResolver",
 			elasticsearchClientResolver);
+		ReflectionTestUtil.setFieldValue(
+			refreshIndexRequestExecutor, "_indexRequestShardFailureTranslator",
+			indexRequestShardFailureTranslator);
 
 		return refreshIndexRequestExecutor;
 	}
