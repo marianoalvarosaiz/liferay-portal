@@ -98,9 +98,6 @@ export default function AdministratorSummary() {
 					title={i18n.translate('recent-orders')}
 				>
 					<AdministratorOrdersListView
-						managementToolbarProps={{
-							visible: false,
-						}}
 						listViewProps={{
 							id: 'summary-orders',
 							initialContext: {pageSize: 5},
@@ -114,9 +111,6 @@ export default function AdministratorSummary() {
 					title={i18n.translate('published-apps')}
 				>
 					<AdministratorAppsListView
-						managementToolbarProps={{
-							visible: false,
-						}}
 						listViewProps={{
 							id: 'summary-apps',
 							initialContext: {pageSize: 5},
