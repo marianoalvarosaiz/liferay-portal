@@ -139,7 +139,7 @@ test(
 test(
 	'Check available actions of marketplace fragment',
 	{
-		tag: '@LPD-43455',
+		tag: '@LPD-34938',
 	},
 	async ({apiHelpers, fragmentsPage, page, site}) => {
 
