@@ -5,41 +5,25 @@
 
 package com.liferay.frontend.js.web.internal.hashed.files;
 
-import com.liferay.petra.string.StringPool;
+import com.liferay.frontend.js.web.internal.hashed.files.osgi.util.tracker.HashedFilesRegistryServiceTrackerCustomizer;
 
 import jakarta.servlet.ServletContext;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
-import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Iván Zaera Avellón
  */
+@Component(service = HashedFilesRegistry.class)
 public class HashedFilesRegistry {
-
-	public HashedFilesRegistry(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
-	public void close() {
-		_map.clear();
-
-		if (_serviceTracker != null) {
-			_serviceTracker.close();
-
-			_serviceTracker = null;
-		}
-	}
 
 	public void forEach(BiConsumer<String, String> biConsumer) {
 		_loadMap();
@@ -55,121 +39,53 @@ public class HashedFilesRegistry {
 		return _map.get(unhashedFileURI);
 	}
 
-	private Set<String> _getHashedResourcePaths(
-		ServletContext servletContext, String folderPath) {
-
-		Set<String> resourcePaths = servletContext.getResourcePaths(folderPath);
-
-		if (resourcePaths == null) {
-			return Collections.emptySet();
-		}
-
-		Set<String> hashedResourcePaths = new HashSet<>();
-
-		for (String resourcePath : resourcePaths) {
-			if (resourcePath.endsWith(StringPool.SLASH)) {
-				hashedResourcePaths.addAll(
-					_getHashedResourcePaths(servletContext, resourcePath));
-			}
-			else if (resourcePath.contains(".(") &&
-					 resourcePath.contains(").")) {
-
-				hashedResourcePaths.add(resourcePath);
-			}
-		}
-
-		return hashedResourcePaths;
+	public void putAll(Map<String, String> map) {
+		_map.putAll(map);
 	}
 
-	private void _loadMap() {
+	public void removeAll(Map<String, String> map) {
+		for (String key : map.keySet()) {
+			_map.remove(key);
+		}
+	}
+
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_bundleContext = null;
+
+		_map.clear();
+
+		if (_serviceTracker != null) {
+			_serviceTracker.close();
+
+			_serviceTracker = null;
+		}
+	}
+
+	private synchronized void _loadMap() {
 		if (_serviceTracker != null) {
 			return;
 		}
 
-		synchronized (this) {
-			if (_serviceTracker != null) {
-				return;
-			}
-
-			_serviceTracker = new ServiceTracker<>(
-				_bundleContext, ServletContext.class,
-				new ServiceTrackerCustomizer<>() {
-
-					@Override
-					public Map<String, String> addingService(
-						ServiceReference<ServletContext> serviceReference) {
-
-						ServletContext servletContext =
-							_bundleContext.getService(serviceReference);
-
-						try {
-							String contextPath =
-								servletContext.getContextPath();
-
-							Set<String> hashedResourcePaths =
-								_getHashedResourcePaths(
-									servletContext,
-									"/META-INF/resources/__liferay__/");
-
-							Map<String, String> map = new HashMap<>();
-
-							for (String hashedResourcePath :
-									hashedResourcePaths) {
-
-								// Remove "/META-INF/resources" from path
-
-								hashedResourcePath =
-									hashedResourcePath.substring(19);
-
-								String baseName = hashedResourcePath.substring(
-									0, hashedResourcePath.lastIndexOf(".("));
-
-								String extension = hashedResourcePath.substring(
-									hashedResourcePath.lastIndexOf(").") + 1);
-
-								map.put(
-									contextPath + baseName + extension,
-									contextPath + hashedResourcePath);
-							}
-
-							_map.putAll(map);
-
-							return map;
-						}
-						finally {
-							_bundleContext.ungetService(serviceReference);
-						}
-					}
-
-					@Override
-					public void modifiedService(
-						ServiceReference<ServletContext> serviceReference,
-						Map<String, String> map) {
-
-						removedService(serviceReference, map);
-
-						addingService(serviceReference);
-					}
-
-					@Override
-					public void removedService(
-						ServiceReference<ServletContext> serviceReference,
-						Map<String, String> map) {
-
-						for (String key : map.keySet()) {
-							_map.remove(key);
-						}
-					}
-
-				});
-
-			_serviceTracker.open();
+		if (_bundleContext == null) {
+			throw new IllegalStateException("Bundle context is null");
 		}
+
+		_serviceTracker = new ServiceTracker<>(
+			_bundleContext, ServletContext.class,
+			new HashedFilesRegistryServiceTrackerCustomizer(
+				_bundleContext, this));
+
+		_serviceTracker.open();
 	}
 
-	private final BundleContext _bundleContext;
+	private BundleContext _bundleContext;
 	private final Map<String, String> _map = new ConcurrentHashMap<>();
-	private volatile ServiceTracker<ServletContext, Map<String, String>>
-		_serviceTracker;
+	private ServiceTracker<ServletContext, Map<String, String>> _serviceTracker;
 
 }
