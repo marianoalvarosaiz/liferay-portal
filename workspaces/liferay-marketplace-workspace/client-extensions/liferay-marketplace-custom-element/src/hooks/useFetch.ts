@@ -18,6 +18,7 @@ type APIParametersOptions = {
 	sort?: string;
 };
 
+
 type FetchOptions<Data> = {
 	params?: APIParametersOptions;
 	swrConfig?: SWRConfiguration & {shouldFetch?: boolean | string | number};
@@ -25,35 +26,38 @@ type FetchOptions<Data> = {
 };
 
 function getPageParameter(
-	parameters: APIParametersOptions = {},
-	baseURL?: string
+    parameters: APIParametersOptions = {},
+    baseURL?: string
 ) {
-	const getBaseSearchParams = (resource?: string) => {
-		if (resource && resource.includes('?')) {
-			return resource.slice(resource.indexOf('?'));
-		}
-	};
+    const getBaseSearchParams = (resource?: string) => {
+        if (resource && resource.includes('?')) {
+            return resource.slice(resource.indexOf('?'));
+        }
+    };
 
-	const searchParams = new URLSearchParams(getBaseSearchParams(baseURL));
+    const searchParams = new URLSearchParams(getBaseSearchParams(baseURL));
 
-	if (parameters.customParams) {
-		parameters = {
-			...parameters,
-			...parameters.customParams,
-		};
+    if (parameters.customParams) {
+        parameters = {
+            ...parameters,
+            ...parameters.customParams,
+        };
 
-		delete parameters.customParams;
-	}
+        delete parameters.customParams;
+    }
 
-	for (const key in parameters) {
-		const value = (parameters as any)[key] as string | number | undefined;
+    for (const key in parameters) {
+        const value = (parameters as any)[key] as
+            | string
+            | number
+            | undefined;
 
-		if (value) {
-			searchParams.set(key, value.toString());
-		}
-	}
+        if (value) {
+            searchParams.set(key, value.toString());
+        }
+    }
 
-	return searchParams.toString();
+    return searchParams.toString();
 }
 
 const getBaseURL = (url: string | null, options?: APIParametersOptions) => {
@@ -95,7 +99,9 @@ export function useFetch<Data = any, Error = any>(
 		}
 
 		return data;
-	}, [data, transformData]);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data]);
 
 	return {
 		called: data && url,
