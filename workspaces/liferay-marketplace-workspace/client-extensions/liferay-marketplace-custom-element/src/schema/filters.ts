@@ -7,10 +7,10 @@ import {Params} from 'react-router-dom';
 
 import SearchBuilder, {Operators} from '../core/SearchBuilder';
 import {AccountType} from '../enums/Account';
+import {LiferayVersionList} from '../enums/Liferay';
 import {OrderTypes} from '../enums/Order';
 import {ProductType, ProductWorkflowStatusCode} from '../enums/Product';
 import i18n from '../i18n';
-import {LIFERAY_VERSION_PICKLIST} from '../pages/PublisherDashboard/pages/NewAppFlow/constants';
 
 type AutoCompleteProps = {
 	label?: string;
@@ -28,6 +28,7 @@ export type RenderedFieldOptions = string[] | AppliedFilters[];
 
 export type RendererFields = {
 	disabled?: boolean;
+	isCustomFilter?: boolean;
 	label: string;
 	name: string;
 	operator?: Operators;
@@ -153,14 +154,7 @@ const filterSchema = {
 				label: i18n.translate('liferay-version'),
 				name: 'specificationValues|liferayVersion',
 				operator: 'lambda',
-				resource: `o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${LIFERAY_VERSION_PICKLIST}`,
-				transformData(item) {
-					const options = item.listTypeEntries.map((entry: any) => {
-						return {label: entry.name, value: entry.name};
-					});
-
-					return options;
-				},
+				options: LiferayVersionList,
 				type: 'multiselect',
 			}),
 			overrides(baseFilters.dateRange, {
@@ -184,7 +178,7 @@ const filterSchema = {
 					},
 				],
 				removeQuoteMark: true,
-				type: 'select',
+				type: 'multiselect',
 			}),
 		],
 		name: 'administratorDashboardAppsTable',
@@ -223,7 +217,6 @@ const filterSchema = {
 				type: 'checkbox',
 			}),
 			overrides(baseFilters.status, {
-				label: i18n.translate('order-status'),
 				name: 'orderStatus',
 				options: [
 					{label: i18n.translate('completed'), value: '0'},
