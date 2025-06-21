@@ -45,10 +45,10 @@ public class ExportImportReportEntryWrapper
 		attributes.put(
 			"classExternalReferenceCode", getClassExternalReferenceCode());
 		attributes.put("classNameId", getClassNameId());
-		attributes.put(
-			"exportImportConfigurationId", getExportImportConfigurationId());
 		attributes.put("error", getError());
 		attributes.put("errorStacktrace", getErrorStacktrace());
+		attributes.put(
+			"exportImportConfigurationId", getExportImportConfigurationId());
 		attributes.put("resolved", isResolved());
 		attributes.put("type", getType());
 
@@ -107,13 +107,6 @@ public class ExportImportReportEntryWrapper
 			setClassNameId(classNameId);
 		}
 
-		Long exportImportConfigurationId = (Long)attributes.get(
-			"exportImportConfigurationId");
-
-		if (exportImportConfigurationId != null) {
-			setExportImportConfigurationId(exportImportConfigurationId);
-		}
-
 		String error = (String)attributes.get("error");
 
 		if (error != null) {
@@ -124,6 +117,13 @@ public class ExportImportReportEntryWrapper
 
 		if (errorStacktrace != null) {
 			setErrorStacktrace(errorStacktrace);
+		}
+
+		Long exportImportConfigurationId = (Long)attributes.get(
+			"exportImportConfigurationId");
+
+		if (exportImportConfigurationId != null) {
+			setExportImportConfigurationId(exportImportConfigurationId);
 		}
 
 		Boolean resolved = (Boolean)attributes.get("resolved");
