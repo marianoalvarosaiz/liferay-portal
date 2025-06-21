@@ -28,7 +28,6 @@ type APIResponse<Query = any> = {
 	lastPage: number;
 	page: number;
 	pageSize: number;
-	results: Query[]
 	totalCount: number;
 };
 
