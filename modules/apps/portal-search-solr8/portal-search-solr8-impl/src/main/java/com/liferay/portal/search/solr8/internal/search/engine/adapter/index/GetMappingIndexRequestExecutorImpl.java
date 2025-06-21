@@ -8,12 +8,20 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.index;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetMappingIndexResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface GetMappingIndexRequestExecutor {
+@Component(service = GetMappingIndexRequestExecutor.class)
+public class GetMappingIndexRequestExecutorImpl
+	implements GetMappingIndexRequestExecutor {
 
+	@Override
 	public GetMappingIndexResponse execute(
-		GetMappingIndexRequest getMappingIndexRequest);
+		GetMappingIndexRequest getMappingIndexRequest) {
+
+		throw new UnsupportedOperationException();
+	}
 
 }
