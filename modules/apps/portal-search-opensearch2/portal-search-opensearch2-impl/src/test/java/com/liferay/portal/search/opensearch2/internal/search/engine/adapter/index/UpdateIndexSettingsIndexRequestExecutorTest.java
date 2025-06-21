@@ -6,6 +6,7 @@
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.index;
 
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
 import com.liferay.portal.search.opensearch2.internal.OpenSearchTestRule;
@@ -52,13 +53,16 @@ public class UpdateIndexSettingsIndexRequestExecutorTest
 						)))
 			).toString());
 
-		UpdateIndexSettingsIndexRequestExecutor
-			updateIndexSettingsIndexRequestExecutor =
-				new UpdateIndexSettingsIndexRequestExecutor(
-					openSearchConnectionManager);
+		UpdateIndexSettingsIndexRequestExecutorImpl
+			updateIndexSettingsIndexRequestExecutorImpl =
+				new UpdateIndexSettingsIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			updateIndexSettingsIndexRequestExecutorImpl,
+			"_openSearchConnectionManager", openSearchConnectionManager);
 
 		PutIndicesSettingsRequest putIndicesSettingsRequest =
-			updateIndexSettingsIndexRequestExecutor.
+			updateIndexSettingsIndexRequestExecutorImpl.
 				createPutIndicesSettingsRequest(
 					updateIndexSettingsIndexRequest);
 
