@@ -50,7 +50,8 @@ public class IndexRequestExecutorFixture {
 			_createGetIndexIndexRequestExecutor(_openSearchConnectionManager));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_getMappingIndexRequestExecutor",
-			new GetMappingIndexRequestExecutor(_openSearchConnectionManager));
+			_createGetMappingIndexRequestExecutor(
+				_openSearchConnectionManager));
 		ReflectionTestUtil.setFieldValue(
 			_indexRequestExecutor, "_indicesExistsIndexRequestExecutor",
 			_createIndexExistsIndexRequestExecutor(
@@ -161,6 +162,20 @@ public class IndexRequestExecutorFixture {
 			openSearchConnectionManager);
 
 		return getIndexIndexRequestExecutor;
+	}
+
+	private GetMappingIndexRequestExecutor
+		_createGetMappingIndexRequestExecutor(
+			OpenSearchConnectionManager openSearchConnectionManager) {
+
+		GetMappingIndexRequestExecutor getMappingIndexRequestExecutor =
+			new GetMappingIndexRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			getMappingIndexRequestExecutor, "_openSearchConnectionManager",
+			openSearchConnectionManager);
+
+		return getMappingIndexRequestExecutor;
 	}
 
 	private IndicesExistsIndexRequestExecutor
