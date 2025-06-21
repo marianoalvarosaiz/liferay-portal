@@ -5,6 +5,7 @@
 
 package com.liferay.portal.search.opensearch2.internal.search.engine.adapter.snapshot;
 
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.engine.adapter.snapshot.CreateSnapshotRequest;
 import com.liferay.portal.search.opensearch2.internal.BaseOpenSearchTestCase;
@@ -37,12 +38,16 @@ public class CreateSnapshotRequestExecutorImplTest
 		createSnapshotRequest.setIndexNames("index1", "index2");
 		createSnapshotRequest.setWaitForCompletion(true);
 
-		CreateSnapshotRequestExecutor createSnapshotRequestExecutor =
-			new CreateSnapshotRequestExecutor(openSearchConnectionManager);
+		CreateSnapshotRequestExecutorImpl createSnapshotRequestExecutorImpl =
+			new CreateSnapshotRequestExecutorImpl();
+
+		ReflectionTestUtil.setFieldValue(
+			createSnapshotRequestExecutorImpl, "_openSearchConnectionManager",
+			openSearchConnectionManager);
 
 		org.opensearch.client.opensearch.snapshot.CreateSnapshotRequest
 			openSearchCreateSnapshotRequest =
-				createSnapshotRequestExecutor.createCreateSnapshotRequest(
+				createSnapshotRequestExecutorImpl.createCreateSnapshotRequest(
 					createSnapshotRequest);
 
 		Assert.assertArrayEquals(
