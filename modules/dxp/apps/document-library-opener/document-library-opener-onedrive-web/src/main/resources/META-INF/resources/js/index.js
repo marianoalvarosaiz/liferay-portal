@@ -4,12 +4,8 @@
  */
 
 import {getSpritemap} from '@liferay/frontend-icons-web';
-import {
-	openModal,
-	openSimpleInputModal,
-	openToast,
-} from 'frontend-js-components-web';
-import {fetch, navigate} from 'frontend-js-web';
+import {openSimpleInputModal, openToast} from 'frontend-js-components-web';
+import {fetch, getWindow, navigate} from 'frontend-js-web';
 
 const TIME_POLLING = 500;
 const TIME_SHOW_MSG = 2000;
@@ -21,11 +17,10 @@ export class DocumentLibraryOpener {
 
 		this._dialogLoadingId = `${namespace}OneDriveLoadingDialog`;
 		this._refreshAfterNavigate = false;
-		this._loadingModal = null;
 	}
 
 	_hideLoading() {
-		this._loadingModal?.unmount();
+		getWindow(this._dialogLoadingId).hide();
 	}
 
 	_openExternal({externalURL}) {
@@ -80,7 +75,7 @@ export class DocumentLibraryOpener {
 
 	_showLoading({dialogMessage}) {
 		return new Promise((resolve) => {
-			this._loadingModal = openModal({
+			Liferay.Util.openModal({
 				bodyHTML: `<p>${dialogMessage}</p><div aria-hidden="true" class="loading-animation"></div>`,
 				center: true,
 				className: 'office-365-redirect-modal',
