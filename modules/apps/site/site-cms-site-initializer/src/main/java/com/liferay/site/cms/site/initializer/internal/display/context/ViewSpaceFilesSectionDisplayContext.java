@@ -10,15 +10,18 @@ import com.liferay.object.service.ObjectDefinitionService;
 import com.liferay.object.service.ObjectDefinitionSettingLocalService;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Portal;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.Map;
 
 /**
  * @author Roberto Díaz
  */
 public class ViewSpaceFilesSectionDisplayContext
-	extends BaseFilesSectionDisplayContext {
+	extends ViewFilesSectionDisplayContext {
 
 	public ViewSpaceFilesSectionDisplayContext(
 		DepotEntryLocalService depotEntryLocalService, long groupId,
@@ -33,7 +36,21 @@ public class ViewSpaceFilesSectionDisplayContext
 			language, objectDefinitionService,
 			objectDefinitionSettingLocalService, portal);
 
-		_groupId = groupId;
+		this.groupId = groupId;
+		this.portal = portal;
+	}
+
+	@Override
+	public Map<String, Object> getEmptyState() {
+		return HashMapBuilder.<String, Object>put(
+			"description",
+			language.get(
+				httpServletRequest, "create-and-manage-files-within-this-space")
+		).put(
+			"image", "/states/cms_empty_state_files.svg"
+		).put(
+			"title", language.get(httpServletRequest, "no-files-yet")
+		).build();
 	}
 
 	@Override
@@ -41,14 +58,10 @@ public class ViewSpaceFilesSectionDisplayContext
 		return String.format(
 			"groupIds/any(g:g eq %s) and cmsSection eq 'files' and cmsRoot " +
 				"eq true",
-			_groupId);
+			groupId);
 	}
 
-	@Override
-	protected String getEmptyStateDescriptionKey() {
-		return "create-and-manage-files-within-this-space";
-	}
-
-	private final long _groupId;
+	protected final long groupId;
+	protected final Portal portal;
 
 }
