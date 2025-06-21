@@ -4,7 +4,6 @@
  */
 
 export type Space = {
-	creatorUserId: string;
 	externalReferenceCode: string;
 	id: string;
 	name: string;
