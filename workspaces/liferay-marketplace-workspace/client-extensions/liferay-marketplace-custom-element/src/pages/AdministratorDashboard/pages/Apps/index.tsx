@@ -14,6 +14,7 @@ import AdministratorAppsListView from './AdministratorAppsListView';
 export default function Apps() {
 	const [searchParams] = useSearchParams();
 	const {
+
 		approved = 0,
 		approvedBeforeLastWeek = 0,
 		approvedLastWeek = 0,
