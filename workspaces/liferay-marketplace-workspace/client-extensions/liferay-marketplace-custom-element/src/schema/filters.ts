@@ -7,7 +7,7 @@ import {Params} from 'react-router-dom';
 
 import SearchBuilder, {Operators} from '../core/SearchBuilder';
 import {AccountType} from '../enums/Account';
-import {OrderTypes, OrderWorkflowStatusCode} from '../enums/Order';
+import {OrderTypes} from '../enums/Order';
 import {ProductType, ProductWorkflowStatusCode} from '../enums/Product';
 import i18n from '../i18n';
 import {LIFERAY_VERSION_PICKLIST} from '../pages/PublisherDashboard/pages/NewAppFlow/constants';
@@ -78,7 +78,7 @@ export type FilterSchemas = {
 export type FilterSchemaOption = keyof typeof filterSchema;
 
 const baseFilters: Filter = {
-	dateCreated: {
+	dateRange: {
 		label: i18n.translate('date-created'),
 		name: 'createDate',
 		type: 'date-range',
@@ -114,7 +114,7 @@ const overrides = (
 });
 
 const filterSchema = {
-	administratorApps: {
+	administratorDashboardAppsTable: {
 		fields: [
 			overrides(baseFilters.type, {
 				label: i18n.translate('app-type'),
@@ -148,20 +148,22 @@ const filterSchema = {
 				],
 				type: 'checkbox',
 			}),
-			baseFilters.dateCreated,
+			baseFilters.dateRange,
 			overrides(baseFilters.version, {
 				label: i18n.translate('liferay-version'),
 				name: 'specificationValues|liferayVersion',
 				operator: 'lambda',
 				resource: `o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${LIFERAY_VERSION_PICKLIST}`,
-				transformData: (item) =>
-					item.listTypeEntries.map((entry: any) => ({
-						label: entry.name,
-						value: entry.name,
-					})),
+				transformData(item) {
+					const options = item.listTypeEntries.map((entry: any) => {
+						return {label: entry.name, value: entry.name};
+					});
+
+					return options;
+				},
 				type: 'multiselect',
 			}),
-			overrides(baseFilters.dateCreated, {
+			overrides(baseFilters.dateRange, {
 				label: i18n.translate('modified-date'),
 				name: 'modifiedDate',
 			}),
@@ -185,9 +187,9 @@ const filterSchema = {
 				type: 'select',
 			}),
 		],
-		name: 'administratorApps',
+		name: 'administratorDashboardAppsTable',
 	},
-	administratorOrders: {
+	administratorDashboardOrdersTable: {
 		fields: [
 			overrides(baseFilters.type, {
 				label: i18n.translate('app-type'),
@@ -224,39 +226,21 @@ const filterSchema = {
 				label: i18n.translate('order-status'),
 				name: 'orderStatus',
 				options: [
-					{
-						label: i18n.translate('canceled'),
-						value: `${OrderWorkflowStatusCode.CANCELLED}`,
-					},
-					{
-						label: i18n.translate('completed'),
-						value: `${OrderWorkflowStatusCode.COMPLETED}`,
-					},
-					{
-						label: i18n.translate('in-progress'),
-						value: `${OrderWorkflowStatusCode.IN_PROGRESS}`,
-					},
-					{
-						label: i18n.translate('on-hold'),
-						value: `${OrderWorkflowStatusCode.ON_HOLD}`,
-					},
-					{
-						label: i18n.translate('pending'),
-						value: `${OrderWorkflowStatusCode.PENDING}`,
-					},
-					{
-						label: i18n.translate('processing'),
-						value: `${OrderWorkflowStatusCode.PROCESSING}`,
-					},
+					{label: i18n.translate('completed'), value: '0'},
+					{label: i18n.translate('pending'), value: '1'},
+					{label: i18n.translate('in-progress'), value: '6'},
+					{label: i18n.translate('canceled'), value: '8'},
+					{label: i18n.translate('processing'), value: '10'},
+					{label: i18n.translate('on-hold'), value: '20'},
 				],
 				removeQuoteMark: true,
 				type: 'multiselect',
 			}),
-			baseFilters.dateCreated,
+			baseFilters.dateRange,
 		],
-		name: 'administratorOrders',
+		name: 'administratorDashboardOrdersTable',
 	},
-	administratorPublishers: {
+	administratorDashboardPublishersTable: {
 		fields: [
 			overrides(baseFilters.type, {
 				label: i18n.translate('account-type'),
@@ -268,16 +252,15 @@ const filterSchema = {
 				],
 				type: 'multiselect',
 			}),
-			overrides(baseFilters.dateCreated, {
+			overrides(baseFilters.dateRange, {
 				name: 'dateCreated',
 			}),
 		],
-		name: 'administratorPublishers',
+		name: 'administratorDashboardSolutionsTable',
 	},
-	administratorSolutions: {
+	administratorDashboardSolutionsTable: {
 		fields: [
-			baseFilters.dateCreated,
-			overrides(baseFilters.dateCreated, {
+			overrides(baseFilters.dateRange, {
 				label: i18n.translate('modified-date'),
 				name: 'modifiedDate',
 			}),
@@ -300,8 +283,9 @@ const filterSchema = {
 				removeQuoteMark: true,
 				type: 'multiselect',
 			}),
+			baseFilters.dateRange,
 		],
-		name: 'administratorSolutions',
+		name: 'administratorDashboardSolutionsTable',
 	},
 };
 
