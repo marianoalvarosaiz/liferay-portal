@@ -57,7 +57,7 @@ public class UpdateIndexSettingsIndexRequestExecutorImpl
 
 		if (indicesOptions != null) {
 			updateSettingsRequest.indicesOptions(
-				IndicesOptionsTranslatorUtil.translate(indicesOptions));
+				_indicesOptionsTranslator.translate(indicesOptions));
 		}
 
 		return updateSettingsRequest;
@@ -85,5 +85,8 @@ public class UpdateIndexSettingsIndexRequestExecutorImpl
 
 	@Reference
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
+
+	@Reference
+	private IndicesOptionsTranslator _indicesOptionsTranslator;
 
 }
