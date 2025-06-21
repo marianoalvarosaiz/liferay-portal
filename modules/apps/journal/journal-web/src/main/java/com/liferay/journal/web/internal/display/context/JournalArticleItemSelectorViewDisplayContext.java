@@ -40,8 +40,6 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
@@ -208,20 +206,10 @@ public class JournalArticleItemSelectorViewDisplayContext {
 				ClassTypeReader classTypeReader =
 					assetRendererFactory.getClassTypeReader();
 
-				try {
-					ClassType classType = classTypeReader.getClassType(
-						assetEntry.getClassTypeId(), _themeDisplay.getLocale());
+				ClassType classType = classTypeReader.getClassType(
+					assetEntry.getClassTypeId(), _themeDisplay.getLocale());
 
-					return classType.getName();
-				}
-				catch (Exception exception) {
-					_log.error(
-						"Unable to get classType for article with ID: " +
-							journalArticle.getArticleId(),
-						exception);
-				}
-
-				return StringPool.BLANK;
+				return classType.getName();
 			}
 		).put(
 			"className", JournalArticle.class.getName()
@@ -778,9 +766,6 @@ public class JournalArticleItemSelectorViewDisplayContext {
 				Boolean.TRUE);
 		}
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		JournalArticleItemSelectorViewDisplayContext.class);
 
 	private SearchContainer<?> _articleSearchContainer;
 	private Long _ddmStructureId;
