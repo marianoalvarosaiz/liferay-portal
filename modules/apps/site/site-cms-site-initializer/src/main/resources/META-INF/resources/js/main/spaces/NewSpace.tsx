@@ -11,7 +11,7 @@ import {navigate} from 'frontend-js-web';
 import React from 'react';
 
 import SpaceService from '../../services/SpaceService';
-import SpaceColorDropdown from './SpaceLogoColorDropdown';
+import SpaceColorDropdown from '../components/SpaceLogoColorDropdown';
 import SpaceSticker, {LogoColor} from '../components/SpaceSticker';
 import {FieldText} from '../components/forms';
 import {
@@ -27,9 +27,10 @@ import {NewSpaceFormSection} from './NewSpaceFormSection';
 
 export interface NewSpaceProps {
 	baseAddMembersUrl: string;
+	baseSpaceUrl: string;
 }
 
-const NewSpace = ({baseAddMembersUrl}: NewSpaceProps) => {
+const NewSpace = ({baseAddMembersUrl, baseSpaceUrl}: NewSpaceProps) => {
 	const {
 		errors,
 		handleChange,
@@ -41,12 +42,18 @@ const NewSpace = ({baseAddMembersUrl}: NewSpaceProps) => {
 		values,
 	} = useFormik({
 		initialValues: {
+			addMembers: false,
 			description: '',
 			logoColor: 'outline-0' as LogoColor,
 			name: '',
 		},
 		onSubmit: (values) => {
-			const {description, logoColor = 'outline-0', name} = values;
+			const {
+				addMembers,
+				description,
+				logoColor = 'outline-0',
+				name,
+			} = values;
 
 			SpaceService.addSpace({
 				description,
@@ -54,11 +61,17 @@ const NewSpace = ({baseAddMembersUrl}: NewSpaceProps) => {
 				settings: {logoColor},
 			}).then((response) => {
 				if (response.data) {
-					navigate(
-						baseAddMembersUrl +
-							'?assetLibraryId=' +
-							response.data.id
-					);
+					if (addMembers) {
+						navigate(
+							baseAddMembersUrl +
+								'?assetLibraryId=' +
+								response.data.id
+						);
+
+						return;
+					}
+
+					navigate(baseSpaceUrl + response.data.id);
 				}
 			});
 		},
@@ -84,6 +97,8 @@ const NewSpace = ({baseAddMembersUrl}: NewSpaceProps) => {
 					description={Liferay.Language.get(
 						'spaces-are-essential-for-organizing-defining-and-managing-your-content-and-files'
 					)}
+					linkLabel={Liferay.Language.get('learn-more-about-spaces')}
+					linkUrl="/"
 					onSubmit={handleSubmit}
 					step={1}
 					title={Liferay.Language.get('create-a-space')}
@@ -141,10 +156,24 @@ const NewSpace = ({baseAddMembersUrl}: NewSpaceProps) => {
 							className="mt-4"
 							disabled={isSubmitting}
 							onClick={() => {
+								setFieldValue('addMembers', true);
 								submitForm();
 							}}
 						>
-							{Liferay.Language.get('continue')}
+							{Liferay.Language.get('add-members')}
+						</ClayButton>
+
+						<ClayButton
+							borderless
+							className="mt-2"
+							disabled={isSubmitting}
+							displayType="secondary"
+							outline
+							type="submit"
+						>
+							{Liferay.Language.get(
+								'create-a-space-without-members'
+							)}
 						</ClayButton>
 					</ClayButton.Group>
 				</NewSpaceFormSection>
