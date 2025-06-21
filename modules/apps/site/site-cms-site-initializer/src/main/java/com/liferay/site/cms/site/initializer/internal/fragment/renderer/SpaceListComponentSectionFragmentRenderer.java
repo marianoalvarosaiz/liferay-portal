@@ -7,15 +7,20 @@ package com.liferay.site.cms.site.initializer.internal.fragment.renderer;
 
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
+import com.liferay.info.item.InfoItemIdentifier;
+import com.liferay.info.item.InfoItemReference;
+import com.liferay.info.item.InfoItemServiceRegistry;
+import com.liferay.info.item.provider.InfoItemObjectProvider;
+import com.liferay.object.model.ObjectEntry;
 import com.liferay.portal.kernel.util.PortalRunMode;
-import com.liferay.site.cms.site.initializer.internal.constants.CMSSpaceStickerConstants;
-import com.liferay.site.cms.site.initializer.internal.display.context.SpaceStickerDisplayContext;
+import com.liferay.site.cms.site.initializer.internal.display.context.SpaceListDisplayContext;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Georgel Pop
@@ -45,18 +50,47 @@ public class SpaceListComponentSectionFragmentRenderer
 			HttpServletRequest httpServletRequest)
 		throws Exception {
 
-		SpaceStickerDisplayContext spaceStickerDisplayContext =
-			new SpaceStickerDisplayContext(
-				getGroupId(httpServletRequest), groupLocalService,
-				httpServletRequest, CMSSpaceStickerConstants.SM);
+		SpaceListDisplayContext spaceListDisplayContext =
+			new SpaceListDisplayContext(
+				_getObjectEntryGroupId(
+					fragmentRendererContext.getContextInfoItemReference()),
+				groupLocalService, httpServletRequest);
 
 		if (PortalRunMode.isTestMode()) {
 			httpServletRequest.setAttribute(
-				SpaceStickerDisplayContext.class.getName(),
-				spaceStickerDisplayContext);
+				SpaceListDisplayContext.class.getName(),
+				spaceListDisplayContext);
 		}
 
-		return spaceStickerDisplayContext.getProps();
+		return spaceListDisplayContext.getProps();
 	}
+
+	private long _getObjectEntryGroupId(InfoItemReference infoItemReference)
+		throws Exception {
+
+		if (infoItemReference == null) {
+			return 0;
+		}
+
+		InfoItemIdentifier infoItemIdentifier =
+			infoItemReference.getInfoItemIdentifier();
+
+		InfoItemObjectProvider<Object> infoItemObjectProvider =
+			_infoItemServiceRegistry.getFirstInfoItemService(
+				InfoItemObjectProvider.class, infoItemReference.getClassName(),
+				infoItemIdentifier.getInfoItemServiceFilter());
+
+		ObjectEntry infoItem = (ObjectEntry)infoItemObjectProvider.getInfoItem(
+			infoItemIdentifier);
+
+		if (infoItem == null) {
+			return 0;
+		}
+
+		return infoItem.getGroupId();
+	}
+
+	@Reference
+	private InfoItemServiceRegistry _infoItemServiceRegistry;
 
 }
