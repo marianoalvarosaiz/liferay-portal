@@ -8,11 +8,18 @@ package com.liferay.portal.search.solr8.internal.search.engine.adapter.index;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexResponse;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Bryan Engler
  */
-public interface DeleteIndexRequestExecutor {
+@Component(service = DeleteIndexRequestExecutor.class)
+public class DeleteIndexRequestExecutorImpl
+	implements DeleteIndexRequestExecutor {
 
-	public DeleteIndexResponse execute(DeleteIndexRequest deleteIndexRequest);
+	@Override
+	public DeleteIndexResponse execute(DeleteIndexRequest deleteIndexRequest) {
+		throw new UnsupportedOperationException();
+	}
 
 }
