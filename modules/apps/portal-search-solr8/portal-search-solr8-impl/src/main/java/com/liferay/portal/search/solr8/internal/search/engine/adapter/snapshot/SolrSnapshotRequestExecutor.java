@@ -89,8 +89,9 @@ public class SolrSnapshotRequestExecutor implements SnapshotRequestExecutor {
 	private GetSnapshotRepositoriesRequestExecutor
 		_getSnapshotRepositoriesRequestExecutor;
 
-	private final GetSnapshotsRequestExecutor _getSnapshotsRequestExecutor =
-		new GetSnapshotsRequestExecutor();
+	@Reference
+	private GetSnapshotsRequestExecutor _getSnapshotsRequestExecutor;
+
 	private final RestoreSnapshotRequestExecutor
 		_restoreSnapshotRequestExecutor = new RestoreSnapshotRequestExecutor();
 
