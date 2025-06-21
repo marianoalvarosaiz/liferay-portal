@@ -9,12 +9,13 @@ import React, {
 	ReactNode,
 	useCallback,
 	useContext,
+	useEffect,
 	useMemo,
 } from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {KeyedMutator} from 'swr';
 
-import CreateFilters from '../../core/CreateFilters';
+import SearchBuilder from '../../core/SearchBuilder';
 import {useFetch} from '../../hooks/useFetch';
 import i18n from '../../i18n';
 import {
@@ -105,19 +106,28 @@ const ListView = <T extends Record<string, any>>({
 	tableProps,
 }: ListViewProps<T>) => {
 	const [listViewContext, dispatch] = useContext(ListViewContext);
-
 	const updateUrlParams = useUpdateUrlParams();
+
 	const [searchParams] = useSearchParams();
 
+	const currentPage = searchParams.get('page');
+
+	const currentPageSize = searchParams.get('pageSize');
+
+	const isRowSelectable = false;
+
 	const {filters, keywords, sort} = listViewContext;
-	const filterSchemaName = managementToolbarProps?.filterSchema ?? '';
+
+	const filterSchemaName = managementToolbarProps.filterSchema ?? '';
 
 	const filterSchema = (filterSchemas as any)[
 		filterSchemaName
 	] as FilterSchemaType;
 
-	const currentPage = searchParams.get('page');
-	const currentPageSize = searchParams.get('pageSize');
+	const onApplyFilterMemo = useMemo(
+		() => filterSchema?.onApply?.bind(filterSchema),
+		[filterSchema]
+	);
 
 	const filterVariables = useMemo(
 		() => ({
@@ -128,24 +138,65 @@ const ListView = <T extends Record<string, any>>({
 		[filters, defaultFilters?.filter, filterSchema]
 	);
 
+	const buildSort = (sort: Sort | Sort[]) => {
+		if (Array.isArray(sort)) {
+			return sort
+				.reduce(
+					(prevSort, newSort) =>
+						prevSort +
+						`${newSort.key}:${newSort.direction.toLowerCase()},`,
+					''
+				)
+				.slice(0, -1);
+		}
+
+		return sort.key ? `${sort.key}:${sort.direction.toLowerCase()}` : '';
+	};
+
 	const filter = useMemo(() => {
-		const baseFilter = CreateFilters.createFilter(filterVariables) || '';
+		const appliedFilters: {[key: string]: string} = {
+			...filterVariables.appliedFilter,
+		};
 
-		return {filter: baseFilter};
-	}, [filterVariables]);
+		const filters: {[key: string]: string | undefined | boolean} = {};
 
-	const buildSort = (sort: Sort) =>
-		sort.key ? `${sort.key}:${sort.direction.toLowerCase()}` : '';
+		Object.entries(appliedFilters).forEach(([key, value]) => {
+			const matchingField = filterSchema.fields.find(
+				(field) => field.name === key && field.isCustomFilter
+			);
 
-	const onSort = useCallback(
-		(key: string, direction: SortDirection) => {
-			dispatch({
-				payload: {direction, key},
-				type: ListViewTypes.SET_SORT,
-			});
-		},
-		[dispatch]
-	);
+			if (matchingField) {
+				if (
+					value.includes(`No ${matchingField.label}`) &&
+					!matchingField.requestOperator
+				) {
+					const newKey = `no${key.charAt(0).toUpperCase() + key.slice(1)}`;
+
+					filters[newKey] = true;
+				}
+				else {
+					filters[key] = SearchBuilder.createCustomFilter(
+						matchingField,
+						value
+					);
+				}
+				delete appliedFilters[key];
+			}
+		});
+
+		const filterVariablesCopy = {
+			...filterVariables,
+			appliedFilter: {...appliedFilters},
+		};
+
+		const baseFilter = onApplyFilterMemo
+			? onApplyFilterMemo(filterVariablesCopy)
+			: SearchBuilder.createFilter(filterVariablesCopy) || '';
+
+		const filter = {filter: baseFilter, ...filters};
+
+		return filter;
+	}, [filterSchema?.fields, filterVariables, onApplyFilterMemo]);
 
 	const getURLSearchParams = useCallback(
 		() => ({
@@ -185,6 +236,23 @@ const ListView = <T extends Record<string, any>>({
 		pageSize,
 		totalCount = 0,
 	} = response || {};
+
+	const onSort = useCallback(
+		(key: string, direction: SortDirection) => {
+			dispatch({
+				payload: {direction, key},
+				type: ListViewTypes.SET_SORT,
+			});
+		},
+		[dispatch]
+	);
+
+	useEffect(() => {
+		dispatch({
+			payload: isRowSelectable,
+			type: ListViewTypes.SET_CHECKED_ALL_ROWS,
+		});
+	}, [dispatch, isRowSelectable]);
 
 	if (loading || (isValidating && searchParams.get('filter'))) {
 		return <Loading />;

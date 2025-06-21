@@ -118,6 +118,7 @@ export function AdministratorOrdersListView({
 						name: i18n.translate('publisher-dashboard'),
 						onClick: redirectTo('/publisher-dashboard'),
 					},
+
 					{
 						name: i18n.translate('order-details'),
 						onClick: (order: Order) => {
