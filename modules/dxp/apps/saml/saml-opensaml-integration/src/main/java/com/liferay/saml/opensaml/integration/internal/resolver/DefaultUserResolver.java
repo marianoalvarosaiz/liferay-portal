@@ -5,13 +5,6 @@
 
 package com.liferay.saml.opensaml.integration.internal.resolver;
 
-import com.liferay.expando.kernel.model.ExpandoColumn;
-import com.liferay.expando.kernel.model.ExpandoColumnConstants;
-import com.liferay.expando.kernel.model.ExpandoTable;
-import com.liferay.expando.kernel.model.ExpandoTableConstants;
-import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
-import com.liferay.expando.kernel.service.ExpandoTableLocalService;
-import com.liferay.expando.kernel.service.ExpandoValueLocalService;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -21,7 +14,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
@@ -29,7 +21,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.saml.opensaml.integration.field.expression.handler.UserFieldExpressionHandler;
 import com.liferay.saml.opensaml.integration.field.expression.handler.registry.UserFieldExpressionHandlerRegistry;
@@ -131,9 +122,7 @@ public class DefaultUserResolver implements UserResolver {
 
 		user.setCompanyId(companyId);
 
-		user = _processUser(
-			user, attributesMap, serviceContext,
-			samlSpIdpConnection.getSamlIdpEntityId());
+		user = _processUser(user, attributesMap, serviceContext);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Added user " + user.toString());
@@ -171,44 +160,6 @@ public class DefaultUserResolver implements UserResolver {
 		}
 
 		return format;
-	}
-
-	private ExpandoColumn _getOrAddExpandoColumn(
-			String className, long companyId)
-		throws Exception {
-
-		ExpandoTable expandoTable = _expandoTableLocalService.fetchTable(
-			companyId, _classNameLocalService.getClassNameId(className),
-			ExpandoTableConstants.DEFAULT_TABLE_NAME);
-
-		if (expandoTable == null) {
-			expandoTable = _expandoTableLocalService.addTable(
-				companyId, className, ExpandoTableConstants.DEFAULT_TABLE_NAME);
-		}
-
-		ExpandoColumn expandoColumn = _expandoColumnLocalService.fetchColumn(
-			expandoTable.getTableId(), "idpId");
-
-		if (expandoColumn != null) {
-			return expandoColumn;
-		}
-
-		expandoColumn = _expandoColumnLocalService.addColumn(
-			expandoTable.getTableId(), "idpId", ExpandoColumnConstants.LONG);
-
-		UnicodeProperties unicodeProperties =
-			expandoColumn.getTypeSettingsProperties();
-
-		unicodeProperties.setProperty(
-			ExpandoColumnConstants.INDEX_TYPE,
-			String.valueOf(ExpandoColumnConstants.INDEX_TYPE_KEYWORD));
-
-		unicodeProperties.setProperty(
-			ExpandoColumnConstants.PROPERTY_HIDDEN, Boolean.TRUE.toString());
-
-		expandoColumn.setTypeSettingsProperties(unicodeProperties);
-
-		return _expandoColumnLocalService.updateExpandoColumn(expandoColumn);
 	}
 
 	private String _getPrefix(String userFieldExpression) {
@@ -295,9 +246,7 @@ public class DefaultUserResolver implements UserResolver {
 				userResolverSAMLContext.resolvePeerEntityId());
 
 			if (user != null) {
-				return _updateUser(
-					user, attributesMap, serviceContext,
-					samlSpIdpConnection.getSamlIdpEntityId());
+				return _updateUser(user, attributesMap, serviceContext);
 			}
 
 			return null;
@@ -368,14 +317,12 @@ public class DefaultUserResolver implements UserResolver {
 				companyId, samlSpIdpConnection, attributesMap, serviceContext);
 		}
 
-		return _updateUser(
-			user, attributesMap, serviceContext,
-			samlSpIdpConnection.getSamlIdpEntityId());
+		return _updateUser(user, attributesMap, serviceContext);
 	}
 
 	private User _processUser(
 			User user, Map<String, List<Serializable>> attributesMap,
-			ServiceContext serviceContext, String idpEntityId)
+			ServiceContext serviceContext)
 		throws Exception {
 
 		UserProcessor userProcessor = _userProcessorFactory.create(
@@ -386,17 +333,7 @@ public class DefaultUserResolver implements UserResolver {
 				key, _getValuesAsString(key, attributesMap));
 		}
 
-		user = userProcessor.process(serviceContext);
-
-		ExpandoColumn expandoColumn = _getOrAddExpandoColumn(
-			User.class.getName(), serviceContext.getCompanyId());
-
-		_expandoValueLocalService.addValue(
-			_classNameLocalService.getClassNameId(User.class.getName()),
-			expandoColumn.getTableId(), expandoColumn.getColumnId(),
-			user.getUserId(), idpEntityId);
-
-		return user;
+		return userProcessor.process(serviceContext);
 	}
 
 	private String _removePrefix(
@@ -441,7 +378,7 @@ public class DefaultUserResolver implements UserResolver {
 
 	private User _updateUser(
 			User user, Map<String, List<Serializable>> attributesMap,
-			ServiceContext serviceContext, String idpEntityId)
+			ServiceContext serviceContext)
 		throws Exception {
 
 		if (_log.isDebugEnabled()) {
@@ -451,26 +388,14 @@ public class DefaultUserResolver implements UserResolver {
 					MapUtil.toString(attributesMap)));
 		}
 
-		return _processUser(user, attributesMap, serviceContext, idpEntityId);
+		return _processUser(user, attributesMap, serviceContext);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DefaultUserResolver.class);
 
 	@Reference
-	private ClassNameLocalService _classNameLocalService;
-
-	@Reference
 	private CompanyLocalService _companyLocalService;
-
-	@Reference
-	private ExpandoColumnLocalService _expandoColumnLocalService;
-
-	@Reference
-	private ExpandoTableLocalService _expandoTableLocalService;
-
-	@Reference
-	private ExpandoValueLocalService _expandoValueLocalService;
 
 	@Reference
 	private SamlPeerBindingLocalService _samlPeerBindingLocalService;
