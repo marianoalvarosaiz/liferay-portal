@@ -1,1 +1,0 @@
-create index IX_C9F916CB on ExportImportReportEntry (companyId, exportImportConfigurationId);
