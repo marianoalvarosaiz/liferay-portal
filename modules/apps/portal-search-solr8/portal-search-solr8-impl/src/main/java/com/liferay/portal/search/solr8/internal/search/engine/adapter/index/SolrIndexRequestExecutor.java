@@ -34,9 +34,7 @@ import com.liferay.portal.search.engine.adapter.index.StatsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.StatsIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexResponse;
-import com.liferay.portal.search.solr8.internal.connection.SolrClientManager;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -149,12 +147,6 @@ public class SolrIndexRequestExecutor implements IndexRequestExecutor {
 			updateIndexSettingsIndexRequest);
 	}
 
-	@Activate
-	protected void activate() {
-		_refreshIndexRequestExecutor = new RefreshIndexRequestExecutor(
-			_solrClientManager);
-	}
-
 	private final AnalyzeIndexRequestExecutor _analyzeIndexRequestExecutor =
 		new AnalyzeIndexRequestExecutor();
 	private final CloseIndexRequestExecutor _closeIndexRequestExecutor =
@@ -185,10 +177,8 @@ public class SolrIndexRequestExecutor implements IndexRequestExecutor {
 	@Reference
 	private PutMappingIndexRequestExecutor _putMappingIndexRequestExecutor;
 
-	private RefreshIndexRequestExecutor _refreshIndexRequestExecutor;
-
 	@Reference
-	private SolrClientManager _solrClientManager;
+	private RefreshIndexRequestExecutor _refreshIndexRequestExecutor;
 
 	private final StatsIndexRequestExecutor _statsIndexRequestExecutor =
 		new StatsIndexRequestExecutor();
