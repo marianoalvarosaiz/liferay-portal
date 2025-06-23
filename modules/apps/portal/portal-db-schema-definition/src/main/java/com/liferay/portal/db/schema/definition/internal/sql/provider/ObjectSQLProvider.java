@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.IndexMetadata;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -150,6 +151,7 @@ public class ObjectSQLProvider implements SQLProvider {
 		throws Exception {
 
 		if (!dbInspector.hasTable(tableName)) {
+			System.out.println("CompanyId: " + CompanyThreadLocal.getCompanyId() + " does not have " + tableName);
 			return;
 		}
 

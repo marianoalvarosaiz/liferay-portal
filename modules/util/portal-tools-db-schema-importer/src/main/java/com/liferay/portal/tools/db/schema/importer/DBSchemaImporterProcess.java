@@ -378,6 +378,8 @@ public class DBSchemaImporterProcess {
 			return;
 		}
 
+		System.out.println("Templateeeeee: " + template);
+
 		_preprocessSQLTemplate(template);
 
 		for (String sql : _syncInitialSQLs) {
