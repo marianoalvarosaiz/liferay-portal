@@ -5,8 +5,7 @@
 
 package com.liferay.portal.kernel.log;
 
-import com.liferay.portal.kernel.internal.log4j.Log4jLogFactoryImpl;
-
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -58,7 +57,23 @@ public class LogFactoryUtil {
 		return _logFactory;
 	}
 
-	private static final LogFactory _logFactory = new Log4jLogFactoryImpl();
+	public static void setLogFactory(LogFactory logFactory) {
+		for (Map.Entry<String, LogWrapper> entry : _logWrappers.entrySet()) {
+			String name = entry.getKey();
+
+			LogWrapper logWrapper = entry.getValue();
+
+			logWrapper.setLog(logFactory.getLog(name));
+		}
+
+		// The following volatile write will flush out all cache data. All
+		// previously swapped LogWrappers will be visible for any reads after a
+		// memory fence read according to the happens-before rules.
+
+		_logFactory = logFactory;
+	}
+
+	private static volatile LogFactory _logFactory = new Jdk14LogFactoryImpl();
 	private static final ConcurrentMap<String, LogWrapper> _logWrappers =
 		new ConcurrentHashMap<>();
 

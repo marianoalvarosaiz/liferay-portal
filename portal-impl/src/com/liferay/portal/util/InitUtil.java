@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataSourceFactoryUtil;
 import com.liferay.portal.kernel.internal.configuration.ConfigurationFactoryImpl;
+import com.liferay.portal.kernel.internal.log.Log4jLogFactoryImpl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.SanitizerLogWrapper;
@@ -110,6 +111,17 @@ public class InitUtil {
 
 		try {
 			PortalClassLoaderUtil.setClassLoader(classLoader);
+		}
+		catch (Exception exception) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(exception);
+			}
+		}
+
+		// Shared log
+
+		try {
+			LogFactoryUtil.setLogFactory(new Log4jLogFactoryImpl());
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {
