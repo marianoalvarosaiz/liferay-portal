@@ -8,16 +8,16 @@ package com.liferay.portal.test.log;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.LogWrapper;
-import com.liferay.portal.kernel.log4j.Log4JUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.log4j.Log4JUtil;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.message.Message;
@@ -27,21 +27,29 @@ import org.apache.logging.log4j.message.Message;
  */
 public class LoggerTestUtil {
 
-	public static final String ALL = String.valueOf(Level.ALL);
+	public static final String ALL = String.valueOf(
+		org.apache.logging.log4j.Level.ALL);
 
-	public static final String DEBUG = String.valueOf(Level.DEBUG);
+	public static final String DEBUG = String.valueOf(
+		org.apache.logging.log4j.Level.DEBUG);
 
-	public static final String ERROR = String.valueOf(Level.ERROR);
+	public static final String ERROR = String.valueOf(
+		org.apache.logging.log4j.Level.ERROR);
 
-	public static final String FATAL = String.valueOf(Level.FATAL);
+	public static final String FATAL = String.valueOf(
+		org.apache.logging.log4j.Level.FATAL);
 
-	public static final String INFO = String.valueOf(Level.INFO);
+	public static final String INFO = String.valueOf(
+		org.apache.logging.log4j.Level.INFO);
 
-	public static final String OFF = String.valueOf(Level.OFF);
+	public static final String OFF = String.valueOf(
+		org.apache.logging.log4j.Level.OFF);
 
-	public static final String TRACE = String.valueOf(Level.TRACE);
+	public static final String TRACE = String.valueOf(
+		org.apache.logging.log4j.Level.TRACE);
 
-	public static final String WARN = String.valueOf(Level.WARN);
+	public static final String WARN = String.valueOf(
+		org.apache.logging.log4j.Level.WARN);
 
 	public static LogCapture configureLog4JLogger(
 		String name, String priority) {
@@ -54,7 +62,7 @@ public class LoggerTestUtil {
 			log = logWrapper.getWrappedLog();
 		}
 
-		Logger logger = null;
+		org.apache.logging.log4j.core.Logger logger = null;
 
 		try {
 			logger = ReflectionTestUtil.getFieldValue(log, "_logger");
@@ -113,12 +121,14 @@ public class LoggerTestUtil {
 		public List<LogEntry> resetPriority(String priority) {
 			_logEntries.clear();
 
-			_logger.setLevel(Level.toLevel(priority));
+			_logger.setLevel(org.apache.logging.log4j.Level.toLevel(priority));
 
 			return _logEntries;
 		}
 
-		private Log4JLogCapture(Logger logger, String priority) {
+		private Log4JLogCapture(
+			org.apache.logging.log4j.core.Logger logger, String priority) {
+
 			super(StringUtil.randomString(), null, null, true, null);
 
 			_logger = logger;
@@ -135,9 +145,9 @@ public class LoggerTestUtil {
 		}
 
 		private final boolean _additive;
-		private final Level _level;
+		private final org.apache.logging.log4j.Level _level;
 		private final List<LogEntry> _logEntries = new CopyOnWriteArrayList<>();
-		private final Logger _logger;
+		private final org.apache.logging.log4j.core.Logger _logger;
 		private final LoggerConfig _loggerConfig;
 
 	}

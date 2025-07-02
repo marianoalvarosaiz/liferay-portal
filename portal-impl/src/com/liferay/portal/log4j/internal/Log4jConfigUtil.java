@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.kernel.internal.log4j;
+package com.liferay.portal.log4j.internal;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
@@ -199,7 +199,7 @@ public class Log4jConfigUtil {
 		LoggerContext.getContext();
 
 	static {
-		PluginManager.addPackage("com.liferay.portal.kernel.internal.log4j");
+		PluginManager.addPackage("com.liferay.portal.log4j.internal");
 
 		_centralizedConfiguration = new CentralizedConfiguration(
 			_loggerContext);

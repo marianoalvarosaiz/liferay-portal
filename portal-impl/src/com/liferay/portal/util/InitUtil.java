@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.internal.configuration.ConfigurationFactoryImpl
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.SanitizerLogWrapper;
-import com.liferay.portal.kernel.log4j.Log4JUtil;
 import com.liferay.portal.kernel.security.xml.SecureXMLFactoryProviderUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -31,6 +30,7 @@ import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.xml.UnsecureSAXReaderUtil;
+import com.liferay.portal.log4j.Log4JUtil;
 import com.liferay.portal.module.framework.ModuleFrameworkUtil;
 import com.liferay.portal.security.xml.SecureXMLFactoryProviderImpl;
 import com.liferay.portal.spring.aop.AopConfigurableApplicationContextConfigurator;

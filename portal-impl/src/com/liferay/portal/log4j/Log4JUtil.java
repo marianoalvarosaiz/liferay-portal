@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.kernel.log4j;
+package com.liferay.portal.log4j;
 
 import com.liferay.petra.string.CharPool;
-import com.liferay.portal.kernel.internal.log4j.Log4jConfigUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -14,6 +13,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.URLUtil;
+import com.liferay.portal.log4j.internal.Log4jConfigUtil;
 
 import java.io.File;
 import java.io.IOException;
