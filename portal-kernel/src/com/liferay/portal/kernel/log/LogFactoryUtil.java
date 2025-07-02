@@ -25,11 +25,10 @@ public class LogFactoryUtil {
 		Log log = _logs.get(name);
 
 		if (log == null) {
+			log = _logFactory.getLog(name);
+
 			if (SanitizerLogWrapper.isEnabled()) {
-				log = new SanitizerLogWrapper(_logFactory.getLog(name));
-			}
-			else {
-				log = _logFactory.getLog(name);
+				log = new SanitizerLogWrapper(log);
 			}
 
 			Log previousLog = _logs.putIfAbsent(name, log);
