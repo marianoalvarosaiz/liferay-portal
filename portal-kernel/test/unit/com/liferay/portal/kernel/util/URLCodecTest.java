@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -159,8 +160,8 @@ public class URLCodecTest {
 			Charset.class, "cache1",
 			new Object[] {_testCharset.name(), _testCharset});
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				URLCodec.class.getName(), LoggerTestUtil.ALL)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				URLCodec.class.getName(), Level.ALL)) {
 
 			Assert.assertEquals(
 				"URLCodec returns blank string when ChaesetEncoder/Decoder" +

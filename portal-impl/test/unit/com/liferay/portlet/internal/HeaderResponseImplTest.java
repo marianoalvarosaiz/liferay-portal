@@ -14,6 +14,7 @@ import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -50,8 +51,8 @@ public class HeaderResponseImplTest {
 			"<script id=\"dt\" type=\"data/template\">+<p>foo</p><p>bar</p>" +
 				"</script>");
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				HeaderResponseImpl.class.getName(), LoggerTestUtil.ERROR)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				HeaderResponseImpl.class.getName(), Level.SEVERE)) {
 
 			try {
 				ReflectionTestUtil.invoke(

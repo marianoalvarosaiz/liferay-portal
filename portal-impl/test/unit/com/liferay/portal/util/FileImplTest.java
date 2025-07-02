@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -462,8 +463,8 @@ public class FileImplTest {
 		File zipFile = _createZipFile(
 			testChildPath, "test_slip.zip", "../bad.txt", "good.txt");
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				FileImpl.class.getName(), LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				FileImpl.class.getName(), Level.WARNING)) {
 
 			_fileImpl.unzip(zipFile, testChildPath.toFile());
 

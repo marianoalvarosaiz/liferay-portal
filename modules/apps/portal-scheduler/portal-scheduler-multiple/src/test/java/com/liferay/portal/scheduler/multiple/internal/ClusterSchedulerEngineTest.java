@@ -337,8 +337,8 @@ public class ClusterSchedulerEngineTest {
 
 		Assert.assertTrue(_memoryClusteredJobs.isEmpty());
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				ClusterSchedulerEngine.class.getName(), LoggerTestUtil.OFF)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				ClusterSchedulerEngine.class.getName(), Level.OFF)) {
 
 			_mockClusterMasterExecutor.reset(false, 4, 2);
 
@@ -860,8 +860,8 @@ public class ClusterSchedulerEngineTest {
 			_TEST_JOB_NAME_0, _MEMORY_CLUSTER_TEST_GROUP_NAME,
 			StorageType.MEMORY_CLUSTERED);
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				ClusterSchedulerEngine.class.getName(), LoggerTestUtil.OFF)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				ClusterSchedulerEngine.class.getName(), Level.OFF)) {
 
 			_mockClusterMasterExecutor.reset(true, 0, 0);
 

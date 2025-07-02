@@ -17,6 +17,7 @@ import java.text.RuleBasedCollator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -53,8 +54,8 @@ public class CollatorUtilTest {
 			"<<<"
 		);
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				CollatorUtil.class.getName(), LoggerTestUtil.ALL)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				CollatorUtil.class.getName(), Level.ALL)) {
 
 			CollatorUtil.getInstance(LocaleUtil.getDefault());
 

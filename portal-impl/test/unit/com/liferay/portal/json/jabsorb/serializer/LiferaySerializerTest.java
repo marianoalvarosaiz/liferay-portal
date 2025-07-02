@@ -13,6 +13,7 @@ import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.jabsorb.serializer.SerializerState;
 
@@ -68,8 +69,8 @@ public class LiferaySerializerTest {
 
 		serializerState.store(jsonObject);
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				LiferaySerializer.class.getName(), LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				LiferaySerializer.class.getName(), Level.WARNING)) {
 
 			Object object = liferaySerializer.unmarshall(
 				serializerState, ServiceContext.class, jsonObject);

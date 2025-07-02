@@ -13,6 +13,7 @@ import com.liferay.portal.test.log.LogEntry;
 import com.liferay.portal.test.log.LoggerTestUtil;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -32,8 +33,8 @@ public class PortalBeanLocatorUtilTest {
 
 	@Test
 	public void testBeanLocatorHasNotBeenSet() {
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				PortalBeanLocatorUtil.class.getName(), LoggerTestUtil.ERROR)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				PortalBeanLocatorUtil.class.getName(), Level.SEVERE)) {
 
 			try {
 				PortalBeanLocatorUtil.locate("beanName");

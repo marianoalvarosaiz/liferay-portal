@@ -12,6 +12,7 @@ import com.liferay.portal.test.log.LoggerTestUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,8 +44,8 @@ public class MapUtilWhenCreatingALinkedHashMapFromArrayTest {
 
 	@Test
 	public void testShouldReturnEmptyMapWithParamsTypeObject() {
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				MapUtil.class.getName(), LoggerTestUtil.ERROR)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				MapUtil.class.getName(), Level.SEVERE)) {
 
 			Map<String, Object> map = MapUtil.toLinkedHashMap(
 				new String[] {"one:1:" + Object.class.getName()});

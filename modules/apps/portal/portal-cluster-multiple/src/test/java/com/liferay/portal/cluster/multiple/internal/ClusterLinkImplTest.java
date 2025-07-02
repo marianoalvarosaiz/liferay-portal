@@ -113,8 +113,8 @@ public class ClusterLinkImplTest extends BaseClusterTestCase {
 
 	@Test
 	public void testInitChannels() {
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				ClusterLinkImpl.class.getName(), LoggerTestUtil.OFF)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				ClusterLinkImpl.class.getName(), Level.OFF)) {
 
 			// Test 1, create ClusterLinkImpl#MAX_CHANNEL_COUNT channels
 

@@ -23,6 +23,7 @@ import java.io.Serializable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -126,9 +127,8 @@ public class SerializableObjectWrapperTest {
 					}
 
 				});
-			LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				SerializableObjectWrapper.class.getName(),
-				LoggerTestUtil.ALL)) {
+			LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				SerializableObjectWrapper.class.getName(), Level.ALL)) {
 
 			// Test unwrap
 

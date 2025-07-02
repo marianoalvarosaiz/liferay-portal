@@ -27,6 +27,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -57,9 +58,9 @@ public class SessionReplicationHttpSessionWrapperTest {
 
 		testHttpSession.setAttribute(_TEST_KEY, new byte[0]);
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
 				SessionReplicationHttpSessionWrapper.class.getName(),
-				LoggerTestUtil.ERROR)) {
+				Level.SEVERE)) {
 
 			sessionReplicationHttpSessionWrapper.getAttribute(_TEST_KEY);
 

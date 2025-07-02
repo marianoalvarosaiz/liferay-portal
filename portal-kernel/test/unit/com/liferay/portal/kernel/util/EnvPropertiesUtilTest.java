@@ -10,6 +10,7 @@ import com.liferay.portal.test.log.LogEntry;
 import com.liferay.portal.test.log.LoggerTestUtil;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,8 +47,8 @@ public class EnvPropertiesUtilTest {
 
 		// Encoded with illegal content
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				EnvPropertiesUtil.class.getName(), LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				EnvPropertiesUtil.class.getName(), Level.WARNING)) {
 
 			String s = "abc_xyz_D_-1__DEF__GH";
 

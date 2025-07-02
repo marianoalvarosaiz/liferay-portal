@@ -14,6 +14,7 @@ import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -129,8 +130,8 @@ public class ReplicasClusterListenerTest {
 			Mockito.anyInt(), Mockito.any()
 		);
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				ReplicasClusterListener.class.getName(), LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				ReplicasClusterListener.class.getName(), Level.WARNING)) {
 
 			masterTokenAcquired();
 

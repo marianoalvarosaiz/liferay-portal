@@ -16,7 +16,7 @@ import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -36,7 +36,7 @@ public class BufferedIncrementConfigurationTest {
 
 	@Test
 	public void testInvalidSettingWithLog() {
-		try (LogCapture logCapture = _testInvalidSetting(LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = _testInvalidSetting(Level.WARNING)) {
 			List<LogEntry> logEntries = logCapture.getLogEntries();
 
 			Assert.assertEquals(logEntries.toString(), 2, logEntries.size());
@@ -59,7 +59,7 @@ public class BufferedIncrementConfigurationTest {
 
 	@Test
 	public void testInvalidSettingWithoutLog() {
-		try (LogCapture logCapture = _testInvalidSetting(LoggerTestUtil.OFF)) {
+		try (LogCapture logCapture = _testInvalidSetting(Level.OFF)) {
 			List<LogEntry> logEntries = logCapture.getLogEntries();
 
 			Assert.assertTrue(logEntries.toString(), logEntries.isEmpty());
@@ -129,8 +129,8 @@ public class BufferedIncrementConfigurationTest {
 		Assert.assertEquals(0, standbyTime);
 	}
 
-	private LogCapture _testInvalidSetting(String level) {
-		if (Objects.equals(LoggerTestUtil.OFF, level)) {
+	private LogCapture _testInvalidSetting(Level level) {
+		if (level == Level.OFF) {
 			PropsUtil.set(
 				PropsKeys.BUFFERED_INCREMENT_STANDBY_QUEUE_THRESHOLD, "1");
 			PropsUtil.set(
@@ -147,13 +147,13 @@ public class BufferedIncrementConfigurationTest {
 			PropsKeys.BUFFERED_INCREMENT_THREADPOOL_KEEP_ALIVE_TIME, "-3");
 		PropsUtil.set(PropsKeys.BUFFERED_INCREMENT_THREADPOOL_MAX_SIZE, "-4");
 
-		LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+		LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
 			BufferedIncrementConfiguration.class.getName(), level);
 
 		BufferedIncrementConfiguration bufferedIncrementConfiguration =
 			new BufferedIncrementConfiguration(StringPool.BLANK);
 
-		if (Objects.equals(LoggerTestUtil.OFF, level)) {
+		if (level == Level.OFF) {
 			Assert.assertEquals(
 				1, bufferedIncrementConfiguration.getStandbyQueueThreshold());
 			Assert.assertEquals(

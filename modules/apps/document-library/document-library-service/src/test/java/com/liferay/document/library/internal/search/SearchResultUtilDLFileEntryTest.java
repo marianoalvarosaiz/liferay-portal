@@ -37,6 +37,7 @@ import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -296,9 +297,8 @@ public class SearchResultUtilDLFileEntryTest
 
 		document.add(new Field(Field.SNIPPET, snippet));
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				SearchResultTranslatorImpl.class.getName(),
-				LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				SearchResultTranslatorImpl.class.getName(), Level.WARNING)) {
 
 			SearchResult searchResult = assertOneSearchResult(document);
 

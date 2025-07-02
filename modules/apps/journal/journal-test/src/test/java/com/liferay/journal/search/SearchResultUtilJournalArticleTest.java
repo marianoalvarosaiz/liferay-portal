@@ -31,6 +31,7 @@ import jakarta.portlet.PortletRequest;
 import jakarta.portlet.PortletResponse;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -94,9 +95,8 @@ public class SearchResultUtilJournalArticleTest
 
 		Document document = createDocument();
 
-		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
-				SearchResultTranslatorImpl.class.getName(),
-				LoggerTestUtil.WARN)) {
+		try (LogCapture logCapture = LoggerTestUtil.configureJDKLogger(
+				SearchResultTranslatorImpl.class.getName(), Level.WARNING)) {
 
 			SearchResult searchResult = assertOneSearchResult(document);
 
