@@ -10,6 +10,8 @@ Main-Class: com.liferay.portal.tools.db.partition.migration.validator.DBPartitio
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/unsync/UnsyncByteArrayInputStream.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/unsync/UnsyncByteArrayOutputStream.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/unsync/UnsyncStringReader.class,\
+	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/log/Jdk14LogFactoryImpl.class,\
+	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/log/Jdk14LogImpl.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/log/Log.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/log/LogFactory.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/log/LogFactoryUtil.class,\
