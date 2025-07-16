@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
@@ -219,6 +220,18 @@ public class BatchEngineUnitProcessorImpl implements BatchEngineUnitProcessor {
 		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
 			_batchEngineTaskItemDelegateProvider.toBatchEngineTaskItemDelegate(
 				service);
+
+		if ((batchEngineUnitConfiguration.getCompanyId() != 0) &&
+			(batchEngineUnitConfiguration.getCompanyId() !=
+				CompanyThreadLocal.getNonsystemCompanyId())) {
+
+			_log.error(
+				"Huge error. CompanyId: " +
+					batchEngineUnitConfiguration.getCompanyId());
+			_log.error(
+				"Huge error. Thread: " +
+					CompanyThreadLocal.getNonsystemCompanyId());
+		}
 
 		BatchEngineImportTask batchEngineImportTask =
 			_batchEngineImportTaskLocalService.addBatchEngineImportTask(

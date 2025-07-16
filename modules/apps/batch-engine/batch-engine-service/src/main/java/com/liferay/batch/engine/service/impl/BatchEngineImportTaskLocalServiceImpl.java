@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.change.tracking.CTAware;
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -90,6 +91,14 @@ public class BatchEngineImportTaskLocalServiceImpl
 			batchEngineImportTaskPersistence.create(
 				counterLocalService.increment(
 					BatchEngineImportTask.class.getName()));
+
+		if ((companyId != 0) &&
+			(companyId != CompanyThreadLocal.getNonsystemCompanyId())) {
+
+			throw new IllegalStateException(
+				"CompanyId: " + companyId + " ThreadLocal" +
+					CompanyThreadLocal.getNonsystemCompanyId());
+		}
 
 		batchEngineImportTask.setExternalReferenceCode(externalReferenceCode);
 		batchEngineImportTask.setCompanyId(companyId);
