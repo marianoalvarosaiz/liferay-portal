@@ -5934,6 +5934,7 @@ ${custom.upgrade.properties}</echo>
 		<attribute default="false" name="skip.delete.liferay.home" />
 
 		<sequential>
+			<echo>This is final value: @{skip.delete.liferay.home}</echo>
 			<if>
 				<not>
 					<isset property="skip.rebuild.database" />
@@ -14956,6 +14957,8 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 			<try>
 				<retry retrycount="2">
 					<sequential>
+						<echo>This is a value: ${skip.delete.liferay.home}</echo>
+						<echo>This is another value: @{skip.delete.liferay.home}</echo>
 						<if>
 							<equals arg1="${skip.delete.liferay.home}" arg2="true" />
 							<then>
