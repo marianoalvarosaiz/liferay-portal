@@ -48,17 +48,15 @@ public class OrphanReferencesDataCleanupUtil {
 					"select ", sourceColumnName, ", count(1) from ",
 					sourceTableName,
 					_getWhereClause(
-						connection, sourceAdditionalWhereClause,
-						sourceColumnName, sourceTableName, targetColumnName,
-						targetTableName),
+						sourceAdditionalWhereClause, sourceColumnName,
+						sourceTableName, targetColumnName, targetTableName),
 					" group by ", sourceColumnName));
 			PreparedStatement preparedStatement2 = connection.prepareStatement(
 				StringBundler.concat(
 					"delete from ", sourceTableName,
 					_getWhereClause(
-						connection, sourceAdditionalWhereClause,
-						sourceColumnName, sourceTableName, targetColumnName,
-						targetTableName)));
+						sourceAdditionalWhereClause, sourceColumnName,
+						sourceTableName, targetColumnName, targetTableName)));
 			ResultSet resultSet = preparedStatement1.executeQuery()) {
 
 			preparedStatement2.execute();
@@ -73,7 +71,7 @@ public class OrphanReferencesDataCleanupUtil {
 						String.valueOf(resultSet.getLong(2)),
 						" orphan entries from table ", sourceTableName,
 						" have been deleted because value ",
-						String.valueOf(resultSet.getObject(1)),
+						String.valueOf(resultSet.getLong(1)),
 						" was not found in the origin table ", targetTableName,
 						" and column ", targetColumnName));
 			}
@@ -81,20 +79,15 @@ public class OrphanReferencesDataCleanupUtil {
 	}
 
 	private static String _getWhereClause(
-			Connection connection, String sourceAdditionalWhereClause,
-			String sourceColumnName, String sourceTableName,
-			String targetColumnName, String targetTableName)
-		throws Exception {
-
-		DBInspector dbInspector = new DBInspector(connection);
+		String sourceAdditionalWhereClause, String sourceColumnName,
+		String sourceTableName, String targetColumnName,
+		String targetTableName) {
 
 		return StringBundler.concat(
 			" where not exists (select 1 from ", targetTableName, " where ",
 			targetTableName, StringPool.PERIOD, targetColumnName, " = ",
 			sourceTableName, StringPool.PERIOD, sourceColumnName, ") and ",
-			sourceColumnName, " is not null ",
-			dbInspector.isNumeric(sourceTableName, sourceColumnName) ?
-				"and " + sourceColumnName + " != 0" : "",
+			sourceColumnName, " is not null and ", sourceColumnName, " != 0",
 			(sourceAdditionalWhereClause != null) ?
 				" and " + sourceAdditionalWhereClause : "");
 	}
