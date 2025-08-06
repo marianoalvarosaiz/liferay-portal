@@ -20,7 +20,7 @@ definition {
 		}
 	}
 
-	@description = "LPS-109189: Given a user starts the portal with a database created previously. When property database.indexes.update.on.startup is set to true. Then portal does update indexes for both core and modules."
+	@description = "LPS-109189: Given a user starts the portal with a database created previously. When property database.indexes.update.on.startup is set to true. Then portal does update indexes and primary keys for both core and modules."
 	@priority = 4
 	test CoreAndModuleIndexesAreUpdatedWithIndexesUpdateOnStartup {
 		property custom.properties = "database.indexes.update.on.startup=true";
@@ -32,9 +32,11 @@ definition {
 		}
 
 		AssertConsoleTextPresent(value1 = "Updating database indexes");
+
+		AssertConsoleTextPresent(value1 = "Updating database primary keys");
 	}
 
-	@description = "LPS-109189: Given a user starts the portal with a database created previously. When core and module indexes are missing and property database.indexes.update.on.startup is set to true. Then portal creates missing indexes."
+	@description = "LPS-109189: Given a user starts the portal with a database created previously. When core and module indexes and primary keys are missing and property database.indexes.update.on.startup is set to true. Then portal creates missing indexes and primary keys."
 	@priority = 4
 	test MissingIndexesAreCreatedWithIndexesUpdateOnStartup {
 		property custom.properties = "database.indexes.update.on.startup=true";
@@ -44,9 +46,13 @@ definition {
 			indexName = "IX_EC00543C",
 			tableName = "Company");
 
+		SQL.dropMySQLPrimaryKey(tableName = "Company");
+
 		SQL.dropMySQLIndex(
 			indexName = "IX_D3ACAD4A",
 			tableName = "JournalArticle");
+
+		SQL.dropMySQLPrimaryKey(tableName = "JournalArticle");
 
 		task ("Restart portal and cleaning the logs") {
 			Portlet.shutdownServer();
@@ -60,10 +66,22 @@ definition {
 			fail("Company index IX_EC00543C wasn't recreated");
 		}
 
+		var hasCompanyMissingPrimaryKey = SQL.hasMySQLPrimaryKey(tableName = "Company");
+
+		if (${hasCompanyMissingPrimaryKey} == "false") {
+			fail("Company primary key wasn't recreated");
+		}
+
 		var hasJournalArticleMissingIndex = SQL.hasMySQLIndex(indexName = "IX_D3ACAD4A");
 
 		if (${hasJournalArticleMissingIndex} == "false") {
 			fail("JournalArticle index IX_D3ACAD4A wasn't recreated");
+		}
+
+		var hasJournalArticleMissingPrimaryKey = SQL.hasMySQLPrimaryKey(tableName = "JournalArticle");
+
+		if (${hasJournalArticleMissingPrimaryKey} == "false") {
+			fail("JournalArticle primary key wasn't recreated");
 		}
 	}
 

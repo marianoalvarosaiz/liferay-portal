@@ -53,6 +53,19 @@ definition {
 		}
 	}
 
+	@summary = "Drop primary key on ${tableName}"
+	macro dropMySQLPrimaryKey(tableName = null) {
+		Variables.assertDefined(parameterList = ${tableName});
+
+		SQL.executeSQLStatement(sqlStatement = "alter table ${tableName} drop primary key;");
+
+		var hasMySQLPrimaryKey = SQL.hasMySQLPrimaryKey(tableName = ${tableName});
+
+		if (${hasMySQLPrimaryKey} == "true") {
+			fail("Primary key on ${tableName} wasn't dropped");
+		}
+	}
+
 	@summary = "Execute ${sqlStatement} with autocommit ${autoCommit}"
 	macro executeSettingAutoCommitSQLStatement(autoCommit = null, sqlStatement = null, customDatabaseURL = null) {
 		Variables.assertDefined(parameterList = "${autoCommit},${sqlStatement}");
@@ -92,6 +105,22 @@ definition {
 		Variables.assertDefined(parameterList = ${indexName});
 
 		var indexQuery = "SELECT COUNT(DISTINCT(index_name)) FROM information_schema.statistics WHERE index_schema = database() AND index_name = '${indexName}';";
+
+		var index = SQL.executeSQLStatement(sqlStatement = ${indexQuery});
+
+		if (contains(${index}, 1)) {
+			return "true";
+		}
+		else {
+			return "false";
+		}
+	}
+
+	@summary = "Assert a primary key on the MySQL database"
+	macro hasMySQLPrimaryKey(tableName = null) {
+		Variables.assertDefined(parameterList = ${tableName});
+
+		var indexQuery = "SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_schema = database() AND table_name = '${tableName}' and constraint_type = 'PRIMARY KEY';";
 
 		var index = SQL.executeSQLStatement(sqlStatement = ${indexQuery});
 
