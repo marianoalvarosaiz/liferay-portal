@@ -832,38 +832,38 @@ public class DBTest {
 
 	@Test
 	public void testUpdatePrimaryKeyAddsMissingPrimaryKey() throws Exception {
-		db.runSQL("create table SomeTable (id INTEGER, column1 TEXT)");
+		db.runSQL("create table DBTest (id INTEGER not null, column1 TEXT)");
 
 		try (Connection connection = DataAccess.getConnection()) {
-			db.updatePrimaryKey(connection, "SomeTable", new String[] {"id"});
+			db.updatePrimaryKey(connection, "DBTest", new String[] {"id"});
 
 			Assert.assertTrue(
 				ArrayUtil.equalsIgnoreCase(
 					new String[] {"id"},
-					db.getPrimaryKeyColumnNames(connection, "SomeTable")));
+					db.getPrimaryKeyColumnNames(connection, "DBTest")));
 		}
 		finally {
-			db.runSQL("DROP_TABLE_IF_EXISTS(SomeTable)");
+			db.runSQL("DROP_TABLE_IF_EXISTS(DBTest)");
 		}
 	}
 
 	@Test
 	public void testUpdatePrimaryKeyChangesPrimaryKey() throws Exception {
 		db.runSQL(
-			"create table SomeTable (id INTEGER, column1 LONG not null " +
-				"primary key, column2 INTEGER)");
+			"create table DBTest (id INTEGER not null, column1 LONG not null " +
+				"primary key, column2 INTEGER not null)");
 
 		try (Connection connection = DataAccess.getConnection()) {
 			db.updatePrimaryKey(
-				connection, "SomeTable", new String[] {"id", "column2"});
+				connection, "DBTest", new String[] {"id", "column2"});
 
 			Assert.assertTrue(
 				ArrayUtil.equalsIgnoreCase(
 					new String[] {"id", "column2"},
-					db.getPrimaryKeyColumnNames(connection, "SomeTable")));
+					db.getPrimaryKeyColumnNames(connection, "DBTest")));
 		}
 		finally {
-			db.runSQL("DROP_TABLE_IF_EXISTS(SomeTable)");
+			db.runSQL("DROP_TABLE_IF_EXISTS(DBTest)");
 		}
 	}
 
@@ -871,19 +871,21 @@ public class DBTest {
 	public void testUpdatePrimaryKeyWithCTCollectionIdAddsPrimaryKey()
 		throws Exception {
 
-		db.runSQL("create table SomeTable (id INTEGER, ctCollectionId LONG)");
+		db.runSQL(
+			"create table DBTest (id INTEGER not null, ctCollectionId LONG " +
+				"not null)");
 
 		try (Connection connection = DataAccess.getConnection()) {
 			db.updatePrimaryKey(
-				connection, "SomeTable", new String[] {"id", "ctCollectionId"});
+				connection, "DBTest", new String[] {"id", "ctCollectionId"});
 
 			Assert.assertTrue(
 				ArrayUtil.equalsIgnoreCase(
 					new String[] {"id", "ctCollectionId"},
-					db.getPrimaryKeyColumnNames(connection, "SomeTable")));
+					db.getPrimaryKeyColumnNames(connection, "DBTest")));
 		}
 		finally {
-			db.runSQL("DROP_TABLE_IF_EXISTS(SomeTable)");
+			db.runSQL("DROP_TABLE_IF_EXISTS(DBTest)");
 		}
 	}
 
@@ -891,19 +893,19 @@ public class DBTest {
 	public void testUpdatePrimaryKeyWithoutCTCollectionIdAddsPrimaryKey()
 		throws Exception {
 
-		db.runSQL("create table SomeTable (id INTEGER, column1 TEXT)");
+		db.runSQL("create table DBTest (id INTEGER not null, column1 TEXT)");
 
 		try (Connection connection = DataAccess.getConnection()) {
 			db.updatePrimaryKey(
-				connection, "SomeTable", new String[] {"id", "ctCollectionId"});
+				connection, "DBTest", new String[] {"id", "ctCollectionId"});
 
 			Assert.assertTrue(
 				ArrayUtil.equalsIgnoreCase(
 					new String[] {"id"},
-					db.getPrimaryKeyColumnNames(connection, "SomeTable")));
+					db.getPrimaryKeyColumnNames(connection, "DBTest")));
 		}
 		finally {
-			db.runSQL("DROP_TABLE_IF_EXISTS(SomeTable)");
+			db.runSQL("DROP_TABLE_IF_EXISTS(DBTest)");
 		}
 	}
 

@@ -1005,7 +1005,9 @@ public abstract class BaseDB implements DB {
 		String[] actualPrimaryKeyColumns = getPrimaryKeyColumnNames(
 			connection, tableName);
 
-		if (actualPrimaryKeyColumns.equals(primaryKeyColumnNames)) {
+		if (ArrayUtil.equalsIgnoreCase(
+				actualPrimaryKeyColumns, primaryKeyColumnNames)) {
+
 			return;
 		}
 
