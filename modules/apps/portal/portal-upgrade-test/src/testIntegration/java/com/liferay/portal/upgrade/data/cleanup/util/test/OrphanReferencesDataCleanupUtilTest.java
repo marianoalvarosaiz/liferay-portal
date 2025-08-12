@@ -210,7 +210,7 @@ public class OrphanReferencesDataCleanupUtilTest {
 				_connection, sourceAdditionalWhereClause,
 				_dbInspector.normalizeName(sourceColumnName),
 				_dbInspector.normalizeName(sourceTableName),
-				_dbInspector.normalizeName(targetColumnName),
+				new String[] {_dbInspector.normalizeName(targetColumnName)},
 				_dbInspector.normalizeName(targetTableName));
 
 			assertUnsafeConsumer.accept(logCapture);

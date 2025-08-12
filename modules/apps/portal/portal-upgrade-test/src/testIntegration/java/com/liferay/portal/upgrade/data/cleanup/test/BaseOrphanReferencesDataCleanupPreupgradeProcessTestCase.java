@@ -76,17 +76,22 @@ public abstract class BaseOrphanReferencesDataCleanupPreupgradeProcessTestCase {
 	}
 
 	protected String getExpectedMessage(
-			long count, String sourceTableName, String targetColumn,
+			long count, String sourceTableName, String[] targetColumns,
 			String targetTable, long targetValue)
 		throws Exception {
+
+		for (int i = 0; i < targetColumns.length; i++) {
+			targetColumns[i] = dbInspector.normalizeName(targetColumns[i]);
+		}
 
 		return StringBundler.concat(
 			count, " orphan entries from table ",
 			dbInspector.normalizeName(sourceTableName),
 			" have been deleted because value ", targetValue,
 			" was not found in the origin table ",
-			dbInspector.normalizeName(targetTable), " and column ",
-			dbInspector.normalizeName(targetColumn));
+			dbInspector.normalizeName(targetTable), " and ",
+			(targetColumns.length == 1) ? "colum " : "columns ",
+			String.join(", ", targetColumns));
 	}
 
 	protected abstract UnsafeRunnable<Exception> getInsertDataUnsafeRunnable();
