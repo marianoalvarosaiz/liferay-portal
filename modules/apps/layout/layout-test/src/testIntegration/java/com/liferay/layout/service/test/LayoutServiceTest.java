@@ -330,7 +330,7 @@ public class LayoutServiceTest {
 		layoutTypePortlet.resetModes();
 		layoutTypePortlet.resetStates();
 
-		_layoutService.updateLayout(
+		_layoutService.updateTypeSettings(
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
 
