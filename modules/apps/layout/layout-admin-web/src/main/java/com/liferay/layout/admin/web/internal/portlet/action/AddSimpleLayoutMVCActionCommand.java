@@ -117,9 +117,8 @@ public class AddSimpleLayoutMVCActionCommand
 					themeDisplay.getUserId(),
 					PropsValues.DEFAULT_LAYOUT_TEMPLATE_ID);
 
-				_layoutService.updateLayout(
-					groupId, privateLayout, layout.getLayoutId(),
-					layout.getTypeSettings());
+				_layoutService.updateTypeSettings(
+					layout, layout.getTypeSettings());
 			}
 
 			ActionUtil.updateLookAndFeel(

@@ -100,9 +100,8 @@ public class DisplayPageFriendlyURLResolverTest {
 			LayoutTypePortletConstants.DEFAULT_ASSET_PUBLISHER_PORTLET_ID,
 			portletId);
 
-		layout = LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		layout = LayoutLocalServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 
 		Map<Locale, String> titleMap = HashMapBuilder.put(
 			LocaleUtil.US, "Test Journal Article"

@@ -1040,9 +1040,7 @@ public class FileSystemImporter extends BaseImporter {
 		_addLayoutColumns(
 			layout, LayoutTypePortletConstants.COLUMN_PREFIX, columnsJSONArray);
 
-		layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		layoutLocalService.updateTypeSettings(layout, layout.getTypeSettings());
 	}
 
 	protected void addLayoutPrototype(String dirName) throws Exception {
@@ -1431,9 +1429,8 @@ public class FileSystemImporter extends BaseImporter {
 				layout, LayoutTypePortletConstants.COLUMN_PREFIX,
 				columnsJSONArray);
 
-			layoutLocalService.updateLayout(
-				groupId, layout.isPrivateLayout(), layout.getLayoutId(),
-				layout.getTypeSettings());
+			layoutLocalService.updateTypeSettings(
+				layout, layout.getTypeSettings());
 
 			JSONArray layoutsJSONArray = layoutJSONObject.getJSONArray(
 				"layouts");

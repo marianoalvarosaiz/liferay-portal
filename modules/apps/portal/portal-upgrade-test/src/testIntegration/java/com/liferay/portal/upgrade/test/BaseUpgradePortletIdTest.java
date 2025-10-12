@@ -214,9 +214,8 @@ public class BaseUpgradePortletIdTest extends BasePortletIdUpgradeProcess {
 			_portletLocalService.destroyPortlet(portlet);
 		}
 
-		_layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		_layoutLocalService.updateTypeSettings(
+			layout, layout.getTypeSettings());
 
 		upgrade();
 

@@ -202,9 +202,8 @@ public class NestedPortletsPortlet extends MVCPortlet {
 			layout.setTypeSettingsProperties(typeSettingsUnicodeProperties);
 
 			try {
-				_layoutLocalService.updateLayout(
-					layout.getGroupId(), layout.isPrivateLayout(),
-					layout.getLayoutId(), layout.getTypeSettings());
+				_layoutLocalService.updateTypeSettings(
+					layout, layout.getTypeSettings());
 			}
 			catch (Exception exception) {
 				if (_log.isWarnEnabled()) {

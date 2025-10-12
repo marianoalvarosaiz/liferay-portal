@@ -171,9 +171,8 @@ public class PersonalApplicationURLUtil {
 			layoutTypePortlet.setLayoutTemplateId(
 				userId, "1_column_dynamic", false);
 
-			return LayoutLocalServiceUtil.updateLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), layout.getTypeSettings());
+			return LayoutLocalServiceUtil.updateTypeSettings(
+				layout, layout.getTypeSettings());
 		}
 	}
 

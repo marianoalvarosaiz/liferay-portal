@@ -462,9 +462,8 @@ public class CPFileImporterImpl implements CPFileImporter {
 				serviceContext);
 		}
 
-		layout = _layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		layout = _layoutLocalService.updateTypeSettings(
+			layout, layout.getTypeSettings());
 
 		JSONArray permissionsJSONArray = jsonObject.getJSONArray("permissions");
 

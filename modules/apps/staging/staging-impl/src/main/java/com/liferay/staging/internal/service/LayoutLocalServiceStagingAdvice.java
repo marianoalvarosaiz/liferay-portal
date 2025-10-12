@@ -265,13 +265,12 @@ public class LayoutLocalServiceStagingAdvice {
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		if (serviceContext == null) {
-			return layoutLocalService.updateLayout(
-				groupId, privateLayout, layoutId, typeSettings);
-		}
-
 		Layout layout = _layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
+
+		if (serviceContext == null) {
+			return layoutLocalService.updateTypeSettings(layout, typeSettings);
+		}
 
 		if (LayoutStagingUtil.isBranchingLayout(layout)) {
 			layout = getProxiedLayout(layout);
@@ -281,8 +280,7 @@ public class LayoutLocalServiceStagingAdvice {
 			layout);
 
 		if (layoutRevision == null) {
-			return layoutLocalService.updateLayout(
-				groupId, privateLayout, layoutId, typeSettings);
+			return layoutLocalService.updateTypeSettings(layout, typeSettings);
 		}
 
 		layout.setTypeSettings(typeSettings);

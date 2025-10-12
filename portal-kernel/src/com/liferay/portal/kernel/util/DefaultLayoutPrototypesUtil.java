@@ -106,9 +106,8 @@ public class DefaultLayoutPrototypesUtil {
 	}
 
 	protected static void updateLayout(Layout layout) throws Exception {
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		LayoutLocalServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 	}
 
 }

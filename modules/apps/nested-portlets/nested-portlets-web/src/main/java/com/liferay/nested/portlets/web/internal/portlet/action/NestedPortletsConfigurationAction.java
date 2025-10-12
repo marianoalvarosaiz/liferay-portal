@@ -135,9 +135,8 @@ public class NestedPortletsConfigurationAction
 
 		layoutTypePortlet.setStateMax(StringPool.BLANK);
 
-		_layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		_layoutLocalService.updateTypeSettings(
+			layout, layout.getTypeSettings());
 	}
 
 	private static final Pattern _pattern = Pattern.compile(

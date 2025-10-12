@@ -194,9 +194,8 @@ public class CommerceGuestCheckoutAuthenticationCommerceHealthStatus
 
 			portletPreferences.store();
 
-			_layoutLocalService.updateLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), layout.getTypeSettings());
+			_layoutLocalService.updateTypeSettings(
+				layout, layout.getTypeSettings());
 		}
 		catch (Exception exception) {
 			throw new PortalException(exception);

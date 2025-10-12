@@ -313,9 +313,8 @@ public class EditLayoutDesignMVCActionCommand extends BaseMVCActionCommand {
 					Boolean.TRUE.toString());
 			}
 
-			layout = _layoutService.updateLayout(
-				groupId, layout.isPrivateLayout(), layout.getLayoutId(),
-				layoutTypeSettingsUnicodeProperties.toString());
+			layout = _layoutService.updateTypeSettings(
+				layout, layoutTypeSettingsUnicodeProperties.toString());
 
 			ActionUtil.updateLookAndFeel(
 				actionRequest, themeDisplay.getCompanyId(), liveGroupId,

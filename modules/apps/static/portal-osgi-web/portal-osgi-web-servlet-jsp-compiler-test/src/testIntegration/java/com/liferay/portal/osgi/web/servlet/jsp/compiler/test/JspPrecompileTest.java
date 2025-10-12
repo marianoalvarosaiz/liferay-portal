@@ -145,9 +145,8 @@ public class JspPrecompileTest {
 			TestPropsValues.getUserId(), JspPrecompilePortlet.PORTLET_NAME,
 			columnId, -1, false);
 
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		LayoutLocalServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 	}
 
 	@After

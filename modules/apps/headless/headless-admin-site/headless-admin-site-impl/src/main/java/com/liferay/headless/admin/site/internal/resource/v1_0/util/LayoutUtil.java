@@ -417,9 +417,8 @@ public class LayoutUtil {
 				typeSettingsUnicodeProperties,
 				layout.getTypeSettingsProperties())) {
 
-			layout = LayoutServiceUtil.updateLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), typeSettingsUnicodeProperties.toString());
+			layout = LayoutServiceUtil.updateTypeSettings(
+				layout, typeSettingsUnicodeProperties.toString());
 		}
 
 		if (pageSpecifications == null) {
@@ -1012,9 +1011,8 @@ public class LayoutUtil {
 			unicodeProperties.putAll(settings.getThemeSettings());
 		}
 
-		layout = LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			unicodeProperties.toString());
+		layout = LayoutServiceUtil.updateTypeSettings(
+			layout, unicodeProperties.toString());
 
 		String themeId = null;
 		String colorSchemeId = null;
@@ -1078,9 +1076,8 @@ public class LayoutUtil {
 			layout.getTypeSettingsProperties();
 
 		if (widgetPageSpecification == null) {
-			return LayoutServiceUtil.updateLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), unicodeProperties.toString());
+			return LayoutServiceUtil.updateTypeSettings(
+				layout, unicodeProperties.toString());
 		}
 
 		WidgetPageSection[] widgetPageSections =
@@ -1162,9 +1159,8 @@ public class LayoutUtil {
 				serviceContext.getUserId(), portletId);
 		}
 
-		return LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			unicodeProperties.toString());
+		return LayoutServiceUtil.updateTypeSettings(
+			layout, unicodeProperties.toString());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(LayoutUtil.class);

@@ -83,9 +83,7 @@ public class CPContentHealthStatus implements CommerceChannelHealthStatus {
 		layoutTypePortlet.addPortletId(
 			PrincipalThreadLocal.getUserId(), CPPortletKeys.CP_CONTENT_WEB);
 
-		_layoutService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		_layoutService.updateTypeSettings(layout, layout.getTypeSettings());
 	}
 
 	@Override

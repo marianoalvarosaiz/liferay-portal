@@ -150,8 +150,8 @@ public class ActionUtil {
 				typeSettingsUnicodeProperties, deviceThemeId, true);
 		}
 
-		LayoutServiceUtil.updateLayout(
-			groupId, privateLayout, layoutId,
+		LayoutServiceUtil.updateTypeSettings(
+			LayoutServiceUtil.fetchLayout(groupId, privateLayout, layoutId),
 			typeSettingsUnicodeProperties.toString());
 
 		LayoutServiceUtil.updateLookAndFeel(

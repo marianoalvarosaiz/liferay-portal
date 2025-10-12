@@ -280,11 +280,8 @@ public class LayoutSetPrototypeHelperImpl implements LayoutSetPrototypeHelper {
 		}
 
 		if (updateLayoutPrototypeLayout) {
-			_layoutService.updateLayout(
-				layoutPrototypeLayout.getGroupId(),
-				layoutPrototypeLayout.isPrivateLayout(),
-				layoutPrototypeLayout.getLayoutId(),
-				layoutPrototypeLayout.getTypeSettings());
+			_layoutService.updateTypeSettings(
+				layoutPrototypeLayout, layoutPrototypeLayout.getTypeSettings());
 		}
 	}
 

@@ -115,9 +115,8 @@ public class LayoutTestUtil {
 		String newPortletId = layoutTypePortlet.addPortletId(
 			userId, portletId, columnId, -1);
 
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		LayoutLocalServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 
 		if (preferenceMap == null) {
 			return newPortletId;
@@ -595,9 +594,8 @@ public class LayoutTestUtil {
 			String.valueOf(customizable));
 		layoutTypePortlet.setUpdatePermission(customizable);
 
-		return LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		return LayoutServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 	}
 
 	public static Layout updateLayoutPortletPreference(
@@ -645,9 +643,8 @@ public class LayoutTestUtil {
 		layoutTypePortlet.setLayoutTemplateId(
 			user.getUserId(), layoutTemplateId);
 
-		return LayoutServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		return LayoutServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(LayoutTestUtil.class);

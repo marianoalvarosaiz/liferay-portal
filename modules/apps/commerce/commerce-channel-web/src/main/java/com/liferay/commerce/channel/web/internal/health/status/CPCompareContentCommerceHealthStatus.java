@@ -85,9 +85,7 @@ public class CPCompareContentCommerceHealthStatus
 			PrincipalThreadLocal.getUserId(),
 			CPPortletKeys.CP_COMPARE_CONTENT_WEB);
 
-		_layoutService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		_layoutService.updateTypeSettings(layout, layout.getTypeSettings());
 	}
 
 	@Override

@@ -78,9 +78,7 @@ public class WishListContentCommerceHealthStatus
 			_portal.getUserId(httpServletRequest),
 			CommerceWishListPortletKeys.COMMERCE_WISH_LIST_CONTENT);
 
-		_layoutService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		_layoutService.updateTypeSettings(layout, layout.getTypeSettings());
 	}
 
 	@Override

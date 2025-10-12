@@ -81,10 +81,8 @@ public class ChangeStyleBookEntryMVCActionCommand
 				LayoutTypeSettingsConstants.KEY_DESIGN_CONFIGURATION_MODIFIED,
 				Boolean.TRUE.toString());
 
-			updatedLayout = _layoutLocalService.updateLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(),
-				layoutTypeSettingsUnicodeProperties.toString());
+			updatedLayout = _layoutLocalService.updateTypeSettings(
+				layout, layoutTypeSettingsUnicodeProperties.toString());
 		}
 
 		FrontendTokenDefinition frontendTokenDefinition = null;

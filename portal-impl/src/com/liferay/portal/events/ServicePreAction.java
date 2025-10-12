@@ -311,9 +311,8 @@ public class ServicePreAction extends Action {
 				0, StringUtil.split(portletIds), columnId, false);
 		}
 
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		LayoutLocalServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 
 		boolean updateLayoutSet = false;
 
@@ -398,9 +397,8 @@ public class ServicePreAction extends Action {
 				0, StringUtil.split(portletIds), columnId, false);
 		}
 
-		LayoutLocalServiceUtil.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		LayoutLocalServiceUtil.updateTypeSettings(
+			layout, layout.getTypeSettings());
 
 		boolean updateLayoutSet = false;
 

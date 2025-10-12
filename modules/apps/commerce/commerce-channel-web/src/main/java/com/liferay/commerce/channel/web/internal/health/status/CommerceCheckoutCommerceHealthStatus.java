@@ -89,9 +89,7 @@ public class CommerceCheckoutCommerceHealthStatus
 			PrincipalThreadLocal.getUserId(),
 			CommercePortletKeys.COMMERCE_CHECKOUT);
 
-		_layoutService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
+		_layoutService.updateTypeSettings(layout, layout.getTypeSettings());
 
 		Role role = _roleLocalService.fetchRole(
 			layout.getCompanyId(), RoleConstants.GUEST);
