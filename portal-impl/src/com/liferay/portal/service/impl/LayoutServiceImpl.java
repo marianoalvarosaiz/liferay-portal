@@ -1671,6 +1671,28 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 		return layoutLocalService.updateType(plid, type);
 	}
 
+	/**
+	 * Updates the layout replacing its type settings.
+	 *
+	 * @param  layout the layout to be updated
+	 * @param  typeSettings the settings to load the unicode properties object.
+	 *         See {@link com.liferay.portal.kernel.util.UnicodeProperties
+	 *         #fastLoad(String)}.
+	 * @return the updated layout
+	 * @throws PortalException if a portal exception occurred
+	 */
+	@Override
+	public Layout updateTypeSettings(Layout layout, String typeSettings)
+		throws PortalException {
+
+		LayoutPermissionUtil.checkLayoutUpdatePermission(
+			getPermissionChecker(), layout);
+
+		checkLayoutTypeSettings(layout, layout.getTypeSettings(), typeSettings);
+
+		return layoutLocalService.updateTypeSettings(layout, typeSettings);
+	}
+
 	protected void checkLayoutTypeSettings(
 			Layout layout, String originalTypeSettings, String newTypeSettings)
 		throws PortalException {
