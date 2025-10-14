@@ -183,9 +183,8 @@ public class JournalArticleAssetRendererTest {
 			LayoutTypePortletConstants.DEFAULT_ASSET_PUBLISHER_PORTLET_ID,
 			_addAssetPublisherPortletToLayout(layout));
 
-		return _layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			typeSettingsUnicodeProperties.toString());
+		return _layoutLocalService.updateTypeSettings(
+			layout, typeSettingsUnicodeProperties.toString());
 	}
 
 	private void _assertURL(
