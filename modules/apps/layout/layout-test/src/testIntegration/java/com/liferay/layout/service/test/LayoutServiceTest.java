@@ -286,9 +286,8 @@ public class LayoutServiceTest {
 			typeSettingsUnicodeProperties.setProperty(
 				"layout-template-id", layoutTemplateId);
 
-			layout = _layoutService.updateLayout(
-				layout.getGroupId(), layout.isPrivateLayout(),
-				layout.getLayoutId(), typeSettingsUnicodeProperties.toString());
+			layout = _layoutService.updateTypeSettings(
+				layout, typeSettingsUnicodeProperties.toString());
 
 			typeSettingsUnicodeProperties = layout.getTypeSettingsProperties();
 
