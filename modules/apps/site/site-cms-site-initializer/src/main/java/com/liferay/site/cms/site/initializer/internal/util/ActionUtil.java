@@ -1096,10 +1096,8 @@ public class ActionUtil {
 		typeSettingsUnicodeProperties.put(
 			LayoutTypeSettingsConstants.KEY_PUBLISHED, Boolean.TRUE.toString());
 
-		LayoutLocalServiceUtil.updateLayout(
-			draftLayout.getGroupId(), draftLayout.isPrivateLayout(),
-			draftLayout.getLayoutId(),
-			typeSettingsUnicodeProperties.toString());
+		LayoutLocalServiceUtil.updateTypeSettings(
+			draftLayout, typeSettingsUnicodeProperties.toString());
 
 		return layoutPageTemplateEntry;
 	}
