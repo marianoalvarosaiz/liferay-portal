@@ -60,6 +60,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.naming.NamingException;
 
@@ -525,6 +526,8 @@ public abstract class BaseDBProcess implements DBProcess {
 				Connection connection = iterator.next();
 
 				iterator.remove();
+				
+				System.out.println("Closing connection: " + _atomicLong.decrementAndGet());
 
 				connection.close();
 			}
@@ -549,6 +552,8 @@ public abstract class BaseDBProcess implements DBProcess {
 					Connection connection = entry.getValue();
 
 					connectionsMap.remove(entry.getKey());
+					
+					System.out.println("Closing connection: " + _atomicLong.decrementAndGet() + " for thread: " + thread);
 
 					connection.close();
 
@@ -569,8 +574,11 @@ public abstract class BaseDBProcess implements DBProcess {
 			Thread.currentThread(),
 			k -> {
 				try {
-					return AutoBatchPreparedStatementUtil.autoBatch(
+					System.out.println("Retrieving prepared statement for thread: " + Thread.currentThread());
+					PreparedStatement ps = AutoBatchPreparedStatementUtil.autoBatch(
 						connection, updateSQL);
+					System.out.println("Retrieved prepared statement for thread: " + Thread.currentThread());
+					return ps;
 				}
 				catch (SQLException sqlException) {
 					throw new RuntimeException(sqlException);
@@ -652,6 +660,10 @@ public abstract class BaseDBProcess implements DBProcess {
 		else {
 			_fixedThreadPoolSize.set(runtime.availableProcessors());
 		}
+		
+		System.out.println("Available: " + runtime.availableProcessors());
+		System.out.println("Companies: " + companyIds.length);
+		System.out.println("_fixedThreadPoolSize: " + _fixedThreadPoolSize.get());
 
 		return _fixedThreadPoolSize.get();
 	}
@@ -796,11 +808,13 @@ public abstract class BaseDBProcess implements DBProcess {
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
-	private static final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(
+	private final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(
 		0);
 
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
+	
+	private final AtomicLong _atomicLong = new AtomicLong(0L);
 
 	private class ConnectionThreadProxyInvocationHandler
 		implements InvocationHandler {
@@ -844,8 +858,14 @@ public abstract class BaseDBProcess implements DBProcess {
 								_log.debug(exception);
 							}
 						}
-
-						return _getConnection();
+						
+						System.out.println("Retrieving connection for thread: " + thread + " total: " + _atomicLong.incrementAndGet());
+						
+						Connection c = _getConnection();
+						
+						System.out.println("Retrieving connection for thread: " + thread + " total: " + _atomicLong.get());
+						
+						return c;
 					}),
 				args);
 		}

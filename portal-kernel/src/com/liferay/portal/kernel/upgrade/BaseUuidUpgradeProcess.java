@@ -85,8 +85,12 @@ public abstract class BaseUuidUpgradeProcess extends UpgradeProcess {
 				(values, preparedStatement) -> {
 					preparedStatement.setString(1, PortalUUIDUtil.generate());
 					preparedStatement.setLong(2, (long)values[0]);
+					
+					System.out.println("Executing for..." + (long)values[0] + " in thread " + Thread.currentThread());
 
 					preparedStatement.addBatch();
+					
+					System.out.println("Executed for..." + (long)values[0] + " in thread " + Thread.currentThread());
 				},
 				null);
 		}
