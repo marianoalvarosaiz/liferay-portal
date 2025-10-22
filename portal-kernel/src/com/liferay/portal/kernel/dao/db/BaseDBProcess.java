@@ -47,18 +47,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.naming.NamingException;
@@ -541,24 +545,9 @@ public abstract class BaseDBProcess implements DBProcess {
 			return;
 		}
 
-		try {
-			for (Map.Entry<Thread, Connection> entry :
-					connectionsMap.entrySet()) {
+		Connection connection = connectionsMap.remove(thread);
 
-				if (entry.getKey() == thread) {
-					Connection connection = entry.getValue();
-
-					connectionsMap.remove(entry.getKey());
-
-					connection.close();
-
-					return;
-				}
-			}
-		}
-		catch (SQLException sqlException) {
-			_log.error(sqlException);
-		}
+		DataAccess.cleanUp(connection);
 	}
 
 	private PreparedStatement _getConcurrentPreparedStatement(
@@ -603,20 +592,36 @@ public abstract class BaseDBProcess implements DBProcess {
 						serviceReference);
 
 					try {
+						_blockedThreads.incrementAndGet();
+
 						if (dataSource != null) {
 							return dataSource.getConnection();
 						}
 					}
 					finally {
+						_blockedThreads.decrementAndGet();
+
 						bundleContext.ungetService(serviceReference);
 					}
 				}
 			}
 
-			return DataAccess.getConnection();
+			try {
+				_blockedThreads.incrementAndGet();
+
+				return DataAccess.getConnection();
+			}
+			finally {
+				_blockedThreads.decrementAndGet();
+			}
 		}
 		catch (Exception exception) {
 			return ReflectionUtil.throwException(exception);
+		}
+		finally {
+			if (_countDownLatch != null) {
+				_countDownLatch.countDown();
+			}
 		}
 	}
 
@@ -677,6 +682,27 @@ public abstract class BaseDBProcess implements DBProcess {
 		return inputStream;
 	}
 
+	private List<Future<Void>> _getPendingFutures(List<Future<Void>> futures)
+		throws Exception {
+
+		List<Future<Void>> pendingFutures = new CopyOnWriteArrayList<>();
+
+		for (Future<Void> future : futures) {
+			try {
+				if (!future.isDone()) {
+					future.get(5, TimeUnit.SECONDS);
+				}
+			}
+			catch (TimeoutException timeoutException) {
+				pendingFutures.add(future);
+			}
+		}
+
+		futures.clear();
+
+		return pendingFutures;
+	}
+
 	private <T> void _processConcurrently(
 			String updateSQL, UnsafeSupplier<T, Exception> unsafeSupplier,
 			UnsafeConsumer<T, Exception> unsafeConsumer,
@@ -696,7 +722,7 @@ public abstract class BaseDBProcess implements DBProcess {
 		ExecutorService executorService = Executors.newFixedThreadPool(
 			_getFixedThreadPoolSize());
 
-		List<Future<Void>> futures = new ArrayList<>();
+		List<Future<Void>> futures = new CopyOnWriteArrayList<>();
 		Map<Thread, PreparedStatement> preparedStatementHashMap =
 			new ConcurrentHashMap<>();
 		Set<Thread> threads = new CopyOnWriteArraySet<>();
@@ -743,11 +769,7 @@ public abstract class BaseDBProcess implements DBProcess {
 						PropsValues.
 							UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE) {
 
-					for (Future<Void> curFuture : futures) {
-						curFuture.get();
-					}
-
-					futures.clear();
+					futures = _getPendingFutures(futures);
 				}
 
 				futures.add(future);
@@ -757,9 +779,21 @@ public abstract class BaseDBProcess implements DBProcess {
 			try {
 				executorService.shutdown();
 
-				for (Future<Void> future : futures) {
-					future.get();
+				_countDownLatch = new CountDownLatch(_blockedThreads.get());
+
+				do {
+					futures = _getPendingFutures(futures);
+
+					if ((_blockedThreads.get() > 0) &&
+						(futures.size() < PropsValues.
+							UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE)) {
+
+						futures.add(
+							executorService.submit(
+								_releaseConnection(preparedStatementHashMap)));
+					}
 				}
+				while (futures.size() > _blockedThreads.get());
 
 				Throwable throwable = throwableCollector.getThrowable();
 
@@ -794,13 +828,38 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 	}
 
+	private Callable<Void> _releaseConnection(
+		Map<Thread, PreparedStatement> preparedStatementHashMap) {
+
+		return () -> {
+			if (preparedStatementHashMap.isEmpty()) {
+				return null;
+			}
+
+			PreparedStatement preparedStatement =
+				preparedStatementHashMap.remove(Thread.currentThread());
+
+			if (preparedStatement != null) {
+				preparedStatement.executeBatch();
+
+				preparedStatement.close();
+
+				closeConnections(Thread.currentThread());
+
+				_countDownLatch.await();
+			}
+
+			return null;
+		};
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
-	private static final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(
-		0);
-
+	private final AtomicInteger _blockedThreads = new AtomicInteger(0);
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
+	private CountDownLatch _countDownLatch;
+	private final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(0);
 
 	private class ConnectionThreadProxyInvocationHandler
 		implements InvocationHandler {
