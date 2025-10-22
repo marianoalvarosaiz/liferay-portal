@@ -593,6 +593,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 					try {
 						_blockedThreads.incrementAndGet();
+						
+						System.out.println("Increment number of blocked threads: " + _blockedThreads.get() + " in " + Thread.currentThread());
 
 						if (dataSource != null) {
 							return dataSource.getConnection();
@@ -600,6 +602,8 @@ public abstract class BaseDBProcess implements DBProcess {
 					}
 					finally {
 						_blockedThreads.decrementAndGet();
+						
+						System.out.println("Decrement number of blocked threads: " + _blockedThreads.get() + " in " + Thread.currentThread());
 
 						bundleContext.ungetService(serviceReference);
 					}
@@ -608,11 +612,15 @@ public abstract class BaseDBProcess implements DBProcess {
 
 			try {
 				_blockedThreads.incrementAndGet();
+				
+				System.out.println("Increment number of blocked threads: " + _blockedThreads.get() + " in " + Thread.currentThread());
 
 				return DataAccess.getConnection();
 			}
 			finally {
 				_blockedThreads.decrementAndGet();
+				
+				System.out.println("Decrement number of blocked threads: " + _blockedThreads.get() + " in " + Thread.currentThread());
 			}
 		}
 		catch (Exception exception) {
@@ -699,6 +707,8 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 
 		futures.clear();
+		
+		System.out.println("Pending futures: " + pendingFutures.size());
 
 		return pendingFutures;
 	}
@@ -733,9 +743,17 @@ public abstract class BaseDBProcess implements DBProcess {
 			boolean workflowEnabled = WorkflowThreadLocal.isEnabled();
 
 			T next = null;
+			
+			System.out.println("Starting processConcurrently");
+			
+			int i = 0;
 
 			while ((next = unsafeSupplier.get()) != null) {
 				T current = next;
+				
+				if ((i++ % 1000) == 0) {
+					System.out.println("Traversed elements: " + i);
+				}
 
 				Future<Void> future = executorService.submit(
 					new CompanyInheritableThreadLocalCallable<>(
@@ -770,6 +788,8 @@ public abstract class BaseDBProcess implements DBProcess {
 							UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE) {
 
 					futures = _getPendingFutures(futures);
+					
+					System.out.println("Removing 1000 futures");
 				}
 
 				futures.add(future);

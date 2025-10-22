@@ -70,6 +70,9 @@ public abstract class BaseUuidUpgradeProcess extends UpgradeProcess {
 		}
 
 		String primaryKeyColumnName = getPrimaryKeyColumnName(tableName);
+		
+		System.out.println("Table name: " + tableName);
+		System.out.println("Primary key: " + primaryKeyColumnName);
 
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			processConcurrently(
@@ -85,8 +88,12 @@ public abstract class BaseUuidUpgradeProcess extends UpgradeProcess {
 				(values, preparedStatement) -> {
 					preparedStatement.setString(1, PortalUUIDUtil.generate());
 					preparedStatement.setLong(2, (long)values[0]);
+					
+					System.out.println("Add batch for: " + (long)values[0]);
 
 					preparedStatement.addBatch();
+					
+					System.out.println("Added batch for: " + (long)values[0]);
 				},
 				null);
 		}
