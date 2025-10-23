@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.util.DDMFieldsCounter;
 import com.liferay.dynamic.data.mapping.util.DDMFormFieldUtil;
 import com.liferay.journal.exception.ArticleContentException;
 import com.liferay.journal.util.JournalConverter;
+import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -87,6 +88,12 @@ public class JournalConverterImpl implements JournalConverter {
 				return new Fields();
 			}
 
+			if ((_ddmStructure.get() == ddmStructure) &&
+				(_content.get() == content)) {
+
+				return _fields.get();
+			}
+
 			Document document = SAXReaderUtil.read(content);
 
 			Fields ddmFields = new Fields();
@@ -110,6 +117,10 @@ public class JournalConverterImpl implements JournalConverter {
 					availableLanguageIds, defaultLanguageId, ddmFields,
 					ddmFormField, ddmStructure, rootElement);
 			}
+
+			_content.set(content);
+			_ddmStructure.set(ddmStructure);
+			_fields.set(ddmFields);
 
 			return ddmFields;
 		}
@@ -731,6 +742,14 @@ public class JournalConverterImpl implements JournalConverter {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalConverterImpl.class);
+
+	private static final CentralizedThreadLocal<String> _content =
+		new CentralizedThreadLocal<>(JournalConverterImpl.class + "._content");
+	private static final CentralizedThreadLocal<DDMStructure> _ddmStructure =
+		new CentralizedThreadLocal<>(
+			JournalConverterImpl.class + "._ddmStructure");
+	private static final CentralizedThreadLocal<Fields> _fields =
+		new CentralizedThreadLocal<>(JournalConverterImpl.class + "._fields");
 
 	@Reference
 	private JSONFactory _jsonFactory;

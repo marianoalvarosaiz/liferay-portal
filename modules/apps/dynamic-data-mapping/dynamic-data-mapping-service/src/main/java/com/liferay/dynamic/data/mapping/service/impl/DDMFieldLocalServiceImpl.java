@@ -34,6 +34,7 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -376,51 +377,71 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 
 		ddmFormUpdateContext._ddmFieldEntries.addAll(childrenDDMFields);
 
-		for (Map.Entry<DDMField, DDMFieldInfo> entry :
-				ddmFormUpdateContext._ddmFieldEntries) {
+		List<DDMField> addedDDMFields = new ArrayList<>();
+		List<DDMField> obsoleteDDMFields = new ArrayList<>();
 
-			DDMField ddmField = entry.getKey();
-			DDMFieldInfo ddmFieldInfo = entry.getValue();
+		Session session = ddmFieldPersistence.openSession();
 
-			if (ddmFieldInfo == null) {
+		try {
+			for (Map.Entry<DDMField, DDMFieldInfo> entry :
+					ddmFormUpdateContext._ddmFieldEntries) {
+
+				DDMField ddmField = entry.getKey();
+				DDMFieldInfo ddmFieldInfo = entry.getValue();
+
+				if (ddmFieldInfo == null) {
+					obsoleteDDMFields.add(ddmField);
+
+					continue;
+				}
+
+				if (ddmField == null) {
+					ddmField = ddmFieldPersistence.create(++batchCounter);
+				}
+
+				long parentFieldId = 0;
+
+				if (ddmFieldInfo._parentInstanceId != null) {
+					parentFieldId = instanceToFieldIdMap.get(
+						ddmFieldInfo._parentInstanceId);
+				}
+
+				ddmField.setParentFieldId(parentFieldId);
+				ddmField.setStorageId(storageId);
+				ddmField.setStructureVersionId(
+					ddmStructureVersion.getStructureVersionId());
+				ddmField.setFieldName(ddmFieldInfo._fieldName);
+				ddmField.setInstanceId(ddmFieldInfo._instanceId);
+				ddmField.setPriority(priority);
+
+				if (ddmFieldInfo != rootDDMFieldInfo) {
+					DDMFormField ddmFormField = ddmFormFieldsMap.get(
+						ddmFieldInfo._fieldName);
+
+					ddmField.setFieldType(ddmFormField.getType());
+					ddmField.setLocalizable(ddmFormField.isLocalizable());
+				}
+
+				session.save(ddmField);
+
+				addedDDMFields.add(ddmField);
+
+				priority++;
+
+				instanceToFieldIdMap.put(
+					ddmField.getInstanceId(), ddmField.getFieldId());
+			}
+
+			for (DDMField ddmField : obsoleteDDMFields) {
 				ddmFieldPersistence.remove(ddmField);
-
-				continue;
 			}
 
-			if (ddmField == null) {
-				ddmField = ddmFieldPersistence.create(++batchCounter);
+			for (DDMField ddmField : addedDDMFields) {
+				ddmFieldPersistence.cacheResult(ddmField);
 			}
-
-			long parentFieldId = 0;
-
-			if (ddmFieldInfo._parentInstanceId != null) {
-				parentFieldId = instanceToFieldIdMap.get(
-					ddmFieldInfo._parentInstanceId);
-			}
-
-			ddmField.setParentFieldId(parentFieldId);
-			ddmField.setStorageId(storageId);
-			ddmField.setStructureVersionId(
-				ddmStructureVersion.getStructureVersionId());
-			ddmField.setFieldName(ddmFieldInfo._fieldName);
-			ddmField.setInstanceId(ddmFieldInfo._instanceId);
-			ddmField.setPriority(priority);
-
-			if (ddmFieldInfo != rootDDMFieldInfo) {
-				DDMFormField ddmFormField = ddmFormFieldsMap.get(
-					ddmFieldInfo._fieldName);
-
-				ddmField.setFieldType(ddmFormField.getType());
-				ddmField.setLocalizable(ddmFormField.isLocalizable());
-			}
-
-			ddmField = ddmFieldPersistence.update(ddmField);
-
-			priority++;
-
-			instanceToFieldIdMap.put(
-				ddmField.getInstanceId(), ddmField.getFieldId());
+		}
+		finally {
+			ddmFieldPersistence.closeSession(session);
 		}
 
 		if (ddmFormUpdateContext._newDDMFieldAttributesCount > 0) {
@@ -431,34 +452,57 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 			batchCounter -= ddmFormUpdateContext._newDDMFieldAttributesCount;
 		}
 
-		for (Map.Entry<DDMFieldAttribute, DDMFieldAttributeInfo> entry :
-				ddmFormUpdateContext._ddmFieldAttributeEntries) {
+		List<DDMFieldAttribute> addedDDMFieldAttributes = new ArrayList<>();
+		List<DDMFieldAttribute> obsoleteDDMFieldAttributes = new ArrayList<>();
 
-			DDMFieldAttribute ddmFieldAttribute = entry.getKey();
-			DDMFieldAttributeInfo ddmFieldAttributeInfo = entry.getValue();
+		session = _ddmFieldAttributePersistence.openSession();
 
-			if (ddmFieldAttributeInfo == null) {
+		try {
+			for (Map.Entry<DDMFieldAttribute, DDMFieldAttributeInfo> entry :
+					ddmFormUpdateContext._ddmFieldAttributeEntries) {
+
+				DDMFieldAttribute ddmFieldAttribute = entry.getKey();
+				DDMFieldAttributeInfo ddmFieldAttributeInfo = entry.getValue();
+
+				if (ddmFieldAttributeInfo == null) {
+					obsoleteDDMFieldAttributes.add(ddmFieldAttribute);
+
+					continue;
+				}
+
+				if (ddmFieldAttribute == null) {
+					ddmFieldAttribute = _ddmFieldAttributePersistence.create(
+						++batchCounter);
+				}
+
+				ddmFieldAttribute.setFieldId(
+					instanceToFieldIdMap.get(
+						ddmFieldAttributeInfo._ddmFieldInfo._instanceId));
+				ddmFieldAttribute.setStorageId(storageId);
+				ddmFieldAttribute.setAttributeName(
+					ddmFieldAttributeInfo._attributeName);
+				ddmFieldAttribute.setLanguageId(
+					ddmFieldAttributeInfo._languageId);
+				ddmFieldAttribute.setAttributeValue(
+					ddmFieldAttributeInfo._attributeValue);
+
+				session.save(ddmFieldAttribute);
+			}
+
+			for (DDMFieldAttribute ddmFieldAttribute :
+					obsoleteDDMFieldAttributes) {
+
 				_ddmFieldAttributePersistence.remove(ddmFieldAttribute);
-
-				continue;
 			}
 
-			if (ddmFieldAttribute == null) {
-				ddmFieldAttribute = _ddmFieldAttributePersistence.create(
-					++batchCounter);
+			for (DDMFieldAttribute ddmFieldAttribute :
+					addedDDMFieldAttributes) {
+
+				_ddmFieldAttributePersistence.cacheResult(ddmFieldAttribute);
 			}
-
-			ddmFieldAttribute.setFieldId(
-				instanceToFieldIdMap.get(
-					ddmFieldAttributeInfo._ddmFieldInfo._instanceId));
-			ddmFieldAttribute.setStorageId(storageId);
-			ddmFieldAttribute.setAttributeName(
-				ddmFieldAttributeInfo._attributeName);
-			ddmFieldAttribute.setLanguageId(ddmFieldAttributeInfo._languageId);
-			ddmFieldAttribute.setAttributeValue(
-				ddmFieldAttributeInfo._attributeValue);
-
-			_ddmFieldAttributePersistence.update(ddmFieldAttribute);
+		}
+		finally {
+			_ddmFieldAttributePersistence.closeSession(session);
 		}
 	}
 
