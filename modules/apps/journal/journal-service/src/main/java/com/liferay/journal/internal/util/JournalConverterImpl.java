@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.util.DDMFieldsCounter;
 import com.liferay.dynamic.data.mapping.util.DDMFormFieldUtil;
 import com.liferay.journal.exception.ArticleContentException;
 import com.liferay.journal.util.JournalConverter;
+import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -87,6 +88,12 @@ public class JournalConverterImpl implements JournalConverter {
 				return new Fields();
 			}
 
+			FieldsKey fieldsKey = new FieldsKey(ddmStructure, content);
+
+			if (fieldsKey.equals(_fieldsKey.get())) {
+				return _fields.get();
+			}
+
 			Document document = SAXReaderUtil.read(content);
 
 			Fields ddmFields = new Fields();
@@ -110,6 +117,9 @@ public class JournalConverterImpl implements JournalConverter {
 					availableLanguageIds, defaultLanguageId, ddmFields,
 					ddmFormField, ddmStructure, rootElement);
 			}
+
+			_fieldsKey.set(fieldsKey);
+			_fields.set(ddmFields);
 
 			return ddmFields;
 		}
@@ -732,10 +742,50 @@ public class JournalConverterImpl implements JournalConverter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalConverterImpl.class);
 
+	private static final CentralizedThreadLocal<Fields> _fields =
+		new CentralizedThreadLocal<>(JournalConverterImpl.class + "._fields");
+	private static final CentralizedThreadLocal<FieldsKey> _fieldsKey =
+		new CentralizedThreadLocal<>(
+			JournalConverterImpl.class + "._fieldsKey");
+
 	@Reference
 	private JSONFactory _jsonFactory;
 
 	@Reference
 	private Language _language;
+
+	private static class FieldsKey {
+
+		public FieldsKey(DDMStructure ddmStructure, String content) {
+			_ddmStructure = ddmStructure;
+			_content = content;
+		}
+
+		@Override
+		public boolean equals(Object object) {
+			if (object == null) {
+				return false;
+			}
+
+			FieldsKey fieldsKey = (FieldsKey)object;
+
+			if ((fieldsKey._ddmStructure == _ddmStructure) &&
+				(fieldsKey._content == _content)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(_ddmStructure, _content);
+		}
+
+		private final String _content;
+		private final DDMStructure _ddmStructure;
+
+	}
 
 }
