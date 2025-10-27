@@ -558,20 +558,11 @@ public abstract class BaseDBProcess implements DBProcess {
 			Thread.currentThread(),
 			k -> {
 				try {
-					_blockedThreads.incrementAndGet();
-
 					return AutoBatchPreparedStatementUtil.autoBatch(
 						connection, updateSQL);
 				}
 				catch (SQLException sqlException) {
 					throw new RuntimeException(sqlException);
-				}
-				finally {
-					_blockedThreads.decrementAndGet();
-
-					if (_countDownLatch != null) {
-						_countDownLatch.countDown();
-					}
 				}
 			});
 	}
@@ -683,7 +674,7 @@ public abstract class BaseDBProcess implements DBProcess {
 		for (Future<Void> future : futures) {
 			try {
 				if (!future.isDone()) {
-					future.get(5, TimeUnit.SECONDS);
+					future.get(1, TimeUnit.SECONDS);
 				}
 			}
 			catch (TimeoutException timeoutException) {
@@ -714,7 +705,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 		ExecutorService executorService = Executors.newFixedThreadPool(
 			_getFixedThreadPoolSize());
-
+		
+		_blockedThreads = new AtomicInteger(0);
 		List<Future<Void>> futures = new CopyOnWriteArrayList<>();
 		Map<Thread, PreparedStatement> preparedStatementHashMap =
 			new ConcurrentHashMap<>();
@@ -726,6 +718,8 @@ public abstract class BaseDBProcess implements DBProcess {
 			boolean workflowEnabled = WorkflowThreadLocal.isEnabled();
 
 			T next = null;
+
+			System.out.println("Process concurrently");
 
 			while ((next = unsafeSupplier.get()) != null) {
 				T current = next;
@@ -763,6 +757,8 @@ public abstract class BaseDBProcess implements DBProcess {
 							UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE) {
 
 					futures = _getPendingFutures(futures);
+
+					System.out.println("In if " + _blockedThreads.get());
 				}
 
 				futures.add(future);
@@ -770,8 +766,8 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 		finally {
 			try {
-				_countDownLatch = new CountDownLatch(_blockedThreads.get());
-
+				_countDownLatch = new CountDownLatch(1);
+				int expectedFutures = 0;
 				do {
 					futures = _getPendingFutures(futures);
 
@@ -782,11 +778,66 @@ public abstract class BaseDBProcess implements DBProcess {
 						futures.add(
 							executorService.submit(
 								_releaseConnection(preparedStatementHashMap)));
-					}
-				}
-				while (futures.size() > _blockedThreads.get());
+						
+						expectedFutures++;
 
-				executorService.shutdownNow();
+						System.out.println("Still blocked threads: " + _blockedThreads.get());
+						System.out.println("Still futures to process: " + futures.size());
+
+						Map<Thread, Connection> connectionsMap =
+							_connectionsMaps.computeIfAbsent(
+								PropsValues.DATABASE_PARTITION_ENABLED ?
+									CompanyThreadLocal.getCompanyId() :
+										CompanyConstants.SYSTEM,
+								key -> new ConcurrentHashMap<>());
+
+						System.out.println(
+							"The following connections are used: " +
+								connectionsMap.values(
+								).size());
+					}
+
+					Map<Thread, Connection> connectionsMap =
+						_connectionsMaps.computeIfAbsent(
+							PropsValues.DATABASE_PARTITION_ENABLED ?
+								CompanyThreadLocal.getCompanyId() :
+									CompanyConstants.SYSTEM,
+							key -> new ConcurrentHashMap<>());
+
+						System.out.println(
+							"These are the connections: " +
+								connectionsMap.values(
+								).size());
+						System.out.println(
+							"These are the blocked threads: " + _blockedThreads.get());
+						System.out.println("These are the futures: " + futures.size());
+						System.out.println("Expected futures: " + expectedFutures);
+				}
+				while (futures.size() > expectedFutures);
+				
+				System.out.println("Outside blockedThreads: " + _blockedThreads.get());
+				System.out.println("Outside futures: " + futures.size());
+				
+				_countDownLatch.countDown();
+				
+				Map<Thread, Connection> connectionsMap =
+						_connectionsMaps.computeIfAbsent(
+							PropsValues.DATABASE_PARTITION_ENABLED ?
+								CompanyThreadLocal.getCompanyId() :
+									CompanyConstants.SYSTEM,
+							key -> new ConcurrentHashMap<>());
+
+						System.out.println(
+							"Outside connections: " +
+								connectionsMap.values(
+								).size());
+						
+				
+				executorService.shutdown();
+				
+				for(Future<Void> future : futures) {
+					future.get();
+				}
 
 				Throwable throwable = throwableCollector.getThrowable();
 
@@ -817,6 +868,18 @@ public abstract class BaseDBProcess implements DBProcess {
 				for (Thread thread : threads) {
 					closeConnections(thread);
 				}
+				
+				Map<Thread, Connection> connectionsMap =
+						_connectionsMaps.computeIfAbsent(
+							PropsValues.DATABASE_PARTITION_ENABLED ?
+								CompanyThreadLocal.getCompanyId() :
+									CompanyConstants.SYSTEM,
+							key -> new ConcurrentHashMap<>());
+
+						System.out.println(
+							"Finally connections: " +
+								connectionsMap.values(
+								).size());
 			}
 		}
 	}
@@ -825,10 +888,6 @@ public abstract class BaseDBProcess implements DBProcess {
 		Map<Thread, PreparedStatement> preparedStatementHashMap) {
 
 		return () -> {
-			if (preparedStatementHashMap.isEmpty()) {
-				return null;
-			}
-
 			PreparedStatement preparedStatement =
 				preparedStatementHashMap.remove(Thread.currentThread());
 
@@ -836,9 +895,9 @@ public abstract class BaseDBProcess implements DBProcess {
 				preparedStatement.executeBatch();
 
 				preparedStatement.close();
-
-				closeConnections(Thread.currentThread());
 			}
+
+			closeConnections(Thread.currentThread());
 
 			_countDownLatch.await();
 
@@ -848,7 +907,7 @@ public abstract class BaseDBProcess implements DBProcess {
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
-	private final AtomicInteger _blockedThreads = new AtomicInteger(0);
+	private AtomicInteger _blockedThreads;
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
 	private CountDownLatch _countDownLatch;
@@ -869,6 +928,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 					_closeConnections(connectionsMap);
 				}
+				
+				System.out.println("All connections should been closed");
 
 				return null;
 			}
@@ -880,33 +941,44 @@ public abstract class BaseDBProcess implements DBProcess {
 							CompanyConstants.SYSTEM,
 					key -> new ConcurrentHashMap<>());
 
-			return method.invoke(
-				connectionsMap.compute(
-					Thread.currentThread(),
-					(thread, connection) -> {
-						try {
-							if ((connection != null) &&
-								!connection.isClosed()) {
+			Connection oldConnection = connectionsMap.get(
+				Thread.currentThread());
 
-								return connection;
-							}
-						}
-						catch (Exception exception) {
-							if (_log.isDebugEnabled()) {
-								_log.debug(exception);
-							}
-						}
+			try {
+				return method.invoke(
+					connectionsMap.compute(
+						Thread.currentThread(),
+						(thread, connection) -> {
+							try {
+								if ((connection != null) &&
+									!connection.isClosed()) {
 
-						try {
-							_blockedThreads.incrementAndGet();
+									return connection;
+								}
+							}
+							catch (Exception exception) {
+								if (_log.isDebugEnabled()) {
+									_log.debug(exception);
+								}
+							}
+
+							if (_blockedThreads != null) {
+								_blockedThreads.incrementAndGet();
+							}
 
 							return _getConnection();
-						}
-						finally {
-							_blockedThreads.decrementAndGet();
-						}
-					}),
-				args);
+						}),
+					args);
+			}
+			finally {
+				if (oldConnection != connectionsMap.get(
+						Thread.currentThread())) {
+
+					if (_blockedThreads != null) {
+						_blockedThreads.decrementAndGet();
+					}
+				}
+			}
 		}
 
 	}
