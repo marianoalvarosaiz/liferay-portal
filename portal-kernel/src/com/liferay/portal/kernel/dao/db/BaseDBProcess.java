@@ -14,6 +14,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.instance.PortalInstancePool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -53,12 +54,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.naming.NamingException;
@@ -295,14 +297,16 @@ public abstract class BaseDBProcess implements DBProcess {
 				CompanyThreadLocal.getCompanyId() : CompanyConstants.SYSTEM);
 
 		_closeConnections(connectionsMap);
-	}
 
-	protected void closeConnections(Thread thread) {
-		Map<Thread, Connection> connectionsMap = _connectionsMaps.get(
-			PropsValues.DATABASE_PARTITION_ENABLED ?
-				CompanyThreadLocal.getCompanyId() : CompanyConstants.SYSTEM);
+		if (_connections == null) {
+			return;
+		}
 
-		_closeConnections(connectionsMap, thread);
+		while (!_connections.isEmpty()) {
+			DataAccess.cleanUp(_connections.poll());
+		}
+
+		_connections = null;
 	}
 
 	/**
@@ -534,33 +538,6 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 	}
 
-	private void _closeConnections(
-		Map<Thread, Connection> connectionsMap, Thread thread) {
-
-		if (MapUtil.isEmpty(connectionsMap)) {
-			return;
-		}
-
-		try {
-			for (Map.Entry<Thread, Connection> entry :
-					connectionsMap.entrySet()) {
-
-				if (entry.getKey() == thread) {
-					Connection connection = entry.getValue();
-
-					connectionsMap.remove(entry.getKey());
-
-					connection.close();
-
-					return;
-				}
-			}
-		}
-		catch (SQLException sqlException) {
-			_log.error(sqlException);
-		}
-	}
-
 	private PreparedStatement _getConcurrentPreparedStatement(
 		String updateSQL,
 		Map<Thread, PreparedStatement> preparedStatementHashMap) {
@@ -620,40 +597,96 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 	}
 
-	private int _getFixedThreadPoolSize() {
-		if (_fixedThreadPoolSize.get() != 0) {
-			return _fixedThreadPoolSize.get();
+	private BlockingQueue<Connection> _getConnections() {
+		if (PropsValues.DATABASE_PARTITION_ENABLED &&
+			(CompanyThreadLocal.getCompanyId() !=
+				PortalInstancePool.getDefaultCompanyId())) {
+
+			return _connections;
 		}
 
-		long[] companyIds = PortalInstancePool.getCompanyIds();
+		BlockingQueue<Connection> connections = new LinkedBlockingQueue<>();
 
-		int maximumPoolSize = GetterUtil.getInteger(
-			PropsUtil.get("jdbc.default.maximumPoolSize"));
+		if (_connections != null) {
+			connections.addAll(_connections);
+		}
 
 		Runtime runtime = Runtime.getRuntime();
 
-		int expectedMaxConnectionsCount =
-			Math.min(companyIds.length - 1, runtime.availableProcessors()) *
-				runtime.availableProcessors();
+		ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		if (expectedMaxConnectionsCount > (0.9 * maximumPoolSize)) {
+		long[] companyIds = PortalInstancePool.getCompanyIds();
+
+		_parallelCompanies.set(
+			PropsValues.DATABASE_PARTITION_ENABLED && (companyIds.length > 1) ?
+				companyIds.length - 1 : 1);
+
+		int expectedQueueSize =
+			(runtime.availableProcessors() * _parallelCompanies.get()) -
+				connections.size();
+
+		for (int i = 0; i < expectedQueueSize; i++) {
+			Future<Connection> future = executor.submit(
+				() -> {
+					try {
+						Connection connection = _getConnection();
+
+						connection.getMetaData();
+
+						return connection;
+					}
+					catch (Exception exception) {
+						return null;
+					}
+				});
+
+			Connection connection = null;
+
+			try {
+				connection = future.get(5, TimeUnit.SECONDS);
+
+				if (connection == null) {
+					break;
+				}
+
+				connections.offer(connection);
+			}
+			catch (Exception exception) {
+				break;
+			}
+		}
+
+		executor.shutdownNow();
+
+		if (connections.size() < runtime.availableProcessors()) {
 			if (_log.isWarnEnabled()) {
+				int maximumPoolSize = GetterUtil.getInteger(
+					PropsUtil.get("jdbc.default.maximumPoolSize"));
+
 				_log.warn(
 					StringBundler.concat(
 						"The database is close to reaching ", maximumPoolSize,
 						" connections. Consider increasing the property ",
 						"\"jdbc.default.maximumPoolSize\" to improve ",
-						"performance. Upgrade processes will continue in ",
-						"single threaded mode."));
+						"performance. Upgrade processes will continue limited ",
+						"connections."));
 			}
-
-			_fixedThreadPoolSize.set(1);
-		}
-		else {
-			_fixedThreadPoolSize.set(runtime.availableProcessors());
 		}
 
-		return _fixedThreadPoolSize.get();
+		_totalConnections.set(connections.size());
+
+		return connections;
+	}
+
+	private int _getFixedThreadPoolSize() {
+		Runtime runtime = Runtime.getRuntime();
+
+		_connections = _getConnections();
+
+		_fixedThreadPoolSize = Math.min(
+			_connections.size(), runtime.availableProcessors());
+
+		return _fixedThreadPoolSize;
 	}
 
 	private InputStream _getInputStream(String path) {
@@ -675,6 +708,28 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 
 		return inputStream;
+	}
+
+	private List<Future<Void>> _getPendingFutures(List<Future<Void>> futures)
+		throws Exception {
+
+		if (futures.size() <
+				PropsValues.UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE) {
+
+			return futures;
+		}
+
+		List<Future<Void>> pendingFutures = new ArrayList<>();
+
+		for (Future<Void> future : futures) {
+			if (!future.isDone()) {
+				pendingFutures.add(future);
+			}
+		}
+
+		futures.clear();
+
+		return pendingFutures;
 	}
 
 	private <T> void _processConcurrently(
@@ -699,7 +754,6 @@ public abstract class BaseDBProcess implements DBProcess {
 		List<Future<Void>> futures = new ArrayList<>();
 		Map<Thread, PreparedStatement> preparedStatementHashMap =
 			new ConcurrentHashMap<>();
-		Set<Thread> threads = new CopyOnWriteArraySet<>();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
 		try {
@@ -719,8 +773,6 @@ public abstract class BaseDBProcess implements DBProcess {
 							WorkflowThreadLocal.setEnabled(workflowEnabled);
 
 							try {
-								threads.add(Thread.currentThread());
-
 								if (Validator.isNull(updateSQL)) {
 									unsafeConsumer.accept(current);
 								}
@@ -738,6 +790,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 							return null;
 						}));
+
+				futures = _getPendingFutures(futures);
 
 				if (futures.size() >=
 						PropsValues.
@@ -787,20 +841,57 @@ public abstract class BaseDBProcess implements DBProcess {
 				}
 			}
 			finally {
-				for (Thread thread : threads) {
-					closeConnections(thread);
-				}
+				_releaseConnections();
 			}
 		}
 	}
 
+	private void _releaseConnections() throws Exception {
+		if (!PropsValues.DATABASE_PARTITION_ENABLED ||
+			(CompanyThreadLocal.getCompanyId() ==
+				PortalInstancePool.getDefaultCompanyId())) {
+
+			for (Map<Thread, Connection> connectionsMap :
+					_connectionsMaps.values()) {
+
+				for (Connection connection : connectionsMap.values()) {
+					_connections.offer(connection);
+				}
+			}
+
+			return;
+		}
+
+		_parallelCompanies.decrementAndGet();
+
+		Map<Thread, Connection> connectionsMap = _connectionsMaps.get(
+			CompanyThreadLocal.getCompanyId());
+
+		for (Connection connection : connectionsMap.values()) {
+			int requiredConnections =
+				_parallelCompanies.get() * _fixedThreadPoolSize;
+
+			if (requiredConnections < _totalConnections.get()) {
+				_totalConnections.decrementAndGet();
+
+				connection.close();
+			}
+			else {
+				_connections.offer(connection);
+			}
+		}
+
+		_connectionsMaps.remove(CompanyThreadLocal.getCompanyId());
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
-	private static final AtomicInteger _fixedThreadPoolSize = new AtomicInteger(
-		0);
-
+	private BlockingQueue<Connection> _connections;
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
+	private int _fixedThreadPoolSize;
+	private final AtomicInteger _parallelCompanies = new AtomicInteger(0);
+	private final AtomicInteger _totalConnections = new AtomicInteger(0);
 
 	private class ConnectionThreadProxyInvocationHandler
 		implements InvocationHandler {
@@ -812,11 +903,7 @@ public abstract class BaseDBProcess implements DBProcess {
 			String methodName = method.getName();
 
 			if (methodName.equals("close")) {
-				for (Map<Thread, Connection> connectionsMap :
-						_connectionsMaps.values()) {
-
-					_closeConnections(connectionsMap);
-				}
+				closeConnections();
 
 				return null;
 			}
@@ -845,7 +932,16 @@ public abstract class BaseDBProcess implements DBProcess {
 							}
 						}
 
-						return _getConnection();
+						if (_connections == null) {
+							return _getConnection();
+						}
+
+						try {
+							return _connections.take();
+						}
+						catch (Exception exception) {
+							throw new SystemException(exception);
+						}
 					}),
 				args);
 		}
