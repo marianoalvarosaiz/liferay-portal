@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.dao.db.IndexMetadata;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -72,7 +73,7 @@ public class BaseDBProcessTest extends BaseDBProcess {
 
 	@Before
 	public void setUp() throws Exception {
-		connection = _connection;
+		connection = getConnection();
 
 		runSQL(
 			StringBundler.concat(
@@ -89,6 +90,8 @@ public class BaseDBProcessTest extends BaseDBProcess {
 	@After
 	public void tearDown() throws Exception {
 		runSQL("DROP_TABLE_IF_EXISTS(" + _TABLE_NAME + ")");
+
+		DataAccess.cleanUp(connection);
 	}
 
 	@Test
@@ -507,34 +510,18 @@ public class BaseDBProcessTest extends BaseDBProcess {
 
 	@Test
 	public void testProcessConcurrentlyShutdown() throws Exception {
-		List<Integer> values = new ArrayList<>();
-
-		for (int i = 1; i <= _PROCESS_CONCURRENTLY_COUNT; i++) {
-			values.add(i);
-		}
-
-		List<Future<Void>> futures = new ArrayList<>();
-
 		ExecutorService executorService = Executors.newWorkStealingPool();
 
-		for (int i = 0; i <= 10; i++) {
-			Future<Void> future = executorService.submit(
-				() -> {
-					processConcurrently(
-						values.toArray(new Integer[0]),
-						value -> Thread.sleep(1000), "An exception was thrown");
+		Future<Void> future = executorService.submit(
+			() -> {
+				processConcurrently(
+					new Integer[] {RandomTestUtil.nextInt()},
+					value -> Thread.sleep(3000), "An exception was thrown");
 
-					return null;
-				});
+				return null;
+			});
 
-			futures.add(future);
-		}
-
-		executorService.shutdown();
-
-		for (Future<Void> future : futures) {
-			future.get();
-		}
+		future.get();
 	}
 
 	@Test
@@ -639,7 +626,7 @@ public class BaseDBProcessTest extends BaseDBProcess {
 	}
 
 	private void _validateTableContent() throws Exception {
-		try (PreparedStatement preparedStatement = connection.prepareStatement(
+		try (PreparedStatement preparedStatement = _connection.prepareStatement(
 				"select count(1) from " + _TABLE_NAME +
 					" where id >= 1 and id <= ? and typeInteger = id")) {
 

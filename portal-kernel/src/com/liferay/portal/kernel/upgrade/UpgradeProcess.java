@@ -119,12 +119,7 @@ public abstract class UpgradeProcess
 						_log.info("Upgrading " + companyInfo);
 					}
 
-					try {
-						doUpgrade();
-					}
-					finally {
-						closeConnections();
-					}
+					doUpgrade();
 				});
 		}
 		catch (Throwable throwable) {
