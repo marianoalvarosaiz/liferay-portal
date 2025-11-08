@@ -9,6 +9,7 @@ import com.liferay.petra.function.UnsafeBiConsumer;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.function.UnsafeSupplier;
+import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -504,15 +505,17 @@ public abstract class BaseDBProcess implements DBProcess {
 
 		_closeConnections(connectionsMap);
 
-		if (_connections == null) {
+		BlockingQueue<Connection> connections = _connections.get();
+
+		if (connections == null) {
 			return;
 		}
 
-		while (!_connections.isEmpty()) {
-			DataAccess.cleanUp(_connections.poll());
+		while (!connections.isEmpty()) {
+			DataAccess.cleanUp(connections.poll());
 		}
 
-		_connections = null;
+		_connections.set(null);
 	}
 
 	private void _closeConnections(Map<Thread, Connection> connectionsMap) {
@@ -602,13 +605,19 @@ public abstract class BaseDBProcess implements DBProcess {
 			(CompanyThreadLocal.getCompanyId() !=
 				PortalInstancePool.getDefaultCompanyId())) {
 
-			return _connections;
+			return _connections.get();
+		}
+
+		BlockingQueue<Connection> currentConnections = _connections.get();
+
+		if ((currentConnections != null) && (currentConnections.size() > 0)) {
+			return _connections.get();
 		}
 
 		BlockingQueue<Connection> connections = new LinkedBlockingQueue<>();
 
-		if (_connections != null) {
-			connections.addAll(_connections);
+		if (currentConnections != null) {
+			connections.addAll(currentConnections);
 		}
 
 		Runtime runtime = Runtime.getRuntime();
@@ -684,10 +693,12 @@ public abstract class BaseDBProcess implements DBProcess {
 	private int _getFixedThreadPoolSize() {
 		Runtime runtime = Runtime.getRuntime();
 
-		_connections = _getConnections();
+		_connections.set(_getConnections());
 
 		_fixedThreadPoolSize = Math.min(
-			_connections.size(), runtime.availableProcessors());
+			_connections.get(
+			).size(),
+			runtime.availableProcessors());
 
 		return _fixedThreadPoolSize;
 	}
@@ -850,6 +861,8 @@ public abstract class BaseDBProcess implements DBProcess {
 	}
 
 	private void _releaseConnections() throws Exception {
+		BlockingQueue<Connection> connections = _connections.get();
+
 		if (!PropsValues.DATABASE_PARTITION_ENABLED ||
 			(CompanyThreadLocal.getCompanyId() ==
 				PortalInstancePool.getDefaultCompanyId())) {
@@ -858,7 +871,7 @@ public abstract class BaseDBProcess implements DBProcess {
 					_connectionsMaps.values()) {
 
 				for (Connection connection : connectionsMap.values()) {
-					_connections.offer(connection);
+					connections.offer(connection);
 				}
 			}
 
@@ -880,7 +893,7 @@ public abstract class BaseDBProcess implements DBProcess {
 				connection.close();
 			}
 			else {
-				_connections.offer(connection);
+				connections.offer(connection);
 			}
 		}
 
@@ -891,7 +904,10 @@ public abstract class BaseDBProcess implements DBProcess {
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
-	private BlockingQueue<Connection> _connections;
+	private static final CentralizedThreadLocal<BlockingQueue<Connection>>
+		_connections = new CentralizedThreadLocal<>(
+			BaseDBProcess.class + "._connections");
+
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
 	private int _fixedThreadPoolSize;
@@ -937,12 +953,15 @@ public abstract class BaseDBProcess implements DBProcess {
 							}
 						}
 
-						if (_connections == null) {
+						BlockingQueue<Connection> connections =
+							_connections.get();
+
+						if (connections == null) {
 							return _getConnection();
 						}
 
 						try {
-							return _connections.take();
+							return connections.take();
 						}
 						catch (Exception exception) {
 							throw new SystemException(exception);

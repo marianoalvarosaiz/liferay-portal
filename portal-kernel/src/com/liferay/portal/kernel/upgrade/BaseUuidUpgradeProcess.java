@@ -13,6 +13,9 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author Amos Fong
  * @author Brian Wing Shun Chan
@@ -71,6 +74,8 @@ public abstract class BaseUuidUpgradeProcess extends UpgradeProcess {
 
 		String primaryKeyColumnName = getPrimaryKeyColumnName(tableName);
 
+		Set<String> set = ConcurrentHashMap.newKeySet();
+
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			processConcurrently(
 				StringBundler.concat(
@@ -83,8 +88,24 @@ public abstract class BaseUuidUpgradeProcess extends UpgradeProcess {
 					resultSet.getLong(primaryKeyColumnName)
 				},
 				(values, preparedStatement) -> {
-					preparedStatement.setString(1, PortalUUIDUtil.generate());
+					String generate = PortalUUIDUtil.generate();
+
+					preparedStatement.setString(1, generate);
 					preparedStatement.setLong(2, (long)values[0]);
+
+					boolean added = set.add(generate);
+
+					if (!added) {
+						throw new IllegalStateException(
+							"Duplicate UUID " + generate);
+					}
+
+					if (set.size() > 900) {
+						System.out.println(
+							"Add batch over table name " + tableName +
+								" value: " + values[0] + " size: " +
+									set.size());
+					}
 
 					preparedStatement.addBatch();
 				},
