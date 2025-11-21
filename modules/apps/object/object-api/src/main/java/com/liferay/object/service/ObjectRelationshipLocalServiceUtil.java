@@ -366,6 +366,28 @@ public class ObjectRelationshipLocalServiceUtil {
 		return getService().getAllObjectRelationships(objectDefinitionId);
 	}
 
+	public static
+		com.liferay.object.petra.sql.dsl.DynamicObjectRelationshipMappingTable
+				getDynamicObjectRelationshipMappingTable(
+					ObjectRelationship objectRelationship)
+			throws com.liferay.object.exception.
+				NoSuchObjectDefinitionException {
+
+		return getService().getDynamicObjectRelationshipMappingTable(
+			objectRelationship);
+	}
+
+	public static
+		com.liferay.object.petra.sql.dsl.DynamicObjectRelationshipMappingTable
+				getDynamicObjectRelationshipMappingTable(
+					ObjectRelationship objectRelationship, boolean reverse)
+			throws com.liferay.object.exception.
+				NoSuchObjectDefinitionException {
+
+		return getService().getDynamicObjectRelationshipMappingTable(
+			objectRelationship, reverse);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
 		getExportActionableDynamicQuery(
 			com.liferay.exportimport.kernel.lar.PortletDataContext

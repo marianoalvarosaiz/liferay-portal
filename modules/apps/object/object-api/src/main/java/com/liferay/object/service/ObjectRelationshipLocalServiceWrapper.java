@@ -423,6 +423,34 @@ public class ObjectRelationshipLocalServiceWrapper
 	}
 
 	@Override
+	public
+		com.liferay.object.petra.sql.dsl.DynamicObjectRelationshipMappingTable
+				getDynamicObjectRelationshipMappingTable(
+					com.liferay.object.model.ObjectRelationship
+						objectRelationship)
+			throws com.liferay.object.exception.
+				NoSuchObjectDefinitionException {
+
+		return _objectRelationshipLocalService.
+			getDynamicObjectRelationshipMappingTable(objectRelationship);
+	}
+
+	@Override
+	public
+		com.liferay.object.petra.sql.dsl.DynamicObjectRelationshipMappingTable
+				getDynamicObjectRelationshipMappingTable(
+					com.liferay.object.model.ObjectRelationship
+						objectRelationship,
+					boolean reverse)
+			throws com.liferay.object.exception.
+				NoSuchObjectDefinitionException {
+
+		return _objectRelationshipLocalService.
+			getDynamicObjectRelationshipMappingTable(
+				objectRelationship, reverse);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
 		getExportActionableDynamicQuery(
 			com.liferay.exportimport.kernel.lar.PortletDataContext

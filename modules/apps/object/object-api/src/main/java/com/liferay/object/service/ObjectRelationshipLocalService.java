@@ -6,9 +6,11 @@
 package com.liferay.object.service;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.object.exception.NoSuchObjectDefinitionException;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectRelationship;
+import com.liferay.object.petra.sql.dsl.DynamicObjectRelationshipMappingTable;
 import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -293,6 +295,18 @@ public interface ObjectRelationshipLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ObjectRelationship> getAllObjectRelationships(
 		long objectDefinitionId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public DynamicObjectRelationshipMappingTable
+			getDynamicObjectRelationshipMappingTable(
+				ObjectRelationship objectRelationship)
+		throws NoSuchObjectDefinitionException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public DynamicObjectRelationshipMappingTable
+			getDynamicObjectRelationshipMappingTable(
+				ObjectRelationship objectRelationship, boolean reverse)
+		throws NoSuchObjectDefinitionException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
