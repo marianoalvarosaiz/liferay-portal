@@ -14,6 +14,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.instance.PortalInstancePool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -548,6 +549,10 @@ public abstract class BaseDBProcess implements DBProcess {
 
 				iterator.remove();
 
+				if (!connection.getAutoCommit()) {
+					connection.commit();
+				}
+
 				connection.close();
 			}
 		}
@@ -571,6 +576,10 @@ public abstract class BaseDBProcess implements DBProcess {
 					Connection connection = entry.getValue();
 
 					connectionsMap.remove(entry.getKey());
+
+					if (!connection.getAutoCommit()) {
+						connection.commit();
+					}
 
 					connection.close();
 
@@ -867,7 +876,16 @@ public abstract class BaseDBProcess implements DBProcess {
 							}
 						}
 
-						return _getConnection();
+						Connection newConnection = _getConnection();
+
+						try {
+							newConnection.setAutoCommit(false);
+						}
+						catch (Exception exception) {
+							throw new SystemException(exception);
+						}
+
+						return newConnection;
 					}),
 				args);
 		}
