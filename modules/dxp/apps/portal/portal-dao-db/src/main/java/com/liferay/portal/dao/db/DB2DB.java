@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 
 import java.util.ArrayList;
@@ -259,11 +260,12 @@ public class DB2DB extends BaseDB {
 		throws IOException, SQLException {
 
 		reorgTables(connection, templates);
-
+		
 		super.runSQL(connection, templates);
 
 		reorgTables(connection, templates);
 	}
+	
 
 	@Override
 	public void runSQL(String template) throws IOException, SQLException {
@@ -500,12 +502,14 @@ public class DB2DB extends BaseDB {
 		return false;
 	}
 
-	protected void reorgTable(Connection connection, String tableName)
+	protected void reorgTable(Connection connection, String tableName, boolean force)
 		throws SQLException {
-
-		if (!isRequiresReorgTable(connection, tableName)) {
+		
+		if (!isRequiresReorgTable(connection, tableName) && !force) {
 			return;
 		}
+		
+		System.out.println("REOOOOOOOOOOOORG table");
 
 		try (CallableStatement callableStatement = connection.prepareCall(
 				"call sysproc.admin_cmd(?)")) {
@@ -514,6 +518,8 @@ public class DB2DB extends BaseDB {
 
 			callableStatement.execute();
 		}
+		
+		System.out.println("Finish REOOOOOOOOOOOORG table");
 	}
 
 	protected void reorgTables(Connection connection, String[] templates)
@@ -523,10 +529,14 @@ public class DB2DB extends BaseDB {
 
 		for (String template : templates) {
 			template = StringUtil.trim(template);
-
+			
 			String lowerCaseTemplate = StringUtil.toLowerCase(template);
+			
+			if (lowerCaseTemplate.startsWith("alter table portletpreferences drop primary key")) {
+				reorgTable(connection, "portletpreferences", true);
+			}
 
-			if (lowerCaseTemplate.startsWith("alter table") ||
+			if (lowerCaseTemplate.startsWith("alter table") || 
 				lowerCaseTemplate.startsWith("delete from")) {
 
 				tableNames.add(template.split(" ")[2]);
@@ -541,7 +551,7 @@ public class DB2DB extends BaseDB {
 		}
 
 		for (String tableName : tableNames) {
-			reorgTable(connection, tableName);
+			reorgTable(connection, tableName, false);
 		}
 	}
 

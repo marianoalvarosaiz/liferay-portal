@@ -49,16 +49,9 @@ public class CTModelUpgradeProcess extends UpgradeProcess {
 			tableName, databaseMetaData);
 
 		ensureTableExists(databaseMetaData, dbInspector, normalizedTableName);
-
-		try (ResultSet resultSet = databaseMetaData.getColumns(
-				dbInspector.getCatalog(), dbInspector.getSchema(),
-				normalizedTableName,
-				dbInspector.normalizeName(
-					"ctCollectionId", databaseMetaData))) {
-
-			if (resultSet.next()) {
-				return;
-			}
+		
+		if (hasColumn(tableName, "ctCollectionId")) {
+			return;
 		}
 
 		String[] primaryKeyColumnNames = getPrimaryKeyColumnNames(
@@ -73,6 +66,16 @@ public class CTModelUpgradeProcess extends UpgradeProcess {
 				"Too many primary key columns to upgrade " +
 					normalizedTableName);
 		}
+		
+		if (tableName.equalsIgnoreCase("PortletPreferences")) {
+			System.out.println("Before removePrimaryKey");
+		}
+		
+		removePrimaryKey(tableName);
+		
+		if (tableName.equalsIgnoreCase("PortletPreferences")) {
+			System.out.println("After removePrimaryKey");
+		}
 
 		String primaryKeyColumnName1 = primaryKeyColumnNames[0];
 
@@ -81,18 +84,32 @@ public class CTModelUpgradeProcess extends UpgradeProcess {
 		if (primaryKeyColumnNames.length == 2) {
 			primaryKeyColumnName2 = primaryKeyColumnNames[1];
 		}
+		
+		if (tableName.equalsIgnoreCase("PortletPreferences")) {
+			System.out.println("Before first add column");
+		}
 
 		alterTableAddColumn(
 			normalizedTableName, "ctCollectionId", "LONG default 0 not null");
+		
+		if (tableName.equalsIgnoreCase("PortletPreferences")) {
+			System.out.println("After first add column");
+		}
 
 		// Assume table is a mapping table
 
 		if (primaryKeyColumnName2 != null) {
+			if (tableName.equalsIgnoreCase("PortletPreferences")) {
+				System.out.println("Before second add column");
+			}
+			
 			alterTableAddColumn(
 				normalizedTableName, "ctChangeType", "BOOLEAN default null");
+			
+			if (tableName.equalsIgnoreCase("PortletPreferences")) {
+				System.out.println("After second add column");
+			}
 		}
-
-		removePrimaryKey(tableName);
 
 		StringBundler sb = new StringBundler(7);
 
@@ -107,8 +124,17 @@ public class CTModelUpgradeProcess extends UpgradeProcess {
 		}
 
 		sb.append(", ctCollectionId)");
+		
+		if (tableName.equalsIgnoreCase("PortletPreferences")) {
+			System.out.println("Before add PK");
+		}
+		
 
 		runSQL(sb.toString());
+		
+		if (tableName.equalsIgnoreCase("PortletPreferences")) {
+			System.out.println("After add PK");
+		}
 	}
 
 	private final String[] _tableNames;
