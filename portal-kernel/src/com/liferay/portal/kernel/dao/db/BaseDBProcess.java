@@ -651,8 +651,12 @@ public abstract class BaseDBProcess implements DBProcess {
 
 		int maximumPoolSize = GetterUtil.getInteger(
 			PropsUtil.get("jdbc.default.maximumPoolSize"));
-
+		
 		Runtime runtime = Runtime.getRuntime();
+		
+		System.out.println("maximumPoolSize: " + maximumPoolSize);
+		System.out.println("availableProcessors: " + runtime.availableProcessors());
+		System.out.println("length: " + companyIds.length);
 
 		int expectedMaxConnectionsCount =
 			Math.min(companyIds.length - 1, runtime.availableProcessors()) *
