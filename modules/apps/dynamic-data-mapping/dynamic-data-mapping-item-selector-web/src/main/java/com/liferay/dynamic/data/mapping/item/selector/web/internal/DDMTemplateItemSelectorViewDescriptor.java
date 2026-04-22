@@ -10,6 +10,7 @@ import com.liferay.dynamic.data.mapping.item.selector.DDMTemplateItemSelectorCri
 import com.liferay.dynamic.data.mapping.item.selector.DDMTemplateItemSelectorReturnType;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.item.selector.ItemSelectorReturnType;
@@ -20,6 +21,7 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -110,10 +112,7 @@ public class DDMTemplateItemSelectorViewDescriptor
 				getOrderByCol(), getOrderByType()));
 		ddmTemplateSearchContainer.setOrderByType(getOrderByType());
 
-		long[] groupIds =
-			SiteConnectedGroupGroupProviderUtil.
-				getCurrentAndAncestorSiteAndDepotGroupIds(
-					_themeDisplay.getScopeGroupId(), false, true);
+		long[] groupIds = _getGroupIds();
 
 		ddmTemplateSearchContainer.setResultsAndTotal(
 			() -> DDMTemplateServiceUtil.search(
@@ -144,6 +143,34 @@ public class DDMTemplateItemSelectorViewDescriptor
 	@Override
 	public boolean isShowSearch() {
 		return true;
+	}
+
+	private long[] _getGroupIds() throws PortalException {
+		if (_ddmTemplateItemSelectorCriterion.isSelectAncestorScopes()) {
+			return SiteConnectedGroupGroupProviderUtil.
+				getCurrentAndAncestorSiteAndDepotGroupIds(
+					_themeDisplay.getScopeGroupId(), false, true);
+		}
+
+		long[] groupIds = {
+			_themeDisplay.getScopeGroupId(), _themeDisplay.getCompanyGroupId()
+		};
+
+		long ddmStructureId =
+			_ddmTemplateItemSelectorCriterion.getDDMStructureId();
+
+		if (ddmStructureId > 0) {
+			DDMStructure ddmStructure =
+				DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId);
+
+			if ((ddmStructure != null) &&
+				!ArrayUtil.contains(groupIds, ddmStructure.getGroupId())) {
+
+				groupIds = ArrayUtil.append(groupIds, ddmStructure.getGroupId());
+			}
+		}
+
+		return groupIds;
 	}
 
 	private String _getKeywords() {
