@@ -565,6 +565,8 @@ public class JournalContentDisplayContext {
 						ddmStructure.getStructureId());
 				}
 
+				ddmTemplateItemSelectorCriterion.setSelectAncestorScopes(false);
+
 				ddmTemplateItemSelectorCriterion.
 					setDesiredItemSelectorReturnTypes(
 						new DDMTemplateItemSelectorReturnType());
