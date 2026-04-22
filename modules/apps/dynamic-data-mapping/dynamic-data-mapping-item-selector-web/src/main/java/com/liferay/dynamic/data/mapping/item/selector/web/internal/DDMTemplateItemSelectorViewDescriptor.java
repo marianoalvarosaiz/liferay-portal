@@ -141,6 +141,11 @@ public class DDMTemplateItemSelectorViewDescriptor
 	}
 
 	@Override
+	public boolean isShowBreadcrumb() {
+		return _ddmTemplateItemSelectorCriterion.isSelectAncestorScopes();
+	}
+
+	@Override
 	public boolean isShowSearch() {
 		return true;
 	}
