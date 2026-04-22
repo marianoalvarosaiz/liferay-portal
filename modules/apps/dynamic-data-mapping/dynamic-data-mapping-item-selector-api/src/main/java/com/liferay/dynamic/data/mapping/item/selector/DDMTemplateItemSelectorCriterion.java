@@ -21,6 +21,10 @@ public class DDMTemplateItemSelectorCriterion
 		return _ddmStructureId;
 	}
 
+	public boolean isSelectAncestorScopes() {
+		return _selectAncestorScopes;
+	}
+
 	public void setClassNameId(long classNameId) {
 		_classNameId = classNameId;
 	}
@@ -29,7 +33,12 @@ public class DDMTemplateItemSelectorCriterion
 		_ddmStructureId = ddmStructureId;
 	}
 
+	public void setSelectAncestorScopes(boolean selectAncestorScopes) {
+		_selectAncestorScopes = selectAncestorScopes;
+	}
+
 	private long _classNameId;
 	private long _ddmStructureId;
+	private boolean _selectAncestorScopes = true;
 
 }
