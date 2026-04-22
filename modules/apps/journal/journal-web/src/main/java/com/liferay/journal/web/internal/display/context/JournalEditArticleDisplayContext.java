@@ -1315,6 +1315,7 @@ public class JournalEditArticleDisplayContext {
 					PortalUtil.getClassNameId(JournalArticle.class.getName()));
 				ddmTemplateItemSelectorCriterion.setDDMStructureId(
 					_ddmStructure.getStructureId());
+				ddmTemplateItemSelectorCriterion.setSelectAncestorScopes(false);
 				ddmTemplateItemSelectorCriterion.
 					setDesiredItemSelectorReturnTypes(
 						new DDMTemplateItemSelectorReturnType());
