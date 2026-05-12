@@ -577,48 +577,6 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 	}
 
-	private Connection _enableTransactionForCurrentThread()
-		throws SQLException {
-
-		Map<Thread, Connection> connectionsMap = _connectionsMaps.get(
-			PropsValues.DATABASE_PARTITION_ENABLED ?
-				CompanyThreadLocal.getCompanyId() : CompanyConstants.SYSTEM);
-
-		if (connectionsMap == null) {
-			return null;
-		}
-
-		Connection workerConnection = connectionsMap.get(
-			Thread.currentThread());
-
-		if (workerConnection == null) {
-			return null;
-		}
-
-		boolean previousAutoCommit = workerConnection.getAutoCommit();
-
-		if (!previousAutoCommit) {
-			return null;
-		}
-
-		if (_autoCommits.putIfAbsent(workerConnection, previousAutoCommit) !=
-				null) {
-
-			return null;
-		}
-
-		try {
-			workerConnection.setAutoCommit(false);
-		}
-		catch (SQLException sqlException) {
-			_autoCommits.remove(workerConnection);
-
-			throw sqlException;
-		}
-
-		return workerConnection;
-	}
-
 	private void _finishAndCloseConnection(Connection connection) {
 		Boolean leaked = _autoCommits.remove(connection);
 
@@ -686,8 +644,7 @@ public abstract class BaseDBProcess implements DBProcess {
 						AutoBatchPreparedStatementUtil.autoBatch(
 							connection, updateSQL);
 
-					Connection workerConnection =
-						_enableTransactionForCurrentThread();
+					Connection workerConnection = _getWorkerConnection();
 
 					if (workerConnection == null) {
 						return preparedStatement;
@@ -697,7 +654,7 @@ public abstract class BaseDBProcess implements DBProcess {
 						ClassLoader.getSystemClassLoader(),
 						new Class<?>[] {PreparedStatement.class},
 						new BatchCommitInvocationHandler(
-							preparedStatement, workerConnection));
+							preparedStatement, workerConnection, _autoCommits));
 				}
 				catch (SQLException sqlException) {
 					throw new RuntimeException(sqlException);
@@ -810,6 +767,18 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 
 		return inputStream;
+	}
+
+	private Connection _getWorkerConnection() {
+		Map<Thread, Connection> connectionsMap = _connectionsMaps.get(
+			PropsValues.DATABASE_PARTITION_ENABLED ?
+				CompanyThreadLocal.getCompanyId() : CompanyConstants.SYSTEM);
+
+		if (connectionsMap == null) {
+			return null;
+		}
+
+		return connectionsMap.get(Thread.currentThread());
 	}
 
 	private <T> void _processConcurrently(
@@ -952,6 +921,12 @@ public abstract class BaseDBProcess implements DBProcess {
 		public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 
+			boolean isAddBatch = method.equals(_addBatchMethod);
+
+			if (isAddBatch && !_transactionActive) {
+				_enableTransaction();
+			}
+
 			Object result;
 
 			try {
@@ -961,27 +936,69 @@ public abstract class BaseDBProcess implements DBProcess {
 				throw invocationTargetException.getCause();
 			}
 
-			if (method.equals(_addBatchMethod)) {
+			if (isAddBatch) {
 				if (++_count >= PropsValues.HIBERNATE_JDBC_BATCH_SIZE) {
-					_count = 0;
-
-					_workerConnection.commit();
+					_finishTransaction(true);
 				}
 			}
-			else if (method.equals(_executeBatchMethod) && (_count > 0)) {
-				_count = 0;
+			else if (method.equals(_executeBatchMethod) &&
+					 _transactionActive) {
 
-				_workerConnection.commit();
+				_finishTransaction(true);
 			}
 
 			return result;
 		}
 
 		private BatchCommitInvocationHandler(
-			PreparedStatement preparedStatement, Connection workerConnection) {
+			PreparedStatement preparedStatement, Connection workerConnection,
+			Map<Connection, Boolean> autoCommits) {
 
 			_preparedStatement = preparedStatement;
 			_workerConnection = workerConnection;
+			_autoCommits = autoCommits;
+		}
+
+		private void _enableTransaction() throws SQLException {
+			if (!_workerConnection.getAutoCommit()) {
+				return;
+			}
+
+			if (_autoCommits.putIfAbsent(_workerConnection, Boolean.TRUE) !=
+					null) {
+
+				return;
+			}
+
+			try {
+				_workerConnection.setAutoCommit(false);
+			}
+			catch (SQLException sqlException) {
+				_autoCommits.remove(_workerConnection);
+
+				throw sqlException;
+			}
+
+			_transactionActive = true;
+		}
+
+		private void _finishTransaction(boolean commit) throws SQLException {
+			_transactionActive = false;
+			_count = 0;
+
+			_autoCommits.remove(_workerConnection);
+
+			try {
+				if (commit) {
+					_workerConnection.commit();
+				}
+				else {
+					_workerConnection.rollback();
+				}
+			}
+			finally {
+				_workerConnection.setAutoCommit(true);
+			}
 		}
 
 		private static final Method _addBatchMethod;
@@ -998,8 +1015,10 @@ public abstract class BaseDBProcess implements DBProcess {
 			}
 		}
 
+		private final Map<Connection, Boolean> _autoCommits;
 		private int _count;
 		private final PreparedStatement _preparedStatement;
+		private boolean _transactionActive;
 		private final Connection _workerConnection;
 
 	}
