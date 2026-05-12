@@ -654,7 +654,7 @@ public abstract class BaseDBProcess implements DBProcess {
 						ClassLoader.getSystemClassLoader(),
 						new Class<?>[] {PreparedStatement.class},
 						new BatchCommitInvocationHandler(
-							preparedStatement, workerConnection, _autoCommits));
+							preparedStatement, workerConnection));
 				}
 				catch (SQLException sqlException) {
 					throw new RuntimeException(sqlException);
@@ -914,8 +914,7 @@ public abstract class BaseDBProcess implements DBProcess {
 	private final Map<Long, Map<Thread, Connection>> _connectionsMaps =
 		new ConcurrentHashMap<>();
 
-	private static class BatchCommitInvocationHandler
-		implements InvocationHandler {
+	private class BatchCommitInvocationHandler implements InvocationHandler {
 
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args)
@@ -941,8 +940,8 @@ public abstract class BaseDBProcess implements DBProcess {
 					_finishTransaction(true);
 				}
 			}
-			else if (method.equals(_executeBatchMethod) &&
-					 _transactionActive) {
+			else if (_transactionActive &&
+					 method.equals(_executeBatchMethod)) {
 
 				_finishTransaction(true);
 			}
@@ -951,12 +950,10 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 
 		private BatchCommitInvocationHandler(
-			PreparedStatement preparedStatement, Connection workerConnection,
-			Map<Connection, Boolean> autoCommits) {
+			PreparedStatement preparedStatement, Connection workerConnection) {
 
 			_preparedStatement = preparedStatement;
 			_workerConnection = workerConnection;
-			_autoCommits = autoCommits;
 		}
 
 		private void _enableTransaction() throws SQLException {
@@ -1015,7 +1012,6 @@ public abstract class BaseDBProcess implements DBProcess {
 			}
 		}
 
-		private final Map<Connection, Boolean> _autoCommits;
 		private int _count;
 		private final PreparedStatement _preparedStatement;
 		private boolean _transactionActive;
