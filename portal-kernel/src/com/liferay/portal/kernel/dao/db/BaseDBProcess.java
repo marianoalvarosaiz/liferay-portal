@@ -618,7 +618,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 	private void _finishOwnedConnections(boolean commit) {
 		Iterator<Map.Entry<Connection, Boolean>> iterator =
-			_autoCommits.entrySet().iterator();
+			_autoCommits.entrySet(
+			).iterator();
 
 		while (iterator.hasNext()) {
 			Map.Entry<Connection, Boolean> entry = iterator.next();
@@ -628,7 +629,8 @@ public abstract class BaseDBProcess implements DBProcess {
 
 			iterator.remove();
 
-			_finishOwnedConnection(workerConnection, previousAutoCommit, commit);
+			_finishOwnedConnection(
+				workerConnection, previousAutoCommit, commit);
 		}
 	}
 
@@ -920,9 +922,9 @@ public abstract class BaseDBProcess implements DBProcess {
 		public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 
-			boolean isAddBatch = method.equals(_addBatchMethod);
+			boolean addBatch = method.equals(_addBatchMethod);
 
-			if (isAddBatch && !_transactionActive) {
+			if (addBatch && !_transactionActive) {
 				_enableTransaction();
 			}
 
@@ -935,14 +937,12 @@ public abstract class BaseDBProcess implements DBProcess {
 				throw invocationTargetException.getCause();
 			}
 
-			if (isAddBatch) {
+			if (addBatch) {
 				if (++_count >= PropsValues.HIBERNATE_JDBC_BATCH_SIZE) {
 					_finishTransaction(true);
 				}
 			}
-			else if (_transactionActive &&
-					 method.equals(_executeBatchMethod)) {
-
+			else if (_transactionActive && method.equals(_executeBatchMethod)) {
 				_finishTransaction(true);
 			}
 
@@ -957,10 +957,6 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 
 		private void _enableTransaction() throws SQLException {
-			if (!_workerConnection.getAutoCommit()) {
-				return;
-			}
-
 			if (_autoCommits.putIfAbsent(_workerConnection, Boolean.TRUE) !=
 					null) {
 
