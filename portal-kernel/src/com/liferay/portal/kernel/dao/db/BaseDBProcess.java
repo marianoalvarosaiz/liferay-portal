@@ -934,7 +934,18 @@ public abstract class BaseDBProcess implements DBProcess {
 				result = method.invoke(_preparedStatement, args);
 			}
 			catch (InvocationTargetException invocationTargetException) {
-				throw invocationTargetException.getCause();
+				Throwable causeThrowable = invocationTargetException.getCause();
+
+				if (_transactionActive) {
+					try {
+						_finishTransaction(false);
+					}
+					catch (SQLException sqlException) {
+						causeThrowable.addSuppressed(sqlException);
+					}
+				}
+
+				throw causeThrowable;
 			}
 
 			if (addBatch) {
