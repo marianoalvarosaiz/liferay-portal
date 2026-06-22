@@ -911,9 +911,9 @@ public abstract class BaseDBProcess implements DBProcess {
 		public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 
-			boolean isAddBatch = method.equals(_addBatchMethod);
+			boolean addBatch = method.equals(_addBatchMethod);
 
-			if (isAddBatch && !_transactionActive) {
+			if (addBatch && !_transactionActive) {
 				_enableTransaction();
 			}
 
@@ -926,14 +926,12 @@ public abstract class BaseDBProcess implements DBProcess {
 				throw invocationTargetException.getCause();
 			}
 
-			if (isAddBatch) {
+			if (addBatch) {
 				if (++_count >= PropsValues.HIBERNATE_JDBC_BATCH_SIZE) {
 					_finishTransaction(true);
 				}
 			}
-			else if (_transactionActive &&
-					 method.equals(_executeBatchMethod)) {
-
+			else if (_transactionActive && method.equals(_executeBatchMethod)) {
 				_finishTransaction(true);
 			}
 
@@ -948,10 +946,6 @@ public abstract class BaseDBProcess implements DBProcess {
 		}
 
 		private void _enableTransaction() throws SQLException {
-			if (!_workerConnection.getAutoCommit()) {
-				return;
-			}
-
 			if (!_autoCommits.add(_workerConnection)) {
 				return;
 			}
