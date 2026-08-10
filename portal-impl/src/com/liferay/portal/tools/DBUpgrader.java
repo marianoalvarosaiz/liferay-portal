@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.util.PropsValues;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.version.Version;
+import com.liferay.portal.module.framework.ModuleFrameworkUtil;
 import com.liferay.portal.transaction.TransactionsUtil;
 import com.liferay.portal.upgrade.PortalUpgradeProcess;
 import com.liferay.portal.upgrade.data.cleanup.DataCleanupPreupgradeProcessSuite;
@@ -169,6 +170,24 @@ public class DBUpgrader {
 	}
 
 	public static void main(String[] args) {
+		Runtime.getRuntime(
+		).addShutdownHook(
+			new Thread() {
+
+				@Override
+				public void run() {
+					try {
+						ModuleFrameworkUtil.stopFramework(
+							PropsValues.MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT);
+					}
+					catch (Exception exception) {
+						_log.error(exception);
+					}
+				}
+
+			}
+		);
+
 		String result = "Completed";
 
 		UpgradeProcessUtil.setUpgradeClient(true);
