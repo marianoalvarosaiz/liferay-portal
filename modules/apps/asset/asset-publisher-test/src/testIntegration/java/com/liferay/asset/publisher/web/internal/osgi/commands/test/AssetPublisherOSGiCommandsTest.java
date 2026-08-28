@@ -25,8 +25,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
+import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
-import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
@@ -34,9 +34,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.test.rule.Inject;
@@ -150,6 +148,7 @@ public class AssetPublisherOSGiCommandsTest {
 
 		Assert.assertEquals(
 			"true", unicodeProperties.getProperty("anyAssetType", null));
+		Assert.assertNull(unicodeProperties.getProperty("classNameIds", null));
 
 		assetEntryQuery = _assetPublisherHelper.getAssetEntryQuery(
 			portletPreferences, _group.getGroupId(), _layout, null, null);
@@ -242,59 +241,9 @@ public class AssetPublisherOSGiCommandsTest {
 			ModelHintsUtil.getMaxLength(
 				AssetListEntry.class.getName(), "title"),
 			title.length());
-	}
-
-	@Test
-	public void testMigratePortletPreferencesWithUnresolvableAnyAssetType()
-		throws Exception {
-
-		long unresolvableClassNameId = _getUnresolvableClassNameId();
-
-		PortletPreferences portletPreferences =
-			_setDynamicSelectionStylePreference();
-
-		portletPreferences.setValue(
-			"anyAssetType", String.valueOf(unresolvableClassNameId));
-
-		portletPreferences.store();
-
-		_run("migratePortletPreferences");
-
-		UnicodeProperties unicodeProperties =
-			_getTypeSettingsUnicodeProperties();
-
-		Assert.assertEquals(
-			"true", unicodeProperties.getProperty("anyAssetType", null));
-	}
-
-	@Test
-	public void testMigratePortletPreferencesWithUnresolvableClassNameIds()
-		throws Exception {
-
-		long classNameId = PortalUtil.getClassNameId(BlogsEntry.class);
-		long unresolvableClassNameId = _getUnresolvableClassNameId();
-
-		PortletPreferences portletPreferences =
-			_setDynamicSelectionStylePreference();
-
-		portletPreferences.setValue("anyAssetType", "true");
-		portletPreferences.setValue(
-			"classNameIds",
-			StringUtil.merge(
-				new long[] {classNameId, unresolvableClassNameId}));
-
-		portletPreferences.store();
-
-		_run("migratePortletPreferences");
-
-		UnicodeProperties unicodeProperties =
-			_getTypeSettingsUnicodeProperties();
-
-		Assert.assertEquals(
-			String.valueOf(classNameId),
-			unicodeProperties.getProperty("classNameIds", null));
-		Assert.assertEquals(
-			"true", unicodeProperties.getProperty("anyAssetType", null));
+		Assert.assertTrue(
+			title.startsWith(
+				"AP " + PortletIdCodec.decodeInstanceId(portletId)));
 	}
 
 	private AssetEntry _addAssetEntry() throws Exception {
@@ -306,43 +255,6 @@ public class AssetPublisherOSGiCommandsTest {
 
 		return _assetEntryLocalService.getEntry(
 			_group.getGroupId(), blogsEntry.getUuid());
-	}
-
-	private UnicodeProperties _getTypeSettingsUnicodeProperties()
-		throws Exception {
-
-		PortletPreferences portletPreferences =
-			PortletPreferencesFactoryUtil.getExistingPortletSetup(
-				_layout, _portletId);
-
-		Assert.assertEquals(
-			"asset-list", portletPreferences.getValue("selectionStyle", null));
-
-		AssetListEntry assetListEntry =
-			_assetListEntryLocalService.
-				fetchAssetListEntryByExternalReferenceCode(
-					portletPreferences.getValue(
-						"assetListEntryExternalReferenceCode", null),
-					_group.getGroupId());
-
-		AssetListEntrySegmentsEntryRel assetListEntrySegmentsEntryRel =
-			_assetListEntrySegmentsEntryRelLocalService.
-				fetchAssetListEntrySegmentsEntryRel(
-					assetListEntry.getAssetListEntryId(),
-					SegmentsEntryConstants.ID_DEFAULT);
-
-		return UnicodePropertiesBuilder.load(
-			assetListEntrySegmentsEntryRel.getTypeSettings()
-		).build();
-	}
-
-	private long _getUnresolvableClassNameId() {
-		long classNameId = RandomTestUtil.nextLong();
-
-		Assert.assertNull(
-			ClassNameLocalServiceUtil.fetchClassName(classNameId));
-
-		return classNameId;
 	}
 
 	private void _run(String name) throws Exception {
@@ -359,6 +271,8 @@ public class AssetPublisherOSGiCommandsTest {
 		PortletPreferences portletPreferences =
 			LayoutTestUtil.getPortletPreferences(_layout, _portletId);
 
+		portletPreferences.setValue(
+			"classNameIds", String.valueOf(RandomTestUtil.nextLong()));
 		portletPreferences.setValue(
 			"scopeIds",
 			AssetPublisherHelper.SCOPE_ID_GROUP_PREFIX + _group.getGroupId());
