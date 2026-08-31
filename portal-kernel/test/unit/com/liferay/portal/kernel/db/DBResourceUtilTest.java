@@ -14,6 +14,10 @@ import java.io.InputStream;
 
 import java.net.URL;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -30,6 +34,64 @@ import org.osgi.framework.Bundle;
  * @author Mariano Álvaro Sáiz
  */
 public class DBResourceUtilTest {
+
+	@Test
+	public void testGetHistoricalServiceComponentTableNames() throws Exception {
+		Connection connection = Mockito.mock(Connection.class);
+		PreparedStatement preparedStatement = Mockito.mock(
+			PreparedStatement.class);
+		ResultSet resultSet = Mockito.mock(ResultSet.class);
+
+		Mockito.when(
+			connection.prepareStatement(ArgumentMatchers.anyString())
+		).thenReturn(
+			preparedStatement
+		);
+
+		Mockito.when(
+			preparedStatement.executeQuery()
+		).thenReturn(
+			resultSet
+		);
+
+		Mockito.when(
+			resultSet.next()
+		).thenReturn(
+			true, true, false
+		);
+
+		Mockito.when(
+			resultSet.getString(1)
+		).thenReturn(
+			"com.liferay.foo.service", "com.liferay.bar.service"
+		);
+
+		Mockito.when(
+			resultSet.getString(2)
+		).thenReturn(
+			StringBundler.concat(
+				"create table FooEntry (fooEntryId LONG not null primary key);",
+				"create table FooLegacy (fooLegacyId LONG not null primary ",
+				"key);"),
+			"create table BarEntry (barEntryId LONG not null primary key);"
+		);
+
+		Map<String, String> historicalServiceComponentTableNames =
+			DBResourceUtil.getHistoricalServiceComponentTableNames(connection);
+
+		Assert.assertEquals(
+			historicalServiceComponentTableNames.toString(), 3,
+			historicalServiceComponentTableNames.size());
+		Assert.assertEquals(
+			"com.liferay.bar.service",
+			historicalServiceComponentTableNames.get("BarEntry"));
+		Assert.assertEquals(
+			"com.liferay.foo.service",
+			historicalServiceComponentTableNames.get("FooEntry"));
+		Assert.assertEquals(
+			"com.liferay.foo.service",
+			historicalServiceComponentTableNames.get("foolegacy"));
+	}
 
 	@Test
 	public void testGetModuleIndexesSQL() throws Exception {

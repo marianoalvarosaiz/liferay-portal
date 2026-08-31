@@ -59,6 +59,33 @@ public class DBResourceUtil {
 		_cacheEnabled = true;
 	}
 
+	public static Map<String, String> getHistoricalServiceComponentTableNames(
+			Connection connection)
+		throws Exception {
+
+		Map<String, String> historicalServiceComponentTableNames =
+			new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+		try (PreparedStatement preparedStatement = connection.prepareStatement(
+				_SQL_HISTORICAL_SERVICE_COMPONENT);
+
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			while (resultSet.next()) {
+				String buildNamespace = resultSet.getString(1);
+
+				for (String tableName :
+						parseCreateTableSQL(resultSet.getString(2))) {
+
+					historicalServiceComponentTableNames.put(
+						tableName, buildNamespace);
+				}
+			}
+		}
+
+		return historicalServiceComponentTableNames;
+	}
+
 	public static Set<String> getLiferayTableNames(Connection connection)
 		throws Exception {
 
@@ -209,6 +236,34 @@ public class DBResourceUtil {
 			connection,
 			"buildNamespace = '" +
 				ReleaseConstants.DEFAULT_SERVLET_CONTEXT_NAME + "'");
+	}
+
+	public static Map<String, String> getTableOwnerMap() {
+		Map<String, String> tableOwnerMap = new TreeMap<>(
+			String.CASE_INSENSITIVE_ORDER);
+
+		for (String portalTableName : getPortalTableNames()) {
+			tableOwnerMap.put(
+				portalTableName, ReleaseConstants.DEFAULT_SERVLET_CONTEXT_NAME);
+		}
+
+		BundleContext bundleContext = SystemBundleUtil.getBundleContext();
+
+		for (Bundle bundle : bundleContext.getBundles()) {
+			if (!BundleUtil.isLiferayRequireSchemaVersionBundle(bundle) &&
+				!BundleUtil.isLiferayServiceBundle(bundle)) {
+
+				continue;
+			}
+
+			for (String tableName :
+					parseCreateTableSQL(getModuleTablesSQL(bundle))) {
+
+				tableOwnerMap.put(tableName, bundle.getSymbolicName());
+			}
+		}
+
+		return tableOwnerMap;
 	}
 
 	public static Set<String> parseCreateTableSQL(String createTableSQL) {
@@ -393,6 +448,10 @@ public class DBResourceUtil {
 			return null;
 		}
 	}
+
+	private static final String _SQL_HISTORICAL_SERVICE_COMPONENT =
+		"select buildNamespace, data_ from ServiceComponent order by " +
+			"buildNumber";
 
 	private static final String _SQL_SERVICE_COMPONENT = StringBundler.concat(
 		"select data_ from ServiceComponent where buildNumber = (select ",
