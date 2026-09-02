@@ -33,6 +33,7 @@ import com.liferay.petra.sql.dsl.expression.Predicate;
 import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.petra.sql.dsl.query.JoinStep;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.aop.AopService;
@@ -59,6 +60,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -301,14 +303,33 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 
 		DDMFieldInfo rootDDMFieldInfo = null;
 
-		for (DDMFieldInfo ddmFieldInfo : ddmFieldInfos) {
-			if (com.liferay.portal.kernel.util.StringUtil.equals(
+		Set<DDMFieldInfo> duplicateRootDDMFieldInfos = new HashSet<>();
+
+		for (Map.Entry<Long, DDMFieldInfo> entry :
+				ddmFieldInfosMap.entrySet()) {
+
+			DDMFieldInfo ddmFieldInfo = entry.getValue();
+
+			if (!com.liferay.portal.kernel.util.StringUtil.equals(
 					ddmFieldInfo._fieldName, StringPool.BLANK)) {
 
+				continue;
+			}
+
+			if (rootDDMFieldInfo == null) {
 				rootDDMFieldInfo = ddmFieldInfo;
 
-				break;
+				continue;
 			}
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					StringBundler.concat(
+						"Ignoring duplicate root DDM field ", entry.getKey(),
+						" for storage ", storageId));
+			}
+
+			duplicateRootDDMFieldInfos.add(ddmFieldInfo);
 		}
 
 		if (rootDDMFieldInfo == null) {
@@ -341,6 +362,7 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 
 		for (DDMFieldInfo ddmFieldInfo : ddmFieldInfos) {
 			if ((ddmFieldInfo != rootDDMFieldInfo) &&
+				!duplicateRootDDMFieldInfos.contains(ddmFieldInfo) &&
 				(ddmFieldInfo._parentInstanceId == null)) {
 
 				ddmFormValues.addDDMFormFieldValue(
@@ -776,13 +798,23 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 
 		int newDDMFieldsCount = 0;
 
+		List<DDMField> duplicateDDMFields = new ArrayList<>();
+
 		Map<String, DDMField> ddmFieldsMap = new HashMap<>();
 
 		ListUtil.isNotEmptyForEach(
 			ddmFieldPersistence.findByStorageId(storageId),
-			ddmField -> ddmFieldsMap.put(
-				_getKey(ddmField.getFieldName(), ddmField.getInstanceId()),
-				ddmField));
+			ddmField -> {
+				String key = _getKey(
+					ddmField.getFieldName(), ddmField.getInstanceId());
+
+				if (ddmFieldsMap.containsKey(key)) {
+					duplicateDDMFields.add(ddmField);
+				}
+				else {
+					ddmFieldsMap.put(key, ddmField);
+				}
+			});
 
 		for (DDMFieldInfo ddmFieldInfo : ddmFieldInfosMap.values()) {
 			DDMField ddmField = ddmFieldsMap.remove(
@@ -822,6 +854,11 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 		}
 
 		for (DDMField ddmField : ddmFieldsMap.values()) {
+			ddmFieldEntries.add(
+				new AbstractMap.SimpleImmutableEntry<>(ddmField, null));
+		}
+
+		for (DDMField ddmField : duplicateDDMFields) {
 			ddmFieldEntries.add(
 				new AbstractMap.SimpleImmutableEntry<>(ddmField, null));
 		}
@@ -981,13 +1018,27 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 		DDMField rootDDMField = null;
 
 		for (DDMField ddmField : ddmFields) {
-			if (com.liferay.portal.kernel.util.StringUtil.equals(
+			if (!com.liferay.portal.kernel.util.StringUtil.equals(
 					ddmField.getFieldName(), StringPool.BLANK)) {
 
+				continue;
+			}
+
+			if (rootDDMField == null) {
 				rootDDMField = ddmField;
 
-				break;
+				continue;
 			}
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					StringBundler.concat(
+						"Ignoring duplicate root DDM field ",
+						ddmField.getFieldId(), " for storage ",
+						ddmField.getStorageId()));
+			}
+
+			ddmFieldInfosMap.remove(ddmField.getFieldId());
 		}
 
 		if (rootDDMField == null) {
