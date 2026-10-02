@@ -43,6 +43,9 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.test.log.LogCapture;
+import com.liferay.portal.test.log.LogEntry;
+import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
@@ -483,8 +486,28 @@ public class DDMFieldLocalServiceTest {
 
 		ddmFormValues.addDDMFormFieldValue(ddmFormFieldValue2);
 
-		_ddmFieldLocalService.updateDDMFormValues(
-			ddmStructure.getStructureId(), _STORAGE_ID, ddmFormValues);
+		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+				"com.liferay.dynamic.data.mapping.service.impl." +
+					"DDMFieldLocalServiceImpl",
+				LoggerTestUtil.WARN)) {
+
+			_ddmFieldLocalService.updateDDMFormValues(
+				ddmStructure.getStructureId(), _STORAGE_ID, ddmFormValues);
+
+			List<LogEntry> logEntries = logCapture.getLogEntries();
+
+			Assert.assertEquals(logEntries.toString(), 1, logEntries.size());
+
+			LogEntry logEntry = logEntries.get(0);
+
+			String message = logEntry.getMessage();
+
+			Assert.assertTrue(
+				message,
+				message.startsWith(
+					"Replaced duplicate instance ID \"ABCD\" of field " +
+						"\"field2\" in storage " + _STORAGE_ID));
+		}
 
 		DDMFormValues deserializedDDMFormValues =
 			_ddmFieldLocalService.getDDMFormValues(ddmForm, _STORAGE_ID);

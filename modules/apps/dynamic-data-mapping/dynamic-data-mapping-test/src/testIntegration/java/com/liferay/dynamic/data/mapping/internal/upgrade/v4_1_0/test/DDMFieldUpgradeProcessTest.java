@@ -33,11 +33,16 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.test.log.LogCapture;
+import com.liferay.portal.test.log.LogEntry;
+import com.liferay.portal.test.log.LoggerTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 import com.liferay.portal.upgrade.test.util.UpgradeTestUtil;
+
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -128,7 +133,27 @@ public class DDMFieldUpgradeProcessTest {
 			"com.liferay.dynamic.data.mapping.internal.upgrade.v4_1_0." +
 				"DDMFieldUpgradeProcess");
 
-		upgradeProcess.upgrade();
+		try (LogCapture logCapture = LoggerTestUtil.configureLog4JLogger(
+				"com.liferay.dynamic.data.mapping.internal.upgrade.v4_1_0." +
+					"DDMFieldUpgradeProcess",
+				LoggerTestUtil.WARN)) {
+
+			upgradeProcess.upgrade();
+
+			List<LogEntry> logEntries = logCapture.getLogEntries();
+
+			Assert.assertEquals(logEntries.toString(), 1, logEntries.size());
+
+			LogEntry logEntry = logEntries.get(0);
+
+			String message = logEntry.getMessage();
+
+			Assert.assertTrue(
+				message,
+				message.startsWith(
+					"Replaced duplicate instance ID \"ABCD\" of field " +
+						"\"field2\" in storage " + _contentId));
+		}
 
 		_entityCache.clearCache();
 		_multiVMPool.clear();
