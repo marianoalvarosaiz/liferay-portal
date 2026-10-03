@@ -466,6 +466,8 @@ public class UserLocalServiceTest {
 				() -> _userLocalService.authenticateByEmailAddress(
 					companyId, emailAddress, "password", null, null, null));
 
+			EntityCacheUtil.removeResult(UserImpl.class, user.getUserId());
+
 			user = _userLocalService.fetchUser(user.getUserId());
 
 			Assert.assertEquals(
@@ -479,11 +481,43 @@ public class UserLocalServiceTest {
 						passwordPolicy.setMaxAge(0);
 					})) {
 
+			user.setPassword("password");
+			user.setPasswordEncrypted(false);
+
+			user = _userLocalService.updateUser(user);
+
+			long mvccVersion = user.getMvccVersion();
+
+			EntityCacheUtil.removeResult(UserImpl.class, user.getUserId());
+
 			Assert.assertEquals(
 				Authenticator.SUCCESS,
 				_userLocalService.authenticateByEmailAddress(
 					user.getCompanyId(), user.getEmailAddress(), "password",
 					null, null, null));
+
+			EntityCacheUtil.removeResult(UserImpl.class, user.getUserId());
+
+			user = _userLocalService.fetchUser(user.getUserId());
+
+			Assert.assertEquals(0, user.getFailedLoginAttempts());
+			Assert.assertEquals(mvccVersion + 1, user.getMvccVersion());
+			Assert.assertTrue(user.isPasswordEncrypted());
+
+			Assert.assertEquals(
+				Authenticator.SUCCESS,
+				_userLocalService.authenticateByEmailAddress(
+					user.getCompanyId(), user.getEmailAddress(), "password",
+					null, null, null));
+
+			EntityCacheUtil.removeResult(UserImpl.class, user.getUserId());
+
+			User curUser = _userLocalService.fetchUser(user.getUserId());
+
+			Assert.assertEquals(
+				user.getModifiedDate(), curUser.getModifiedDate());
+			Assert.assertEquals(
+				user.getMvccVersion(), curUser.getMvccVersion());
 		}
 	}
 
