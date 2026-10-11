@@ -81,6 +81,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.KeyValuePair;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -447,10 +448,52 @@ public class EmailNotificationType extends BaseNotificationType {
 	public Object[] toRecipients(
 		List<NotificationRecipientSetting> notificationRecipientSettings) {
 
-		return new Object[] {
+		Map<String, Object> notificationRecipientSettingsMap =
 			NotificationRecipientSettingUtil.toMap(
-				notificationRecipientSettings)
-		};
+				notificationRecipientSettings);
+
+		if (ListUtil.isEmpty(notificationRecipientSettings)) {
+			return new Object[] {notificationRecipientSettingsMap};
+		}
+
+		NotificationRecipientSetting notificationRecipientSetting =
+			notificationRecipientSettings.get(0);
+
+		for (String name :
+				ListUtil.fromArray(
+					NotificationRecipientSettingConstants.NAME_BCC,
+					NotificationRecipientSettingConstants.NAME_CC,
+					NotificationRecipientSettingConstants.NAME_TO)) {
+
+			String recipientType = GetterUtil.getString(
+				notificationRecipientSettingsMap.get(
+					NotificationRecipientSettingConstants.getRecipientTypeName(
+						name)));
+
+			if (!Objects.equals(
+					recipientType, NotificationRecipientConstants.TYPE_ROLE) &&
+				!Objects.equals(
+					recipientType,
+					NotificationRecipientConstants.TYPE_USER_GROUP)) {
+
+				continue;
+			}
+
+			List<Map<String, String>> recipientMaps =
+				(List<Map<String, String>>)notificationRecipientSettingsMap.get(
+					name);
+
+			if (recipientMaps == null) {
+				continue;
+			}
+
+			for (Map<String, String> recipientMap : recipientMaps) {
+				addRecipientReferences(
+					notificationRecipientSetting.getCompanyId(), recipientMap);
+			}
+		}
+
+		return new Object[] {notificationRecipientSettingsMap};
 	}
 
 	@Override
