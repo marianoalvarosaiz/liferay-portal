@@ -41,6 +41,10 @@ components:
                     format: int64
                     readOnly: true
                     type: integer
+                missingRequiredFieldsCount:
+                    format: int64
+                    readOnly: true
+                    type: integer
                 overdueWorkflowTasksCount:
                     format: int64
                     readOnly: true
@@ -54,6 +58,10 @@ components:
                     readOnly: true
                     type: integer
                 scheduledCount:
+                    format: int64
+                    readOnly: true
+                    type: integer
+                slaBreachedWorkflowTasksCount:
                     format: int64
                     readOnly: true
                     type: integer

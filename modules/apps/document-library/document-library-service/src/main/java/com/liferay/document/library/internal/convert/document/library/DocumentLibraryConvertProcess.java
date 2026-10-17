@@ -6,6 +6,8 @@
 package com.liferay.document.library.internal.convert.document.library;
 
 import com.liferay.document.library.kernel.store.Store;
+import com.liferay.document.library.kernel.store.StoreAreaAwareStoreWrapper;
+import com.liferay.document.library.kernel.store.StoreAreaProcessor;
 import com.liferay.document.library.kernel.util.comparator.FileVersionVersionComparator;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
@@ -71,10 +73,12 @@ public class DocumentLibraryConvertProcess extends BaseConvertProcess {
 		for (String storeType : storeTypes) {
 			Class<?> clazz = _store.getClass();
 
-			if (!storeType.equals(clazz.getName())) {
-				sb.append(storeType);
-				sb.append(StringPool.SEMICOLON);
+			if (storeType.equals(clazz.getName())) {
+				continue;
 			}
+
+			sb.append(storeType);
+			sb.append(StringPool.SEMICOLON);
 		}
 
 		return new String[] {
@@ -100,6 +104,10 @@ public class DocumentLibraryConvertProcess extends BaseConvertProcess {
 
 		_dlStoreConvertProcesses = ServiceTrackerListFactory.open(
 			bundleContext, DLStoreConvertProcess.class);
+
+		_storeAreaProcessorServiceTrackerMap =
+			ServiceTrackerMapFactory.openSingleValueMap(
+				bundleContext, StoreAreaProcessor.class, "store.type");
 	}
 
 	@Deactivate
@@ -107,6 +115,7 @@ public class DocumentLibraryConvertProcess extends BaseConvertProcess {
 		_dlStoreConvertProcesses.close();
 
 		_serviceTrackerMap.close();
+		_storeAreaProcessorServiceTrackerMap.close();
 	}
 
 	@Override
@@ -114,7 +123,11 @@ public class DocumentLibraryConvertProcess extends BaseConvertProcess {
 		String targetStoreClassName = getTargetStoreClassName();
 
 		migrateDLStoreConvertProcesses(
-			_store, _serviceTrackerMap.getService(targetStoreClassName));
+			new StoreAreaAwareStoreWrapper(
+				() -> _store,
+				() -> _storeAreaProcessorServiceTrackerMap.getService(
+					PropsValues.DL_STORE_IMPL)),
+			_serviceTrackerMap.getService(targetStoreClassName));
 
 		MaintenanceUtil.appendStatus(
 			StringBundler.concat(
@@ -171,5 +184,8 @@ public class DocumentLibraryConvertProcess extends BaseConvertProcess {
 
 	@Reference(target = "(default=true)")
 	private Store _store;
+
+	private ServiceTrackerMap<String, StoreAreaProcessor>
+		_storeAreaProcessorServiceTrackerMap;
 
 }

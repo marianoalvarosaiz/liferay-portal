@@ -7,6 +7,7 @@ package com.liferay.portal.store.file.system;
 
 import com.liferay.document.library.kernel.exception.NoSuchFileException;
 import com.liferay.document.library.kernel.store.Store;
+import com.liferay.document.library.kernel.store.StoreArea;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.petra.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.petra.reflect.ReflectionUtil;
@@ -97,7 +98,8 @@ public class FileSystemStore implements Store {
 
 	@Override
 	public void deleteDirectory(long companyId) {
-		File companyDir = new File(_rootDir, String.valueOf(companyId));
+		File companyDir = new File(
+			_getStoreAreaRootDir(), String.valueOf(companyId));
 
 		if (!companyDir.exists()) {
 			return;
@@ -266,7 +268,9 @@ public class FileSystemStore implements Store {
 
 	@Override
 	public void verifyCompanyStores() {
-		File[] storeDirs = _rootDir.listFiles(
+		File storeAreaRootDir = _getStoreAreaRootDir();
+
+		File[] storeDirs = storeAreaRootDir.listFiles(
 			file -> file.isDirectory() && Validator.isNumber(file.getName()));
 
 		if (storeDirs == null) {
@@ -357,9 +361,11 @@ public class FileSystemStore implements Store {
 		String headVersionLabel = VERSION_DEFAULT;
 
 		for (String versionLabel : versionLabels) {
-			if (DLUtil.compareVersions(versionLabel, headVersionLabel) > 0) {
-				headVersionLabel = versionLabel;
+			if (DLUtil.compareVersions(versionLabel, headVersionLabel) <= 0) {
+				continue;
 			}
+
+			headVersionLabel = versionLabel;
 		}
 
 		return headVersionLabel;
@@ -367,7 +373,8 @@ public class FileSystemStore implements Store {
 
 	protected File getRepositoryDir(long companyId, long repositoryId) {
 		File repositoryDir = new File(
-			_rootDir, companyId + StringPool.SLASH + repositoryId);
+			_getStoreAreaRootDir(),
+			companyId + StringPool.SLASH + repositoryId);
 
 		if (!repositoryDir.exists()) {
 			repositoryDir.mkdirs();
@@ -384,6 +391,10 @@ public class FileSystemStore implements Store {
 
 			file = file.getParentFile();
 		}
+	}
+
+	private File _getStoreAreaRootDir() {
+		return new File(_rootDir, StoreArea.getCurrentStoreAreaPath());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

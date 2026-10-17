@@ -478,41 +478,51 @@ public class PostUpgradeVerifyDatabaseState extends VerifyProcess {
 					return;
 				}
 
+				Map<String, String> expectedColumnTypes = new TreeMap<>(
+					String.CASE_INSENSITIVE_ORDER);
+
+				for (String columnDefinition : entry.getValue()) {
+					int index = columnDefinition.indexOf(StringPool.SPACE);
+
+					expectedColumnTypes.put(
+						columnDefinition.substring(0, index),
+						columnDefinition.substring(index + 1));
+				}
+
 				Set<String> databaseColumnNames = new TreeSet<>(
 					String.CASE_INSENSITIVE_ORDER);
+				Set<String> mismatchedColumnNames = new TreeSet<>(
+					String.CASE_INSENSITIVE_ORDER);
+				String normalizedTableName = dbInspector.normalizeName(
+					tableName);
 
 				try (ResultSet resultSet = dbInspector.getColumnsResultSet(
 						tableName)) {
 
 					while (resultSet.next()) {
-						databaseColumnNames.add(
-							resultSet.getString("COLUMN_NAME"));
+						String columnName = resultSet.getString("COLUMN_NAME");
+
+						databaseColumnNames.add(columnName);
+
+						String columnType = expectedColumnTypes.get(columnName);
+
+						if ((columnType == null) ||
+							!dbInspector.isSupportedColumnType(columnType) ||
+							dbInspector.hasColumnType(columnType, resultSet)) {
+
+							continue;
+						}
+
+						mismatchedColumnNames.add(columnName);
 					}
 				}
-
-				String normalizedTableName = dbInspector.normalizeName(
-					tableName);
-
-				Set<String> expectedColumnNames = new TreeSet<>(
-					String.CASE_INSENSITIVE_ORDER);
 
 				for (String columnDefinition : entry.getValue()) {
 					int index = columnDefinition.indexOf(StringPool.SPACE);
 
 					String columnName = columnDefinition.substring(0, index);
 
-					expectedColumnNames.add(columnName);
-
-					if (!databaseColumnNames.contains(columnName)) {
-						continue;
-					}
-
-					String columnType = columnDefinition.substring(index + 1);
-
-					if (!dbInspector.isSupportedColumnType(columnType) ||
-						dbInspector.hasColumnType(
-							tableName, columnName, columnType)) {
-
+					if (!mismatchedColumnNames.contains(columnName)) {
 						continue;
 					}
 
@@ -525,10 +535,13 @@ public class PostUpgradeVerifyDatabaseState extends VerifyProcess {
 							StringBundler.concat(
 								"Column ",
 								dbInspector.normalizeName(columnName),
-								" is not defined as ", columnType, " for ",
+								" is not defined as ",
+								columnDefinition.substring(index + 1), " for ",
 								normalizedTableName, " table"),
 							servletContextName));
 				}
+
+				Set<String> expectedColumnNames = expectedColumnTypes.keySet();
 
 				Set<String> missingColumnNames = _asymmetricDifference(
 					expectedColumnNames, databaseColumnNames);

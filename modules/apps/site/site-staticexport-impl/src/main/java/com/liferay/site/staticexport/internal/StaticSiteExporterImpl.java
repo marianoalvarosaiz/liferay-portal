@@ -200,15 +200,17 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 		for (StaticSiteExportEntryRendering staticSiteExportEntryRendering :
 				staticSiteExportEntryRenderings) {
 
-			if (Objects.equals(
+			if (!Objects.equals(
 					staticSiteExportEntryRendering.getLocale(), locale)) {
 
-				friendlyURLs.addAll(
-					_getDisplayPageFriendlyURLs(
-						group, portalHostNames,
-						staticSiteExportEntryRendering.
-							getStaticSiteExportDocument()));
+				continue;
 			}
+
+			friendlyURLs.addAll(
+				_getDisplayPageFriendlyURLs(
+					group, portalHostNames,
+					staticSiteExportEntryRendering.
+						getStaticSiteExportDocument()));
 		}
 
 		Map<String, StaticSiteExportEntryRendering>
@@ -695,6 +697,20 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 					moduleURLs.add(
 						StringBundler.concat("/o/", moduleName, resourcePath));
 				}
+
+				for (String resourcePath :
+						staticSiteExportBundleResourceResolver.getResourcePaths(
+							moduleName, StringPool.SLASH)) {
+
+					if (!resourcePath.endsWith(".css") ||
+						!HashedFilesUtil.containsHash(resourcePath)) {
+
+						continue;
+					}
+
+					moduleURLs.add(
+						StringBundler.concat("/o/", moduleName, resourcePath));
+				}
 			}
 			catch (Exception exception) {
 				if (_log.isDebugEnabled()) {
@@ -746,10 +762,12 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 		List<String> openGraphLocaleAlternates = new ArrayList<>();
 
 		for (Locale alternateLocale : locales) {
-			if (!Objects.equals(alternateLocale, locale)) {
-				openGraphLocaleAlternates.add(
-					LocaleUtil.toLanguageId(alternateLocale));
+			if (Objects.equals(alternateLocale, locale)) {
+				continue;
 			}
+
+			openGraphLocaleAlternates.add(
+				LocaleUtil.toLanguageId(alternateLocale));
 		}
 
 		Collections.sort(openGraphLocaleAlternates);
@@ -871,9 +889,11 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 		_addPortalHostName(PropsValues.WEB_SERVER_HOST, portalHostNames);
 
 		for (String validHost : PropsValues.VIRTUAL_HOSTS_VALID_HOSTS) {
-			if (!Objects.equals(validHost, StringPool.STAR)) {
-				_addPortalHostName(validHost, portalHostNames);
+			if (Objects.equals(validHost, StringPool.STAR)) {
+				continue;
 			}
+
+			_addPortalHostName(validHost, portalHostNames);
 		}
 
 		return portalHostNames;
@@ -893,9 +913,11 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 			StaticSiteExportURL staticSiteExportURL = new StaticSiteExportURL(
 				portalHostNames, url);
 
-			if (staticSiteExportURL.isResource()) {
-				resourceURLs.add(staticSiteExportURL.getURL());
+			if (!staticSiteExportURL.isResource()) {
+				continue;
 			}
+
+			resourceURLs.add(staticSiteExportURL.getURL());
 		}
 
 		for (String url : staticSiteExportDocument.getEmbeddedURLs()) {
@@ -906,9 +928,11 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 			StaticSiteExportURL staticSiteExportURL = new StaticSiteExportURL(
 				portalHostNames, url);
 
-			if (staticSiteExportURL.isExternal()) {
-				resourceURLs.add(staticSiteExportURL.getURL());
+			if (!staticSiteExportURL.isExternal()) {
+				continue;
 			}
+
+			resourceURLs.add(staticSiteExportURL.getURL());
 		}
 
 		return resourceURLs;
@@ -1001,10 +1025,11 @@ public class StaticSiteExporterImpl implements StaticSiteExporter {
 			StaticSiteExportURL resolvedStaticSiteExportURL =
 				staticSiteExportURL.resolve(stylesheetResourceURL);
 
-			if (resolvedStaticSiteExportURL != null) {
-				stylesheetResourceURLs.add(
-					resolvedStaticSiteExportURL.getURL());
+			if (resolvedStaticSiteExportURL == null) {
+				continue;
 			}
+
+			stylesheetResourceURLs.add(resolvedStaticSiteExportURL.getURL());
 		}
 
 		return stylesheetResourceURLs;

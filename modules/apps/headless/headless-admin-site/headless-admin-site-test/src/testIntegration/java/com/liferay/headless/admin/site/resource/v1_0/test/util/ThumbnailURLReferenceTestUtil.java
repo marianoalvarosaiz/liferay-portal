@@ -9,6 +9,7 @@ import com.liferay.headless.admin.site.client.dto.v1_0.ThumbnailURLReference;
 import com.liferay.headless.admin.site.client.problem.Problem;
 import com.liferay.petra.function.UnsafeBiConsumer;
 import com.liferay.petra.function.UnsafeFunction;
+import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 
 import org.junit.Assert;
@@ -32,29 +33,33 @@ public class ThumbnailURLReferenceTestUtil {
 	public static <T> void testThumbnailURLReferenceURLFetchSecurity(
 			UnsafeBiConsumer<ThumbnailURLReference, T, Exception>
 				assertUnsafeBiConsumer,
-			T t1, T t2,
 			UnsafeFunction<T, ThumbnailURLReference, Exception>
 				thumbnailURLReferenceUnsafeFunction,
-			UnsafeFunction<T, T, Exception> unsafeFunction)
+			UnsafeFunction<T, T, Exception> unsafeFunction,
+			UnsafeSupplier<T, Exception> unsafeSupplier)
 		throws Exception {
 
+		_assertAllowedHost(
+			new String[0], true, assertUnsafeBiConsumer, unsafeSupplier.get(),
+			thumbnailURLReferenceUnsafeFunction, unsafeFunction);
+		_assertAllowedHost(
+			new String[] {"127.0.0.1"}, true, assertUnsafeBiConsumer,
+			unsafeSupplier.get(), thumbnailURLReferenceUnsafeFunction,
+			unsafeFunction);
+
+		T t = unsafeSupplier.get();
+
 		_assertRestrictedHost(
-			new String[0], false, t1, thumbnailURLReferenceUnsafeFunction,
+			new String[0], false, t, thumbnailURLReferenceUnsafeFunction,
 			unsafeFunction);
 		_assertRestrictedHost(
-			new String[] {"127.0.0.1"}, false, t1,
+			new String[] {"127.0.0.1"}, false, t,
 			thumbnailURLReferenceUnsafeFunction, unsafeFunction);
 		_assertRestrictedHost(
-			new String[] {"example.test"}, false, t1,
-			thumbnailURLReferenceUnsafeFunction, unsafeFunction);
-		_assertAllowedHost(
-			new String[0], true, assertUnsafeBiConsumer, t1,
-			thumbnailURLReferenceUnsafeFunction, unsafeFunction);
-		_assertAllowedHost(
-			new String[] {"127.0.0.1"}, true, assertUnsafeBiConsumer, t2,
+			new String[] {"example.test"}, false, t,
 			thumbnailURLReferenceUnsafeFunction, unsafeFunction);
 		_assertRestrictedHost(
-			new String[] {"example.test"}, true, t2,
+			new String[] {"example.test"}, true, t,
 			thumbnailURLReferenceUnsafeFunction, unsafeFunction);
 	}
 
